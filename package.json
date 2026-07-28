@@ -1,0 +1,52 @@
+{
+  "name": "@spatialanalyzer/briosa",
+  "version": "0.1.0",
+  "description": "Thin TypeScript client for the Briosa SpatialAnalyzer gRPC bridge",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "protocol.lock.json"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "clean": "node eng/clean.mjs",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "test": "npm run typecheck:test && tsx --test tests/client.test.ts",
+    "typecheck:test": "tsc -p tsconfig.test.json",
+    "lint": "eslint src tests tools eng --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "pack:check": "npm pack --dry-run",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "2.13.0",
+    "@grpc/grpc-js": "1.14.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "26.1.2",
+    "adm-zip": "0.6.0",
+    "eslint": "10.8.0",
+    "grpc-tools": "1.13.1",
+    "prettier": "3.9.6",
+    "ts-proto": "2.12.0",
+    "tsx": "4.23.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.65.0"
+  }
+}

@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-conformance:
+    name: Node build, package, and shared conformance
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+      DOTNET_NOLOGO: 'true'
+      BRIOSA_REVISION: 1a0714345981592b37e26a90ffc4db0de32fe388
+      PROTOCOL_ARTIFACT: briosa-protocol-0.2.0-dev.2-sa-2026.1.0529.7-catalog-5.zip
+
+    steps:
+      - name: Check out client
+        uses: actions/checkout@v6
+
+      - name: Check out immutable Briosa source
+        uses: actions/checkout@v6
+        with:
+          repository: spatialanalyzer/briosa
+          ref: ${{ env.BRIOSA_REVISION }}
+          path: briosa-source
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.13.0
+          cache: npm
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: briosa-source/global.json
+          cache: true
+          cache-dependency-path: briosa-source/**/packages.lock.json
+
+      - name: Install Buf
+        uses: bufbuild/buf-setup-action@v1.50.0
+        with:
+          version: 1.72.0
+          github_token: ${{ github.token }}
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Rebuild immutable protocol artifact
+        shell: pwsh
+        run: >
+          ./briosa-source/eng/New-ProtocolArtifact.ps1
+          -Version 0.2.0-dev.2
+          -SourceRevision $env:BRIOSA_REVISION
+          -OutputDirectory artifacts/protocol
+          -BufPath buf
+
+      - name: Verify protocol artifact and generated drift
+        shell: pwsh
+        run: |
+          $artifact = Join-Path artifacts/protocol $env:PROTOCOL_ARTIFACT
+          $hash = (Get-FileHash -LiteralPath $artifact -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($hash -ne "4ce33ac6ecc9db382e870aa2c005f90a25128ad863fcf007c855d00470ea3e39") {
+            throw "Protocol artifact ZIP hash drifted."
+          }
+          node ./eng/import-protocol-artifact.mjs --artifact $artifact
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Verify formatting
+        run: npm run format:check
+
+      - name: Verify package contents
+        run: npm run pack:check
+
+      - name: Audit runtime dependencies
+        run: npm audit --omit=dev
+
+      - name: Run packaged-server conformance
+        shell: pwsh
+        run: >
+          ./eng/Test-Conformance.ps1
+          -ProtocolArtifactPath (Join-Path artifacts/protocol $env:PROTOCOL_ARTIFACT)
+          -BriosaRepository ./briosa-source
