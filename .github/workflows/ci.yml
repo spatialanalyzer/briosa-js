@@ -54,12 +54,13 @@ jobs:
 
       - name: Rebuild immutable protocol artifact
         shell: pwsh
-        run: >
-          ./briosa-source/eng/New-ProtocolArtifact.ps1
-          -Version 0.2.0-dev.2
-          -SourceRevision $env:BRIOSA_REVISION
-          -OutputDirectory artifacts/protocol
-          -BufPath buf
+        run: |
+          $outputDirectory = Join-Path $env:GITHUB_WORKSPACE 'artifacts/protocol'
+          ./briosa-source/eng/New-ProtocolArtifact.ps1 `
+            -Version 0.2.0-dev.2 `
+            -SourceRevision $env:BRIOSA_REVISION `
+            -OutputDirectory $outputDirectory `
+            -BufPath buf
 
       - name: Verify protocol artifact and generated drift
         shell: pwsh
