@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "artifact": {
+    "name": "briosa-protocol-0.2.0-dev.2-sa-2026.1.0529.7-catalog-5",
+    "file_name": "briosa-protocol-0.2.0-dev.2-sa-2026.1.0529.7-catalog-5.zip",
+    "sha256": "4ce33ac6ecc9db382e870aa2c005f90a25128ad863fcf007c855d00470ea3e39",
+    "briosa_version": "0.2.0-dev.2",
+    "source_revision": "1a0714345981592b37e26a90ffc4db0de32fe388",
+    "source_repository": "https://github.com/spatialanalyzer/briosa",
+    "source_channel": "source_commit_bootstrap"
+  },
+  "protocol": {
+    "generation_contract_version": 1,
+    "schema_sha256": "465c9cabbec956d56788af5ccc489b94cd2b3026b2e710cc804fe6a69ad3dabb",
+    "descriptor_sha256": "72851886c7f8d94ba9c5e373491539e9c8aeae8c7d20841bbd449af004f19ee0",
+    "core_package": "briosa.core.v1alpha1",
+    "target_package": "briosa.sa.v2026_1_0529_7.v1alpha1",
+    "generator": {
+      "name": "ts-proto",
+      "version": "2.12.0",
+      "options": [
+        "env=node",
+        "esModuleInterop=true",
+        "exportCommonSymbols=false",
+        "forceLong=bigint",
+        "importSuffix=.js",
+        "lowerCaseServiceMethods=true",
+        "oneof=unions-value",
+        "outputJsonMethods=false",
+        "outputServices=grpc-js",
+        "useExactTypes=false",
+        "useOptionals=all"
+      ]
+    },
+    "javascript_semantics": {
+      "int64": "bigint",
+      "optional_fields": "undefined"
+    }
+  },
+  "catalog": {
+    "id": "briosa.sa.2026.1.0529.7",
+    "revision": "5",
+    "spatial_analyzer_target": "2026.1.0529.7",
+    "coverage_sha256": "3c4b57116b629d9beb7b69c06f01f9539ab08969487dd6b6b7c449f5d319a416"
+  },
+  "conformance": {
+    "sha256": "1d84287e1e62dfe7abcc856af97a6bd532e441dfa13e822bda7d40e21af80588",
+    "fixture_sets": [
+      "briosa.client.live.v1",
+      "briosa.client.operation-errors.v1"
+    ]
+  }
+}
