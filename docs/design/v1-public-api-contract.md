@@ -1,9 +1,9 @@
 # Briosa JavaScript/TypeScript v1 public API contract
 
 - Status: Accepted design target
-- Last reviewed: 2026-08-10
+- Last reviewed: 2026-08-12
 - Scope: The target-specific `@spatialanalyzer/briosa` Node.js package
-- Implementation status: Not yet conforming
+- Implementation status: Lifecycle foundation conforming; MP surface expanding
 
 ## Authority and scope
 
@@ -25,8 +25,9 @@ The language split was established in
 accepted the choices below after reviewing all 26 rules in the original .NET
 proposal.
 
-The current `0.1.0` package is an earlier bootstrap. Its exported API is not a
-v1 compatibility commitment and does not override this contract.
+The current `0.1.0` package remains pre-v1. Its lifecycle foundation now follows
+this contract, while the MP command surface will expand through subsequent
+vertical slices.
 
 ## Accepted JavaScript/TypeScript rules
 
@@ -285,32 +286,14 @@ Resolve these points through focused issues. An implementation issue may make a
 reversible local choice only when it stays inside the shared contract and its
 accepted scope.
 
-## Current bootstrap incompatibilities
+## Implemented Lifecycle Foundation
 
-The current `0.1.0` implementation predates this accepted design. A conforming
-release must address at least these known gaps:
-
-- replace `new BriosaClient(...)` with `createBriosaClient(...)` returning an
-  opaque public interface;
-- move MP commands off the client class and into flat package exports;
-- add explicit asynchronous `start()` and reusable `stop()` lifecycle methods;
-- defer channel creation and all external work until `start()`;
-- replace `defaultTimeoutMs: 30_000` and per-call `timeoutMs` with the accepted
-  command-timeout and `AbortSignal` model;
-- remove public gRPC credentials, channel options, generated messages, enums,
-  clients, and protocol identity exports;
-- replace generated discovery values and `GetWorkingDirectoryResult` with
-  handwritten public values and direct output cardinality;
-- replace `BriosaCallError`, public gRPC status values, and its transport
-  `Error.cause` with the accepted handwritten error boundary;
-- make all command validation failures reject Promises consistently;
-- replace synchronous `close()` with asynchronous lifecycle cleanup;
-- migrate from the retired bootstrap protocol shape to the parent epic's
-  locked target-qualified `package briosa` artifact; and
-- update README examples only as their corresponding behavior is implemented.
-
-These are planned breaking changes from an early pre-v1 bootstrap, not
-regressions against a previously accepted v1 API.
+The package now uses the synchronous factory and opaque client interface,
+dormant construction, explicit reusable asynchronous lifecycle, private
+generated transport, handwritten public states and errors, `AbortSignal`
+cancellation, exact-target compatibility checks, and detached MP results
+required by this contract. Subsequent implementation slices add handwritten MP
+functions without changing this lifecycle foundation.
 
 ## V1 non-goals
 

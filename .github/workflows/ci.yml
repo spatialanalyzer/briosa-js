@@ -8,26 +8,35 @@ permissions:
   contents: read
 
 jobs:
-  build-test-conformance:
-    name: Node build, package, and shared conformance
+  build-test-package:
+    name: Node build, test, and package
     runs-on: windows-latest
     timeout-minutes: 30
 
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
       DOTNET_NOLOGO: 'true'
-      BRIOSA_REVISION: 1a0714345981592b37e26a90ffc4db0de32fe388
-      PROTOCOL_ARTIFACT: briosa-protocol-0.2.0-dev.2-sa-2026.1.0529.7-catalog-5.zip
 
     steps:
       - name: Check out client
         uses: actions/checkout@v6
 
-      - name: Check out immutable Briosa source
+      - name: Read protocol lock
+        id: protocol
+        shell: pwsh
+        run: |
+          $lock = Get-Content protocol.lock.json -Raw | ConvertFrom-Json
+          "source_revision=$($lock.artifact.source_revision)" | Out-File $env:GITHUB_OUTPUT -Append
+          "briosa_version=$($lock.artifact.briosa_version)" | Out-File $env:GITHUB_OUTPUT -Append
+          "artifact_file_name=$($lock.artifact.file_name)" | Out-File $env:GITHUB_OUTPUT -Append
+          "artifact_sha256=$($lock.artifact.sha256)" | Out-File $env:GITHUB_OUTPUT -Append
+          "spatial_analyzer_target=$($lock.target.spatial_analyzer)" | Out-File $env:GITHUB_OUTPUT -Append
+
+      - name: Check out pinned Briosa source
         uses: actions/checkout@v6
         with:
           repository: spatialanalyzer/briosa
-          ref: ${{ env.BRIOSA_REVISION }}
+          ref: ${{ steps.protocol.outputs.source_revision }}
           path: briosa-source
 
       - name: Install Node.js
@@ -35,13 +44,6 @@ jobs:
         with:
           node-version: 22.13.0
           cache: npm
-
-      - name: Install .NET SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          global-json-file: briosa-source/global.json
-          cache: true
-          cache-dependency-path: briosa-source/**/packages.lock.json
 
       - name: Install Buf
         uses: bufbuild/buf-setup-action@v1.50.0
@@ -52,22 +54,22 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Rebuild immutable protocol artifact
+      - name: Rebuild pinned protocol artifact
         shell: pwsh
         run: |
           $outputDirectory = Join-Path $env:GITHUB_WORKSPACE 'artifacts/protocol'
-          ./briosa-source/eng/New-ProtocolArtifact.ps1 `
-            -Version 0.2.0-dev.2 `
-            -SourceRevision $env:BRIOSA_REVISION `
+          ./briosa-source/targets/${{ steps.protocol.outputs.spatial_analyzer_target }}/eng/New-ProtocolArtifact.ps1 `
+            -Version "${{ steps.protocol.outputs.briosa_version }}" `
+            -SourceRevision "${{ steps.protocol.outputs.source_revision }}" `
             -OutputDirectory $outputDirectory `
             -BufPath buf
 
       - name: Verify protocol artifact and generated drift
         shell: pwsh
         run: |
-          $artifact = Join-Path artifacts/protocol $env:PROTOCOL_ARTIFACT
+          $artifact = Join-Path artifacts/protocol "${{ steps.protocol.outputs.artifact_file_name }}"
           $hash = (Get-FileHash -LiteralPath $artifact -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($hash -ne "4ce33ac6ecc9db382e870aa2c005f90a25128ad863fcf007c855d00470ea3e39") {
+          if ($hash -ne "${{ steps.protocol.outputs.artifact_sha256 }}") {
             throw "Protocol artifact ZIP hash drifted."
           }
           node ./eng/import-protocol-artifact.mjs --artifact $artifact
@@ -77,6 +79,9 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Emit lifecycle contract report
+        run: node ./node_modules/tsx/dist/cli.mjs ./tools/conformance.ts
 
       - name: Lint
         run: npm run lint
@@ -89,10 +94,3 @@ jobs:
 
       - name: Audit runtime dependencies
         run: npm audit --omit=dev
-
-      - name: Run packaged-server conformance
-        shell: pwsh
-        run: >
-          ./eng/Test-Conformance.ps1
-          -ProtocolArtifactPath (Join-Path artifacts/protocol $env:PROTOCOL_ARTIFACT)
-          -BriosaRepository ./briosa-source

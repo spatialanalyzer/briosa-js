@@ -2,35 +2,23 @@
 // versions:
 //   protoc-gen-ts_proto  v2.12.0
 //   protoc               v3.19.1
-// source: briosa/core/v1alpha1/version_coordinates.proto
+// source: briosa/version_coordinates.proto
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
-/**
- * Identifies one reproducible Briosa distribution without treating its
- * independent implementation, protocol, and SpatialAnalyzer versions as one
- * semantic version.
- */
+/** Identifies one reproducible, SA-version-locked Briosa server distribution. */
 export interface VersionCoordinates {
   /** Briosa's semantic version, such as 0.3.2. */
   briosaVersion?:
     | string
     | undefined;
-  /** The stable core protobuf package implemented by the distribution. */
-  coreProtocolPackage?:
+  /** The stable protobuf package implemented by the distribution. */
+  protocolPackage?:
     | string
     | undefined;
-  /** The exact SpatialAnalyzer release for which the distribution was built. */
+  /** The exact SpatialAnalyzer release for which the server was built. */
   spatialAnalyzerTarget?:
-    | string
-    | undefined;
-  /** The exact-target protobuf package implemented by the distribution. */
-  targetProtocolPackage?:
-    | string
-    | undefined;
-  /** Immutable identity of the reviewed command catalog. */
-  catalogRevision?:
     | string
     | undefined;
   /** Fingerprint of the approved generated interop metadata. */
@@ -44,10 +32,8 @@ export interface VersionCoordinates {
 function createBaseVersionCoordinates(): VersionCoordinates {
   return {
     briosaVersion: undefined,
-    coreProtocolPackage: undefined,
+    protocolPackage: undefined,
     spatialAnalyzerTarget: undefined,
-    targetProtocolPackage: undefined,
-    catalogRevision: undefined,
     interopFingerprint: undefined,
     sourceRevision: undefined,
   };
@@ -58,17 +44,11 @@ export const VersionCoordinates: MessageFns<VersionCoordinates> = {
     if (message.briosaVersion !== undefined) {
       writer.uint32(10).string(message.briosaVersion);
     }
-    if (message.coreProtocolPackage !== undefined) {
-      writer.uint32(18).string(message.coreProtocolPackage);
+    if (message.protocolPackage !== undefined) {
+      writer.uint32(18).string(message.protocolPackage);
     }
     if (message.spatialAnalyzerTarget !== undefined) {
       writer.uint32(26).string(message.spatialAnalyzerTarget);
-    }
-    if (message.targetProtocolPackage !== undefined) {
-      writer.uint32(34).string(message.targetProtocolPackage);
-    }
-    if (message.catalogRevision !== undefined) {
-      writer.uint32(42).string(message.catalogRevision);
     }
     if (message.interopFingerprint !== undefined) {
       writer.uint32(50).string(message.interopFingerprint);
@@ -99,7 +79,7 @@ export const VersionCoordinates: MessageFns<VersionCoordinates> = {
             break;
           }
 
-          message.coreProtocolPackage = reader.string();
+          message.protocolPackage = reader.string();
           continue;
         }
         case 3: {
@@ -108,22 +88,6 @@ export const VersionCoordinates: MessageFns<VersionCoordinates> = {
           }
 
           message.spatialAnalyzerTarget = reader.string();
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.targetProtocolPackage = reader.string();
-          continue;
-        }
-        case 5: {
-          if (tag !== 42) {
-            break;
-          }
-
-          message.catalogRevision = reader.string();
           continue;
         }
         case 6: {
@@ -157,10 +121,8 @@ export const VersionCoordinates: MessageFns<VersionCoordinates> = {
   fromPartial(object: DeepPartial<VersionCoordinates>): VersionCoordinates {
     const message = createBaseVersionCoordinates();
     message.briosaVersion = object.briosaVersion ?? undefined;
-    message.coreProtocolPackage = object.coreProtocolPackage ?? undefined;
+    message.protocolPackage = object.protocolPackage ?? undefined;
     message.spatialAnalyzerTarget = object.spatialAnalyzerTarget ?? undefined;
-    message.targetProtocolPackage = object.targetProtocolPackage ?? undefined;
-    message.catalogRevision = object.catalogRevision ?? undefined;
     message.interopFingerprint = object.interopFingerprint ?? undefined;
     message.sourceRevision = object.sourceRevision ?? undefined;
     return message;

@@ -2,7 +2,7 @@
 // versions:
 //   protoc-gen-ts_proto  v2.12.0
 //   protoc               v3.19.1
-// source: briosa/core/v1alpha1/operation_outcomes.proto
+// source: briosa/operation_outcomes.proto
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";

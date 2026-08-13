@@ -138,7 +138,7 @@ function verifyBundle(bundleRoot, artifactPath, artifactHash, update) {
   const manifest = readJson(resolve(bundleRoot, 'manifest.json'));
   assertEqual(
     manifest.schema_version,
-    1,
+    2,
     'Unsupported protocol manifest schema.',
   );
   assertEqual(
@@ -147,8 +147,8 @@ function verifyBundle(bundleRoot, artifactPath, artifactHash, update) {
     'Unexpected artifact kind.',
   );
   assertEqual(
-    manifest.client_generation_contract_version,
-    1,
+    manifest.client_generation_contract,
+    'standard-protobuf-grpc',
     'Unsupported client generation contract.',
   );
   assertEqual(
@@ -216,7 +216,7 @@ function verifyBundle(bundleRoot, artifactPath, artifactHash, update) {
 
   if (!update) {
     const lock = readJson(lockPath);
-    assertEqual(lock.schema_version, 1, 'Unsupported protocol lock schema.');
+    assertEqual(lock.schema_version, 2, 'Unsupported protocol lock schema.');
     assertEqual(
       artifactHash,
       lock.artifact.sha256,
@@ -247,31 +247,20 @@ function verifyBundle(bundleRoot, artifactPath, artifactHash, update) {
       lock.protocol.descriptor_sha256,
       'Descriptor drift.',
     );
-    assertEqual(manifest.catalog_id, lock.catalog.id, 'Catalog ID drift.');
-    assertEqual(
-      manifest.catalog_revision,
-      lock.catalog.revision,
-      'Catalog revision drift.',
-    );
     assertEqual(
       manifest.spatial_analyzer_target,
-      lock.catalog.spatial_analyzer_target,
+      lock.target.spatial_analyzer,
       'SA target drift.',
     );
     assertEqual(
-      manifest.target_protocol_package,
-      lock.protocol.target_package,
-      'Target package drift.',
+      manifest.protocol_package,
+      lock.protocol.package,
+      'Protocol package drift.',
     );
     assertEqual(
-      manifest.core_protocol_package,
-      lock.protocol.core_package,
-      'Core package drift.',
-    );
-    assertEqual(
-      manifest.conformance_fixture_sha256,
-      lock.conformance.sha256,
-      'Conformance fixture drift.',
+      manifest.client_generation_contract,
+      lock.protocol.generation_contract,
+      'Client generation contract drift.',
     );
     assertEqual(
       JSON.stringify(lock.protocol.generator.options),
@@ -334,12 +323,9 @@ function generateProtocol(bundleRoot, outputRoot, manifest, artifactHash) {
       sourceRevision: manifest.source_revision,
       protocolSchemaSha256: manifest.protocol_schema_sha256,
       descriptorSetSha256: manifest.descriptor_set_sha256,
-      coreProtocolPackage: manifest.core_protocol_package,
-      targetProtocolPackage: manifest.target_protocol_package,
+      protocolPackage: manifest.protocol_package,
+      clientGenerationContract: manifest.client_generation_contract,
       spatialAnalyzerTarget: manifest.spatial_analyzer_target,
-      catalogId: manifest.catalog_id,
-      catalogRevision: manifest.catalog_revision,
-      conformanceFixtureSha256: manifest.conformance_fixture_sha256,
       int64Representation: 'bigint',
       optionalFieldRepresentation: 'undefined',
     },
@@ -389,7 +375,7 @@ try {
     rmSync(generatedRoot, { force: true, recursive: true });
     cpSync(generated, generatedRoot, { recursive: true });
     const lock = {
-      schema_version: 1,
+      schema_version: 2,
       artifact: {
         name: manifest.artifact_name,
         file_name: basename(artifactPath),
@@ -400,11 +386,10 @@ try {
         source_channel: options.sourceChannel,
       },
       protocol: {
-        generation_contract_version: 1,
+        generation_contract: manifest.client_generation_contract,
         schema_sha256: manifest.protocol_schema_sha256,
         descriptor_sha256: manifest.descriptor_set_sha256,
-        core_package: manifest.core_protocol_package,
-        target_package: manifest.target_protocol_package,
+        package: manifest.protocol_package,
         generator: {
           name: 'ts-proto',
           version: '2.12.0',
@@ -412,15 +397,8 @@ try {
         },
         javascript_semantics: { int64: 'bigint', optional_fields: 'undefined' },
       },
-      catalog: {
-        id: manifest.catalog_id,
-        revision: manifest.catalog_revision,
-        spatial_analyzer_target: manifest.spatial_analyzer_target,
-        coverage_sha256: manifest.catalog_coverage_sha256,
-      },
-      conformance: {
-        sha256: manifest.conformance_fixture_sha256,
-        fixture_sets: manifest.conformance_fixture_sets,
+      target: {
+        spatial_analyzer: manifest.spatial_analyzer_target,
       },
     };
     writeText(lockPath, `${JSON.stringify(lock, null, 2)}\n`);
