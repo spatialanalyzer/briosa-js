@@ -26,10 +26,17 @@ jobs:
         shell: pwsh
         run: |
           $lock = Get-Content protocol.lock.json -Raw | ConvertFrom-Json
+          $conformance = Get-Content conformance.lock.json -Raw | ConvertFrom-Json
+          if ($conformance.artifact.source_revision -ne $lock.artifact.source_revision -or
+              $conformance.artifact.briosa_version -ne $lock.artifact.briosa_version -or
+              $conformance.target.spatial_analyzer -ne $lock.target.spatial_analyzer) {
+            throw "Protocol and conformance locks must identify the same Briosa product."
+          }
           "source_revision=$($lock.artifact.source_revision)" | Out-File $env:GITHUB_OUTPUT -Append
           "briosa_version=$($lock.artifact.briosa_version)" | Out-File $env:GITHUB_OUTPUT -Append
           "artifact_file_name=$($lock.artifact.file_name)" | Out-File $env:GITHUB_OUTPUT -Append
           "artifact_sha256=$($lock.artifact.sha256)" | Out-File $env:GITHUB_OUTPUT -Append
+          "conformance_file_name=$($conformance.artifact.file_name)" | Out-File $env:GITHUB_OUTPUT -Append
           "spatial_analyzer_target=$($lock.target.spatial_analyzer)" | Out-File $env:GITHUB_OUTPUT -Append
 
       - name: Check out pinned Briosa source
@@ -44,6 +51,11 @@ jobs:
         with:
           node-version: 22.13.0
           cache: npm
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: briosa-source/global.json
 
       - name: Install Buf
         uses: bufbuild/buf-setup-action@v1.50.0
@@ -74,14 +86,26 @@ jobs:
           }
           node ./eng/import-protocol-artifact.mjs --artifact $artifact
 
+      - name: Rebuild pinned client conformance artifact
+        shell: pwsh
+        run: >
+          ./briosa-source/targets/${{ steps.protocol.outputs.spatial_analyzer_target }}/eng/New-ClientConformancePackage.ps1
+          -Version "${{ steps.protocol.outputs.briosa_version }}"
+          -SourceRevision "${{ steps.protocol.outputs.source_revision }}"
+          -OutputDirectory "${{ github.workspace }}/artifacts/conformance"
+
       - name: Build
         run: npm run build
 
       - name: Test
         run: npm test
 
-      - name: Emit lifecycle contract report
-        run: node ./node_modules/tsx/dist/cli.mjs ./tools/conformance.ts
+      - name: Run shared client conformance suite
+        shell: pwsh
+        run: >
+          ./eng/Test-Conformance.ps1
+          -ArtifactPath "artifacts/conformance/${{ steps.protocol.outputs.conformance_file_name }}"
+          -NodeExecutable node
 
       - name: Lint
         run: npm run lint

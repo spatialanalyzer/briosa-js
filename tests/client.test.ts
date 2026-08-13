@@ -265,7 +265,7 @@ void test('records merged lifecycle artifact and generated semantics', () => {
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    'cd36842dcbdc910a05a96e22453a54f5769b05fe',
+    'cf8d01288fb52b8880262e76c6a68bc8d1bc743f',
   );
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(
