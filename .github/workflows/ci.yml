@@ -45,13 +45,6 @@ jobs:
           node-version: 22.13.0
           cache: npm
 
-      - name: Install .NET SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          global-json-file: briosa-source/global.json
-          cache: true
-          cache-dependency-path: briosa-source/**/packages.lock.json
-
       - name: Install Buf
         uses: bufbuild/buf-setup-action@v1.50.0
         with:
