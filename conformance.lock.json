@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "artifact": {
+    "name": "briosa-client-conformance-0.2.0-lifecycle-sa-2026.1.0529.7-win-x64",
+    "file_name": "briosa-client-conformance-0.2.0-lifecycle-sa-2026.1.0529.7-win-x64.zip",
+    "sha256": "31f6f644563d305500f4d6d864f997574a1fea86111d492d6d608ece070d0039",
+    "briosa_version": "0.2.0-lifecycle",
+    "source_revision": "bd19e8f32a8bd717e6cf2ec2aea93b68b8c39c11",
+    "source_repository": "https://github.com/spatialanalyzer/briosa",
+    "source_channel": "source_commit_bootstrap"
+  },
+  "contract": {
+    "id": "briosa.first-party-client.v1",
+    "schema_version": 1
+  },
+  "target": {
+    "spatial_analyzer": "2026.1.0529.7",
+    "runtime_identifier": "win-x64"
+  }
+}

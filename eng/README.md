@@ -18,6 +18,10 @@ Generated transport modules are private implementation details. Handwritten
 public interfaces, lifecycle orchestration, mappings, and errors live outside
 `src/generated` and never expose generated or grpc-js values.
 
-`tools/conformance.ts` emits the normalized lifecycle contract implemented by
-this package. Behavioral tests use fake server/transport boundaries and require
-neither SpatialAnalyzer nor a license.
+`Test-Conformance.ps1` verifies the immutable package named by
+`conformance.lock.json`, then runs the shared Briosa scenario runner against the
+public-API-only `tools/conformance.ts` fixture. The package supplies the real
+Briosa server plus a portable fake SDK/application host, so lifecycle,
+compatibility, capability, failure, interruption, worker-loss, recovery, and
+cleanup behavior can run in ordinary Windows CI without SpatialAnalyzer or a
+license.
