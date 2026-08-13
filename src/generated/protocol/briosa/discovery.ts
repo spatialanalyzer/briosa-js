@@ -2,7 +2,7 @@
 // versions:
 //   protoc-gen-ts_proto  v2.12.0
 //   protoc               v3.19.1
-// source: briosa/core/v1alpha1/discovery.proto
+// source: briosa/discovery.proto
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
@@ -20,6 +20,22 @@ import {
 } from "@grpc/grpc-js";
 import { ReplaySafety } from "./operation_outcomes.js";
 import { VersionCoordinates } from "./version_coordinates.js";
+
+export enum RuntimeIdentityEvidenceSource {
+  RUNTIME_IDENTITY_EVIDENCE_SOURCE_UNSPECIFIED = 0,
+  RUNTIME_IDENTITY_EVIDENCE_SOURCE_UNAVAILABLE = 1,
+  RUNTIME_IDENTITY_EVIDENCE_SOURCE_RUNTIME_VERIFICATION = 2,
+  RUNTIME_IDENTITY_EVIDENCE_SOURCE_OPERATOR_ATTESTATION = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum RuntimeIdentityMatchState {
+  RUNTIME_IDENTITY_MATCH_STATE_UNSPECIFIED = 0,
+  RUNTIME_IDENTITY_MATCH_STATE_UNAVAILABLE = 1,
+  RUNTIME_IDENTITY_MATCH_STATE_EXACT_MATCH = 2,
+  RUNTIME_IDENTITY_MATCH_STATE_MISMATCH = 3,
+  UNRECOGNIZED = -1,
+}
 
 /** Describes how callers may share one worker/SpatialAnalyzer target. */
 export enum TargetIsolationMode {
@@ -65,6 +81,8 @@ export enum ConnectedSpatialAnalyzerVersionState {
   CONNECTED_SPATIAL_ANALYZER_VERSION_STATE_UNAVAILABLE = 1,
   CONNECTED_SPATIAL_ANALYZER_VERSION_STATE_VERIFIED_MATCH = 2,
   CONNECTED_SPATIAL_ANALYZER_VERSION_STATE_VERIFIED_MISMATCH = 3,
+  CONNECTED_SPATIAL_ANALYZER_VERSION_STATE_OPERATOR_ATTESTED_MATCH = 4,
+  CONNECTED_SPATIAL_ANALYZER_VERSION_STATE_OPERATOR_ATTESTED_MISMATCH = 5,
   UNRECOGNIZED = -1,
 }
 
@@ -102,16 +120,26 @@ export interface GetServerInfoResponse {
   connectedSpatialAnalyzerVersionState?: ConnectedSpatialAnalyzerVersionState | undefined;
   spatialAnalyzerExecutionReadinessState?: SpatialAnalyzerExecutionReadinessState | undefined;
   targetIsolationMode?: TargetIsolationMode | undefined;
+  activatedSdkIdentity?: RuntimeIdentityEvidence | undefined;
+  connectedSpatialAnalyzerIdentity?: RuntimeIdentityEvidence | undefined;
+}
+
+export interface RuntimeIdentityEvidence {
+  /**
+   * Present only when runtime verification or an explicit operator attestation
+   * supplied a version. It is never copied from the configured target.
+   */
+  version?: string | undefined;
+  source?: RuntimeIdentityEvidenceSource | undefined;
+  matchState?: RuntimeIdentityMatchState | undefined;
 }
 
 export interface ListCapabilitiesRequest {
 }
 
 export interface ListCapabilitiesResponse {
-  catalogId?: string | undefined;
-  catalogRevision?: string | undefined;
   spatialAnalyzerTarget?: string | undefined;
-  targetProtocolPackage?: string | undefined;
+  protocolPackage?: string | undefined;
   operations?: OperationCapability[] | undefined;
 }
 
@@ -169,6 +197,8 @@ function createBaseGetServerInfoResponse(): GetServerInfoResponse {
     connectedSpatialAnalyzerVersionState: 0,
     spatialAnalyzerExecutionReadinessState: 0,
     targetIsolationMode: 0,
+    activatedSdkIdentity: undefined,
+    connectedSpatialAnalyzerIdentity: undefined,
   };
 }
 
@@ -202,6 +232,12 @@ export const GetServerInfoResponse: MessageFns<GetServerInfoResponse> = {
     }
     if (message.targetIsolationMode !== undefined && message.targetIsolationMode !== 0) {
       writer.uint32(64).int32(message.targetIsolationMode);
+    }
+    if (message.activatedSdkIdentity !== undefined) {
+      RuntimeIdentityEvidence.encode(message.activatedSdkIdentity, writer.uint32(74).fork()).join();
+    }
+    if (message.connectedSpatialAnalyzerIdentity !== undefined) {
+      RuntimeIdentityEvidence.encode(message.connectedSpatialAnalyzerIdentity, writer.uint32(82).fork()).join();
     }
     return writer;
   },
@@ -277,6 +313,22 @@ export const GetServerInfoResponse: MessageFns<GetServerInfoResponse> = {
           message.targetIsolationMode = reader.int32() as any;
           continue;
         }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.activatedSdkIdentity = RuntimeIdentityEvidence.decode(reader, reader.uint32());
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
+          message.connectedSpatialAnalyzerIdentity = RuntimeIdentityEvidence.decode(reader, reader.uint32());
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -301,6 +353,83 @@ export const GetServerInfoResponse: MessageFns<GetServerInfoResponse> = {
     message.connectedSpatialAnalyzerVersionState = object.connectedSpatialAnalyzerVersionState ?? 0;
     message.spatialAnalyzerExecutionReadinessState = object.spatialAnalyzerExecutionReadinessState ?? 0;
     message.targetIsolationMode = object.targetIsolationMode ?? 0;
+    message.activatedSdkIdentity = (object.activatedSdkIdentity !== undefined && object.activatedSdkIdentity !== null)
+      ? RuntimeIdentityEvidence.fromPartial(object.activatedSdkIdentity)
+      : undefined;
+    message.connectedSpatialAnalyzerIdentity =
+      (object.connectedSpatialAnalyzerIdentity !== undefined && object.connectedSpatialAnalyzerIdentity !== null)
+        ? RuntimeIdentityEvidence.fromPartial(object.connectedSpatialAnalyzerIdentity)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseRuntimeIdentityEvidence(): RuntimeIdentityEvidence {
+  return { version: undefined, source: 0, matchState: 0 };
+}
+
+export const RuntimeIdentityEvidence: MessageFns<RuntimeIdentityEvidence> = {
+  encode(message: RuntimeIdentityEvidence, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.version !== undefined) {
+      writer.uint32(10).string(message.version);
+    }
+    if (message.source !== undefined && message.source !== 0) {
+      writer.uint32(16).int32(message.source);
+    }
+    if (message.matchState !== undefined && message.matchState !== 0) {
+      writer.uint32(24).int32(message.matchState);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RuntimeIdentityEvidence {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRuntimeIdentityEvidence();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.source = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.matchState = reader.int32() as any;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RuntimeIdentityEvidence>): RuntimeIdentityEvidence {
+    return RuntimeIdentityEvidence.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<RuntimeIdentityEvidence>): RuntimeIdentityEvidence {
+    const message = createBaseRuntimeIdentityEvidence();
+    message.version = object.version ?? undefined;
+    message.source = object.source ?? 0;
+    message.matchState = object.matchState ?? 0;
     return message;
   },
 };
@@ -340,22 +469,16 @@ export const ListCapabilitiesRequest: MessageFns<ListCapabilitiesRequest> = {
 };
 
 function createBaseListCapabilitiesResponse(): ListCapabilitiesResponse {
-  return { catalogId: "", catalogRevision: "", spatialAnalyzerTarget: "", targetProtocolPackage: "", operations: [] };
+  return { spatialAnalyzerTarget: "", protocolPackage: "", operations: [] };
 }
 
 export const ListCapabilitiesResponse: MessageFns<ListCapabilitiesResponse> = {
   encode(message: ListCapabilitiesResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.catalogId !== undefined && message.catalogId !== "") {
-      writer.uint32(10).string(message.catalogId);
-    }
-    if (message.catalogRevision !== undefined && message.catalogRevision !== "") {
-      writer.uint32(18).string(message.catalogRevision);
-    }
     if (message.spatialAnalyzerTarget !== undefined && message.spatialAnalyzerTarget !== "") {
       writer.uint32(26).string(message.spatialAnalyzerTarget);
     }
-    if (message.targetProtocolPackage !== undefined && message.targetProtocolPackage !== "") {
-      writer.uint32(34).string(message.targetProtocolPackage);
+    if (message.protocolPackage !== undefined && message.protocolPackage !== "") {
+      writer.uint32(34).string(message.protocolPackage);
     }
     if (message.operations !== undefined && message.operations.length !== 0) {
       for (const v of message.operations) {
@@ -372,22 +495,6 @@ export const ListCapabilitiesResponse: MessageFns<ListCapabilitiesResponse> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.catalogId = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.catalogRevision = reader.string();
-          continue;
-        }
         case 3: {
           if (tag !== 26) {
             break;
@@ -401,7 +508,7 @@ export const ListCapabilitiesResponse: MessageFns<ListCapabilitiesResponse> = {
             break;
           }
 
-          message.targetProtocolPackage = reader.string();
+          message.protocolPackage = reader.string();
           continue;
         }
         case 5: {
@@ -429,10 +536,8 @@ export const ListCapabilitiesResponse: MessageFns<ListCapabilitiesResponse> = {
   },
   fromPartial(object: DeepPartial<ListCapabilitiesResponse>): ListCapabilitiesResponse {
     const message = createBaseListCapabilitiesResponse();
-    message.catalogId = object.catalogId ?? "";
-    message.catalogRevision = object.catalogRevision ?? "";
     message.spatialAnalyzerTarget = object.spatialAnalyzerTarget ?? "";
-    message.targetProtocolPackage = object.targetProtocolPackage ?? "";
+    message.protocolPackage = object.protocolPackage ?? "";
     message.operations = object.operations?.map((e) => OperationCapability.fromPartial(e)) || [];
     return message;
   },
@@ -564,12 +669,12 @@ export const OperationCapability: MessageFns<OperationCapability> = {
   },
 };
 
-/** Provides low-sensitivity server identity and exact-target capability metadata. */
+/** Provides low-sensitivity server identity and capability metadata. */
 export type DiscoveryServiceService = typeof DiscoveryServiceService;
 export const DiscoveryServiceService = {
   /** Returns build coordinates and a safe current runtime summary. */
   getServerInfo: {
-    path: "/briosa.core.v1alpha1.DiscoveryService/GetServerInfo" as const,
+    path: "/briosa.DiscoveryService/GetServerInfo" as const,
     requestStream: false as const,
     responseStream: false as const,
     requestSerialize: (value: GetServerInfoRequest): Buffer => Buffer.from(GetServerInfoRequest.encode(value).finish()),
@@ -578,9 +683,9 @@ export const DiscoveryServiceService = {
       Buffer.from(GetServerInfoResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetServerInfoResponse => GetServerInfoResponse.decode(value),
   },
-  /** Lists only operations in this build's reviewed command catalog. */
+  /** Lists only implemented operations enabled by the active runtime policy. */
   listCapabilities: {
-    path: "/briosa.core.v1alpha1.DiscoveryService/ListCapabilities" as const,
+    path: "/briosa.DiscoveryService/ListCapabilities" as const,
     requestStream: false as const,
     responseStream: false as const,
     requestSerialize: (value: ListCapabilitiesRequest): Buffer =>
@@ -595,7 +700,7 @@ export const DiscoveryServiceService = {
 export interface DiscoveryServiceServer extends UntypedServiceImplementation {
   /** Returns build coordinates and a safe current runtime summary. */
   getServerInfo: handleUnaryCall<GetServerInfoRequest, GetServerInfoResponse>;
-  /** Lists only operations in this build's reviewed command catalog. */
+  /** Lists only implemented operations enabled by the active runtime policy. */
   listCapabilities: handleUnaryCall<ListCapabilitiesRequest, ListCapabilitiesResponse>;
 }
 
@@ -616,7 +721,7 @@ export interface DiscoveryServiceClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetServerInfoResponse) => void,
   ): ClientUnaryCall;
-  /** Lists only operations in this build's reviewed command catalog. */
+  /** Lists only implemented operations enabled by the active runtime policy. */
   listCapabilities(
     request: ListCapabilitiesRequest,
     callback: (error: ServiceError | null, response: ListCapabilitiesResponse) => void,
@@ -636,7 +741,7 @@ export interface DiscoveryServiceClient extends Client {
 
 export const DiscoveryServiceClient = makeGenericClientConstructor(
   DiscoveryServiceService,
-  "briosa.core.v1alpha1.DiscoveryService",
+  "briosa.DiscoveryService",
 ) as unknown as {
   new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): DiscoveryServiceClient;
   service: typeof DiscoveryServiceService;

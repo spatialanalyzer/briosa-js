@@ -1,10 +1,11 @@
 import type {
   GetServerInfoResponse,
   ListCapabilitiesResponse,
-} from './generated/protocol/briosa/core/v1alpha1/discovery.js';
+} from './generated/protocol/briosa/discovery.js';
+import { TargetIsolationMode } from './generated/protocol/briosa/discovery.js';
 import { briosaProtocolIdentity } from './generated/protocolIdentity.js';
 
-/** Indicates that a server does not implement this package's exact protocol identity. */
+/** Indicates that a runtime does not match this package's exact identity. */
 export class BriosaCompatibilityError extends Error {
   constructor(readonly diagnosticCode: string) {
     super(`Briosa compatibility check failed: ${diagnosticCode}.`);
@@ -12,15 +13,7 @@ export class BriosaCompatibilityError extends Error {
   }
 }
 
-function requireCoordinate(
-  actual: string | undefined,
-  expected: string,
-  diagnosticCode: string,
-): void {
-  if (actual !== expected) throw new BriosaCompatibilityError(diagnosticCode);
-}
-
-/** Validates server discovery against the immutable generation identity. */
+/** Validates discovery without exposing generated messages to callers. */
 export function validateBriosaCompatibility(
   serverInfo: GetServerInfoResponse,
   capabilities: ListCapabilitiesResponse,
@@ -29,45 +22,47 @@ export function validateBriosaCompatibility(
   if (version === undefined) {
     throw new BriosaCompatibilityError('server-version-missing');
   }
-
-  requireCoordinate(
-    version.coreProtocolPackage,
-    briosaProtocolIdentity.coreProtocolPackage,
-    'core-protocol-package-mismatch',
-  );
-  requireCoordinate(
-    version.spatialAnalyzerTarget,
-    briosaProtocolIdentity.spatialAnalyzerTarget,
-    'server-sa-target-mismatch',
-  );
-  requireCoordinate(
-    version.targetProtocolPackage,
-    briosaProtocolIdentity.targetProtocolPackage,
-    'server-target-package-mismatch',
-  );
-  requireCoordinate(
-    version.catalogRevision,
-    briosaProtocolIdentity.catalogRevision,
-    'server-catalog-revision-mismatch',
-  );
-  requireCoordinate(
-    capabilities.catalogId,
-    briosaProtocolIdentity.catalogId,
-    'capability-catalog-id-mismatch',
-  );
-  requireCoordinate(
-    capabilities.catalogRevision,
-    briosaProtocolIdentity.catalogRevision,
-    'capability-catalog-revision-mismatch',
-  );
-  requireCoordinate(
-    capabilities.spatialAnalyzerTarget,
-    briosaProtocolIdentity.spatialAnalyzerTarget,
-    'capability-sa-target-mismatch',
-  );
-  requireCoordinate(
-    capabilities.targetProtocolPackage,
-    briosaProtocolIdentity.targetProtocolPackage,
-    'capability-target-package-mismatch',
-  );
+  const checks: readonly (readonly [string | undefined, string, string])[] = [
+    [
+      version.briosaVersion,
+      briosaProtocolIdentity.briosaVersion,
+      'server-version-mismatch',
+    ],
+    [
+      version.sourceRevision,
+      briosaProtocolIdentity.sourceRevision,
+      'server-source-revision-mismatch',
+    ],
+    [
+      version.protocolPackage,
+      briosaProtocolIdentity.protocolPackage,
+      'server-protocol-package-mismatch',
+    ],
+    [
+      version.spatialAnalyzerTarget,
+      briosaProtocolIdentity.spatialAnalyzerTarget,
+      'server-sa-target-mismatch',
+    ],
+    [
+      capabilities.protocolPackage,
+      briosaProtocolIdentity.protocolPackage,
+      'capability-protocol-package-mismatch',
+    ],
+    [
+      capabilities.spatialAnalyzerTarget,
+      briosaProtocolIdentity.spatialAnalyzerTarget,
+      'capability-sa-target-mismatch',
+    ],
+  ];
+  for (const [actual, expected, diagnosticCode] of checks) {
+    if (actual !== expected) {
+      throw new BriosaCompatibilityError(diagnosticCode);
+    }
+  }
+  if (
+    serverInfo.targetIsolationMode !==
+    TargetIsolationMode.TARGET_ISOLATION_MODE_SINGLE_TENANT
+  ) {
+    throw new BriosaCompatibilityError('target-isolation-mode-mismatch');
+  }
 }
