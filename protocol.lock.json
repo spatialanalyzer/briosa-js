@@ -7,7 +7,7 @@
     "briosa_version": "0.2.1",
     "source_revision": "dc361c55e09cf2b6cdf5b058c9a2b75d52907bd5",
     "source_repository": "https://github.com/spatialanalyzer/briosa",
-    "source_channel": "github_actions_artifact"
+    "source_channel": "github_release"
   },
   "protocol": {
     "generation_contract": "standard-protobuf-grpc",

@@ -11,7 +11,7 @@ generated-byte drift.
 node ./eng/import-protocol-artifact.mjs `
   --artifact C:\path\to\briosa-protocol-0.2.1-sa-2026.1.0529.7.zip `
   --update `
-  --source-channel github_actions_artifact
+  --source-channel github_release
 ```
 
 Generated transport modules are private implementation details. Handwritten

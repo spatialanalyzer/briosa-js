@@ -80,7 +80,7 @@ Neither path requires SpatialAnalyzer nor a license.
 node ./eng/import-protocol-artifact.mjs `
   --artifact C:\path\to\briosa-protocol-0.2.1-sa-2026.1.0529.7.zip `
   --update `
-  --source-channel github_actions_artifact
+  --source-channel github_release
 
 node ./eng/import-protocol-artifact.mjs `
   --artifact C:\path\to\briosa-protocol-0.2.1-sa-2026.1.0529.7.zip
