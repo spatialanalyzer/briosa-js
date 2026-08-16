@@ -288,11 +288,11 @@ function serviceError(
 void test('records merged lifecycle artifact and generated semantics', () => {
   assert.equal(
     briosaProtocolIdentity.artifactName,
-    'briosa-protocol-0.2.0-sa-2026.1.0529.7',
+    'briosa-protocol-0.2.1-sa-2026.1.0529.7',
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    'a009d95c1a5d293bdcbe3edb2edfe9cd99081c2e',
+    'dc361c55e09cf2b6cdf5b058c9a2b75d52907bd5',
   );
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(

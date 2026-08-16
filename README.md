@@ -63,7 +63,7 @@ npm ci
 npm run build
 npm test
 ./eng/Test-Conformance.ps1 `
-  -ArtifactPath C:\path\to\briosa-client-conformance-0.2.0-lifecycle-sa-2026.1.0529.7-win-x64.zip `
+  -ArtifactPath C:\path\to\briosa-client-conformance-0.2.1-sa-2026.1.0529.7-win-x64.zip `
   -NodeExecutable node
 npm run lint
 npm run format:check
@@ -78,12 +78,12 @@ Neither path requires SpatialAnalyzer nor a license.
 
 ```powershell
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.2.0-lifecycle-sa-2026.1.0529.7.zip `
+  --artifact C:\path\to\briosa-protocol-0.2.1-sa-2026.1.0529.7.zip `
   --update `
-  --source-channel source_commit_bootstrap
+  --source-channel github_actions_artifact
 
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.2.0-lifecycle-sa-2026.1.0529.7.zip
+  --artifact C:\path\to\briosa-protocol-0.2.1-sa-2026.1.0529.7.zip
 ```
 
 Never edit `src/generated` or `protocol.lock.json` by hand.
