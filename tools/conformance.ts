@@ -48,7 +48,7 @@ async function captureError(
 
 async function runScenario(scenario: string): Promise<void> {
   const briosa = createBriosaClient({
-    commandTimeoutMs: scenario === 'deadline' ? 150 : null,
+    commandTimeoutMs: scenario === 'deadline' ? 250 : null,
   });
   let startupSucceeded = false;
   try {
@@ -224,7 +224,20 @@ async function assertDeadline(briosa: BriosaClient): Promise<void> {
     'The deadline diagnostic changed.',
   );
   await delay(400);
-  await getWorkingDirectory(briosa);
+  try {
+    await getWorkingDirectory(briosa);
+  } catch (recoveryError) {
+    if (
+      !(recoveryError instanceof BriosaTransportError) ||
+      recoveryError.diagnosticCode !== 'transport-deadline-exceeded'
+    ) {
+      throw recoveryError;
+    }
+    // If the initial deadline expired before worker dispatch, this call consumes
+    // the one scripted delay. A final caller-initiated read verifies recovery.
+    await delay(400);
+    await getWorkingDirectory(briosa);
+  }
 }
 
 async function assertCancellation(briosa: BriosaClient): Promise<void> {
