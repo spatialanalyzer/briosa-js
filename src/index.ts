@@ -40,3 +40,5 @@ export type {
   SpatialAnalyzerSdkState,
   SpatialAnalyzerSdkTerminationKind,
 } from './models.js';
+export * from './operationValues.js';
+export * from './waveAOperations.js';

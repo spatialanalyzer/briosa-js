@@ -14,9 +14,16 @@ import {
   BriosaProtocolError,
   BriosaSpatialAnalyzerError,
   BriosaTransportError,
+  FitConstraintScalarOptions,
+  ObjectType,
+  deleteObjects,
   createBriosaClient,
+  getActiveUnits,
+  getObjectReportingFrame,
   getWorkingDirectory,
+  setRelationshipFitConstraintsScalarType,
 } from '../src/index.js';
+import * as waveAOperations from '../src/waveAOperations.js';
 import { mapServiceError } from '../src/errors.js';
 import {
   BriosaClientImplementation,
@@ -51,7 +58,7 @@ import {
   ReplaySafety,
 } from '../src/generated/protocol/briosa/operation_outcomes.js';
 import type { OwnedServer, ServerLauncher } from '../src/serverLauncher.js';
-import type { ClientTransport } from '../src/transport.js';
+import type { ClientTransport, OperationCodec } from '../src/transport.js';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -83,6 +90,12 @@ class FakeTransport implements ClientTransport {
   closeApplicationCount = 0;
   launchFailure: ServiceError | null = null;
   publishReadySnapshot = true;
+  operationResponse: unknown = {};
+  lastOperation: {
+    readonly service: string;
+    readonly rpc: string;
+    readonly request: unknown;
+  } | null = null;
 
   async getServerSnapshot(): Promise<
     readonly [GetServerInfoResponse, ListCapabilitiesResponse]
@@ -160,6 +173,20 @@ class FakeTransport implements ClientTransport {
   async getWorkingDirectory(): Promise<string> {
     this.calls.push('get-working-directory');
     return String.raw`C:\Working`;
+  }
+
+  async invokeOperation<TRequest, TResponse>(
+    service: string,
+    rpc: string,
+    request: TRequest,
+    _requestCodec: OperationCodec<TRequest>,
+    _responseCodec: OperationCodec<TResponse>,
+  ): Promise<TResponse> {
+    void _requestCodec;
+    void _responseCodec;
+    this.calls.push(`operation:${service}/${rpc}`);
+    this.lastOperation = { service, rpc, request };
+    return this.operationResponse as TResponse;
   }
 
   close(): void {
@@ -261,11 +288,11 @@ function serviceError(
 void test('records merged lifecycle artifact and generated semantics', () => {
   assert.equal(
     briosaProtocolIdentity.artifactName,
-    'briosa-protocol-0.2.0-lifecycle-sa-2026.1.0529.7',
+    'briosa-protocol-0.2.0-sa-2026.1.0529.7',
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    'bd19e8f32a8bd717e6cf2ec2aea93b68b8c39c11',
+    'a009d95c1a5d293bdcbe3edb2edfe9cd99081c2e',
   );
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(
@@ -277,6 +304,121 @@ void test('records merged lifecycle artifact and generated semantics', () => {
     readFileSync(resolve(repositoryRoot, 'protocol.lock.json'), 'utf8'),
   ) as { protocol: { javascript_semantics: { int64: string } } };
   assert.equal(lock.protocol.javascript_semantics.int64, 'bigint');
+});
+
+void test('exports all 469 approved Wave A operations as functions', () => {
+  const operations = Object.values(waveAOperations).filter(
+    (value) => typeof value === 'function',
+  );
+  assert.equal(operations.length, 468);
+  assert.equal(new Set(operations).size, 468);
+  assert.equal(typeof getWorkingDirectory, 'function');
+  assert.equal(operations.length + 1, 469);
+});
+
+void test('maps Wave A scalar, repeated, structured-default, and result values', async () => {
+  const transport = new FakeTransport();
+  const client = createTestClient(new FakeLauncher(), transport);
+  await client.start();
+
+  transport.operationResponse = {
+    length: 'in',
+    angular: 'deg',
+    temperature: 'F',
+  };
+  assert.deepEqual(await getActiveUnits(client), {
+    length: 'in',
+    angular: 'deg',
+    temperature: 'F',
+  });
+  assert.deepEqual(transport.lastOperation, {
+    service: 'UtilityOperations',
+    rpc: 'GetActiveUnits',
+    request: {},
+  });
+
+  const objects = [
+    {
+      collectionName: 'A',
+      objectName: 'First',
+      objectType: ObjectType.pointGroup,
+    },
+    {
+      collectionName: 'B',
+      objectName: 'Second',
+      objectType: ObjectType.plane,
+    },
+  ];
+  transport.operationResponse = {};
+  await deleteObjects(client, { objectNames: new Set(objects) });
+  assert.deepEqual(
+    (transport.lastOperation?.request as { objectNames: unknown }).objectNames,
+    [
+      { collectionName: 'A', objectName: 'First', objectType: 18 },
+      { collectionName: 'B', objectName: 'Second', objectType: 17 },
+    ],
+  );
+
+  await setRelationshipFitConstraintsScalarType(client, {
+    relationshipName: {
+      collectionName: 'Relationships',
+      objectName: 'R1',
+      objectType: ObjectType.any,
+    },
+  });
+  assert.deepEqual(
+    (
+      transport.lastOperation?.request as {
+        fitConstraintOptions: unknown;
+      }
+    ).fitConstraintOptions,
+    FitConstraintScalarOptions.default,
+  );
+
+  await client[Symbol.asyncDispose]();
+});
+
+void test('fails closed on an unknown Wave A enum returned by the server', async () => {
+  const transport = new FakeTransport();
+  const client = createTestClient(new FakeLauncher(), transport);
+  await client.start();
+  transport.operationResponse = {
+    reportingFrame: {
+      collectionName: 'Frames',
+      objectName: 'Working',
+      objectType: 0,
+    },
+  };
+
+  await assert.rejects(
+    () =>
+      getObjectReportingFrame(client, {
+        objectName: {
+          collectionName: 'Objects',
+          objectName: 'Plane 1',
+          objectType: ObjectType.plane,
+        },
+      }),
+    (error: unknown) =>
+      error instanceof BriosaProtocolError &&
+      error.diagnosticCode === 'unknown-enum-value',
+  );
+  await client[Symbol.asyncDispose]();
+});
+
+void test('fails closed when a required Wave A output is absent', async () => {
+  const transport = new FakeTransport();
+  const client = createTestClient(new FakeLauncher(), transport);
+  await client.start();
+  transport.operationResponse = {};
+
+  await assert.rejects(
+    () => getActiveUnits(client),
+    (error: unknown) =>
+      error instanceof BriosaProtocolError &&
+      error.diagnosticCode === 'required-output-missing:length',
+  );
+  await client[Symbol.asyncDispose]();
 });
 
 void test('construction is dormant and options fail closed', async () => {

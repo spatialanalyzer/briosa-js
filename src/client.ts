@@ -36,9 +36,14 @@ import {
   type OwnedServer,
   type ServerLauncher,
 } from './serverLauncher.js';
-import { type ClientTransport, GrpcClientTransport } from './transport.js';
+import {
+  type ClientTransport,
+  GrpcClientTransport,
+  type OperationCodec,
+} from './transport.js';
 
 const getWorkingDirectoryInternal = Symbol('getWorkingDirectoryInternal');
+const invokeOperationInternal = Symbol('invokeOperationInternal');
 
 interface Session {
   readonly server: OwnedServer;
@@ -308,6 +313,54 @@ export class BriosaClientImplementation implements BriosaClient {
     });
     try {
       return await session.transport.getWorkingDirectory(
+        this.#options.commandTimeoutMs ?? null,
+        options.signal,
+      );
+    } catch (error) {
+      throw mapTransportFailure(error, session.applicationState);
+    } finally {
+      await this.#withLock(() => {
+        session.activeCommands -= 1;
+        if (session.activeCommands === 0) {
+          session.resolveCommandsDrained?.();
+          session.resolveCommandsDrained = null;
+        }
+      });
+    }
+  }
+
+  async [invokeOperationInternal]<TRequest, TResponse>(
+    service: string,
+    rpc: string,
+    request: TRequest,
+    requestCodec: OperationCodec<TRequest>,
+    responseCodec: OperationCodec<TResponse>,
+    options: BriosaCallOptions = {},
+  ): Promise<TResponse> {
+    const session = await this.#withLock(() => {
+      this.#ensureOpen();
+      if (this.#startTask !== null) {
+        throw new BriosaLifecycleError('client-start-in-progress');
+      }
+      const current = this.#requireSession();
+      if (!current.commandAdmissionOpen) {
+        throw new BriosaLifecycleError('mp-command-admission-closed');
+      }
+      current.activeCommands += 1;
+      if (current.activeCommands === 1) {
+        current.commandsDrained = new Promise<void>((resolvePromise) => {
+          current.resolveCommandsDrained = resolvePromise;
+        });
+      }
+      return current;
+    });
+    try {
+      return await session.transport.invokeOperation(
+        service,
+        rpc,
+        request,
+        requestCodec,
+        responseCodec,
         this.#options.commandTimeoutMs ?? null,
         options.signal,
       );
@@ -624,6 +677,31 @@ export function getWorkingDirectory(
     );
   }
   return client[getWorkingDirectoryInternal](options);
+}
+
+/** @internal Shared admission and error mapping for handwritten MP functions. */
+export function invokeClientOperation<TRequest, TResponse>(
+  client: BriosaClient,
+  service: string,
+  rpc: string,
+  request: TRequest,
+  requestCodec: OperationCodec<TRequest>,
+  responseCodec: OperationCodec<TResponse>,
+  options: BriosaCallOptions = {},
+): Promise<TResponse> {
+  if (!(client instanceof BriosaClientImplementation)) {
+    return Promise.reject(
+      new TypeError('client must be created by createBriosaClient().'),
+    );
+  }
+  return client[invokeOperationInternal](
+    service,
+    rpc,
+    request,
+    requestCodec,
+    responseCodec,
+    options,
+  );
 }
 
 function createSession(

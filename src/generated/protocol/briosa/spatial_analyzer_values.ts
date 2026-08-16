@@ -7,7 +7,173 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
-/** The exact object-type domain accepted by collection-object MP arguments. */
+export enum AngularUnits {
+  ANGULAR_UNITS_UNSPECIFIED = 0,
+  ANGULAR_UNITS_DEGREES = 1,
+  ANGULAR_UNITS_DEGREES_MINUTES_SECONDS = 2,
+  ANGULAR_UNITS_RADIANS = 3,
+  ANGULAR_UNITS_MILLIRADIANS = 4,
+  ANGULAR_UNITS_GONS_GRAD = 5,
+  ANGULAR_UNITS_MILS = 6,
+  ANGULAR_UNITS_ARCSECONDS = 7,
+  ANGULAR_UNITS_DEGREES_MINUTES = 8,
+  UNRECOGNIZED = -1,
+}
+
+export enum AsciiFileFormat {
+  ASCII_FILE_FORMAT_UNSPECIFIED = 0,
+  ASCII_FILE_FORMAT_X_Y_Z = 1,
+  ASCII_FILE_FORMAT_X_Y_Z_OFFSET_OFFSET2 = 2,
+  ASCII_FILE_FORMAT_X_Y_Z_NOTES = 3,
+  ASCII_FILE_FORMAT_RADIUS_THETA_PHI = 4,
+  ASCII_FILE_FORMAT_RADIUS_THETA_Z = 5,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z = 6,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_NOTES = 7,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_OFFSET_OFFSET2 = 8,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_UX_UY_UZ = 9,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_TX_TY_TZ_TD = 10,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_WX_WY_WZ_WMAG = 11,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_HIGH_LOW_TOLERANCE = 12,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_TX_TY_TZ_TD_WX_WY_WZ = 13,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_WX_WY_WZ_TX_TY_TZ_TD = 14,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_HIGH_LOW_TOLERANCE_WX_WY_WZ = 15,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_WX_WY_WZ_HIGH_LOW_TOLERANCE = 16,
+  ASCII_FILE_FORMAT_POINT_NAME_RADIUS_THETA_PHI = 17,
+  ASCII_FILE_FORMAT_POINT_NAME_RADIUS_THETA_Z = 18,
+  ASCII_FILE_FORMAT_POINT_NAME_X_Y_Z_GROUP_NAME = 19,
+  ASCII_FILE_FORMAT_POINT_NAME_Y_X_Z_GROUP_NAME = 20,
+  ASCII_FILE_FORMAT_GROUP_NAME_POINT_NAME_X_Y_Z = 21,
+  ASCII_FILE_FORMAT_GROUP_NAME_POINT_NAME_X_Y_Z_OFFSET_OFFSET2 = 22,
+  ASCII_FILE_FORMAT_GROUP_NAME_POINT_NAME_X_Y_Z_NOTES = 23,
+  ASCII_FILE_FORMAT_GROUP_NAME_POINT_NAME_X_Y_Z_UX_UY_UZ = 24,
+  ASCII_FILE_FORMAT_GROUP_NAME_POINT_NAME_RADIUS_THETA_PHI = 25,
+  ASCII_FILE_FORMAT_GROUP_NAME_POINT_NAME_RADIUS_THETA_Z = 26,
+  ASCII_FILE_FORMAT_COLLECTION_GROUP_POINT_X_Y_Z = 27,
+  ASCII_FILE_FORMAT_COLLECTION_GROUP_POINT_X_Y_Z_NOTES = 28,
+  ASCII_FILE_FORMAT_COLLECTION_GROUP_POINT_RADIUS_THETA_PHI = 29,
+  ASCII_FILE_FORMAT_COLLECTION_GROUP_POINT_RADIUS_THETA_Z = 30,
+  ASCII_FILE_FORMAT_X_Y_Z_I_J_K = 31,
+  ASCII_FILE_FORMAT_VECTOR_NAME_X_Y_Z_I_J_K = 32,
+  ASCII_FILE_FORMAT_VECTOR_NAME_X_Y_Z_DX_DY_DZ_SIGNED_MAGNITUDE = 33,
+  ASCII_FILE_FORMAT_VECTOR_GROUP_NAME_VECTOR_NAME_X_Y_Z_I_J_K = 34,
+  ASCII_FILE_FORMAT_VECTOR_GROUP_NAME_VECTOR_NAME_X_Y_Z_DX_DY_DZ_SIGNED_MAGNITUDE = 35,
+  ASCII_FILE_FORMAT_FRAME_NAME_X_Y_Z_RX_RY_RZ_TIMESTAMP = 36,
+  ASCII_FILE_FORMAT_FRAME_NAME_X_Y_Z_EULER_X_Y_Z_TIMESTAMP = 37,
+  ASCII_FILE_FORMAT_FRAME_NAME_X_Y_Z_EULER_Z_Y_X_TIMESTAMP = 38,
+  ASCII_FILE_FORMAT_FRAME_NAME_X_Y_Z_EULER_Z_Y_Z_TIMESTAMP = 39,
+  ASCII_FILE_FORMAT_FRAME_NAME_X_Y_Z_EULER_Z_X_Z_TIMESTAMP = 40,
+  ASCII_FILE_FORMAT_FRAME_NAME_TRANSFORMATION_MATRIX_TIMESTAMP = 41,
+  ASCII_FILE_FORMAT_TRANSFORMATION_MATRIX_TIMESTAMP = 42,
+  ASCII_FILE_FORMAT_FRAME_NAME_X_Y_Z_QUATERNION_TIMESTAMP = 43,
+  ASCII_FILE_FORMAT_PLANE_NAME_X_Y_Z_DX_DY_DZ_PLANE_SIZE = 44,
+  UNRECOGNIZED = -1,
+}
+
+export enum ChartType {
+  CHART_TYPE_UNSPECIFIED = 0,
+  CHART_TYPE_RUN_CHART = 1,
+  CHART_TYPE_INDIVIDUAL_X_MOVING_RANGE = 2,
+  CHART_TYPE_BULLSEYE_CHART = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum CoordinateSystemType {
+  COORDINATE_SYSTEM_TYPE_UNSPECIFIED = 0,
+  COORDINATE_SYSTEM_TYPE_CARTESIAN = 1,
+  COORDINATE_SYSTEM_TYPE_CYLINDRIC = 2,
+  COORDINATE_SYSTEM_TYPE_POLAR = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum DatasetType {
+  DATASET_TYPE_UNSPECIFIED = 0,
+  DATASET_TYPE_X = 1,
+  DATASET_TYPE_Y = 2,
+  DATASET_TYPE_Z = 3,
+  DATASET_TYPE_MAGNITUDE = 4,
+  UNRECOGNIZED = -1,
+}
+
+export enum DistanceUnits {
+  DISTANCE_UNITS_UNSPECIFIED = 0,
+  DISTANCE_UNITS_METERS = 1,
+  DISTANCE_UNITS_CENTIMETERS = 2,
+  DISTANCE_UNITS_MILLIMETERS = 3,
+  DISTANCE_UNITS_FEET = 4,
+  DISTANCE_UNITS_INCHES = 5,
+  DISTANCE_UNITS_US_SURVEY_FEET = 6,
+  UNRECOGNIZED = -1,
+}
+
+export enum ExportDataDelimeterType {
+  EXPORT_DATA_DELIMETER_TYPE_UNSPECIFIED = 0,
+  EXPORT_DATA_DELIMETER_TYPE_SPACE = 1,
+  EXPORT_DATA_DELIMETER_TYPE_COMMA = 2,
+  EXPORT_DATA_DELIMETER_TYPE_TAB = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum ExportTargetNameFormat {
+  EXPORT_TARGET_NAME_FORMAT_UNSPECIFIED = 0,
+  EXPORT_TARGET_NAME_FORMAT_COLLECTION_GROUP_TARGET = 1,
+  EXPORT_TARGET_NAME_FORMAT_GROUP_TARGET = 2,
+  EXPORT_TARGET_NAME_FORMAT_TARGET = 3,
+  EXPORT_TARGET_NAME_FORMAT_NONE = 4,
+  UNRECOGNIZED = -1,
+}
+
+export enum ExportVectorNameFormat {
+  EXPORT_VECTOR_NAME_FORMAT_UNSPECIFIED = 0,
+  EXPORT_VECTOR_NAME_FORMAT_COLLECTION_GROUP_VECTOR = 1,
+  EXPORT_VECTOR_NAME_FORMAT_GROUP_VECTOR = 2,
+  EXPORT_VECTOR_NAME_FORMAT_VECTOR = 3,
+  EXPORT_VECTOR_NAME_FORMAT_NONE = 4,
+  UNRECOGNIZED = -1,
+}
+
+export enum BaseColorType {
+  BASE_COLOR_TYPE_UNSPECIFIED = 0,
+  BASE_COLOR_TYPE_RED = 1,
+  BASE_COLOR_TYPE_GREEN = 2,
+  BASE_COLOR_TYPE_BLUE = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum BaseMidColorType {
+  BASE_MID_COLOR_TYPE_UNSPECIFIED = 0,
+  BASE_MID_COLOR_TYPE_RED = 1,
+  BASE_MID_COLOR_TYPE_GREEN = 2,
+  BASE_MID_COLOR_TYPE_GRAY = 3,
+  BASE_MID_COLOR_TYPE_BLUE = 4,
+  UNRECOGNIZED = -1,
+}
+
+export enum ColorRangeMethod {
+  COLOR_RANGE_METHOD_UNSPECIFIED = 0,
+  COLOR_RANGE_METHOD_SINGLE_COLOR = 1,
+  COLOR_RANGE_METHOD_CONTINUOUS = 2,
+  COLOR_RANGE_METHOD_TOLERANCED_CONTINUOUS = 3,
+  COLOR_RANGE_METHOD_TOLERANCED_GO_NO_GO = 4,
+  COLOR_RANGE_METHOD_TOLERANCED_GO_NO_GO_WITH_WARNING = 5,
+  COLOR_RANGE_METHOD_DISCRETE_COLORS = 6,
+  UNRECOGNIZED = -1,
+}
+
+export enum GeometryType {
+  GEOMETRY_TYPE_UNSPECIFIED = 0,
+  GEOMETRY_TYPE_LINE = 1,
+  GEOMETRY_TYPE_PLANE = 2,
+  GEOMETRY_TYPE_CIRCLE = 3,
+  GEOMETRY_TYPE_SPHERE = 4,
+  GEOMETRY_TYPE_CYLINDER = 5,
+  GEOMETRY_TYPE_CONE = 6,
+  GEOMETRY_TYPE_PARABOLOID = 7,
+  GEOMETRY_TYPE_ELLIPSE = 8,
+  GEOMETRY_TYPE_SLOT = 9,
+  GEOMETRY_TYPE_TORUS = 10,
+  UNRECOGNIZED = -1,
+}
+
 export enum ObjectType {
   OBJECT_TYPE_UNSPECIFIED = 0,
   OBJECT_TYPE_ANY = 1,
@@ -39,12 +205,784 @@ export enum ObjectType {
   UNRECOGNIZED = -1,
 }
 
-/** An object in a SpatialAnalyzer collection. */
+export enum ItemType {
+  ITEM_TYPE_UNSPECIFIED = 0,
+  ITEM_TYPE_ANY = 1,
+  ITEM_TYPE_ALIGNMENT = 2,
+  ITEM_TYPE_ANNOTATION = 3,
+  ITEM_TYPE_B_SPLINE = 4,
+  ITEM_TYPE_CALIBRATION_APPLIANCE_NODE = 5,
+  ITEM_TYPE_CALLOUT_VIEW = 6,
+  ITEM_TYPE_CHART = 7,
+  ITEM_TYPE_CIRCLE = 8,
+  ITEM_TYPE_CLOUD = 9,
+  ITEM_TYPE_ENHANCED_CLOUD = 10,
+  ITEM_TYPE_SCAN_STRIPE_CLOUD = 11,
+  ITEM_TYPE_CROSS_SECTION_CLOUD = 12,
+  ITEM_TYPE_CONE = 13,
+  ITEM_TYPE_CYLINDER = 14,
+  ITEM_TYPE_DATUM = 15,
+  ITEM_TYPE_DIMENSION = 16,
+  ITEM_TYPE_ELLIPSE = 17,
+  ITEM_TYPE_EVENT = 18,
+  ITEM_TYPE_FEATURE_CHECK = 19,
+  ITEM_TYPE_FRAME = 20,
+  ITEM_TYPE_FRAME_SET = 21,
+  ITEM_TYPE_LINE = 22,
+  ITEM_TYPE_PARABOLOID = 23,
+  ITEM_TYPE_PERIMETER = 24,
+  ITEM_TYPE_PICTURE = 25,
+  ITEM_TYPE_PLANE = 26,
+  ITEM_TYPE_POINT_GROUP = 27,
+  ITEM_TYPE_POINT_SET = 28,
+  ITEM_TYPE_POLY_SURFACE = 29,
+  ITEM_TYPE_RELATIONSHIP = 30,
+  ITEM_TYPE_SA_DOC = 31,
+  ITEM_TYPE_SA_REPORT = 32,
+  ITEM_TYPE_SA_REPORT_TEMPLATE = 33,
+  ITEM_TYPE_SCALE_BAR = 34,
+  ITEM_TYPE_SCAN_STRIPE_MESH = 35,
+  ITEM_TYPE_SLOT = 36,
+  ITEM_TYPE_SPHERE = 37,
+  ITEM_TYPE_SURFACE = 38,
+  ITEM_TYPE_TABLE = 39,
+  ITEM_TYPE_TCP_FIXTURE = 40,
+  ITEM_TYPE_TORUS = 41,
+  ITEM_TYPE_VECTOR_GROUP = 42,
+  UNRECOGNIZED = -1,
+}
+
+export enum PointFilterInputType {
+  POINT_FILTER_INPUT_TYPE_UNSPECIFIED = 0,
+  POINT_FILTER_INPUT_TYPE_CARDINAL_POINTS = 1,
+  POINT_FILTER_INPUT_TYPE_INPUT_POINTS = 2,
+  POINT_FILTER_INPUT_TYPE_NOMINAL_CARDINAL_POINTS = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum RelWeightingMode {
+  REL_WEIGHTING_MODE_UNSPECIFIED = 0,
+  REL_WEIGHTING_MODE_NORMALIZE_EQUATION_COUNT = 1,
+  REL_WEIGHTING_MODE_NORMALIZE_EQUATION_COUNT_AND_TOLERANCE_WIDTH = 2,
+  REL_WEIGHTING_MODE_RESET_ALL_WEIGHTS = 3,
+  REL_WEIGHTING_MODE_NORMALIZE_SQUARE_ROOT_EQUATION_COUNT = 4,
+  REL_WEIGHTING_MODE_NORMALIZE_SQUARE_ROOT_AND_TOLERANCE_WIDTH = 5,
+  UNRECOGNIZED = -1,
+}
+
+export enum RenderModeType {
+  RENDER_MODE_TYPE_UNSPECIFIED = 0,
+  RENDER_MODE_TYPE_WIREFRAME = 1,
+  RENDER_MODE_TYPE_HIDDEN_LINE_REMOVED = 2,
+  RENDER_MODE_TYPE_SOLID_AND_EDGES = 3,
+  RENDER_MODE_TYPE_SOLID = 4,
+  UNRECOGNIZED = -1,
+}
+
+export enum ReportOutputType {
+  REPORT_OUTPUT_TYPE_UNSPECIFIED = 0,
+  REPORT_OUTPUT_TYPE_NONE = 1,
+  REPORT_OUTPUT_TYPE_SA_REPORT = 2,
+  REPORT_OUTPUT_TYPE_SA_DOCUMENT = 3,
+  REPORT_OUTPUT_TYPE_PDF = 4,
+  REPORT_OUTPUT_TYPE_RTF = 5,
+  UNRECOGNIZED = -1,
+}
+
+export enum ReportPageSettings {
+  REPORT_PAGE_SETTINGS_UNSPECIFIED = 0,
+  REPORT_PAGE_SETTINGS_PORTRAIT = 1,
+  REPORT_PAGE_SETTINGS_LANDSCAPE = 2,
+  UNRECOGNIZED = -1,
+}
+
+export enum ReportViewType {
+  REPORT_VIEW_TYPE_UNSPECIFIED = 0,
+  REPORT_VIEW_TYPE_NONE = 1,
+  REPORT_VIEW_TYPE_CURRENT_VIEW = 2,
+  REPORT_VIEW_TYPE_CALLOUT_VIEW = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum SurfaceAnalysisMode {
+  SURFACE_ANALYSIS_MODE_UNSPECIFIED = 0,
+  SURFACE_ANALYSIS_MODE_NONE = 1,
+  SURFACE_ANALYSIS_MODE_RELATIONSHIP = 2,
+  SURFACE_ANALYSIS_MODE_NORMALS = 3,
+  SURFACE_ANALYSIS_MODE_CURVATURE = 4,
+  SURFACE_ANALYSIS_MODE_DEVIATION_RMS = 5,
+  SURFACE_ANALYSIS_MODE_DEVIATION_MAX = 6,
+  SURFACE_ANALYSIS_MODE_DEVIATION_AVERAGE = 7,
+  SURFACE_ANALYSIS_MODE_DEVIATION_MIN = 8,
+  SURFACE_ANALYSIS_MODE_DEVIATION_MAX_ABSOLUTE = 9,
+  SURFACE_ANALYSIS_MODE_DEVIATION_MAX_DELTA = 10,
+  SURFACE_ANALYSIS_MODE_PSEUDO_SURFACE = 11,
+  UNRECOGNIZED = -1,
+}
+
+export enum TemperatureUnits {
+  TEMPERATURE_UNITS_UNSPECIFIED = 0,
+  TEMPERATURE_UNITS_FAHRENHEIT = 1,
+  TEMPERATURE_UNITS_CELSIUS = 2,
+  UNRECOGNIZED = -1,
+}
+
+export enum TranslucencyType {
+  TRANSLUCENCY_TYPE_UNSPECIFIED = 0,
+  TRANSLUCENCY_TYPE_SOLID = 1,
+  TRANSLUCENCY_TYPE_TRANSLUCENT = 2,
+  TRANSLUCENCY_TYPE_WIREFRAME = 3,
+  UNRECOGNIZED = -1,
+}
+
+/** Exact-target choices used by fit-profile commands. */
+export enum CompTechnique {
+  COMP_TECHNIQUE_UNSPECIFIED = 0,
+  COMP_TECHNIQUE_STANDARD = 1,
+  COMP_TECHNIQUE_MAX_INSCRIBED = 2,
+  COMP_TECHNIQUE_MIN_CIRCUMSCRIBED = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum DegreeOfFreedom {
+  DEGREE_OF_FREEDOM_UNSPECIFIED = 0,
+  DEGREE_OF_FREEDOM_ANY = 1,
+  DEGREE_OF_FREEDOM_LOCK_FOCUS_LOCATION = 2,
+  DEGREE_OF_FREEDOM_LOCK_VERTEX_LOCATION = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum FitMethod {
+  FIT_METHOD_UNSPECIFIED = 0,
+  FIT_METHOD_MINIMUM_RMS = 1,
+  FIT_METHOD_BEST_AXIS = 2,
+  UNRECOGNIZED = -1,
+}
+
+export enum MeasuredSideForPlanarOffset {
+  MEASURED_SIDE_FOR_PLANAR_OFFSET_UNSPECIFIED = 0,
+  MEASURED_SIDE_FOR_PLANAR_OFFSET_ABOVE_PLANE = 1,
+  MEASURED_SIDE_FOR_PLANAR_OFFSET_PROBE_CENTER = 2,
+  MEASURED_SIDE_FOR_PLANAR_OFFSET_BELOW_PLANE = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum MeasuredSideForRadialOffset {
+  MEASURED_SIDE_FOR_RADIAL_OFFSET_UNSPECIFIED = 0,
+  MEASURED_SIDE_FOR_RADIAL_OFFSET_INSIDE = 1,
+  MEASURED_SIDE_FOR_RADIAL_OFFSET_PROBE_CENTER = 2,
+  MEASURED_SIDE_FOR_RADIAL_OFFSET_OUTSIDE = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum MpDialogInteractionMode {
+  MP_DIALOG_INTERACTION_MODE_UNSPECIFIED = 0,
+  MP_DIALOG_INTERACTION_MODE_BLOCK_APPLICATION_INTERACTION = 1,
+  MP_DIALOG_INTERACTION_MODE_ALLOW_APPLICATION_INTERACTION = 2,
+  UNRECOGNIZED = -1,
+}
+
+export enum MpInteractionMode {
+  MP_INTERACTION_MODE_UNSPECIFIED = 0,
+  MP_INTERACTION_MODE_HALT_ON_FAILURE_ONLY = 1,
+  MP_INTERACTION_MODE_HALT_ON_FAILURE_OR_PARTIAL_SUCCESS = 2,
+  MP_INTERACTION_MODE_NEVER_HALT = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum NormalDirection {
+  NORMAL_DIRECTION_UNSPECIFIED = 0,
+  NORMAL_DIRECTION_PROBING_DIRECTION = 1,
+  NORMAL_DIRECTION_WORKING_ORIGIN_POSITIVE = 2,
+  NORMAL_DIRECTION_RIGHT_HAND_RULE = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum SaInteractionMode {
+  SA_INTERACTION_MODE_UNSPECIFIED = 0,
+  SA_INTERACTION_MODE_MANUAL = 1,
+  SA_INTERACTION_MODE_AUTOMATIC = 2,
+  SA_INTERACTION_MODE_SILENT = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum SlotType {
+  SLOT_TYPE_UNSPECIFIED = 0,
+  SLOT_TYPE_ROUND = 1,
+  SLOT_TYPE_SQUARE = 2,
+  UNRECOGNIZED = -1,
+}
+
+export enum SphereFitComputationMode {
+  SPHERE_FIT_COMPUTATION_MODE_UNSPECIFIED = 0,
+  SPHERE_FIT_COMPUTATION_MODE_STANDARD = 1,
+  SPHERE_FIT_COMPUTATION_MODE_MAX_INSCRIBED = 2,
+  SPHERE_FIT_COMPUTATION_MODE_MIN_CIRCUMSCRIBED = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum WindowState {
+  WINDOW_STATE_UNSPECIFIED = 0,
+  WINDOW_STATE_MAXIMIZE = 1,
+  WINDOW_STATE_MINIMIZE = 2,
+  WINDOW_STATE_RESTORE = 3,
+  WINDOW_STATE_SHOW = 4,
+  WINDOW_STATE_HIDE = 5,
+  UNRECOGNIZED = -1,
+}
+
+export interface ChartName {
+  name?: string | undefined;
+}
+
+export interface CollectionName {
+  name?: string | undefined;
+}
+
+export interface FrameName {
+  name?: string | undefined;
+}
+
+export interface ViewName {
+  name?: string | undefined;
+}
+
+export interface PointName {
+  collectionName?: string | undefined;
+  groupName?: string | undefined;
+  targetName?: string | undefined;
+}
+
+export interface CollectionInstrumentId {
+  collectionName?: string | undefined;
+  instrumentId?: number | undefined;
+}
+
+export interface CollectionGroupName {
+  collectionName?: string | undefined;
+  groupName?: string | undefined;
+}
+
 export interface CollectionObjectName {
   collectionName?: string | undefined;
   objectName?: string | undefined;
   objectType?: ObjectType | undefined;
 }
+
+export interface CollectionItemName {
+  collectionName?: string | undefined;
+  itemName?: string | undefined;
+  itemType?: ItemType | undefined;
+}
+
+export interface CollectionVectorGroupName {
+  collectionName?: string | undefined;
+  vectorGroupName?: string | undefined;
+}
+
+export interface VectorName {
+  collectionName?: string | undefined;
+  groupName?: string | undefined;
+  name?: string | undefined;
+}
+
+export interface Vector {
+  x?: number | undefined;
+  y?: number | undefined;
+  z?: number | undefined;
+}
+
+export interface Transform {
+  values?: number[] | undefined;
+}
+
+export interface WorldTransform {
+  transform?: Transform | undefined;
+  scaleFactor?: number | undefined;
+}
+
+export interface Color {
+  red?: number | undefined;
+  green?: number | undefined;
+  blue?: number | undefined;
+}
+
+export interface ColorizationOptions {
+  colorRangeMethod?: ColorRangeMethod | undefined;
+  baseHighColor?: BaseColorType | undefined;
+  baseMidColor?: BaseMidColorType | undefined;
+  baseLowColor?: BaseColorType | undefined;
+  drawTubes?: boolean | undefined;
+  drawArrowheads?: boolean | undefined;
+  indicateValues?: boolean | undefined;
+  vectorMagnification?: number | undefined;
+  vectorWidth?: number | undefined;
+  drawBlotches?: boolean | undefined;
+  blotchSize?: number | undefined;
+  showOutOfToleranceOnly?: boolean | undefined;
+  showColorBarInView?: boolean | undefined;
+  showColorBarPercentages?: boolean | undefined;
+  showColorBarFractions?: boolean | undefined;
+  highSaturationLimit?: number | undefined;
+  lowSaturationLimit?: number | undefined;
+  highTolerance?: number | undefined;
+  lowTolerance?: number | undefined;
+}
+
+export interface FileReference {
+  path?: string | undefined;
+  embeddedFile?: boolean | undefined;
+}
+
+export interface Font {
+  fontName?: string | undefined;
+  size?: number | undefined;
+  color?: Color | undefined;
+}
+
+export interface ScalarToleranceLimit {
+  enabled?: boolean | undefined;
+  value?: number | undefined;
+}
+
+export interface ToleranceLimit {
+  enabled?: boolean | undefined;
+  value?: number | undefined;
+}
+
+export interface ToleranceVectorOptions {
+  highX?: ToleranceLimit | undefined;
+  highY?: ToleranceLimit | undefined;
+  highZ?: ToleranceLimit | undefined;
+  highMagnitude?: ToleranceLimit | undefined;
+  lowX?: ToleranceLimit | undefined;
+  lowY?: ToleranceLimit | undefined;
+  lowZ?: ToleranceLimit | undefined;
+  lowMagnitude?: ToleranceLimit | undefined;
+}
+
+export interface FitConstraintScalarOptions {
+  high?: ScalarToleranceLimit | undefined;
+  low?: ScalarToleranceLimit | undefined;
+}
+
+export interface ToleranceScalarOptions {
+  high?: ScalarToleranceLimit | undefined;
+  low?: ScalarToleranceLimit | undefined;
+}
+
+export interface EmbeddedReportFile {
+  collectionName?: string | undefined;
+  fileName?: string | undefined;
+}
+
+export interface ReportOutputOptions {
+  outputType?: ReportOutputType | undefined;
+  destination?:
+    | { $case: "externalPath"; value: string }
+    | { $case: "embeddedFile"; value: EmbeddedReportFile }
+    | undefined;
+}
+
+export interface ReportViewOptions {
+  viewType?: ReportViewType | undefined;
+  collectionName?: string | undefined;
+  calloutName?: string | undefined;
+}
+
+export interface ProjectionOptions {
+  projectionType?: string | undefined;
+  ignoreEdgeProjections?: boolean | undefined;
+  overrideTargetOffsets?: boolean | undefined;
+  overrideTargetOffsetsValue?: number | undefined;
+  addExtraMaterialThickness?: boolean | undefined;
+  extraMaterialThicknessValue?: number | undefined;
+}
+
+export interface PointDeltaReportOptions {
+  coordinateSystem?: CoordinateSystemType | undefined;
+  detailsFormat?: string | undefined;
+  showPointA?: boolean | undefined;
+  showPointB?: boolean | undefined;
+  showDelta?: boolean | undefined;
+  showMagnitude?: boolean | undefined;
+  showComponent1?: boolean | undefined;
+  showComponent2?: boolean | undefined;
+  showComponent3?: boolean | undefined;
+  sortPointNames?: boolean | undefined;
+  showToleranceFields?: boolean | undefined;
+  colorizeInToleranceFields?: boolean | undefined;
+}
+
+function createBaseChartName(): ChartName {
+  return { name: undefined };
+}
+
+export const ChartName: MessageFns<ChartName> = {
+  encode(message: ChartName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ChartName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChartName();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ChartName>): ChartName {
+    return ChartName.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ChartName>): ChartName {
+    const message = createBaseChartName();
+    message.name = object.name ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCollectionName(): CollectionName {
+  return { name: undefined };
+}
+
+export const CollectionName: MessageFns<CollectionName> = {
+  encode(message: CollectionName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CollectionName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCollectionName();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CollectionName>): CollectionName {
+    return CollectionName.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CollectionName>): CollectionName {
+    const message = createBaseCollectionName();
+    message.name = object.name ?? undefined;
+    return message;
+  },
+};
+
+function createBaseFrameName(): FrameName {
+  return { name: undefined };
+}
+
+export const FrameName: MessageFns<FrameName> = {
+  encode(message: FrameName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FrameName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFrameName();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FrameName>): FrameName {
+    return FrameName.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FrameName>): FrameName {
+    const message = createBaseFrameName();
+    message.name = object.name ?? undefined;
+    return message;
+  },
+};
+
+function createBaseViewName(): ViewName {
+  return { name: undefined };
+}
+
+export const ViewName: MessageFns<ViewName> = {
+  encode(message: ViewName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ViewName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseViewName();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ViewName>): ViewName {
+    return ViewName.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ViewName>): ViewName {
+    const message = createBaseViewName();
+    message.name = object.name ?? undefined;
+    return message;
+  },
+};
+
+function createBasePointName(): PointName {
+  return { collectionName: undefined, groupName: undefined, targetName: undefined };
+}
+
+export const PointName: MessageFns<PointName> = {
+  encode(message: PointName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionName !== undefined) {
+      writer.uint32(10).string(message.collectionName);
+    }
+    if (message.groupName !== undefined) {
+      writer.uint32(18).string(message.groupName);
+    }
+    if (message.targetName !== undefined) {
+      writer.uint32(26).string(message.targetName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PointName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePointName();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.targetName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PointName>): PointName {
+    return PointName.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PointName>): PointName {
+    const message = createBasePointName();
+    message.collectionName = object.collectionName ?? undefined;
+    message.groupName = object.groupName ?? undefined;
+    message.targetName = object.targetName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCollectionInstrumentId(): CollectionInstrumentId {
+  return { collectionName: undefined, instrumentId: undefined };
+}
+
+export const CollectionInstrumentId: MessageFns<CollectionInstrumentId> = {
+  encode(message: CollectionInstrumentId, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionName !== undefined) {
+      writer.uint32(10).string(message.collectionName);
+    }
+    if (message.instrumentId !== undefined) {
+      writer.uint32(16).int32(message.instrumentId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CollectionInstrumentId {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCollectionInstrumentId();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.instrumentId = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CollectionInstrumentId>): CollectionInstrumentId {
+    return CollectionInstrumentId.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CollectionInstrumentId>): CollectionInstrumentId {
+    const message = createBaseCollectionInstrumentId();
+    message.collectionName = object.collectionName ?? undefined;
+    message.instrumentId = object.instrumentId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCollectionGroupName(): CollectionGroupName {
+  return { collectionName: undefined, groupName: undefined };
+}
+
+export const CollectionGroupName: MessageFns<CollectionGroupName> = {
+  encode(message: CollectionGroupName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionName !== undefined) {
+      writer.uint32(10).string(message.collectionName);
+    }
+    if (message.groupName !== undefined) {
+      writer.uint32(18).string(message.groupName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CollectionGroupName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCollectionGroupName();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CollectionGroupName>): CollectionGroupName {
+    return CollectionGroupName.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CollectionGroupName>): CollectionGroupName {
+    const message = createBaseCollectionGroupName();
+    message.collectionName = object.collectionName ?? undefined;
+    message.groupName = object.groupName ?? undefined;
+    return message;
+  },
+};
 
 function createBaseCollectionObjectName(): CollectionObjectName {
   return { collectionName: undefined, objectName: undefined, objectType: 0 };
@@ -112,6 +1050,1788 @@ export const CollectionObjectName: MessageFns<CollectionObjectName> = {
     message.collectionName = object.collectionName ?? undefined;
     message.objectName = object.objectName ?? undefined;
     message.objectType = object.objectType ?? 0;
+    return message;
+  },
+};
+
+function createBaseCollectionItemName(): CollectionItemName {
+  return { collectionName: undefined, itemName: undefined, itemType: undefined };
+}
+
+export const CollectionItemName: MessageFns<CollectionItemName> = {
+  encode(message: CollectionItemName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionName !== undefined) {
+      writer.uint32(10).string(message.collectionName);
+    }
+    if (message.itemName !== undefined) {
+      writer.uint32(18).string(message.itemName);
+    }
+    if (message.itemType !== undefined) {
+      writer.uint32(24).int32(message.itemType);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CollectionItemName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCollectionItemName();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.itemName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.itemType = reader.int32() as any;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CollectionItemName>): CollectionItemName {
+    return CollectionItemName.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CollectionItemName>): CollectionItemName {
+    const message = createBaseCollectionItemName();
+    message.collectionName = object.collectionName ?? undefined;
+    message.itemName = object.itemName ?? undefined;
+    message.itemType = object.itemType ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCollectionVectorGroupName(): CollectionVectorGroupName {
+  return { collectionName: undefined, vectorGroupName: undefined };
+}
+
+export const CollectionVectorGroupName: MessageFns<CollectionVectorGroupName> = {
+  encode(message: CollectionVectorGroupName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionName !== undefined) {
+      writer.uint32(10).string(message.collectionName);
+    }
+    if (message.vectorGroupName !== undefined) {
+      writer.uint32(18).string(message.vectorGroupName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CollectionVectorGroupName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCollectionVectorGroupName();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.vectorGroupName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CollectionVectorGroupName>): CollectionVectorGroupName {
+    return CollectionVectorGroupName.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CollectionVectorGroupName>): CollectionVectorGroupName {
+    const message = createBaseCollectionVectorGroupName();
+    message.collectionName = object.collectionName ?? undefined;
+    message.vectorGroupName = object.vectorGroupName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseVectorName(): VectorName {
+  return { collectionName: undefined, groupName: undefined, name: undefined };
+}
+
+export const VectorName: MessageFns<VectorName> = {
+  encode(message: VectorName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionName !== undefined) {
+      writer.uint32(10).string(message.collectionName);
+    }
+    if (message.groupName !== undefined) {
+      writer.uint32(18).string(message.groupName);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VectorName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVectorName();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<VectorName>): VectorName {
+    return VectorName.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<VectorName>): VectorName {
+    const message = createBaseVectorName();
+    message.collectionName = object.collectionName ?? undefined;
+    message.groupName = object.groupName ?? undefined;
+    message.name = object.name ?? undefined;
+    return message;
+  },
+};
+
+function createBaseVector(): Vector {
+  return { x: undefined, y: undefined, z: undefined };
+}
+
+export const Vector: MessageFns<Vector> = {
+  encode(message: Vector, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.x !== undefined) {
+      writer.uint32(9).double(message.x);
+    }
+    if (message.y !== undefined) {
+      writer.uint32(17).double(message.y);
+    }
+    if (message.z !== undefined) {
+      writer.uint32(25).double(message.z);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Vector {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVector();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.x = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.y = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.z = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Vector>): Vector {
+    return Vector.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<Vector>): Vector {
+    const message = createBaseVector();
+    message.x = object.x ?? undefined;
+    message.y = object.y ?? undefined;
+    message.z = object.z ?? undefined;
+    return message;
+  },
+};
+
+function createBaseTransform(): Transform {
+  return { values: [] };
+}
+
+export const Transform: MessageFns<Transform> = {
+  encode(message: Transform, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.values !== undefined && message.values.length !== 0) {
+      writer.uint32(10).fork();
+      for (const v of message.values) {
+        writer.double(v);
+      }
+      writer.join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Transform {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransform();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag === 9) {
+            message.values!.push(reader.double());
+
+            continue;
+          }
+
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.values!.push(reader.double());
+            }
+
+            continue;
+          }
+
+          break;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Transform>): Transform {
+    return Transform.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<Transform>): Transform {
+    const message = createBaseTransform();
+    message.values = object.values?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseWorldTransform(): WorldTransform {
+  return { transform: undefined, scaleFactor: undefined };
+}
+
+export const WorldTransform: MessageFns<WorldTransform> = {
+  encode(message: WorldTransform, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.transform !== undefined) {
+      Transform.encode(message.transform, writer.uint32(10).fork()).join();
+    }
+    if (message.scaleFactor !== undefined) {
+      writer.uint32(17).double(message.scaleFactor);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): WorldTransform {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWorldTransform();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.transform = Transform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.scaleFactor = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<WorldTransform>): WorldTransform {
+    return WorldTransform.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<WorldTransform>): WorldTransform {
+    const message = createBaseWorldTransform();
+    message.transform = (object.transform !== undefined && object.transform !== null)
+      ? Transform.fromPartial(object.transform)
+      : undefined;
+    message.scaleFactor = object.scaleFactor ?? undefined;
+    return message;
+  },
+};
+
+function createBaseColor(): Color {
+  return { red: undefined, green: undefined, blue: undefined };
+}
+
+export const Color: MessageFns<Color> = {
+  encode(message: Color, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.red !== undefined) {
+      writer.uint32(8).uint32(message.red);
+    }
+    if (message.green !== undefined) {
+      writer.uint32(16).uint32(message.green);
+    }
+    if (message.blue !== undefined) {
+      writer.uint32(24).uint32(message.blue);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Color {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseColor();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.red = reader.uint32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.green = reader.uint32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.blue = reader.uint32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Color>): Color {
+    return Color.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<Color>): Color {
+    const message = createBaseColor();
+    message.red = object.red ?? undefined;
+    message.green = object.green ?? undefined;
+    message.blue = object.blue ?? undefined;
+    return message;
+  },
+};
+
+function createBaseColorizationOptions(): ColorizationOptions {
+  return {
+    colorRangeMethod: undefined,
+    baseHighColor: undefined,
+    baseMidColor: undefined,
+    baseLowColor: undefined,
+    drawTubes: undefined,
+    drawArrowheads: undefined,
+    indicateValues: undefined,
+    vectorMagnification: undefined,
+    vectorWidth: undefined,
+    drawBlotches: undefined,
+    blotchSize: undefined,
+    showOutOfToleranceOnly: undefined,
+    showColorBarInView: undefined,
+    showColorBarPercentages: undefined,
+    showColorBarFractions: undefined,
+    highSaturationLimit: undefined,
+    lowSaturationLimit: undefined,
+    highTolerance: undefined,
+    lowTolerance: undefined,
+  };
+}
+
+export const ColorizationOptions: MessageFns<ColorizationOptions> = {
+  encode(message: ColorizationOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.colorRangeMethod !== undefined) {
+      writer.uint32(8).int32(message.colorRangeMethod);
+    }
+    if (message.baseHighColor !== undefined) {
+      writer.uint32(16).int32(message.baseHighColor);
+    }
+    if (message.baseMidColor !== undefined) {
+      writer.uint32(24).int32(message.baseMidColor);
+    }
+    if (message.baseLowColor !== undefined) {
+      writer.uint32(32).int32(message.baseLowColor);
+    }
+    if (message.drawTubes !== undefined) {
+      writer.uint32(40).bool(message.drawTubes);
+    }
+    if (message.drawArrowheads !== undefined) {
+      writer.uint32(48).bool(message.drawArrowheads);
+    }
+    if (message.indicateValues !== undefined) {
+      writer.uint32(56).bool(message.indicateValues);
+    }
+    if (message.vectorMagnification !== undefined) {
+      writer.uint32(65).double(message.vectorMagnification);
+    }
+    if (message.vectorWidth !== undefined) {
+      writer.uint32(72).int32(message.vectorWidth);
+    }
+    if (message.drawBlotches !== undefined) {
+      writer.uint32(80).bool(message.drawBlotches);
+    }
+    if (message.blotchSize !== undefined) {
+      writer.uint32(89).double(message.blotchSize);
+    }
+    if (message.showOutOfToleranceOnly !== undefined) {
+      writer.uint32(96).bool(message.showOutOfToleranceOnly);
+    }
+    if (message.showColorBarInView !== undefined) {
+      writer.uint32(104).bool(message.showColorBarInView);
+    }
+    if (message.showColorBarPercentages !== undefined) {
+      writer.uint32(112).bool(message.showColorBarPercentages);
+    }
+    if (message.showColorBarFractions !== undefined) {
+      writer.uint32(120).bool(message.showColorBarFractions);
+    }
+    if (message.highSaturationLimit !== undefined) {
+      writer.uint32(129).double(message.highSaturationLimit);
+    }
+    if (message.lowSaturationLimit !== undefined) {
+      writer.uint32(137).double(message.lowSaturationLimit);
+    }
+    if (message.highTolerance !== undefined) {
+      writer.uint32(145).double(message.highTolerance);
+    }
+    if (message.lowTolerance !== undefined) {
+      writer.uint32(153).double(message.lowTolerance);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ColorizationOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseColorizationOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.colorRangeMethod = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.baseHighColor = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.baseMidColor = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.baseLowColor = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.drawTubes = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.drawArrowheads = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.indicateValues = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 65) {
+            break;
+          }
+
+          message.vectorMagnification = reader.double();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.vectorWidth = reader.int32();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.drawBlotches = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 89) {
+            break;
+          }
+
+          message.blotchSize = reader.double();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.showOutOfToleranceOnly = reader.bool();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.showColorBarInView = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.showColorBarPercentages = reader.bool();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.showColorBarFractions = reader.bool();
+          continue;
+        }
+        case 16: {
+          if (tag !== 129) {
+            break;
+          }
+
+          message.highSaturationLimit = reader.double();
+          continue;
+        }
+        case 17: {
+          if (tag !== 137) {
+            break;
+          }
+
+          message.lowSaturationLimit = reader.double();
+          continue;
+        }
+        case 18: {
+          if (tag !== 145) {
+            break;
+          }
+
+          message.highTolerance = reader.double();
+          continue;
+        }
+        case 19: {
+          if (tag !== 153) {
+            break;
+          }
+
+          message.lowTolerance = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ColorizationOptions>): ColorizationOptions {
+    return ColorizationOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ColorizationOptions>): ColorizationOptions {
+    const message = createBaseColorizationOptions();
+    message.colorRangeMethod = object.colorRangeMethod ?? undefined;
+    message.baseHighColor = object.baseHighColor ?? undefined;
+    message.baseMidColor = object.baseMidColor ?? undefined;
+    message.baseLowColor = object.baseLowColor ?? undefined;
+    message.drawTubes = object.drawTubes ?? undefined;
+    message.drawArrowheads = object.drawArrowheads ?? undefined;
+    message.indicateValues = object.indicateValues ?? undefined;
+    message.vectorMagnification = object.vectorMagnification ?? undefined;
+    message.vectorWidth = object.vectorWidth ?? undefined;
+    message.drawBlotches = object.drawBlotches ?? undefined;
+    message.blotchSize = object.blotchSize ?? undefined;
+    message.showOutOfToleranceOnly = object.showOutOfToleranceOnly ?? undefined;
+    message.showColorBarInView = object.showColorBarInView ?? undefined;
+    message.showColorBarPercentages = object.showColorBarPercentages ?? undefined;
+    message.showColorBarFractions = object.showColorBarFractions ?? undefined;
+    message.highSaturationLimit = object.highSaturationLimit ?? undefined;
+    message.lowSaturationLimit = object.lowSaturationLimit ?? undefined;
+    message.highTolerance = object.highTolerance ?? undefined;
+    message.lowTolerance = object.lowTolerance ?? undefined;
+    return message;
+  },
+};
+
+function createBaseFileReference(): FileReference {
+  return { path: undefined, embeddedFile: undefined };
+}
+
+export const FileReference: MessageFns<FileReference> = {
+  encode(message: FileReference, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.path !== undefined) {
+      writer.uint32(10).string(message.path);
+    }
+    if (message.embeddedFile !== undefined) {
+      writer.uint32(16).bool(message.embeddedFile);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FileReference {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFileReference();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.path = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.embeddedFile = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FileReference>): FileReference {
+    return FileReference.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FileReference>): FileReference {
+    const message = createBaseFileReference();
+    message.path = object.path ?? undefined;
+    message.embeddedFile = object.embeddedFile ?? undefined;
+    return message;
+  },
+};
+
+function createBaseFont(): Font {
+  return { fontName: undefined, size: undefined, color: undefined };
+}
+
+export const Font: MessageFns<Font> = {
+  encode(message: Font, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fontName !== undefined) {
+      writer.uint32(10).string(message.fontName);
+    }
+    if (message.size !== undefined) {
+      writer.uint32(16).uint32(message.size);
+    }
+    if (message.color !== undefined) {
+      Color.encode(message.color, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Font {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFont();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fontName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.size = reader.uint32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.color = Color.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Font>): Font {
+    return Font.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<Font>): Font {
+    const message = createBaseFont();
+    message.fontName = object.fontName ?? undefined;
+    message.size = object.size ?? undefined;
+    message.color = (object.color !== undefined && object.color !== null) ? Color.fromPartial(object.color) : undefined;
+    return message;
+  },
+};
+
+function createBaseScalarToleranceLimit(): ScalarToleranceLimit {
+  return { enabled: undefined, value: undefined };
+}
+
+export const ScalarToleranceLimit: MessageFns<ScalarToleranceLimit> = {
+  encode(message: ScalarToleranceLimit, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.enabled !== undefined) {
+      writer.uint32(8).bool(message.enabled);
+    }
+    if (message.value !== undefined) {
+      writer.uint32(17).double(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ScalarToleranceLimit {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseScalarToleranceLimit();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.enabled = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.value = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ScalarToleranceLimit>): ScalarToleranceLimit {
+    return ScalarToleranceLimit.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ScalarToleranceLimit>): ScalarToleranceLimit {
+    const message = createBaseScalarToleranceLimit();
+    message.enabled = object.enabled ?? undefined;
+    message.value = object.value ?? undefined;
+    return message;
+  },
+};
+
+function createBaseToleranceLimit(): ToleranceLimit {
+  return { enabled: undefined, value: undefined };
+}
+
+export const ToleranceLimit: MessageFns<ToleranceLimit> = {
+  encode(message: ToleranceLimit, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.enabled !== undefined) {
+      writer.uint32(8).bool(message.enabled);
+    }
+    if (message.value !== undefined) {
+      writer.uint32(17).double(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ToleranceLimit {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseToleranceLimit();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.enabled = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.value = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ToleranceLimit>): ToleranceLimit {
+    return ToleranceLimit.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ToleranceLimit>): ToleranceLimit {
+    const message = createBaseToleranceLimit();
+    message.enabled = object.enabled ?? undefined;
+    message.value = object.value ?? undefined;
+    return message;
+  },
+};
+
+function createBaseToleranceVectorOptions(): ToleranceVectorOptions {
+  return {
+    highX: undefined,
+    highY: undefined,
+    highZ: undefined,
+    highMagnitude: undefined,
+    lowX: undefined,
+    lowY: undefined,
+    lowZ: undefined,
+    lowMagnitude: undefined,
+  };
+}
+
+export const ToleranceVectorOptions: MessageFns<ToleranceVectorOptions> = {
+  encode(message: ToleranceVectorOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.highX !== undefined) {
+      ToleranceLimit.encode(message.highX, writer.uint32(10).fork()).join();
+    }
+    if (message.highY !== undefined) {
+      ToleranceLimit.encode(message.highY, writer.uint32(18).fork()).join();
+    }
+    if (message.highZ !== undefined) {
+      ToleranceLimit.encode(message.highZ, writer.uint32(26).fork()).join();
+    }
+    if (message.highMagnitude !== undefined) {
+      ToleranceLimit.encode(message.highMagnitude, writer.uint32(34).fork()).join();
+    }
+    if (message.lowX !== undefined) {
+      ToleranceLimit.encode(message.lowX, writer.uint32(42).fork()).join();
+    }
+    if (message.lowY !== undefined) {
+      ToleranceLimit.encode(message.lowY, writer.uint32(50).fork()).join();
+    }
+    if (message.lowZ !== undefined) {
+      ToleranceLimit.encode(message.lowZ, writer.uint32(58).fork()).join();
+    }
+    if (message.lowMagnitude !== undefined) {
+      ToleranceLimit.encode(message.lowMagnitude, writer.uint32(66).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ToleranceVectorOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseToleranceVectorOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.highX = ToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.highY = ToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.highZ = ToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.highMagnitude = ToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.lowX = ToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.lowY = ToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.lowZ = ToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.lowMagnitude = ToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ToleranceVectorOptions>): ToleranceVectorOptions {
+    return ToleranceVectorOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ToleranceVectorOptions>): ToleranceVectorOptions {
+    const message = createBaseToleranceVectorOptions();
+    message.highX = (object.highX !== undefined && object.highX !== null)
+      ? ToleranceLimit.fromPartial(object.highX)
+      : undefined;
+    message.highY = (object.highY !== undefined && object.highY !== null)
+      ? ToleranceLimit.fromPartial(object.highY)
+      : undefined;
+    message.highZ = (object.highZ !== undefined && object.highZ !== null)
+      ? ToleranceLimit.fromPartial(object.highZ)
+      : undefined;
+    message.highMagnitude = (object.highMagnitude !== undefined && object.highMagnitude !== null)
+      ? ToleranceLimit.fromPartial(object.highMagnitude)
+      : undefined;
+    message.lowX = (object.lowX !== undefined && object.lowX !== null)
+      ? ToleranceLimit.fromPartial(object.lowX)
+      : undefined;
+    message.lowY = (object.lowY !== undefined && object.lowY !== null)
+      ? ToleranceLimit.fromPartial(object.lowY)
+      : undefined;
+    message.lowZ = (object.lowZ !== undefined && object.lowZ !== null)
+      ? ToleranceLimit.fromPartial(object.lowZ)
+      : undefined;
+    message.lowMagnitude = (object.lowMagnitude !== undefined && object.lowMagnitude !== null)
+      ? ToleranceLimit.fromPartial(object.lowMagnitude)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseFitConstraintScalarOptions(): FitConstraintScalarOptions {
+  return { high: undefined, low: undefined };
+}
+
+export const FitConstraintScalarOptions: MessageFns<FitConstraintScalarOptions> = {
+  encode(message: FitConstraintScalarOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.high !== undefined) {
+      ScalarToleranceLimit.encode(message.high, writer.uint32(10).fork()).join();
+    }
+    if (message.low !== undefined) {
+      ScalarToleranceLimit.encode(message.low, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FitConstraintScalarOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFitConstraintScalarOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.high = ScalarToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.low = ScalarToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FitConstraintScalarOptions>): FitConstraintScalarOptions {
+    return FitConstraintScalarOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FitConstraintScalarOptions>): FitConstraintScalarOptions {
+    const message = createBaseFitConstraintScalarOptions();
+    message.high = (object.high !== undefined && object.high !== null)
+      ? ScalarToleranceLimit.fromPartial(object.high)
+      : undefined;
+    message.low = (object.low !== undefined && object.low !== null)
+      ? ScalarToleranceLimit.fromPartial(object.low)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseToleranceScalarOptions(): ToleranceScalarOptions {
+  return { high: undefined, low: undefined };
+}
+
+export const ToleranceScalarOptions: MessageFns<ToleranceScalarOptions> = {
+  encode(message: ToleranceScalarOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.high !== undefined) {
+      ScalarToleranceLimit.encode(message.high, writer.uint32(10).fork()).join();
+    }
+    if (message.low !== undefined) {
+      ScalarToleranceLimit.encode(message.low, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ToleranceScalarOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseToleranceScalarOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.high = ScalarToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.low = ScalarToleranceLimit.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ToleranceScalarOptions>): ToleranceScalarOptions {
+    return ToleranceScalarOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ToleranceScalarOptions>): ToleranceScalarOptions {
+    const message = createBaseToleranceScalarOptions();
+    message.high = (object.high !== undefined && object.high !== null)
+      ? ScalarToleranceLimit.fromPartial(object.high)
+      : undefined;
+    message.low = (object.low !== undefined && object.low !== null)
+      ? ScalarToleranceLimit.fromPartial(object.low)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseEmbeddedReportFile(): EmbeddedReportFile {
+  return { collectionName: undefined, fileName: undefined };
+}
+
+export const EmbeddedReportFile: MessageFns<EmbeddedReportFile> = {
+  encode(message: EmbeddedReportFile, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionName !== undefined) {
+      writer.uint32(10).string(message.collectionName);
+    }
+    if (message.fileName !== undefined) {
+      writer.uint32(18).string(message.fileName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): EmbeddedReportFile {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEmbeddedReportFile();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.fileName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<EmbeddedReportFile>): EmbeddedReportFile {
+    return EmbeddedReportFile.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<EmbeddedReportFile>): EmbeddedReportFile {
+    const message = createBaseEmbeddedReportFile();
+    message.collectionName = object.collectionName ?? undefined;
+    message.fileName = object.fileName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseReportOutputOptions(): ReportOutputOptions {
+  return { outputType: undefined, destination: undefined };
+}
+
+export const ReportOutputOptions: MessageFns<ReportOutputOptions> = {
+  encode(message: ReportOutputOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.outputType !== undefined) {
+      writer.uint32(8).int32(message.outputType);
+    }
+    switch (message.destination?.$case) {
+      case "externalPath":
+        writer.uint32(18).string(message.destination.value);
+        break;
+      case "embeddedFile":
+        EmbeddedReportFile.encode(message.destination.value, writer.uint32(26).fork()).join();
+        break;
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReportOutputOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReportOutputOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.outputType = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.destination = { $case: "externalPath", value: reader.string() };
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.destination = { $case: "embeddedFile", value: EmbeddedReportFile.decode(reader, reader.uint32()) };
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReportOutputOptions>): ReportOutputOptions {
+    return ReportOutputOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReportOutputOptions>): ReportOutputOptions {
+    const message = createBaseReportOutputOptions();
+    message.outputType = object.outputType ?? undefined;
+    switch (object.destination?.$case) {
+      case "externalPath": {
+        if (object.destination?.value !== undefined && object.destination?.value !== null) {
+          message.destination = { $case: "externalPath", value: object.destination.value };
+        }
+        break;
+      }
+      case "embeddedFile": {
+        if (object.destination?.value !== undefined && object.destination?.value !== null) {
+          message.destination = {
+            $case: "embeddedFile",
+            value: EmbeddedReportFile.fromPartial(object.destination.value),
+          };
+        }
+        break;
+      }
+    }
+    return message;
+  },
+};
+
+function createBaseReportViewOptions(): ReportViewOptions {
+  return { viewType: undefined, collectionName: undefined, calloutName: undefined };
+}
+
+export const ReportViewOptions: MessageFns<ReportViewOptions> = {
+  encode(message: ReportViewOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.viewType !== undefined) {
+      writer.uint32(8).int32(message.viewType);
+    }
+    if (message.collectionName !== undefined) {
+      writer.uint32(18).string(message.collectionName);
+    }
+    if (message.calloutName !== undefined) {
+      writer.uint32(26).string(message.calloutName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReportViewOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReportViewOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.viewType = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.collectionName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.calloutName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReportViewOptions>): ReportViewOptions {
+    return ReportViewOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReportViewOptions>): ReportViewOptions {
+    const message = createBaseReportViewOptions();
+    message.viewType = object.viewType ?? undefined;
+    message.collectionName = object.collectionName ?? undefined;
+    message.calloutName = object.calloutName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseProjectionOptions(): ProjectionOptions {
+  return {
+    projectionType: undefined,
+    ignoreEdgeProjections: undefined,
+    overrideTargetOffsets: undefined,
+    overrideTargetOffsetsValue: undefined,
+    addExtraMaterialThickness: undefined,
+    extraMaterialThicknessValue: undefined,
+  };
+}
+
+export const ProjectionOptions: MessageFns<ProjectionOptions> = {
+  encode(message: ProjectionOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.projectionType !== undefined) {
+      writer.uint32(10).string(message.projectionType);
+    }
+    if (message.ignoreEdgeProjections !== undefined) {
+      writer.uint32(16).bool(message.ignoreEdgeProjections);
+    }
+    if (message.overrideTargetOffsets !== undefined) {
+      writer.uint32(24).bool(message.overrideTargetOffsets);
+    }
+    if (message.overrideTargetOffsetsValue !== undefined) {
+      writer.uint32(33).double(message.overrideTargetOffsetsValue);
+    }
+    if (message.addExtraMaterialThickness !== undefined) {
+      writer.uint32(40).bool(message.addExtraMaterialThickness);
+    }
+    if (message.extraMaterialThicknessValue !== undefined) {
+      writer.uint32(49).double(message.extraMaterialThicknessValue);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ProjectionOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseProjectionOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.projectionType = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.ignoreEdgeProjections = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.overrideTargetOffsets = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.overrideTargetOffsetsValue = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.addExtraMaterialThickness = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.extraMaterialThicknessValue = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ProjectionOptions>): ProjectionOptions {
+    return ProjectionOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ProjectionOptions>): ProjectionOptions {
+    const message = createBaseProjectionOptions();
+    message.projectionType = object.projectionType ?? undefined;
+    message.ignoreEdgeProjections = object.ignoreEdgeProjections ?? undefined;
+    message.overrideTargetOffsets = object.overrideTargetOffsets ?? undefined;
+    message.overrideTargetOffsetsValue = object.overrideTargetOffsetsValue ?? undefined;
+    message.addExtraMaterialThickness = object.addExtraMaterialThickness ?? undefined;
+    message.extraMaterialThicknessValue = object.extraMaterialThicknessValue ?? undefined;
+    return message;
+  },
+};
+
+function createBasePointDeltaReportOptions(): PointDeltaReportOptions {
+  return {
+    coordinateSystem: undefined,
+    detailsFormat: undefined,
+    showPointA: undefined,
+    showPointB: undefined,
+    showDelta: undefined,
+    showMagnitude: undefined,
+    showComponent1: undefined,
+    showComponent2: undefined,
+    showComponent3: undefined,
+    sortPointNames: undefined,
+    showToleranceFields: undefined,
+    colorizeInToleranceFields: undefined,
+  };
+}
+
+export const PointDeltaReportOptions: MessageFns<PointDeltaReportOptions> = {
+  encode(message: PointDeltaReportOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.coordinateSystem !== undefined) {
+      writer.uint32(8).int32(message.coordinateSystem);
+    }
+    if (message.detailsFormat !== undefined) {
+      writer.uint32(18).string(message.detailsFormat);
+    }
+    if (message.showPointA !== undefined) {
+      writer.uint32(24).bool(message.showPointA);
+    }
+    if (message.showPointB !== undefined) {
+      writer.uint32(32).bool(message.showPointB);
+    }
+    if (message.showDelta !== undefined) {
+      writer.uint32(40).bool(message.showDelta);
+    }
+    if (message.showMagnitude !== undefined) {
+      writer.uint32(48).bool(message.showMagnitude);
+    }
+    if (message.showComponent1 !== undefined) {
+      writer.uint32(56).bool(message.showComponent1);
+    }
+    if (message.showComponent2 !== undefined) {
+      writer.uint32(64).bool(message.showComponent2);
+    }
+    if (message.showComponent3 !== undefined) {
+      writer.uint32(72).bool(message.showComponent3);
+    }
+    if (message.sortPointNames !== undefined) {
+      writer.uint32(80).bool(message.sortPointNames);
+    }
+    if (message.showToleranceFields !== undefined) {
+      writer.uint32(88).bool(message.showToleranceFields);
+    }
+    if (message.colorizeInToleranceFields !== undefined) {
+      writer.uint32(96).bool(message.colorizeInToleranceFields);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PointDeltaReportOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePointDeltaReportOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.coordinateSystem = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.detailsFormat = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.showPointA = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.showPointB = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.showDelta = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.showMagnitude = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.showComponent1 = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.showComponent2 = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.showComponent3 = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.sortPointNames = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.showToleranceFields = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.colorizeInToleranceFields = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PointDeltaReportOptions>): PointDeltaReportOptions {
+    return PointDeltaReportOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PointDeltaReportOptions>): PointDeltaReportOptions {
+    const message = createBasePointDeltaReportOptions();
+    message.coordinateSystem = object.coordinateSystem ?? undefined;
+    message.detailsFormat = object.detailsFormat ?? undefined;
+    message.showPointA = object.showPointA ?? undefined;
+    message.showPointB = object.showPointB ?? undefined;
+    message.showDelta = object.showDelta ?? undefined;
+    message.showMagnitude = object.showMagnitude ?? undefined;
+    message.showComponent1 = object.showComponent1 ?? undefined;
+    message.showComponent2 = object.showComponent2 ?? undefined;
+    message.showComponent3 = object.showComponent3 ?? undefined;
+    message.sortPointNames = object.sortPointNames ?? undefined;
+    message.showToleranceFields = object.showToleranceFields ?? undefined;
+    message.colorizeInToleranceFields = object.colorizeInToleranceFields ?? undefined;
     return message;
   },
 };

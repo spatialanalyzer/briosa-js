@@ -19,49 +19,4627 @@ import {
   type UntypedServiceImplementation,
 } from "@grpc/grpc-js";
 import { MpExecutionDetails } from "./operation_outcomes.js";
+import {
+  CollectionItemName,
+  CollectionObjectName,
+  ColorizationOptions,
+  CompTechnique,
+  DegreeOfFreedom,
+  FileReference,
+  FitMethod,
+  FrameName,
+  GeometryType,
+  MeasuredSideForPlanarOffset,
+  MeasuredSideForRadialOffset,
+  NormalDirection,
+  ObjectType,
+  PointName,
+  ProjectionOptions,
+  SlotType,
+  SphereFitComputationMode,
+  ToleranceVectorOptions,
+  Transform,
+  Vector,
+  WorldTransform,
+} from "./spatial_analyzer_values.js";
 
-export interface GetIThCollectionNameRequest {
-  /** The zero-based MP argument named "Collection Index". */
-  collectionIndex?: number | undefined;
+export interface AngleBetweenLineAndPlaneRequest {
+  selectedLine?: CollectionObjectName | undefined;
+  selectedPlane?: CollectionObjectName | undefined;
+  nominalAngle?: number | undefined;
+  angleTolerance00ForNone?: number | undefined;
 }
 
-export interface GetIThCollectionNameResult {
-  /** The MP return argument named "Resultant Name". */
-  resultantName?:
-    | string
-    | undefined;
-  /** Explicit MP and result-only argument retrieval outcome. */
+export interface AngleBetweenLineAndPlaneResult {
+  angle?: number | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
+export interface AngleBetweenTwoLinesRequest {
+  line1?: CollectionObjectName | undefined;
+  line2?: CollectionObjectName | undefined;
+  nominalAngle?: number | undefined;
+  angleTolerance00ForNone?: number | undefined;
+}
+
+export interface AngleBetweenTwoLinesResult {
+  angle?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface AngleBetweenTwoPlanesNormalsRequest {
+  planeA?: CollectionObjectName | undefined;
+  planeB?: CollectionObjectName | undefined;
+  nominalAngle?: number | undefined;
+  angleTolerance00ForNone?: number | undefined;
+}
+
+export interface AngleBetweenTwoPlanesNormalsResult {
+  angle?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface BestFitTransformationGroupToGroupRequest {
+  referenceGroup?: CollectionObjectName | undefined;
+  correspondingGroup?: CollectionObjectName | undefined;
+  showInterface?: boolean | undefined;
+  rmsTolerance00ForNone?: number | undefined;
+  maximumAbsoluteTolerance00ForNone?: number | undefined;
+  allowScale?: boolean | undefined;
+  allowX?: boolean | undefined;
+  allowY?: boolean | undefined;
+  allowZ?: boolean | undefined;
+  allowRx?: boolean | undefined;
+  allowRy?: boolean | undefined;
+  allowRz?: boolean | undefined;
+  lockDegreesOfFreedom?: boolean | undefined;
+  generateEvent?: boolean | undefined;
+  filePathForCsvTextReportRequiresShowInterfaceTrue?: FileReference | undefined;
+}
+
+export interface BestFitTransformationGroupToGroupResult {
+  transformInWorking?: Transform | undefined;
+  optimumTransform?: WorldTransform | undefined;
+  rmsDeviation?: number | undefined;
+  maximumAbsoluteDeviation?: number | undefined;
+  numberOfUnknowns?: number | undefined;
+  numberOfEquations?: number | undefined;
+  robustness?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ComputeGroupToGroupOrientationRxRyRzRequest {
+  referenceGroup?: CollectionObjectName | undefined;
+  correspondingGroup?: CollectionObjectName | undefined;
+}
+
+export interface ComputeGroupToGroupOrientationRxRyRzResult {
+  rx?: number | undefined;
+  ry?: number | undefined;
+  rz?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface CreatePointUncertaintyCloudPointSetsRequest {
+  pointNameList?: PointName[] | undefined;
+  numberOfSamples?: number | undefined;
+  uncertaintyReferenceFrameMode?: string | undefined;
+  groupingMode?: string | undefined;
+  pointSetMode?: string | undefined;
+}
+
+export interface CreatePointUncertaintyCloudPointSetsResult {
+  pointGroups?: CollectionObjectName[] | undefined;
+  pointSets?: CollectionObjectName[] | undefined;
+  pointClouds?: CollectionObjectName[] | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface CreatePointUncertaintyFieldsRequest {
+  pointNameList?: PointName[] | undefined;
+  numberOfSamples?: number | undefined;
+}
+
+export interface CreatePointUncertaintyFieldsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface FitGeometryToPointGroupRequest {
+  geometryType?: GeometryType | undefined;
+  groupToFit?: CollectionObjectName | undefined;
+  resultingObjectName?: CollectionObjectName | undefined;
+  fitProfileName?: string | undefined;
+  reportDeviations?: boolean | undefined;
+  fitInterfaceTolerance10UseProfile?: number | undefined;
+  ignoreOutOfTolerancePoints?: boolean | undefined;
+  startingConditionGeometryOptional?: CollectionObjectName | undefined;
+}
+
+export interface FitGeometryToPointGroupResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface FitGeometryToPointGroupProjectedToPlaneRequest {
+  geometryType?: GeometryType | undefined;
+  groupToFit?: CollectionObjectName | undefined;
+  planeName?: CollectionObjectName | undefined;
+  resultingObjectName?: CollectionObjectName | undefined;
+  fitProfileName?: string | undefined;
+  reportDeviations?: boolean | undefined;
+  fitInterfaceTolerance10UseProfile?: number | undefined;
+  ignoreOutOfTolerancePoints?: boolean | undefined;
+  startingConditionGeometryOptional?: CollectionObjectName | undefined;
+}
+
+export interface FitGeometryToPointGroupProjectedToPlaneResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface FitGeometryToPointsRequest {
+  geometryType?: GeometryType | undefined;
+  pointsToFit?: PointName[] | undefined;
+  resultingObjectName?: CollectionObjectName | undefined;
+  fitProfileName?: string | undefined;
+  reportDeviations?: boolean | undefined;
+  fitInterfaceTolerance10UseProfile?: number | undefined;
+  ignoreOutOfTolerancePoints?: boolean | undefined;
+  startingConditionGeometryOptional?: CollectionObjectName | undefined;
+}
+
+export interface FitGeometryToPointsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetBSplinePropertiesRequest {
+  bSplineName?: CollectionObjectName | undefined;
+}
+
+export interface GetBSplinePropertiesResult {
+  degree?: number | undefined;
+  knots?: number | undefined;
+  controlPoints?: number | undefined;
+  rangeMin?: number | undefined;
+  rangeMax?: number | undefined;
+  length?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetCirclePropertiesRequest {
+  circleName?: CollectionObjectName | undefined;
+}
+
+export interface GetCirclePropertiesResult {
+  centerCoordinate?: Vector | undefined;
+  normalDirection?: Vector | undefined;
+  radius?: number | undefined;
+  diameter?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetConePropertiesRequest {
+  coneName?: CollectionObjectName | undefined;
+}
+
+export interface GetConePropertiesResult {
+  coneEndPointInWorkingCoordinates?: Vector | undefined;
+  coneAxisInWorkingCoordinates?: Vector | undefined;
+  coneLength?: number | undefined;
+  coneThetaStart?: number | undefined;
+  coneThetaSpan?: number | undefined;
+  coneIncludedAngle?: number | undefined;
+  cutLengthFromApex?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetCoordinateForIthPointInPointSetRequest {
+  pointSet?: CollectionObjectName | undefined;
+  pointSetIndex?: number | undefined;
+}
+
+export interface GetCoordinateForIthPointInPointSetResult {
+  pointName?: string | undefined;
+  pointCoordinates?: Vector | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetCylinderPropertiesRequest {
+  cylinderName?: CollectionObjectName | undefined;
+}
+
+export interface GetCylinderPropertiesResult {
+  beginCoordinate?: Vector | undefined;
+  endCoordinate?: Vector | undefined;
+  axisDirection?: Vector | undefined;
+  length?: number | undefined;
+  radius?: number | undefined;
+  diameter?: number | undefined;
+  nominalsPointInward?: boolean | undefined;
+  facets?: number | undefined;
+  enableThetaExtentDisplayMode?: boolean | undefined;
+  thetaStartInDegrees?: number | undefined;
+  thetaSpanInDegrees?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetEllipsePropertiesRequest {
+  ellipseName?: CollectionObjectName | undefined;
+}
+
+export interface GetEllipsePropertiesResult {
+  centerCoordinate?: Vector | undefined;
+  normalDirection?: Vector | undefined;
+  majorAxisRadius?: number | undefined;
+  minorAxisRadius?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetEulerParametersForFrameRequest {
+  frame?: CollectionObjectName | undefined;
+}
+
+export interface GetEulerParametersForFrameResult {
+  x?: number | undefined;
+  y?: number | undefined;
+  z?: number | undefined;
+  e1?: number | undefined;
+  e2?: number | undefined;
+  e3?: number | undefined;
+  e4?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetEulerParametersForIthFrameInFrameSetRequest {
+  frameSet?: CollectionObjectName | undefined;
+  frameSetIndex?: number | undefined;
+}
+
+export interface GetEulerParametersForIthFrameInFrameSetResult {
+  x?: number | undefined;
+  y?: number | undefined;
+  z?: number | undefined;
+  e1?: number | undefined;
+  e2?: number | undefined;
+  e3?: number | undefined;
+  e4?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetIthCollectionNameRequest {
+  collectionIndex?: number | undefined;
+}
+
+export interface GetIthCollectionNameResult {
+  resultantName?: string | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetIthPointFromGroupRequest {
+  groupName?: CollectionObjectName | undefined;
+  pointIndex?: number | undefined;
+}
+
+export interface GetIthPointFromGroupResult {
+  completePointName?: PointName | undefined;
+  pointNameOnly?: string | undefined;
+  vectorInWorking?: Vector | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetLinePropertiesRequest {
+  lineName?: CollectionObjectName | undefined;
+}
+
+export interface GetLinePropertiesResult {
+  beginCoordinate?: Vector | undefined;
+  endCoordinate?: Vector | undefined;
+  deltaComponents?: Vector | undefined;
+  length?: number | undefined;
+  angleAboutXFromYInYzPlane?: number | undefined;
+  angleAboutYFromZInXzPlane?: number | undefined;
+  angleAboutZFromXInXyPlane?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetMeasurementAuxiliaryDataRequest {
+  pointName?: PointName | undefined;
+  auxiliaryName?: string | undefined;
+}
+
+export interface GetMeasurementAuxiliaryDataResult {
+  value?: number | undefined;
+  units?: string | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetMeasurementInfoDataRequest {
+  pointName?: PointName | undefined;
+}
+
+export interface GetMeasurementInfoDataResult {
+  infoData?: string | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetMeasurementWeatherDataRequest {
+  pointName?: PointName | undefined;
+}
+
+export interface GetMeasurementWeatherDataResult {
+  temperatureDegF?: number | undefined;
+  pressureInHg?: number | undefined;
+  humidityRh?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+/** No MP inputs. */
 export interface GetNumberOfCollectionsRequest {
 }
 
 export interface GetNumberOfCollectionsResult {
-  /** The MP return argument named "Total Count". */
-  totalCount?:
-    | number
-    | undefined;
-  /** Explicit MP and result-only argument retrieval outcome. */
+  totalCount?: number | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
-function createBaseGetIThCollectionNameRequest(): GetIThCollectionNameRequest {
+export interface GetNumberOfFramesInFrameSetRequest {
+  frameSetContainer?: CollectionObjectName | undefined;
+}
+
+export interface GetNumberOfFramesInFrameSetResult {
+  totalCount?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetNumberOfPointsInGroupRequest {
+  groupName?: CollectionObjectName | undefined;
+}
+
+export interface GetNumberOfPointsInGroupResult {
+  totalCount?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetNumberOfPointsInPointSetRequest {
+  pointSetContainer?: CollectionObjectName | undefined;
+}
+
+export interface GetNumberOfPointsInPointSetResult {
+  totalCount?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetObjectReportingFrameRequest {
+  objectName?: CollectionObjectName | undefined;
+}
+
+export interface GetObjectReportingFrameResult {
+  reportingFrame?: CollectionObjectName | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPlanePropertiesRequest {
+  planeName?: CollectionObjectName | undefined;
+}
+
+export interface GetPlanePropertiesResult {
+  normalDirection?: Vector | undefined;
+  pointOnPlane?: Vector | undefined;
+  dParameter?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointCoordinateRequest {
+  pointName?: PointName | undefined;
+}
+
+export interface GetPointCoordinateResult {
+  vectorRepresentation?: Vector | undefined;
+  xValue?: number | undefined;
+  yValue?: number | undefined;
+  zValue?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointCoordinateCylindricalRequest {
+  pointName?: PointName | undefined;
+}
+
+export interface GetPointCoordinateCylindricalResult {
+  radiusValue?: number | undefined;
+  thetaValue?: number | undefined;
+  zValue?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointCoordinatePolarRequest {
+  pointName?: PointName | undefined;
+}
+
+export interface GetPointCoordinatePolarResult {
+  radiusValue?: number | undefined;
+  thetaValue?: number | undefined;
+  phiValue?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointPropertiesRequest {
+  pointName?: PointName | undefined;
+}
+
+export interface GetPointPropertiesResult {
+  planarOffset?: number | undefined;
+  radialOffset?: number | undefined;
+  ux?: number | undefined;
+  uy?: number | undefined;
+  uz?: number | undefined;
+  umag?: number | undefined;
+  positionTolerance?: ToleranceVectorOptions | undefined;
+  componentWeights?: Vector | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointToLineDistanceRequest {
+  point?: PointName | undefined;
+  line?: CollectionObjectName | undefined;
+}
+
+export interface GetPointToLineDistanceResult {
+  vectorRepresentation?: Vector | undefined;
+  xValue?: number | undefined;
+  yValue?: number | undefined;
+  zValue?: number | undefined;
+  magnitude?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointToPointDistanceRequest {
+  firstPoint?: PointName | undefined;
+  secondPoint?: PointName | undefined;
+}
+
+export interface GetPointToPointDistanceResult {
+  vectorRepresentation?: Vector | undefined;
+  xValue?: number | undefined;
+  yValue?: number | undefined;
+  zValue?: number | undefined;
+  magnitude?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointToleranceRequest {
+  pointName?: PointName | undefined;
+}
+
+export interface GetPointToleranceResult {
+  useHighXTolerance?: boolean | undefined;
+  highXTolerance?: number | undefined;
+  useHighYTolerance?: boolean | undefined;
+  highYTolerance?: number | undefined;
+  useHighZTolerance?: boolean | undefined;
+  highZTolerance?: number | undefined;
+  useHighMagTolerance?: boolean | undefined;
+  highMagTolerance?: number | undefined;
+  useLowXTolerance?: boolean | undefined;
+  lowXTolerance?: number | undefined;
+  useLowYTolerance?: boolean | undefined;
+  lowYTolerance?: number | undefined;
+  useLowZTolerance?: boolean | undefined;
+  lowZTolerance?: number | undefined;
+  useLowMagTolerance?: boolean | undefined;
+  lowMagTolerance?: number | undefined;
+  vectorTolerance?: ToleranceVectorOptions | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetSlotPropertiesRequest {
+  slotName?: CollectionObjectName | undefined;
+}
+
+export interface GetSlotPropertiesResult {
+  slotTransformInWorkingCoordinates?: Transform | undefined;
+  centerInWorkingCoordinates?: Vector | undefined;
+  normalDirectionInWorkingCoordinates?: Vector | undefined;
+  slotLength?: number | undefined;
+  slotWidth?: number | undefined;
+  roundSlotType?: boolean | undefined;
+  centerlinePt1InWorkingCoordinates?: Vector | undefined;
+  centerlinePt2InWorkingCoordinates?: Vector | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetSpherePropertiesRequest {
+  sphereName?: CollectionObjectName | undefined;
+}
+
+export interface GetSpherePropertiesResult {
+  centerCoordinate?: Vector | undefined;
+  radius?: number | undefined;
+  diameter?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetSurfacePhysicalStatsRequest {
+  surfaceName?: CollectionObjectName | undefined;
+}
+
+export interface GetSurfacePhysicalStatsResult {
+  volume?: number | undefined;
+  area?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetTimestampForIthFrameInFrameSetRequest {
+  frameSet?: CollectionObjectName | undefined;
+  frameSetIndex?: number | undefined;
+}
+
+export interface GetTimestampForIthFrameInFrameSetResult {
+  timestamp?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetTimestampForIthPointInPointSetRequest {
+  pointSet?: CollectionObjectName | undefined;
+  pointSetIndex?: number | undefined;
+}
+
+export interface GetTimestampForIthPointInPointSetResult {
+  timestamp?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetTorusPropertiesRequest {
+  torusName?: CollectionObjectName | undefined;
+}
+
+export interface GetTorusPropertiesResult {
+  centerCoordinate?: Vector | undefined;
+  normalDirection?: Vector | undefined;
+  majorRadius?: number | undefined;
+  minorRadius?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetTransformForIthFrameInFrameSetRequest {
+  frameSet?: CollectionObjectName | undefined;
+  frameSetIndex?: number | undefined;
+}
+
+export interface GetTransformForIthFrameInFrameSetResult {
+  transformInWorking?: Transform | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GroupToSurfaceFitRequest {
+  groupToFit?: CollectionObjectName | undefined;
+  surface?: CollectionObjectName | undefined;
+  doConventionalFit?: boolean | undefined;
+  rmsTolerance00ForNone?: number | undefined;
+  maximumAbsoluteTolerance00ForNone?: number | undefined;
+}
+
+export interface GroupToSurfaceFitResult {
+  optimumTransform?: WorldTransform | undefined;
+  rmsDeviation?: number | undefined;
+  maximumAbsoluteDeviation?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportGeometryFitProfilesRequest {
+  geometryFitProfilesFilePath?: FileReference | undefined;
+  overwriteProfilesWithSameName?: boolean | undefined;
+}
+
+export interface ImportGeometryFitProfilesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface IsObjectOfTypeRequest {
+  objectName?: CollectionObjectName | undefined;
+  objectType?: ObjectType | undefined;
+}
+
+export interface IsObjectOfTypeResult {
+  resultant?: boolean | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeCircleFitProfileRequest {
+  fitProfileName?: string | undefined;
+  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
+  overrideRadialOffset10UseCurrent?: number | undefined;
+  measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset | undefined;
+  overridePlanarOffset10UseCurrent?: number | undefined;
+  planarOffsetDirection?: NormalDirection | undefined;
+  lockRadius10DoNotLock?: number | undefined;
+  circleComputationTechnique?: CompTechnique | undefined;
+  reverseNormalVectorAfterFit?: boolean | undefined;
+  makeCardinalPoints?: boolean | undefined;
+  cardinalPt1Center?: boolean | undefined;
+  cardinalPt2PointOnNormal?: boolean | undefined;
+}
+
+export interface MakeCircleFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeConeFitProfileRequest {
+  fitProfileName?: string | undefined;
+  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
+  overrideRadialOffset10UseCurrent?: number | undefined;
+  lockAngleInDegrees10DoNotLock?: number | undefined;
+  useExhaustiveSearch?: boolean | undefined;
+  makeCardinalPoints?: boolean | undefined;
+  cardinalPt1Vertex?: boolean | undefined;
+  cardinalPt2PointOnAxis?: boolean | undefined;
+  cardinalPt3CutPointOnAxis?: boolean | undefined;
+}
+
+export interface MakeConeFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeCylinderFitProfileRequest {
+  fitProfileName?: string | undefined;
+  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
+  overrideRadialOffset10UseCurrent?: number | undefined;
+  lockRadius10DoNotLock?: number | undefined;
+  lockedRadiusFitMethod?: FitMethod | undefined;
+  constrainToNominalAxis?: boolean | undefined;
+  constrainToNominalOrientation?: boolean | undefined;
+  alignWithNominal?: boolean | undefined;
+  reverseAxis?: boolean | undefined;
+  setAxisFirstToLastPoint?: boolean | undefined;
+  cylinderComputationTechnique?: CompTechnique | undefined;
+  useExhaustiveSearch?: boolean | undefined;
+  makeCardinalPoints?: boolean | undefined;
+  cardinalPt1BeginPt?: boolean | undefined;
+  cardinalPt2EndPt?: boolean | undefined;
+  cardinalPt3Center?: boolean | undefined;
+}
+
+export interface MakeCylinderFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeEllipseFitProfileRequest {
+  fitProfileName?: string | undefined;
+  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
+  overrideRadialOffset10UseCurrent?: number | undefined;
+  measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset | undefined;
+  overridePlanarOffset10UseCurrent?: number | undefined;
+  planarOffsetDirection?: NormalDirection | undefined;
+  reverseNormalVectorAfterFit?: boolean | undefined;
+  makeCardinalPoints?: boolean | undefined;
+  cardinalPt1Center?: boolean | undefined;
+  cardinalPt2PointOnNormal?: boolean | undefined;
+  cardinalPt3FocalPt1?: boolean | undefined;
+  cardinalPt4FocalPt2?: boolean | undefined;
+}
+
+export interface MakeEllipseFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeLineFitProfileRequest {
+  fitProfileName?: string | undefined;
+  reverseNormalVectorAfterFit?: boolean | undefined;
+  makeCardinalPoints?: boolean | undefined;
+  cardinalPt1PointA?: boolean | undefined;
+  cardinalPt2PointB?: boolean | undefined;
+  cardinalPt3MidPoint?: boolean | undefined;
+}
+
+export interface MakeLineFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeParaboloidFitProfileRequest {
+  fitProfileName?: string | undefined;
+  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
+  overrideRadialOffset10UseCurrent?: number | undefined;
+  lockFocalLength10DoNotLock?: number | undefined;
+  degreeOfFreedom?: DegreeOfFreedom | undefined;
+  makeCardinalPoints?: boolean | undefined;
+  cardinalPt1Vertex?: boolean | undefined;
+  cardinalPt2FocalPoint?: boolean | undefined;
+}
+
+export interface MakeParaboloidFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakePlaneFitProfileRequest {
+  fitProfileName?: string | undefined;
+  measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset | undefined;
+  overridePlanarOffset10UseCurrent?: number | undefined;
+  planarOffsetDirection?: NormalDirection | undefined;
+  reverseNormalVectorAfterFit?: boolean | undefined;
+  makeCardinalPoints?: boolean | undefined;
+  cardinalPt1Centroid?: boolean | undefined;
+  cardinalPt2PointOnNormal?: boolean | undefined;
+}
+
+export interface MakePlaneFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeSlotFitProfileRequest {
+  fitProfileName?: string | undefined;
+  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
+  overrideRadialOffset10UseCurrent?: number | undefined;
+  measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset | undefined;
+  overridePlanarOffset10UseCurrent?: number | undefined;
+  planarOffsetDirection?: NormalDirection | undefined;
+  slotType?: SlotType | undefined;
+  slotComputationTechnique?: CompTechnique | undefined;
+  reverseNormalVectorAfterFit?: boolean | undefined;
+  makeCardinalPoints?: boolean | undefined;
+  cardinalPt1Center?: boolean | undefined;
+  cardinalPt2PointOnNormal?: boolean | undefined;
+  cardinalPt3CenterlinePt1?: boolean | undefined;
+  cardinalPt4CenterlinePt2?: boolean | undefined;
+}
+
+export interface MakeSlotFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeSphereFitProfileRequest {
+  fitProfileName?: string | undefined;
+  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
+  overrideRadialOffset10UseCurrent?: number | undefined;
+  lockRadius10DoNotLock?: number | undefined;
+  makeCardinalPoints?: boolean | undefined;
+  cardinalPt1Center?: boolean | undefined;
+  computationMethod?: SphereFitComputationMode | undefined;
+}
+
+export interface MakeSphereFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MushroomTargetHoleInspectionRequest {
+  namePrefixForIntermediateConstructions?: string | undefined;
+  spherePointsGroupName?: CollectionObjectName | undefined;
+  sphereTargetRadius?: number | undefined;
+  targetContactPlane?: CollectionObjectName | undefined;
+  pointToCreateAtHole?: PointName | undefined;
+}
+
+export interface MushroomTargetHoleInspectionResult {
+  sphereFitRmsError?: number | undefined;
+  sphereFitMaxError?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface PatchNormalShiftHolePinRequest {
+  planePointsGroupName?: CollectionObjectName | undefined;
+  perimeterPointsGroupName?: CollectionObjectName | undefined;
+  resultingPointName?: PointName | undefined;
+  additionalMaterialThickness?: number | undefined;
+}
+
+export interface PatchNormalShiftHolePinResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface PatchNormalShiftPointRequest {
+  planePointsGroupName?: CollectionObjectName | undefined;
+  pointToShift?: PointName | undefined;
+  resultingPointName?: PointName | undefined;
+  additionalMaterialThickness?: number | undefined;
+}
+
+export interface PatchNormalShiftPointResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface QueryCloudsToObjectsRequest {
+  cloudNames?: CollectionObjectName[] | undefined;
+  objectNames?: CollectionObjectName[] | undefined;
+  resultingObjectName?: CollectionObjectName | undefined;
+  projectionOptions?: ProjectionOptions | undefined;
+  proximity?: number | undefined;
+  skipFactor?: number | undefined;
+  rmsTolerance00ForNone?: number | undefined;
+  maximumAbsoluteTolerance00ForNone?: number | undefined;
+}
+
+export interface QueryCloudsToObjectsResult {
+  rmsDeviation?: number | undefined;
+  maximumAbsoluteDeviation?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface QueryCloudsToSurfaceRequest {
+  cloudNames?: CollectionObjectName[] | undefined;
+  filterSurfaceName?: CollectionObjectName | undefined;
+  resultingObjectName?: CollectionObjectName | undefined;
+  projectionOptions?: ProjectionOptions | undefined;
+  proximity?: number | undefined;
+  skipFactor?: number | undefined;
+  rmsTolerance00ForNone?: number | undefined;
+  maximumAbsoluteTolerance00ForNone?: number | undefined;
+}
+
+export interface QueryCloudsToSurfaceResult {
+  rmsDeviation?: number | undefined;
+  maximumAbsoluteDeviation?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface QueryFrameToFrameRequest {
+  referenceFrameName?: CollectionObjectName | undefined;
+  correspondingFrameName?: CollectionObjectName | undefined;
+}
+
+export interface QueryFrameToFrameResult {
+  x?: number | undefined;
+  y?: number | undefined;
+  z?: number | undefined;
+  rxRoll?: number | undefined;
+  ryPitch?: number | undefined;
+  rzYaw?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface QueryGroupsToObjectsRequest {
+  groupNameListGroupsToProject?: CollectionObjectName[] | undefined;
+  objectNameListObjectsToProjectTo?: CollectionObjectName[] | undefined;
+  resultingObjectName?: CollectionObjectName | undefined;
+  projectionOptions?: ProjectionOptions | undefined;
+  rmsTolerance00ForNone?: number | undefined;
+  maximumAbsoluteTolerance00ForNone?: number | undefined;
+  showResultsDialog?: boolean | undefined;
+}
+
+export interface QueryGroupsToObjectsResult {
+  rmsDeviation?: number | undefined;
+  maxAbsoluteDeviation?: number | undefined;
+  averageDeviation?: number | undefined;
+  standardDeviation?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface QueryPointToObjectsRequest {
+  pointName?: PointName | undefined;
+  objects?: CollectionObjectName[] | undefined;
+  ignoreTargetOffset?: boolean | undefined;
+}
+
+export interface QueryPointToObjectsResult {
+  dX?: number | undefined;
+  dY?: number | undefined;
+  dZ?: number | undefined;
+  dMag?: number | undefined;
+  resultantObject?: CollectionObjectName | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface QueryPointToPointAlongCurveRequest {
+  value1stPoint?: PointName | undefined;
+  value2ndPoint?: PointName | undefined;
+  curve?: CollectionObjectName | undefined;
+}
+
+export interface QueryPointToPointAlongCurveResult {
+  distanceAlongCurve?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface QueryPointsToCircleRequest {
+  circleName?: CollectionObjectName | undefined;
+  pointGroupName?: CollectionObjectName | undefined;
+  isInsideMeasurement?: boolean | undefined;
+  autoScaleVectorsToOfRadius?: number | undefined;
+  vectorGroupNameForRadial?: CollectionObjectName | undefined;
+  vectorGroupNameForPlanar?: CollectionObjectName | undefined;
+  vectorGroupNameForCombined?: CollectionObjectName | undefined;
+}
+
+export interface QueryPointsToCircleResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface QueryPointsToObjectsRequest {
+  pointNames?: PointName[] | undefined;
+  objectNameListObjectsToProjectTo?: CollectionObjectName[] | undefined;
+  resultingObjectName?: CollectionObjectName | undefined;
+  projectionOptions?: ProjectionOptions | undefined;
+  rmsTolerance00ForNone?: number | undefined;
+  maximumAbsoluteTolerance00ForNone?: number | undefined;
+  showResultsDialog?: boolean | undefined;
+}
+
+export interface QueryPointsToObjectsResult {
+  rmsDeviation?: number | undefined;
+  maxAbsoluteDeviation?: number | undefined;
+  averageDeviation?: number | undefined;
+  standardDeviation?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface QueryPointsToSinglePointRequest {
+  pointNames?: PointName[] | undefined;
+  singlePoint?: PointName | undefined;
+  showVectorProperties?: boolean | undefined;
+}
+
+export interface QueryPointsToSinglePointResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ReComputeCalculatedItemsRequest {
+  targetsFromShots?: boolean | undefined;
+  hiddenPoints?: boolean | undefined;
+  relationships?: boolean | undefined;
+  refreshFilteredCloudData?: boolean | undefined;
+}
+
+export interface ReComputeCalculatedItemsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface RenamePointsBasedOnInterPointDistanceToReferencePointsRequest {
+  referenceGroupName?: CollectionObjectName | undefined;
+  groupToRenamePoints?: CollectionObjectName | undefined;
+  distanceThreshold?: number | undefined;
+  verifyResults?: boolean | undefined;
+}
+
+export interface RenamePointsBasedOnInterPointDistanceToReferencePointsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface RenamePointsBasedOnProximityToReferencePointsRequest {
+  referenceGroupName?: CollectionObjectName | undefined;
+  groupToRenamePoints?: CollectionObjectName | undefined;
+  proximityThreshold?: number | undefined;
+  verifyResults?: boolean | undefined;
+  renameAllProximatePoints?: boolean | undefined;
+}
+
+export interface RenamePointsBasedOnProximityToReferencePointsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ReverseBSplinesRequest {
+  bSplineList?: CollectionObjectName[] | undefined;
+}
+
+export interface ReverseBSplinesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ReversePlaneNormalsRequest {
+  planeList?: CollectionObjectName[] | undefined;
+}
+
+export interface ReversePlaneNormalsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ReverseSurfaceNormalsRequest {
+  surfaceList?: CollectionObjectName[] | undefined;
+}
+
+export interface ReverseSurfaceNormalsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetCirclePropertiesRequest {
+  circleName?: CollectionObjectName | undefined;
+  centerCoordinate?: Vector | undefined;
+  normalDirection?: Vector | undefined;
+  radius?: number | undefined;
+}
+
+export interface SetCirclePropertiesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetConePropertiesRequest {
+  coneName?: CollectionObjectName | undefined;
+  coneEndPointInWorkingCoordinates?: Vector | undefined;
+  coneAxisInWorkingCoordinates?: Vector | undefined;
+  coneLength?: number | undefined;
+  coneThetaStart?: number | undefined;
+  coneThetaSpan?: number | undefined;
+  coneIncludedAngle?: number | undefined;
+  cutLengthFromApex?: number | undefined;
+}
+
+export interface SetConePropertiesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetCylinderPropertiesRequest {
+  cylinderName?: CollectionObjectName | undefined;
+  beginCoordinate?: Vector | undefined;
+  axisDirection?: Vector | undefined;
+  length?: number | undefined;
+  diameter?: number | undefined;
+  nominalsPointInward?: boolean | undefined;
+  facets?: number | undefined;
+  enableThetaExtentDisplayMode?: boolean | undefined;
+  thetaStartInDegrees?: number | undefined;
+  thetaSpanInDegrees?: number | undefined;
+}
+
+export interface SetCylinderPropertiesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetDefaultColorizationOptionsRequest {
+  colorizationOptions?: ColorizationOptions | undefined;
+}
+
+export interface SetDefaultColorizationOptionsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetEllipsePropertiesRequest {
+  ellipseName?: CollectionObjectName | undefined;
+  centerCoordinate?: Vector | undefined;
+  normalDirection?: Vector | undefined;
+  majorAxisRadius?: number | undefined;
+  minorAxisRadius?: number | undefined;
+}
+
+export interface SetEllipsePropertiesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetGeometryRelationshipFitProfileRequest {
+  geometryType?: GeometryType | undefined;
+  relationshipRefList?: CollectionItemName[] | undefined;
+  fitProfileName?: string | undefined;
+  applyCardinalPointSettings?: boolean | undefined;
+}
+
+export interface SetGeometryRelationshipFitProfileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetLinePropertiesRequest {
+  lineName?: CollectionObjectName | undefined;
+  beginCoordinate?: Vector | undefined;
+  endCoordinate?: Vector | undefined;
+  lengthOptional?: number | undefined;
+}
+
+export interface SetLinePropertiesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetMeasurementAuxiliaryDataRequest {
+  pointName?: PointName | undefined;
+  auxiliaryName?: string | undefined;
+  value?: number | undefined;
+  units?: string | undefined;
+}
+
+export interface SetMeasurementAuxiliaryDataResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetObjectReportingFrameRequest {
+  objectName?: CollectionObjectName | undefined;
+  reportingFrame?: CollectionObjectName | undefined;
+}
+
+export interface SetObjectReportingFrameResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetPointPropertiesRequest {
+  pointNameList?: PointName[] | undefined;
+  planarOffset?: number | undefined;
+  radialOffset?: number | undefined;
+  positionTolerance?: ToleranceVectorOptions | undefined;
+  componentWeights?: Vector | undefined;
+}
+
+export interface SetPointPropertiesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetPointWeightsFromUncertaintiesRequest {
+  pointNameList?: PointName[] | undefined;
+  uncertaintyReferenceFrameMode?: string | undefined;
+  reportingFrame?: CollectionObjectName | undefined;
+  weightNormalizationMode?: string | undefined;
+  fixedWeightValue?: number | undefined;
+  outputWeightedPointGroup?: CollectionObjectName | undefined;
+}
+
+export interface SetPointWeightsFromUncertaintiesResult {
+  outputWeightedPointList?: PointName[] | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetTransformForIthFrameInFrameSetRequest {
+  frameSet?: CollectionObjectName | undefined;
+  frameSetIndex?: number | undefined;
+  transformInWorking?: Transform | undefined;
+}
+
+export interface SetTransformForIthFrameInFrameSetResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SphereAxisCheckRequest {
+  spherePointsGroupName?: CollectionObjectName | undefined;
+  sphereTargetRadius?: number | undefined;
+  pointToCreateAtSphereCenter?: PointName | undefined;
+  lineDefiningTheAxis?: CollectionObjectName | undefined;
+}
+
+export interface SphereAxisCheckResult {
+  sphereFitRmsError?: number | undefined;
+  sphereFitMaxError?: number | undefined;
+  vectorRepresentation?: Vector | undefined;
+  xValue?: number | undefined;
+  yValue?: number | undefined;
+  zValue?: number | undefined;
+  magnitude?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface TemperatureCompensateAGroupRequest {
+  originalGroup?: CollectionObjectName | undefined;
+  scalingOriginCoordinateFrame?: FrameName | undefined;
+  materialCte1DegF?: number | undefined;
+  initialTemperatureF?: number | undefined;
+  finalTemperatureF?: number | undefined;
+  scaledGroupName?: CollectionObjectName | undefined;
+}
+
+export interface TemperatureCompensateAGroupResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface TransformObjectsFrameToFrameRequest {
+  objectNameList?: CollectionObjectName[] | undefined;
+  initialFrameName?: CollectionObjectName | undefined;
+  destinationFrameName?: CollectionObjectName | undefined;
+  numberOfSteps?: number | undefined;
+}
+
+export interface TransformObjectsFrameToFrameResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface TransformObjectsByDeltaAboutWorkingFrameRequest {
+  objectsToTransform?: CollectionObjectName[] | undefined;
+  deltaTransform?: Transform | undefined;
+}
+
+export interface TransformObjectsByDeltaAboutWorkingFrameResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface TransformObjectsByDeltaWorldTransformOperatorRequest {
+  objectsToTransform?: CollectionObjectName[] | undefined;
+  deltaTransform?: WorldTransform | undefined;
+}
+
+export interface TransformObjectsByDeltaWorldTransformOperatorResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface TranslateObjectsByDeltaRequest {
+  objectsToTranslate?: CollectionObjectName[] | undefined;
+  deltaTranslation?: Vector | undefined;
+}
+
+export interface TranslateObjectsByDeltaResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+function createBaseAngleBetweenLineAndPlaneRequest(): AngleBetweenLineAndPlaneRequest {
+  return {
+    selectedLine: undefined,
+    selectedPlane: undefined,
+    nominalAngle: undefined,
+    angleTolerance00ForNone: undefined,
+  };
+}
+
+export const AngleBetweenLineAndPlaneRequest: MessageFns<AngleBetweenLineAndPlaneRequest> = {
+  encode(message: AngleBetweenLineAndPlaneRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.selectedLine !== undefined) {
+      CollectionObjectName.encode(message.selectedLine, writer.uint32(10).fork()).join();
+    }
+    if (message.selectedPlane !== undefined) {
+      CollectionObjectName.encode(message.selectedPlane, writer.uint32(18).fork()).join();
+    }
+    if (message.nominalAngle !== undefined) {
+      writer.uint32(25).double(message.nominalAngle);
+    }
+    if (message.angleTolerance00ForNone !== undefined) {
+      writer.uint32(33).double(message.angleTolerance00ForNone);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AngleBetweenLineAndPlaneRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAngleBetweenLineAndPlaneRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.selectedLine = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.selectedPlane = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.nominalAngle = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.angleTolerance00ForNone = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AngleBetweenLineAndPlaneRequest>): AngleBetweenLineAndPlaneRequest {
+    return AngleBetweenLineAndPlaneRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<AngleBetweenLineAndPlaneRequest>): AngleBetweenLineAndPlaneRequest {
+    const message = createBaseAngleBetweenLineAndPlaneRequest();
+    message.selectedLine = (object.selectedLine !== undefined && object.selectedLine !== null)
+      ? CollectionObjectName.fromPartial(object.selectedLine)
+      : undefined;
+    message.selectedPlane = (object.selectedPlane !== undefined && object.selectedPlane !== null)
+      ? CollectionObjectName.fromPartial(object.selectedPlane)
+      : undefined;
+    message.nominalAngle = object.nominalAngle ?? undefined;
+    message.angleTolerance00ForNone = object.angleTolerance00ForNone ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAngleBetweenLineAndPlaneResult(): AngleBetweenLineAndPlaneResult {
+  return { angle: undefined, execution: undefined };
+}
+
+export const AngleBetweenLineAndPlaneResult: MessageFns<AngleBetweenLineAndPlaneResult> = {
+  encode(message: AngleBetweenLineAndPlaneResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.angle !== undefined) {
+      writer.uint32(9).double(message.angle);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AngleBetweenLineAndPlaneResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAngleBetweenLineAndPlaneResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.angle = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AngleBetweenLineAndPlaneResult>): AngleBetweenLineAndPlaneResult {
+    return AngleBetweenLineAndPlaneResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<AngleBetweenLineAndPlaneResult>): AngleBetweenLineAndPlaneResult {
+    const message = createBaseAngleBetweenLineAndPlaneResult();
+    message.angle = object.angle ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseAngleBetweenTwoLinesRequest(): AngleBetweenTwoLinesRequest {
+  return { line1: undefined, line2: undefined, nominalAngle: undefined, angleTolerance00ForNone: undefined };
+}
+
+export const AngleBetweenTwoLinesRequest: MessageFns<AngleBetweenTwoLinesRequest> = {
+  encode(message: AngleBetweenTwoLinesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.line1 !== undefined) {
+      CollectionObjectName.encode(message.line1, writer.uint32(10).fork()).join();
+    }
+    if (message.line2 !== undefined) {
+      CollectionObjectName.encode(message.line2, writer.uint32(18).fork()).join();
+    }
+    if (message.nominalAngle !== undefined) {
+      writer.uint32(25).double(message.nominalAngle);
+    }
+    if (message.angleTolerance00ForNone !== undefined) {
+      writer.uint32(33).double(message.angleTolerance00ForNone);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AngleBetweenTwoLinesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAngleBetweenTwoLinesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.line1 = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.line2 = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.nominalAngle = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.angleTolerance00ForNone = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AngleBetweenTwoLinesRequest>): AngleBetweenTwoLinesRequest {
+    return AngleBetweenTwoLinesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<AngleBetweenTwoLinesRequest>): AngleBetweenTwoLinesRequest {
+    const message = createBaseAngleBetweenTwoLinesRequest();
+    message.line1 = (object.line1 !== undefined && object.line1 !== null)
+      ? CollectionObjectName.fromPartial(object.line1)
+      : undefined;
+    message.line2 = (object.line2 !== undefined && object.line2 !== null)
+      ? CollectionObjectName.fromPartial(object.line2)
+      : undefined;
+    message.nominalAngle = object.nominalAngle ?? undefined;
+    message.angleTolerance00ForNone = object.angleTolerance00ForNone ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAngleBetweenTwoLinesResult(): AngleBetweenTwoLinesResult {
+  return { angle: undefined, execution: undefined };
+}
+
+export const AngleBetweenTwoLinesResult: MessageFns<AngleBetweenTwoLinesResult> = {
+  encode(message: AngleBetweenTwoLinesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.angle !== undefined) {
+      writer.uint32(9).double(message.angle);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AngleBetweenTwoLinesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAngleBetweenTwoLinesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.angle = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AngleBetweenTwoLinesResult>): AngleBetweenTwoLinesResult {
+    return AngleBetweenTwoLinesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<AngleBetweenTwoLinesResult>): AngleBetweenTwoLinesResult {
+    const message = createBaseAngleBetweenTwoLinesResult();
+    message.angle = object.angle ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseAngleBetweenTwoPlanesNormalsRequest(): AngleBetweenTwoPlanesNormalsRequest {
+  return { planeA: undefined, planeB: undefined, nominalAngle: undefined, angleTolerance00ForNone: undefined };
+}
+
+export const AngleBetweenTwoPlanesNormalsRequest: MessageFns<AngleBetweenTwoPlanesNormalsRequest> = {
+  encode(message: AngleBetweenTwoPlanesNormalsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.planeA !== undefined) {
+      CollectionObjectName.encode(message.planeA, writer.uint32(10).fork()).join();
+    }
+    if (message.planeB !== undefined) {
+      CollectionObjectName.encode(message.planeB, writer.uint32(18).fork()).join();
+    }
+    if (message.nominalAngle !== undefined) {
+      writer.uint32(25).double(message.nominalAngle);
+    }
+    if (message.angleTolerance00ForNone !== undefined) {
+      writer.uint32(33).double(message.angleTolerance00ForNone);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AngleBetweenTwoPlanesNormalsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAngleBetweenTwoPlanesNormalsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.planeA = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.planeB = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.nominalAngle = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.angleTolerance00ForNone = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AngleBetweenTwoPlanesNormalsRequest>): AngleBetweenTwoPlanesNormalsRequest {
+    return AngleBetweenTwoPlanesNormalsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<AngleBetweenTwoPlanesNormalsRequest>): AngleBetweenTwoPlanesNormalsRequest {
+    const message = createBaseAngleBetweenTwoPlanesNormalsRequest();
+    message.planeA = (object.planeA !== undefined && object.planeA !== null)
+      ? CollectionObjectName.fromPartial(object.planeA)
+      : undefined;
+    message.planeB = (object.planeB !== undefined && object.planeB !== null)
+      ? CollectionObjectName.fromPartial(object.planeB)
+      : undefined;
+    message.nominalAngle = object.nominalAngle ?? undefined;
+    message.angleTolerance00ForNone = object.angleTolerance00ForNone ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAngleBetweenTwoPlanesNormalsResult(): AngleBetweenTwoPlanesNormalsResult {
+  return { angle: undefined, execution: undefined };
+}
+
+export const AngleBetweenTwoPlanesNormalsResult: MessageFns<AngleBetweenTwoPlanesNormalsResult> = {
+  encode(message: AngleBetweenTwoPlanesNormalsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.angle !== undefined) {
+      writer.uint32(9).double(message.angle);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AngleBetweenTwoPlanesNormalsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAngleBetweenTwoPlanesNormalsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.angle = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AngleBetweenTwoPlanesNormalsResult>): AngleBetweenTwoPlanesNormalsResult {
+    return AngleBetweenTwoPlanesNormalsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<AngleBetweenTwoPlanesNormalsResult>): AngleBetweenTwoPlanesNormalsResult {
+    const message = createBaseAngleBetweenTwoPlanesNormalsResult();
+    message.angle = object.angle ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseBestFitTransformationGroupToGroupRequest(): BestFitTransformationGroupToGroupRequest {
+  return {
+    referenceGroup: undefined,
+    correspondingGroup: undefined,
+    showInterface: undefined,
+    rmsTolerance00ForNone: undefined,
+    maximumAbsoluteTolerance00ForNone: undefined,
+    allowScale: undefined,
+    allowX: undefined,
+    allowY: undefined,
+    allowZ: undefined,
+    allowRx: undefined,
+    allowRy: undefined,
+    allowRz: undefined,
+    lockDegreesOfFreedom: undefined,
+    generateEvent: undefined,
+    filePathForCsvTextReportRequiresShowInterfaceTrue: undefined,
+  };
+}
+
+export const BestFitTransformationGroupToGroupRequest: MessageFns<BestFitTransformationGroupToGroupRequest> = {
+  encode(message: BestFitTransformationGroupToGroupRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.referenceGroup !== undefined) {
+      CollectionObjectName.encode(message.referenceGroup, writer.uint32(10).fork()).join();
+    }
+    if (message.correspondingGroup !== undefined) {
+      CollectionObjectName.encode(message.correspondingGroup, writer.uint32(18).fork()).join();
+    }
+    if (message.showInterface !== undefined) {
+      writer.uint32(24).bool(message.showInterface);
+    }
+    if (message.rmsTolerance00ForNone !== undefined) {
+      writer.uint32(33).double(message.rmsTolerance00ForNone);
+    }
+    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
+      writer.uint32(41).double(message.maximumAbsoluteTolerance00ForNone);
+    }
+    if (message.allowScale !== undefined) {
+      writer.uint32(48).bool(message.allowScale);
+    }
+    if (message.allowX !== undefined) {
+      writer.uint32(56).bool(message.allowX);
+    }
+    if (message.allowY !== undefined) {
+      writer.uint32(64).bool(message.allowY);
+    }
+    if (message.allowZ !== undefined) {
+      writer.uint32(72).bool(message.allowZ);
+    }
+    if (message.allowRx !== undefined) {
+      writer.uint32(80).bool(message.allowRx);
+    }
+    if (message.allowRy !== undefined) {
+      writer.uint32(88).bool(message.allowRy);
+    }
+    if (message.allowRz !== undefined) {
+      writer.uint32(96).bool(message.allowRz);
+    }
+    if (message.lockDegreesOfFreedom !== undefined) {
+      writer.uint32(104).bool(message.lockDegreesOfFreedom);
+    }
+    if (message.generateEvent !== undefined) {
+      writer.uint32(112).bool(message.generateEvent);
+    }
+    if (message.filePathForCsvTextReportRequiresShowInterfaceTrue !== undefined) {
+      FileReference.encode(message.filePathForCsvTextReportRequiresShowInterfaceTrue, writer.uint32(122).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): BestFitTransformationGroupToGroupRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBestFitTransformationGroupToGroupRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.referenceGroup = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.correspondingGroup = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.showInterface = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.rmsTolerance00ForNone = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.allowScale = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.allowX = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.allowY = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.allowZ = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.allowRx = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.allowRy = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.allowRz = reader.bool();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.lockDegreesOfFreedom = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.generateEvent = reader.bool();
+          continue;
+        }
+        case 15: {
+          if (tag !== 122) {
+            break;
+          }
+
+          message.filePathForCsvTextReportRequiresShowInterfaceTrue = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BestFitTransformationGroupToGroupRequest>): BestFitTransformationGroupToGroupRequest {
+    return BestFitTransformationGroupToGroupRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<BestFitTransformationGroupToGroupRequest>): BestFitTransformationGroupToGroupRequest {
+    const message = createBaseBestFitTransformationGroupToGroupRequest();
+    message.referenceGroup = (object.referenceGroup !== undefined && object.referenceGroup !== null)
+      ? CollectionObjectName.fromPartial(object.referenceGroup)
+      : undefined;
+    message.correspondingGroup = (object.correspondingGroup !== undefined && object.correspondingGroup !== null)
+      ? CollectionObjectName.fromPartial(object.correspondingGroup)
+      : undefined;
+    message.showInterface = object.showInterface ?? undefined;
+    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
+    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    message.allowScale = object.allowScale ?? undefined;
+    message.allowX = object.allowX ?? undefined;
+    message.allowY = object.allowY ?? undefined;
+    message.allowZ = object.allowZ ?? undefined;
+    message.allowRx = object.allowRx ?? undefined;
+    message.allowRy = object.allowRy ?? undefined;
+    message.allowRz = object.allowRz ?? undefined;
+    message.lockDegreesOfFreedom = object.lockDegreesOfFreedom ?? undefined;
+    message.generateEvent = object.generateEvent ?? undefined;
+    message.filePathForCsvTextReportRequiresShowInterfaceTrue =
+      (object.filePathForCsvTextReportRequiresShowInterfaceTrue !== undefined &&
+          object.filePathForCsvTextReportRequiresShowInterfaceTrue !== null)
+        ? FileReference.fromPartial(object.filePathForCsvTextReportRequiresShowInterfaceTrue)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseBestFitTransformationGroupToGroupResult(): BestFitTransformationGroupToGroupResult {
+  return {
+    transformInWorking: undefined,
+    optimumTransform: undefined,
+    rmsDeviation: undefined,
+    maximumAbsoluteDeviation: undefined,
+    numberOfUnknowns: undefined,
+    numberOfEquations: undefined,
+    robustness: undefined,
+    execution: undefined,
+  };
+}
+
+export const BestFitTransformationGroupToGroupResult: MessageFns<BestFitTransformationGroupToGroupResult> = {
+  encode(message: BestFitTransformationGroupToGroupResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.transformInWorking !== undefined) {
+      Transform.encode(message.transformInWorking, writer.uint32(10).fork()).join();
+    }
+    if (message.optimumTransform !== undefined) {
+      WorldTransform.encode(message.optimumTransform, writer.uint32(18).fork()).join();
+    }
+    if (message.rmsDeviation !== undefined) {
+      writer.uint32(25).double(message.rmsDeviation);
+    }
+    if (message.maximumAbsoluteDeviation !== undefined) {
+      writer.uint32(33).double(message.maximumAbsoluteDeviation);
+    }
+    if (message.numberOfUnknowns !== undefined) {
+      writer.uint32(40).int32(message.numberOfUnknowns);
+    }
+    if (message.numberOfEquations !== undefined) {
+      writer.uint32(48).int32(message.numberOfEquations);
+    }
+    if (message.robustness !== undefined) {
+      writer.uint32(57).double(message.robustness);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): BestFitTransformationGroupToGroupResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBestFitTransformationGroupToGroupResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.transformInWorking = Transform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.optimumTransform = WorldTransform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.rmsDeviation = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.maximumAbsoluteDeviation = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.numberOfUnknowns = reader.int32();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.numberOfEquations = reader.int32();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.robustness = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BestFitTransformationGroupToGroupResult>): BestFitTransformationGroupToGroupResult {
+    return BestFitTransformationGroupToGroupResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<BestFitTransformationGroupToGroupResult>): BestFitTransformationGroupToGroupResult {
+    const message = createBaseBestFitTransformationGroupToGroupResult();
+    message.transformInWorking = (object.transformInWorking !== undefined && object.transformInWorking !== null)
+      ? Transform.fromPartial(object.transformInWorking)
+      : undefined;
+    message.optimumTransform = (object.optimumTransform !== undefined && object.optimumTransform !== null)
+      ? WorldTransform.fromPartial(object.optimumTransform)
+      : undefined;
+    message.rmsDeviation = object.rmsDeviation ?? undefined;
+    message.maximumAbsoluteDeviation = object.maximumAbsoluteDeviation ?? undefined;
+    message.numberOfUnknowns = object.numberOfUnknowns ?? undefined;
+    message.numberOfEquations = object.numberOfEquations ?? undefined;
+    message.robustness = object.robustness ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseComputeGroupToGroupOrientationRxRyRzRequest(): ComputeGroupToGroupOrientationRxRyRzRequest {
+  return { referenceGroup: undefined, correspondingGroup: undefined };
+}
+
+export const ComputeGroupToGroupOrientationRxRyRzRequest: MessageFns<ComputeGroupToGroupOrientationRxRyRzRequest> = {
+  encode(
+    message: ComputeGroupToGroupOrientationRxRyRzRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.referenceGroup !== undefined) {
+      CollectionObjectName.encode(message.referenceGroup, writer.uint32(10).fork()).join();
+    }
+    if (message.correspondingGroup !== undefined) {
+      CollectionObjectName.encode(message.correspondingGroup, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ComputeGroupToGroupOrientationRxRyRzRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseComputeGroupToGroupOrientationRxRyRzRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.referenceGroup = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.correspondingGroup = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ComputeGroupToGroupOrientationRxRyRzRequest>): ComputeGroupToGroupOrientationRxRyRzRequest {
+    return ComputeGroupToGroupOrientationRxRyRzRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<ComputeGroupToGroupOrientationRxRyRzRequest>,
+  ): ComputeGroupToGroupOrientationRxRyRzRequest {
+    const message = createBaseComputeGroupToGroupOrientationRxRyRzRequest();
+    message.referenceGroup = (object.referenceGroup !== undefined && object.referenceGroup !== null)
+      ? CollectionObjectName.fromPartial(object.referenceGroup)
+      : undefined;
+    message.correspondingGroup = (object.correspondingGroup !== undefined && object.correspondingGroup !== null)
+      ? CollectionObjectName.fromPartial(object.correspondingGroup)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseComputeGroupToGroupOrientationRxRyRzResult(): ComputeGroupToGroupOrientationRxRyRzResult {
+  return { rx: undefined, ry: undefined, rz: undefined, execution: undefined };
+}
+
+export const ComputeGroupToGroupOrientationRxRyRzResult: MessageFns<ComputeGroupToGroupOrientationRxRyRzResult> = {
+  encode(message: ComputeGroupToGroupOrientationRxRyRzResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.rx !== undefined) {
+      writer.uint32(9).double(message.rx);
+    }
+    if (message.ry !== undefined) {
+      writer.uint32(17).double(message.ry);
+    }
+    if (message.rz !== undefined) {
+      writer.uint32(25).double(message.rz);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ComputeGroupToGroupOrientationRxRyRzResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseComputeGroupToGroupOrientationRxRyRzResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.rx = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.ry = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.rz = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ComputeGroupToGroupOrientationRxRyRzResult>): ComputeGroupToGroupOrientationRxRyRzResult {
+    return ComputeGroupToGroupOrientationRxRyRzResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<ComputeGroupToGroupOrientationRxRyRzResult>,
+  ): ComputeGroupToGroupOrientationRxRyRzResult {
+    const message = createBaseComputeGroupToGroupOrientationRxRyRzResult();
+    message.rx = object.rx ?? undefined;
+    message.ry = object.ry ?? undefined;
+    message.rz = object.rz ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseCreatePointUncertaintyCloudPointSetsRequest(): CreatePointUncertaintyCloudPointSetsRequest {
+  return {
+    pointNameList: [],
+    numberOfSamples: undefined,
+    uncertaintyReferenceFrameMode: undefined,
+    groupingMode: undefined,
+    pointSetMode: undefined,
+  };
+}
+
+export const CreatePointUncertaintyCloudPointSetsRequest: MessageFns<CreatePointUncertaintyCloudPointSetsRequest> = {
+  encode(
+    message: CreatePointUncertaintyCloudPointSetsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.pointNameList !== undefined && message.pointNameList.length !== 0) {
+      for (const v of message.pointNameList) {
+        PointName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.numberOfSamples !== undefined) {
+      writer.uint32(16).int32(message.numberOfSamples);
+    }
+    if (message.uncertaintyReferenceFrameMode !== undefined) {
+      writer.uint32(26).string(message.uncertaintyReferenceFrameMode);
+    }
+    if (message.groupingMode !== undefined) {
+      writer.uint32(34).string(message.groupingMode);
+    }
+    if (message.pointSetMode !== undefined) {
+      writer.uint32(42).string(message.pointSetMode);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CreatePointUncertaintyCloudPointSetsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePointUncertaintyCloudPointSetsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointNameList!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.numberOfSamples = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.uncertaintyReferenceFrameMode = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.groupingMode = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.pointSetMode = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CreatePointUncertaintyCloudPointSetsRequest>): CreatePointUncertaintyCloudPointSetsRequest {
+    return CreatePointUncertaintyCloudPointSetsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<CreatePointUncertaintyCloudPointSetsRequest>,
+  ): CreatePointUncertaintyCloudPointSetsRequest {
+    const message = createBaseCreatePointUncertaintyCloudPointSetsRequest();
+    message.pointNameList = object.pointNameList?.map((e) => PointName.fromPartial(e)) || [];
+    message.numberOfSamples = object.numberOfSamples ?? undefined;
+    message.uncertaintyReferenceFrameMode = object.uncertaintyReferenceFrameMode ?? undefined;
+    message.groupingMode = object.groupingMode ?? undefined;
+    message.pointSetMode = object.pointSetMode ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCreatePointUncertaintyCloudPointSetsResult(): CreatePointUncertaintyCloudPointSetsResult {
+  return { pointGroups: [], pointSets: [], pointClouds: [], execution: undefined };
+}
+
+export const CreatePointUncertaintyCloudPointSetsResult: MessageFns<CreatePointUncertaintyCloudPointSetsResult> = {
+  encode(message: CreatePointUncertaintyCloudPointSetsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointGroups !== undefined && message.pointGroups.length !== 0) {
+      for (const v of message.pointGroups) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.pointSets !== undefined && message.pointSets.length !== 0) {
+      for (const v of message.pointSets) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.pointClouds !== undefined && message.pointClouds.length !== 0) {
+      for (const v of message.pointClouds) {
+        CollectionObjectName.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CreatePointUncertaintyCloudPointSetsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePointUncertaintyCloudPointSetsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointGroups!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointSets!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointClouds!.push(el);
+          }
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CreatePointUncertaintyCloudPointSetsResult>): CreatePointUncertaintyCloudPointSetsResult {
+    return CreatePointUncertaintyCloudPointSetsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<CreatePointUncertaintyCloudPointSetsResult>,
+  ): CreatePointUncertaintyCloudPointSetsResult {
+    const message = createBaseCreatePointUncertaintyCloudPointSetsResult();
+    message.pointGroups = object.pointGroups?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.pointSets = object.pointSets?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.pointClouds = object.pointClouds?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseCreatePointUncertaintyFieldsRequest(): CreatePointUncertaintyFieldsRequest {
+  return { pointNameList: [], numberOfSamples: undefined };
+}
+
+export const CreatePointUncertaintyFieldsRequest: MessageFns<CreatePointUncertaintyFieldsRequest> = {
+  encode(message: CreatePointUncertaintyFieldsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointNameList !== undefined && message.pointNameList.length !== 0) {
+      for (const v of message.pointNameList) {
+        PointName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.numberOfSamples !== undefined) {
+      writer.uint32(16).int32(message.numberOfSamples);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CreatePointUncertaintyFieldsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePointUncertaintyFieldsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointNameList!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.numberOfSamples = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CreatePointUncertaintyFieldsRequest>): CreatePointUncertaintyFieldsRequest {
+    return CreatePointUncertaintyFieldsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CreatePointUncertaintyFieldsRequest>): CreatePointUncertaintyFieldsRequest {
+    const message = createBaseCreatePointUncertaintyFieldsRequest();
+    message.pointNameList = object.pointNameList?.map((e) => PointName.fromPartial(e)) || [];
+    message.numberOfSamples = object.numberOfSamples ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCreatePointUncertaintyFieldsResult(): CreatePointUncertaintyFieldsResult {
+  return { execution: undefined };
+}
+
+export const CreatePointUncertaintyFieldsResult: MessageFns<CreatePointUncertaintyFieldsResult> = {
+  encode(message: CreatePointUncertaintyFieldsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CreatePointUncertaintyFieldsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePointUncertaintyFieldsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CreatePointUncertaintyFieldsResult>): CreatePointUncertaintyFieldsResult {
+    return CreatePointUncertaintyFieldsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CreatePointUncertaintyFieldsResult>): CreatePointUncertaintyFieldsResult {
+    const message = createBaseCreatePointUncertaintyFieldsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseFitGeometryToPointGroupRequest(): FitGeometryToPointGroupRequest {
+  return {
+    geometryType: undefined,
+    groupToFit: undefined,
+    resultingObjectName: undefined,
+    fitProfileName: undefined,
+    reportDeviations: undefined,
+    fitInterfaceTolerance10UseProfile: undefined,
+    ignoreOutOfTolerancePoints: undefined,
+    startingConditionGeometryOptional: undefined,
+  };
+}
+
+export const FitGeometryToPointGroupRequest: MessageFns<FitGeometryToPointGroupRequest> = {
+  encode(message: FitGeometryToPointGroupRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.geometryType !== undefined) {
+      writer.uint32(8).int32(message.geometryType);
+    }
+    if (message.groupToFit !== undefined) {
+      CollectionObjectName.encode(message.groupToFit, writer.uint32(18).fork()).join();
+    }
+    if (message.resultingObjectName !== undefined) {
+      CollectionObjectName.encode(message.resultingObjectName, writer.uint32(26).fork()).join();
+    }
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(34).string(message.fitProfileName);
+    }
+    if (message.reportDeviations !== undefined) {
+      writer.uint32(40).bool(message.reportDeviations);
+    }
+    if (message.fitInterfaceTolerance10UseProfile !== undefined) {
+      writer.uint32(49).double(message.fitInterfaceTolerance10UseProfile);
+    }
+    if (message.ignoreOutOfTolerancePoints !== undefined) {
+      writer.uint32(56).bool(message.ignoreOutOfTolerancePoints);
+    }
+    if (message.startingConditionGeometryOptional !== undefined) {
+      CollectionObjectName.encode(message.startingConditionGeometryOptional, writer.uint32(66).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FitGeometryToPointGroupRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFitGeometryToPointGroupRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.geometryType = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupToFit = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.resultingObjectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.reportDeviations = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.fitInterfaceTolerance10UseProfile = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.ignoreOutOfTolerancePoints = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.startingConditionGeometryOptional = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FitGeometryToPointGroupRequest>): FitGeometryToPointGroupRequest {
+    return FitGeometryToPointGroupRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FitGeometryToPointGroupRequest>): FitGeometryToPointGroupRequest {
+    const message = createBaseFitGeometryToPointGroupRequest();
+    message.geometryType = object.geometryType ?? undefined;
+    message.groupToFit = (object.groupToFit !== undefined && object.groupToFit !== null)
+      ? CollectionObjectName.fromPartial(object.groupToFit)
+      : undefined;
+    message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
+      ? CollectionObjectName.fromPartial(object.resultingObjectName)
+      : undefined;
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.reportDeviations = object.reportDeviations ?? undefined;
+    message.fitInterfaceTolerance10UseProfile = object.fitInterfaceTolerance10UseProfile ?? undefined;
+    message.ignoreOutOfTolerancePoints = object.ignoreOutOfTolerancePoints ?? undefined;
+    message.startingConditionGeometryOptional =
+      (object.startingConditionGeometryOptional !== undefined && object.startingConditionGeometryOptional !== null)
+        ? CollectionObjectName.fromPartial(object.startingConditionGeometryOptional)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseFitGeometryToPointGroupResult(): FitGeometryToPointGroupResult {
+  return { execution: undefined };
+}
+
+export const FitGeometryToPointGroupResult: MessageFns<FitGeometryToPointGroupResult> = {
+  encode(message: FitGeometryToPointGroupResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FitGeometryToPointGroupResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFitGeometryToPointGroupResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FitGeometryToPointGroupResult>): FitGeometryToPointGroupResult {
+    return FitGeometryToPointGroupResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FitGeometryToPointGroupResult>): FitGeometryToPointGroupResult {
+    const message = createBaseFitGeometryToPointGroupResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseFitGeometryToPointGroupProjectedToPlaneRequest(): FitGeometryToPointGroupProjectedToPlaneRequest {
+  return {
+    geometryType: undefined,
+    groupToFit: undefined,
+    planeName: undefined,
+    resultingObjectName: undefined,
+    fitProfileName: undefined,
+    reportDeviations: undefined,
+    fitInterfaceTolerance10UseProfile: undefined,
+    ignoreOutOfTolerancePoints: undefined,
+    startingConditionGeometryOptional: undefined,
+  };
+}
+
+export const FitGeometryToPointGroupProjectedToPlaneRequest: MessageFns<
+  FitGeometryToPointGroupProjectedToPlaneRequest
+> = {
+  encode(
+    message: FitGeometryToPointGroupProjectedToPlaneRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.geometryType !== undefined) {
+      writer.uint32(8).int32(message.geometryType);
+    }
+    if (message.groupToFit !== undefined) {
+      CollectionObjectName.encode(message.groupToFit, writer.uint32(18).fork()).join();
+    }
+    if (message.planeName !== undefined) {
+      CollectionObjectName.encode(message.planeName, writer.uint32(26).fork()).join();
+    }
+    if (message.resultingObjectName !== undefined) {
+      CollectionObjectName.encode(message.resultingObjectName, writer.uint32(34).fork()).join();
+    }
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(42).string(message.fitProfileName);
+    }
+    if (message.reportDeviations !== undefined) {
+      writer.uint32(48).bool(message.reportDeviations);
+    }
+    if (message.fitInterfaceTolerance10UseProfile !== undefined) {
+      writer.uint32(57).double(message.fitInterfaceTolerance10UseProfile);
+    }
+    if (message.ignoreOutOfTolerancePoints !== undefined) {
+      writer.uint32(64).bool(message.ignoreOutOfTolerancePoints);
+    }
+    if (message.startingConditionGeometryOptional !== undefined) {
+      CollectionObjectName.encode(message.startingConditionGeometryOptional, writer.uint32(74).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FitGeometryToPointGroupProjectedToPlaneRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFitGeometryToPointGroupProjectedToPlaneRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.geometryType = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupToFit = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.planeName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.resultingObjectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.reportDeviations = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.fitInterfaceTolerance10UseProfile = reader.double();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.ignoreOutOfTolerancePoints = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.startingConditionGeometryOptional = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<FitGeometryToPointGroupProjectedToPlaneRequest>,
+  ): FitGeometryToPointGroupProjectedToPlaneRequest {
+    return FitGeometryToPointGroupProjectedToPlaneRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<FitGeometryToPointGroupProjectedToPlaneRequest>,
+  ): FitGeometryToPointGroupProjectedToPlaneRequest {
+    const message = createBaseFitGeometryToPointGroupProjectedToPlaneRequest();
+    message.geometryType = object.geometryType ?? undefined;
+    message.groupToFit = (object.groupToFit !== undefined && object.groupToFit !== null)
+      ? CollectionObjectName.fromPartial(object.groupToFit)
+      : undefined;
+    message.planeName = (object.planeName !== undefined && object.planeName !== null)
+      ? CollectionObjectName.fromPartial(object.planeName)
+      : undefined;
+    message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
+      ? CollectionObjectName.fromPartial(object.resultingObjectName)
+      : undefined;
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.reportDeviations = object.reportDeviations ?? undefined;
+    message.fitInterfaceTolerance10UseProfile = object.fitInterfaceTolerance10UseProfile ?? undefined;
+    message.ignoreOutOfTolerancePoints = object.ignoreOutOfTolerancePoints ?? undefined;
+    message.startingConditionGeometryOptional =
+      (object.startingConditionGeometryOptional !== undefined && object.startingConditionGeometryOptional !== null)
+        ? CollectionObjectName.fromPartial(object.startingConditionGeometryOptional)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseFitGeometryToPointGroupProjectedToPlaneResult(): FitGeometryToPointGroupProjectedToPlaneResult {
+  return { execution: undefined };
+}
+
+export const FitGeometryToPointGroupProjectedToPlaneResult: MessageFns<FitGeometryToPointGroupProjectedToPlaneResult> =
+  {
+    encode(
+      message: FitGeometryToPointGroupProjectedToPlaneResult,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.execution !== undefined) {
+        MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+      }
+      return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): FitGeometryToPointGroupProjectedToPlaneResult {
+      const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseFitGeometryToPointGroupProjectedToPlaneResult();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1000: {
+            if (tag !== 8002) {
+              break;
+            }
+
+            message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
+
+    create(
+      base?: DeepPartial<FitGeometryToPointGroupProjectedToPlaneResult>,
+    ): FitGeometryToPointGroupProjectedToPlaneResult {
+      return FitGeometryToPointGroupProjectedToPlaneResult.fromPartial(base ?? {});
+    },
+    fromPartial(
+      object: DeepPartial<FitGeometryToPointGroupProjectedToPlaneResult>,
+    ): FitGeometryToPointGroupProjectedToPlaneResult {
+      const message = createBaseFitGeometryToPointGroupProjectedToPlaneResult();
+      message.execution = (object.execution !== undefined && object.execution !== null)
+        ? MpExecutionDetails.fromPartial(object.execution)
+        : undefined;
+      return message;
+    },
+  };
+
+function createBaseFitGeometryToPointsRequest(): FitGeometryToPointsRequest {
+  return {
+    geometryType: undefined,
+    pointsToFit: [],
+    resultingObjectName: undefined,
+    fitProfileName: undefined,
+    reportDeviations: undefined,
+    fitInterfaceTolerance10UseProfile: undefined,
+    ignoreOutOfTolerancePoints: undefined,
+    startingConditionGeometryOptional: undefined,
+  };
+}
+
+export const FitGeometryToPointsRequest: MessageFns<FitGeometryToPointsRequest> = {
+  encode(message: FitGeometryToPointsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.geometryType !== undefined) {
+      writer.uint32(8).int32(message.geometryType);
+    }
+    if (message.pointsToFit !== undefined && message.pointsToFit.length !== 0) {
+      for (const v of message.pointsToFit) {
+        PointName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.resultingObjectName !== undefined) {
+      CollectionObjectName.encode(message.resultingObjectName, writer.uint32(26).fork()).join();
+    }
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(34).string(message.fitProfileName);
+    }
+    if (message.reportDeviations !== undefined) {
+      writer.uint32(40).bool(message.reportDeviations);
+    }
+    if (message.fitInterfaceTolerance10UseProfile !== undefined) {
+      writer.uint32(49).double(message.fitInterfaceTolerance10UseProfile);
+    }
+    if (message.ignoreOutOfTolerancePoints !== undefined) {
+      writer.uint32(56).bool(message.ignoreOutOfTolerancePoints);
+    }
+    if (message.startingConditionGeometryOptional !== undefined) {
+      CollectionObjectName.encode(message.startingConditionGeometryOptional, writer.uint32(66).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FitGeometryToPointsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFitGeometryToPointsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.geometryType = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointsToFit!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.resultingObjectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.reportDeviations = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.fitInterfaceTolerance10UseProfile = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.ignoreOutOfTolerancePoints = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.startingConditionGeometryOptional = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FitGeometryToPointsRequest>): FitGeometryToPointsRequest {
+    return FitGeometryToPointsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FitGeometryToPointsRequest>): FitGeometryToPointsRequest {
+    const message = createBaseFitGeometryToPointsRequest();
+    message.geometryType = object.geometryType ?? undefined;
+    message.pointsToFit = object.pointsToFit?.map((e) => PointName.fromPartial(e)) || [];
+    message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
+      ? CollectionObjectName.fromPartial(object.resultingObjectName)
+      : undefined;
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.reportDeviations = object.reportDeviations ?? undefined;
+    message.fitInterfaceTolerance10UseProfile = object.fitInterfaceTolerance10UseProfile ?? undefined;
+    message.ignoreOutOfTolerancePoints = object.ignoreOutOfTolerancePoints ?? undefined;
+    message.startingConditionGeometryOptional =
+      (object.startingConditionGeometryOptional !== undefined && object.startingConditionGeometryOptional !== null)
+        ? CollectionObjectName.fromPartial(object.startingConditionGeometryOptional)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseFitGeometryToPointsResult(): FitGeometryToPointsResult {
+  return { execution: undefined };
+}
+
+export const FitGeometryToPointsResult: MessageFns<FitGeometryToPointsResult> = {
+  encode(message: FitGeometryToPointsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FitGeometryToPointsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFitGeometryToPointsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FitGeometryToPointsResult>): FitGeometryToPointsResult {
+    return FitGeometryToPointsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FitGeometryToPointsResult>): FitGeometryToPointsResult {
+    const message = createBaseFitGeometryToPointsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetBSplinePropertiesRequest(): GetBSplinePropertiesRequest {
+  return { bSplineName: undefined };
+}
+
+export const GetBSplinePropertiesRequest: MessageFns<GetBSplinePropertiesRequest> = {
+  encode(message: GetBSplinePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.bSplineName !== undefined) {
+      CollectionObjectName.encode(message.bSplineName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetBSplinePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetBSplinePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.bSplineName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetBSplinePropertiesRequest>): GetBSplinePropertiesRequest {
+    return GetBSplinePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetBSplinePropertiesRequest>): GetBSplinePropertiesRequest {
+    const message = createBaseGetBSplinePropertiesRequest();
+    message.bSplineName = (object.bSplineName !== undefined && object.bSplineName !== null)
+      ? CollectionObjectName.fromPartial(object.bSplineName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetBSplinePropertiesResult(): GetBSplinePropertiesResult {
+  return {
+    degree: undefined,
+    knots: undefined,
+    controlPoints: undefined,
+    rangeMin: undefined,
+    rangeMax: undefined,
+    length: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetBSplinePropertiesResult: MessageFns<GetBSplinePropertiesResult> = {
+  encode(message: GetBSplinePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.degree !== undefined) {
+      writer.uint32(8).int32(message.degree);
+    }
+    if (message.knots !== undefined) {
+      writer.uint32(16).int32(message.knots);
+    }
+    if (message.controlPoints !== undefined) {
+      writer.uint32(24).int32(message.controlPoints);
+    }
+    if (message.rangeMin !== undefined) {
+      writer.uint32(33).double(message.rangeMin);
+    }
+    if (message.rangeMax !== undefined) {
+      writer.uint32(41).double(message.rangeMax);
+    }
+    if (message.length !== undefined) {
+      writer.uint32(49).double(message.length);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetBSplinePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetBSplinePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.degree = reader.int32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.knots = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.controlPoints = reader.int32();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.rangeMin = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.rangeMax = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.length = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetBSplinePropertiesResult>): GetBSplinePropertiesResult {
+    return GetBSplinePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetBSplinePropertiesResult>): GetBSplinePropertiesResult {
+    const message = createBaseGetBSplinePropertiesResult();
+    message.degree = object.degree ?? undefined;
+    message.knots = object.knots ?? undefined;
+    message.controlPoints = object.controlPoints ?? undefined;
+    message.rangeMin = object.rangeMin ?? undefined;
+    message.rangeMax = object.rangeMax ?? undefined;
+    message.length = object.length ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetCirclePropertiesRequest(): GetCirclePropertiesRequest {
+  return { circleName: undefined };
+}
+
+export const GetCirclePropertiesRequest: MessageFns<GetCirclePropertiesRequest> = {
+  encode(message: GetCirclePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.circleName !== undefined) {
+      CollectionObjectName.encode(message.circleName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCirclePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCirclePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.circleName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetCirclePropertiesRequest>): GetCirclePropertiesRequest {
+    return GetCirclePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetCirclePropertiesRequest>): GetCirclePropertiesRequest {
+    const message = createBaseGetCirclePropertiesRequest();
+    message.circleName = (object.circleName !== undefined && object.circleName !== null)
+      ? CollectionObjectName.fromPartial(object.circleName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetCirclePropertiesResult(): GetCirclePropertiesResult {
+  return {
+    centerCoordinate: undefined,
+    normalDirection: undefined,
+    radius: undefined,
+    diameter: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetCirclePropertiesResult: MessageFns<GetCirclePropertiesResult> = {
+  encode(message: GetCirclePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.centerCoordinate !== undefined) {
+      Vector.encode(message.centerCoordinate, writer.uint32(10).fork()).join();
+    }
+    if (message.normalDirection !== undefined) {
+      Vector.encode(message.normalDirection, writer.uint32(18).fork()).join();
+    }
+    if (message.radius !== undefined) {
+      writer.uint32(25).double(message.radius);
+    }
+    if (message.diameter !== undefined) {
+      writer.uint32(33).double(message.diameter);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCirclePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCirclePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.centerCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.normalDirection = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.radius = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.diameter = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetCirclePropertiesResult>): GetCirclePropertiesResult {
+    return GetCirclePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetCirclePropertiesResult>): GetCirclePropertiesResult {
+    const message = createBaseGetCirclePropertiesResult();
+    message.centerCoordinate = (object.centerCoordinate !== undefined && object.centerCoordinate !== null)
+      ? Vector.fromPartial(object.centerCoordinate)
+      : undefined;
+    message.normalDirection = (object.normalDirection !== undefined && object.normalDirection !== null)
+      ? Vector.fromPartial(object.normalDirection)
+      : undefined;
+    message.radius = object.radius ?? undefined;
+    message.diameter = object.diameter ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetConePropertiesRequest(): GetConePropertiesRequest {
+  return { coneName: undefined };
+}
+
+export const GetConePropertiesRequest: MessageFns<GetConePropertiesRequest> = {
+  encode(message: GetConePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.coneName !== undefined) {
+      CollectionObjectName.encode(message.coneName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetConePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetConePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.coneName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetConePropertiesRequest>): GetConePropertiesRequest {
+    return GetConePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetConePropertiesRequest>): GetConePropertiesRequest {
+    const message = createBaseGetConePropertiesRequest();
+    message.coneName = (object.coneName !== undefined && object.coneName !== null)
+      ? CollectionObjectName.fromPartial(object.coneName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetConePropertiesResult(): GetConePropertiesResult {
+  return {
+    coneEndPointInWorkingCoordinates: undefined,
+    coneAxisInWorkingCoordinates: undefined,
+    coneLength: undefined,
+    coneThetaStart: undefined,
+    coneThetaSpan: undefined,
+    coneIncludedAngle: undefined,
+    cutLengthFromApex: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetConePropertiesResult: MessageFns<GetConePropertiesResult> = {
+  encode(message: GetConePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.coneEndPointInWorkingCoordinates !== undefined) {
+      Vector.encode(message.coneEndPointInWorkingCoordinates, writer.uint32(10).fork()).join();
+    }
+    if (message.coneAxisInWorkingCoordinates !== undefined) {
+      Vector.encode(message.coneAxisInWorkingCoordinates, writer.uint32(18).fork()).join();
+    }
+    if (message.coneLength !== undefined) {
+      writer.uint32(25).double(message.coneLength);
+    }
+    if (message.coneThetaStart !== undefined) {
+      writer.uint32(33).double(message.coneThetaStart);
+    }
+    if (message.coneThetaSpan !== undefined) {
+      writer.uint32(41).double(message.coneThetaSpan);
+    }
+    if (message.coneIncludedAngle !== undefined) {
+      writer.uint32(49).double(message.coneIncludedAngle);
+    }
+    if (message.cutLengthFromApex !== undefined) {
+      writer.uint32(57).double(message.cutLengthFromApex);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetConePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetConePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.coneEndPointInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.coneAxisInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.coneLength = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.coneThetaStart = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.coneThetaSpan = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.coneIncludedAngle = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.cutLengthFromApex = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetConePropertiesResult>): GetConePropertiesResult {
+    return GetConePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetConePropertiesResult>): GetConePropertiesResult {
+    const message = createBaseGetConePropertiesResult();
+    message.coneEndPointInWorkingCoordinates =
+      (object.coneEndPointInWorkingCoordinates !== undefined && object.coneEndPointInWorkingCoordinates !== null)
+        ? Vector.fromPartial(object.coneEndPointInWorkingCoordinates)
+        : undefined;
+    message.coneAxisInWorkingCoordinates =
+      (object.coneAxisInWorkingCoordinates !== undefined && object.coneAxisInWorkingCoordinates !== null)
+        ? Vector.fromPartial(object.coneAxisInWorkingCoordinates)
+        : undefined;
+    message.coneLength = object.coneLength ?? undefined;
+    message.coneThetaStart = object.coneThetaStart ?? undefined;
+    message.coneThetaSpan = object.coneThetaSpan ?? undefined;
+    message.coneIncludedAngle = object.coneIncludedAngle ?? undefined;
+    message.cutLengthFromApex = object.cutLengthFromApex ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetCoordinateForIthPointInPointSetRequest(): GetCoordinateForIthPointInPointSetRequest {
+  return { pointSet: undefined, pointSetIndex: undefined };
+}
+
+export const GetCoordinateForIthPointInPointSetRequest: MessageFns<GetCoordinateForIthPointInPointSetRequest> = {
+  encode(message: GetCoordinateForIthPointInPointSetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointSet !== undefined) {
+      CollectionObjectName.encode(message.pointSet, writer.uint32(10).fork()).join();
+    }
+    if (message.pointSetIndex !== undefined) {
+      writer.uint32(16).int32(message.pointSetIndex);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCoordinateForIthPointInPointSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCoordinateForIthPointInPointSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointSet = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.pointSetIndex = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetCoordinateForIthPointInPointSetRequest>): GetCoordinateForIthPointInPointSetRequest {
+    return GetCoordinateForIthPointInPointSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetCoordinateForIthPointInPointSetRequest>,
+  ): GetCoordinateForIthPointInPointSetRequest {
+    const message = createBaseGetCoordinateForIthPointInPointSetRequest();
+    message.pointSet = (object.pointSet !== undefined && object.pointSet !== null)
+      ? CollectionObjectName.fromPartial(object.pointSet)
+      : undefined;
+    message.pointSetIndex = object.pointSetIndex ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetCoordinateForIthPointInPointSetResult(): GetCoordinateForIthPointInPointSetResult {
+  return { pointName: undefined, pointCoordinates: undefined, execution: undefined };
+}
+
+export const GetCoordinateForIthPointInPointSetResult: MessageFns<GetCoordinateForIthPointInPointSetResult> = {
+  encode(message: GetCoordinateForIthPointInPointSetResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      writer.uint32(10).string(message.pointName);
+    }
+    if (message.pointCoordinates !== undefined) {
+      Vector.encode(message.pointCoordinates, writer.uint32(18).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCoordinateForIthPointInPointSetResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCoordinateForIthPointInPointSetResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pointCoordinates = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetCoordinateForIthPointInPointSetResult>): GetCoordinateForIthPointInPointSetResult {
+    return GetCoordinateForIthPointInPointSetResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetCoordinateForIthPointInPointSetResult>): GetCoordinateForIthPointInPointSetResult {
+    const message = createBaseGetCoordinateForIthPointInPointSetResult();
+    message.pointName = object.pointName ?? undefined;
+    message.pointCoordinates = (object.pointCoordinates !== undefined && object.pointCoordinates !== null)
+      ? Vector.fromPartial(object.pointCoordinates)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetCylinderPropertiesRequest(): GetCylinderPropertiesRequest {
+  return { cylinderName: undefined };
+}
+
+export const GetCylinderPropertiesRequest: MessageFns<GetCylinderPropertiesRequest> = {
+  encode(message: GetCylinderPropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.cylinderName !== undefined) {
+      CollectionObjectName.encode(message.cylinderName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCylinderPropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCylinderPropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.cylinderName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetCylinderPropertiesRequest>): GetCylinderPropertiesRequest {
+    return GetCylinderPropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetCylinderPropertiesRequest>): GetCylinderPropertiesRequest {
+    const message = createBaseGetCylinderPropertiesRequest();
+    message.cylinderName = (object.cylinderName !== undefined && object.cylinderName !== null)
+      ? CollectionObjectName.fromPartial(object.cylinderName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetCylinderPropertiesResult(): GetCylinderPropertiesResult {
+  return {
+    beginCoordinate: undefined,
+    endCoordinate: undefined,
+    axisDirection: undefined,
+    length: undefined,
+    radius: undefined,
+    diameter: undefined,
+    nominalsPointInward: undefined,
+    facets: undefined,
+    enableThetaExtentDisplayMode: undefined,
+    thetaStartInDegrees: undefined,
+    thetaSpanInDegrees: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetCylinderPropertiesResult: MessageFns<GetCylinderPropertiesResult> = {
+  encode(message: GetCylinderPropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.beginCoordinate !== undefined) {
+      Vector.encode(message.beginCoordinate, writer.uint32(10).fork()).join();
+    }
+    if (message.endCoordinate !== undefined) {
+      Vector.encode(message.endCoordinate, writer.uint32(18).fork()).join();
+    }
+    if (message.axisDirection !== undefined) {
+      Vector.encode(message.axisDirection, writer.uint32(26).fork()).join();
+    }
+    if (message.length !== undefined) {
+      writer.uint32(33).double(message.length);
+    }
+    if (message.radius !== undefined) {
+      writer.uint32(41).double(message.radius);
+    }
+    if (message.diameter !== undefined) {
+      writer.uint32(49).double(message.diameter);
+    }
+    if (message.nominalsPointInward !== undefined) {
+      writer.uint32(56).bool(message.nominalsPointInward);
+    }
+    if (message.facets !== undefined) {
+      writer.uint32(64).int32(message.facets);
+    }
+    if (message.enableThetaExtentDisplayMode !== undefined) {
+      writer.uint32(72).bool(message.enableThetaExtentDisplayMode);
+    }
+    if (message.thetaStartInDegrees !== undefined) {
+      writer.uint32(81).double(message.thetaStartInDegrees);
+    }
+    if (message.thetaSpanInDegrees !== undefined) {
+      writer.uint32(89).double(message.thetaSpanInDegrees);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCylinderPropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCylinderPropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.beginCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.endCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.axisDirection = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.length = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.radius = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.diameter = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.nominalsPointInward = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.facets = reader.int32();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.enableThetaExtentDisplayMode = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 81) {
+            break;
+          }
+
+          message.thetaStartInDegrees = reader.double();
+          continue;
+        }
+        case 11: {
+          if (tag !== 89) {
+            break;
+          }
+
+          message.thetaSpanInDegrees = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetCylinderPropertiesResult>): GetCylinderPropertiesResult {
+    return GetCylinderPropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetCylinderPropertiesResult>): GetCylinderPropertiesResult {
+    const message = createBaseGetCylinderPropertiesResult();
+    message.beginCoordinate = (object.beginCoordinate !== undefined && object.beginCoordinate !== null)
+      ? Vector.fromPartial(object.beginCoordinate)
+      : undefined;
+    message.endCoordinate = (object.endCoordinate !== undefined && object.endCoordinate !== null)
+      ? Vector.fromPartial(object.endCoordinate)
+      : undefined;
+    message.axisDirection = (object.axisDirection !== undefined && object.axisDirection !== null)
+      ? Vector.fromPartial(object.axisDirection)
+      : undefined;
+    message.length = object.length ?? undefined;
+    message.radius = object.radius ?? undefined;
+    message.diameter = object.diameter ?? undefined;
+    message.nominalsPointInward = object.nominalsPointInward ?? undefined;
+    message.facets = object.facets ?? undefined;
+    message.enableThetaExtentDisplayMode = object.enableThetaExtentDisplayMode ?? undefined;
+    message.thetaStartInDegrees = object.thetaStartInDegrees ?? undefined;
+    message.thetaSpanInDegrees = object.thetaSpanInDegrees ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetEllipsePropertiesRequest(): GetEllipsePropertiesRequest {
+  return { ellipseName: undefined };
+}
+
+export const GetEllipsePropertiesRequest: MessageFns<GetEllipsePropertiesRequest> = {
+  encode(message: GetEllipsePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.ellipseName !== undefined) {
+      CollectionObjectName.encode(message.ellipseName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetEllipsePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetEllipsePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ellipseName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetEllipsePropertiesRequest>): GetEllipsePropertiesRequest {
+    return GetEllipsePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetEllipsePropertiesRequest>): GetEllipsePropertiesRequest {
+    const message = createBaseGetEllipsePropertiesRequest();
+    message.ellipseName = (object.ellipseName !== undefined && object.ellipseName !== null)
+      ? CollectionObjectName.fromPartial(object.ellipseName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetEllipsePropertiesResult(): GetEllipsePropertiesResult {
+  return {
+    centerCoordinate: undefined,
+    normalDirection: undefined,
+    majorAxisRadius: undefined,
+    minorAxisRadius: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetEllipsePropertiesResult: MessageFns<GetEllipsePropertiesResult> = {
+  encode(message: GetEllipsePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.centerCoordinate !== undefined) {
+      Vector.encode(message.centerCoordinate, writer.uint32(10).fork()).join();
+    }
+    if (message.normalDirection !== undefined) {
+      Vector.encode(message.normalDirection, writer.uint32(18).fork()).join();
+    }
+    if (message.majorAxisRadius !== undefined) {
+      writer.uint32(25).double(message.majorAxisRadius);
+    }
+    if (message.minorAxisRadius !== undefined) {
+      writer.uint32(33).double(message.minorAxisRadius);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetEllipsePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetEllipsePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.centerCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.normalDirection = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.majorAxisRadius = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.minorAxisRadius = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetEllipsePropertiesResult>): GetEllipsePropertiesResult {
+    return GetEllipsePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetEllipsePropertiesResult>): GetEllipsePropertiesResult {
+    const message = createBaseGetEllipsePropertiesResult();
+    message.centerCoordinate = (object.centerCoordinate !== undefined && object.centerCoordinate !== null)
+      ? Vector.fromPartial(object.centerCoordinate)
+      : undefined;
+    message.normalDirection = (object.normalDirection !== undefined && object.normalDirection !== null)
+      ? Vector.fromPartial(object.normalDirection)
+      : undefined;
+    message.majorAxisRadius = object.majorAxisRadius ?? undefined;
+    message.minorAxisRadius = object.minorAxisRadius ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetEulerParametersForFrameRequest(): GetEulerParametersForFrameRequest {
+  return { frame: undefined };
+}
+
+export const GetEulerParametersForFrameRequest: MessageFns<GetEulerParametersForFrameRequest> = {
+  encode(message: GetEulerParametersForFrameRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.frame !== undefined) {
+      CollectionObjectName.encode(message.frame, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetEulerParametersForFrameRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetEulerParametersForFrameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.frame = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetEulerParametersForFrameRequest>): GetEulerParametersForFrameRequest {
+    return GetEulerParametersForFrameRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetEulerParametersForFrameRequest>): GetEulerParametersForFrameRequest {
+    const message = createBaseGetEulerParametersForFrameRequest();
+    message.frame = (object.frame !== undefined && object.frame !== null)
+      ? CollectionObjectName.fromPartial(object.frame)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetEulerParametersForFrameResult(): GetEulerParametersForFrameResult {
+  return {
+    x: undefined,
+    y: undefined,
+    z: undefined,
+    e1: undefined,
+    e2: undefined,
+    e3: undefined,
+    e4: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetEulerParametersForFrameResult: MessageFns<GetEulerParametersForFrameResult> = {
+  encode(message: GetEulerParametersForFrameResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.x !== undefined) {
+      writer.uint32(9).double(message.x);
+    }
+    if (message.y !== undefined) {
+      writer.uint32(17).double(message.y);
+    }
+    if (message.z !== undefined) {
+      writer.uint32(25).double(message.z);
+    }
+    if (message.e1 !== undefined) {
+      writer.uint32(33).double(message.e1);
+    }
+    if (message.e2 !== undefined) {
+      writer.uint32(41).double(message.e2);
+    }
+    if (message.e3 !== undefined) {
+      writer.uint32(49).double(message.e3);
+    }
+    if (message.e4 !== undefined) {
+      writer.uint32(57).double(message.e4);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetEulerParametersForFrameResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetEulerParametersForFrameResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.x = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.y = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.z = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.e1 = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.e2 = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.e3 = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.e4 = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetEulerParametersForFrameResult>): GetEulerParametersForFrameResult {
+    return GetEulerParametersForFrameResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetEulerParametersForFrameResult>): GetEulerParametersForFrameResult {
+    const message = createBaseGetEulerParametersForFrameResult();
+    message.x = object.x ?? undefined;
+    message.y = object.y ?? undefined;
+    message.z = object.z ?? undefined;
+    message.e1 = object.e1 ?? undefined;
+    message.e2 = object.e2 ?? undefined;
+    message.e3 = object.e3 ?? undefined;
+    message.e4 = object.e4 ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetEulerParametersForIthFrameInFrameSetRequest(): GetEulerParametersForIthFrameInFrameSetRequest {
+  return { frameSet: undefined, frameSetIndex: undefined };
+}
+
+export const GetEulerParametersForIthFrameInFrameSetRequest: MessageFns<
+  GetEulerParametersForIthFrameInFrameSetRequest
+> = {
+  encode(
+    message: GetEulerParametersForIthFrameInFrameSetRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.frameSet !== undefined) {
+      CollectionObjectName.encode(message.frameSet, writer.uint32(10).fork()).join();
+    }
+    if (message.frameSetIndex !== undefined) {
+      writer.uint32(16).int32(message.frameSetIndex);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetEulerParametersForIthFrameInFrameSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetEulerParametersForIthFrameInFrameSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.frameSet = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.frameSetIndex = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetEulerParametersForIthFrameInFrameSetRequest>,
+  ): GetEulerParametersForIthFrameInFrameSetRequest {
+    return GetEulerParametersForIthFrameInFrameSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetEulerParametersForIthFrameInFrameSetRequest>,
+  ): GetEulerParametersForIthFrameInFrameSetRequest {
+    const message = createBaseGetEulerParametersForIthFrameInFrameSetRequest();
+    message.frameSet = (object.frameSet !== undefined && object.frameSet !== null)
+      ? CollectionObjectName.fromPartial(object.frameSet)
+      : undefined;
+    message.frameSetIndex = object.frameSetIndex ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetEulerParametersForIthFrameInFrameSetResult(): GetEulerParametersForIthFrameInFrameSetResult {
+  return {
+    x: undefined,
+    y: undefined,
+    z: undefined,
+    e1: undefined,
+    e2: undefined,
+    e3: undefined,
+    e4: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetEulerParametersForIthFrameInFrameSetResult: MessageFns<GetEulerParametersForIthFrameInFrameSetResult> =
+  {
+    encode(
+      message: GetEulerParametersForIthFrameInFrameSetResult,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.x !== undefined) {
+        writer.uint32(9).double(message.x);
+      }
+      if (message.y !== undefined) {
+        writer.uint32(17).double(message.y);
+      }
+      if (message.z !== undefined) {
+        writer.uint32(25).double(message.z);
+      }
+      if (message.e1 !== undefined) {
+        writer.uint32(33).double(message.e1);
+      }
+      if (message.e2 !== undefined) {
+        writer.uint32(41).double(message.e2);
+      }
+      if (message.e3 !== undefined) {
+        writer.uint32(49).double(message.e3);
+      }
+      if (message.e4 !== undefined) {
+        writer.uint32(57).double(message.e4);
+      }
+      if (message.execution !== undefined) {
+        MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+      }
+      return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): GetEulerParametersForIthFrameInFrameSetResult {
+      const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGetEulerParametersForIthFrameInFrameSetResult();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 9) {
+              break;
+            }
+
+            message.x = reader.double();
+            continue;
+          }
+          case 2: {
+            if (tag !== 17) {
+              break;
+            }
+
+            message.y = reader.double();
+            continue;
+          }
+          case 3: {
+            if (tag !== 25) {
+              break;
+            }
+
+            message.z = reader.double();
+            continue;
+          }
+          case 4: {
+            if (tag !== 33) {
+              break;
+            }
+
+            message.e1 = reader.double();
+            continue;
+          }
+          case 5: {
+            if (tag !== 41) {
+              break;
+            }
+
+            message.e2 = reader.double();
+            continue;
+          }
+          case 6: {
+            if (tag !== 49) {
+              break;
+            }
+
+            message.e3 = reader.double();
+            continue;
+          }
+          case 7: {
+            if (tag !== 57) {
+              break;
+            }
+
+            message.e4 = reader.double();
+            continue;
+          }
+          case 1000: {
+            if (tag !== 8002) {
+              break;
+            }
+
+            message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
+
+    create(
+      base?: DeepPartial<GetEulerParametersForIthFrameInFrameSetResult>,
+    ): GetEulerParametersForIthFrameInFrameSetResult {
+      return GetEulerParametersForIthFrameInFrameSetResult.fromPartial(base ?? {});
+    },
+    fromPartial(
+      object: DeepPartial<GetEulerParametersForIthFrameInFrameSetResult>,
+    ): GetEulerParametersForIthFrameInFrameSetResult {
+      const message = createBaseGetEulerParametersForIthFrameInFrameSetResult();
+      message.x = object.x ?? undefined;
+      message.y = object.y ?? undefined;
+      message.z = object.z ?? undefined;
+      message.e1 = object.e1 ?? undefined;
+      message.e2 = object.e2 ?? undefined;
+      message.e3 = object.e3 ?? undefined;
+      message.e4 = object.e4 ?? undefined;
+      message.execution = (object.execution !== undefined && object.execution !== null)
+        ? MpExecutionDetails.fromPartial(object.execution)
+        : undefined;
+      return message;
+    },
+  };
+
+function createBaseGetIthCollectionNameRequest(): GetIthCollectionNameRequest {
   return { collectionIndex: undefined };
 }
 
-export const GetIThCollectionNameRequest: MessageFns<GetIThCollectionNameRequest> = {
-  encode(message: GetIThCollectionNameRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const GetIthCollectionNameRequest: MessageFns<GetIthCollectionNameRequest> = {
+  encode(message: GetIthCollectionNameRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.collectionIndex !== undefined) {
       writer.uint32(8).int32(message.collectionIndex);
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetIThCollectionNameRequest {
+  decode(input: BinaryReader | Uint8Array, length?: number): GetIthCollectionNameRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetIThCollectionNameRequest();
+    const message = createBaseGetIthCollectionNameRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -82,22 +4660,22 @@ export const GetIThCollectionNameRequest: MessageFns<GetIThCollectionNameRequest
     return message;
   },
 
-  create(base?: DeepPartial<GetIThCollectionNameRequest>): GetIThCollectionNameRequest {
-    return GetIThCollectionNameRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<GetIthCollectionNameRequest>): GetIthCollectionNameRequest {
+    return GetIthCollectionNameRequest.fromPartial(base ?? {});
   },
-  fromPartial(object: DeepPartial<GetIThCollectionNameRequest>): GetIThCollectionNameRequest {
-    const message = createBaseGetIThCollectionNameRequest();
+  fromPartial(object: DeepPartial<GetIthCollectionNameRequest>): GetIthCollectionNameRequest {
+    const message = createBaseGetIthCollectionNameRequest();
     message.collectionIndex = object.collectionIndex ?? undefined;
     return message;
   },
 };
 
-function createBaseGetIThCollectionNameResult(): GetIThCollectionNameResult {
+function createBaseGetIthCollectionNameResult(): GetIthCollectionNameResult {
   return { resultantName: undefined, execution: undefined };
 }
 
-export const GetIThCollectionNameResult: MessageFns<GetIThCollectionNameResult> = {
-  encode(message: GetIThCollectionNameResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const GetIthCollectionNameResult: MessageFns<GetIthCollectionNameResult> = {
+  encode(message: GetIthCollectionNameResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.resultantName !== undefined) {
       writer.uint32(10).string(message.resultantName);
     }
@@ -107,10 +4685,10 @@ export const GetIThCollectionNameResult: MessageFns<GetIThCollectionNameResult> 
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetIThCollectionNameResult {
+  decode(input: BinaryReader | Uint8Array, length?: number): GetIthCollectionNameResult {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetIThCollectionNameResult();
+    const message = createBaseGetIthCollectionNameResult();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -139,12 +4717,727 @@ export const GetIThCollectionNameResult: MessageFns<GetIThCollectionNameResult> 
     return message;
   },
 
-  create(base?: DeepPartial<GetIThCollectionNameResult>): GetIThCollectionNameResult {
-    return GetIThCollectionNameResult.fromPartial(base ?? {});
+  create(base?: DeepPartial<GetIthCollectionNameResult>): GetIthCollectionNameResult {
+    return GetIthCollectionNameResult.fromPartial(base ?? {});
   },
-  fromPartial(object: DeepPartial<GetIThCollectionNameResult>): GetIThCollectionNameResult {
-    const message = createBaseGetIThCollectionNameResult();
+  fromPartial(object: DeepPartial<GetIthCollectionNameResult>): GetIthCollectionNameResult {
+    const message = createBaseGetIthCollectionNameResult();
     message.resultantName = object.resultantName ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetIthPointFromGroupRequest(): GetIthPointFromGroupRequest {
+  return { groupName: undefined, pointIndex: undefined };
+}
+
+export const GetIthPointFromGroupRequest: MessageFns<GetIthPointFromGroupRequest> = {
+  encode(message: GetIthPointFromGroupRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.groupName !== undefined) {
+      CollectionObjectName.encode(message.groupName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointIndex !== undefined) {
+      writer.uint32(16).int32(message.pointIndex);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetIthPointFromGroupRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetIthPointFromGroupRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.groupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.pointIndex = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetIthPointFromGroupRequest>): GetIthPointFromGroupRequest {
+    return GetIthPointFromGroupRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetIthPointFromGroupRequest>): GetIthPointFromGroupRequest {
+    const message = createBaseGetIthPointFromGroupRequest();
+    message.groupName = (object.groupName !== undefined && object.groupName !== null)
+      ? CollectionObjectName.fromPartial(object.groupName)
+      : undefined;
+    message.pointIndex = object.pointIndex ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetIthPointFromGroupResult(): GetIthPointFromGroupResult {
+  return { completePointName: undefined, pointNameOnly: undefined, vectorInWorking: undefined, execution: undefined };
+}
+
+export const GetIthPointFromGroupResult: MessageFns<GetIthPointFromGroupResult> = {
+  encode(message: GetIthPointFromGroupResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.completePointName !== undefined) {
+      PointName.encode(message.completePointName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointNameOnly !== undefined) {
+      writer.uint32(18).string(message.pointNameOnly);
+    }
+    if (message.vectorInWorking !== undefined) {
+      Vector.encode(message.vectorInWorking, writer.uint32(26).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetIthPointFromGroupResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetIthPointFromGroupResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.completePointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pointNameOnly = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.vectorInWorking = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetIthPointFromGroupResult>): GetIthPointFromGroupResult {
+    return GetIthPointFromGroupResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetIthPointFromGroupResult>): GetIthPointFromGroupResult {
+    const message = createBaseGetIthPointFromGroupResult();
+    message.completePointName = (object.completePointName !== undefined && object.completePointName !== null)
+      ? PointName.fromPartial(object.completePointName)
+      : undefined;
+    message.pointNameOnly = object.pointNameOnly ?? undefined;
+    message.vectorInWorking = (object.vectorInWorking !== undefined && object.vectorInWorking !== null)
+      ? Vector.fromPartial(object.vectorInWorking)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetLinePropertiesRequest(): GetLinePropertiesRequest {
+  return { lineName: undefined };
+}
+
+export const GetLinePropertiesRequest: MessageFns<GetLinePropertiesRequest> = {
+  encode(message: GetLinePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.lineName !== undefined) {
+      CollectionObjectName.encode(message.lineName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetLinePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetLinePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.lineName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetLinePropertiesRequest>): GetLinePropertiesRequest {
+    return GetLinePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetLinePropertiesRequest>): GetLinePropertiesRequest {
+    const message = createBaseGetLinePropertiesRequest();
+    message.lineName = (object.lineName !== undefined && object.lineName !== null)
+      ? CollectionObjectName.fromPartial(object.lineName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetLinePropertiesResult(): GetLinePropertiesResult {
+  return {
+    beginCoordinate: undefined,
+    endCoordinate: undefined,
+    deltaComponents: undefined,
+    length: undefined,
+    angleAboutXFromYInYzPlane: undefined,
+    angleAboutYFromZInXzPlane: undefined,
+    angleAboutZFromXInXyPlane: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetLinePropertiesResult: MessageFns<GetLinePropertiesResult> = {
+  encode(message: GetLinePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.beginCoordinate !== undefined) {
+      Vector.encode(message.beginCoordinate, writer.uint32(10).fork()).join();
+    }
+    if (message.endCoordinate !== undefined) {
+      Vector.encode(message.endCoordinate, writer.uint32(18).fork()).join();
+    }
+    if (message.deltaComponents !== undefined) {
+      Vector.encode(message.deltaComponents, writer.uint32(26).fork()).join();
+    }
+    if (message.length !== undefined) {
+      writer.uint32(33).double(message.length);
+    }
+    if (message.angleAboutXFromYInYzPlane !== undefined) {
+      writer.uint32(41).double(message.angleAboutXFromYInYzPlane);
+    }
+    if (message.angleAboutYFromZInXzPlane !== undefined) {
+      writer.uint32(49).double(message.angleAboutYFromZInXzPlane);
+    }
+    if (message.angleAboutZFromXInXyPlane !== undefined) {
+      writer.uint32(57).double(message.angleAboutZFromXInXyPlane);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetLinePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetLinePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.beginCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.endCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.deltaComponents = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.length = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.angleAboutXFromYInYzPlane = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.angleAboutYFromZInXzPlane = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.angleAboutZFromXInXyPlane = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetLinePropertiesResult>): GetLinePropertiesResult {
+    return GetLinePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetLinePropertiesResult>): GetLinePropertiesResult {
+    const message = createBaseGetLinePropertiesResult();
+    message.beginCoordinate = (object.beginCoordinate !== undefined && object.beginCoordinate !== null)
+      ? Vector.fromPartial(object.beginCoordinate)
+      : undefined;
+    message.endCoordinate = (object.endCoordinate !== undefined && object.endCoordinate !== null)
+      ? Vector.fromPartial(object.endCoordinate)
+      : undefined;
+    message.deltaComponents = (object.deltaComponents !== undefined && object.deltaComponents !== null)
+      ? Vector.fromPartial(object.deltaComponents)
+      : undefined;
+    message.length = object.length ?? undefined;
+    message.angleAboutXFromYInYzPlane = object.angleAboutXFromYInYzPlane ?? undefined;
+    message.angleAboutYFromZInXzPlane = object.angleAboutYFromZInXzPlane ?? undefined;
+    message.angleAboutZFromXInXyPlane = object.angleAboutZFromXInXyPlane ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetMeasurementAuxiliaryDataRequest(): GetMeasurementAuxiliaryDataRequest {
+  return { pointName: undefined, auxiliaryName: undefined };
+}
+
+export const GetMeasurementAuxiliaryDataRequest: MessageFns<GetMeasurementAuxiliaryDataRequest> = {
+  encode(message: GetMeasurementAuxiliaryDataRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    if (message.auxiliaryName !== undefined) {
+      writer.uint32(18).string(message.auxiliaryName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetMeasurementAuxiliaryDataRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetMeasurementAuxiliaryDataRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.auxiliaryName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetMeasurementAuxiliaryDataRequest>): GetMeasurementAuxiliaryDataRequest {
+    return GetMeasurementAuxiliaryDataRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetMeasurementAuxiliaryDataRequest>): GetMeasurementAuxiliaryDataRequest {
+    const message = createBaseGetMeasurementAuxiliaryDataRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    message.auxiliaryName = object.auxiliaryName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetMeasurementAuxiliaryDataResult(): GetMeasurementAuxiliaryDataResult {
+  return { value: undefined, units: undefined, execution: undefined };
+}
+
+export const GetMeasurementAuxiliaryDataResult: MessageFns<GetMeasurementAuxiliaryDataResult> = {
+  encode(message: GetMeasurementAuxiliaryDataResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.value !== undefined) {
+      writer.uint32(9).double(message.value);
+    }
+    if (message.units !== undefined) {
+      writer.uint32(18).string(message.units);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetMeasurementAuxiliaryDataResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetMeasurementAuxiliaryDataResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.value = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.units = reader.string();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetMeasurementAuxiliaryDataResult>): GetMeasurementAuxiliaryDataResult {
+    return GetMeasurementAuxiliaryDataResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetMeasurementAuxiliaryDataResult>): GetMeasurementAuxiliaryDataResult {
+    const message = createBaseGetMeasurementAuxiliaryDataResult();
+    message.value = object.value ?? undefined;
+    message.units = object.units ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetMeasurementInfoDataRequest(): GetMeasurementInfoDataRequest {
+  return { pointName: undefined };
+}
+
+export const GetMeasurementInfoDataRequest: MessageFns<GetMeasurementInfoDataRequest> = {
+  encode(message: GetMeasurementInfoDataRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetMeasurementInfoDataRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetMeasurementInfoDataRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetMeasurementInfoDataRequest>): GetMeasurementInfoDataRequest {
+    return GetMeasurementInfoDataRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetMeasurementInfoDataRequest>): GetMeasurementInfoDataRequest {
+    const message = createBaseGetMeasurementInfoDataRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetMeasurementInfoDataResult(): GetMeasurementInfoDataResult {
+  return { infoData: undefined, execution: undefined };
+}
+
+export const GetMeasurementInfoDataResult: MessageFns<GetMeasurementInfoDataResult> = {
+  encode(message: GetMeasurementInfoDataResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.infoData !== undefined) {
+      writer.uint32(10).string(message.infoData);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetMeasurementInfoDataResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetMeasurementInfoDataResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.infoData = reader.string();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetMeasurementInfoDataResult>): GetMeasurementInfoDataResult {
+    return GetMeasurementInfoDataResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetMeasurementInfoDataResult>): GetMeasurementInfoDataResult {
+    const message = createBaseGetMeasurementInfoDataResult();
+    message.infoData = object.infoData ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetMeasurementWeatherDataRequest(): GetMeasurementWeatherDataRequest {
+  return { pointName: undefined };
+}
+
+export const GetMeasurementWeatherDataRequest: MessageFns<GetMeasurementWeatherDataRequest> = {
+  encode(message: GetMeasurementWeatherDataRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetMeasurementWeatherDataRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetMeasurementWeatherDataRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetMeasurementWeatherDataRequest>): GetMeasurementWeatherDataRequest {
+    return GetMeasurementWeatherDataRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetMeasurementWeatherDataRequest>): GetMeasurementWeatherDataRequest {
+    const message = createBaseGetMeasurementWeatherDataRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetMeasurementWeatherDataResult(): GetMeasurementWeatherDataResult {
+  return { temperatureDegF: undefined, pressureInHg: undefined, humidityRh: undefined, execution: undefined };
+}
+
+export const GetMeasurementWeatherDataResult: MessageFns<GetMeasurementWeatherDataResult> = {
+  encode(message: GetMeasurementWeatherDataResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.temperatureDegF !== undefined) {
+      writer.uint32(9).double(message.temperatureDegF);
+    }
+    if (message.pressureInHg !== undefined) {
+      writer.uint32(17).double(message.pressureInHg);
+    }
+    if (message.humidityRh !== undefined) {
+      writer.uint32(25).double(message.humidityRh);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetMeasurementWeatherDataResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetMeasurementWeatherDataResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.temperatureDegF = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.pressureInHg = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.humidityRh = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetMeasurementWeatherDataResult>): GetMeasurementWeatherDataResult {
+    return GetMeasurementWeatherDataResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetMeasurementWeatherDataResult>): GetMeasurementWeatherDataResult {
+    const message = createBaseGetMeasurementWeatherDataResult();
+    message.temperatureDegF = object.temperatureDegF ?? undefined;
+    message.pressureInHg = object.pressureInHg ?? undefined;
+    message.humidityRh = object.humidityRh ?? undefined;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -246,21 +5539,11224 @@ export const GetNumberOfCollectionsResult: MessageFns<GetNumberOfCollectionsResu
   },
 };
 
+function createBaseGetNumberOfFramesInFrameSetRequest(): GetNumberOfFramesInFrameSetRequest {
+  return { frameSetContainer: undefined };
+}
+
+export const GetNumberOfFramesInFrameSetRequest: MessageFns<GetNumberOfFramesInFrameSetRequest> = {
+  encode(message: GetNumberOfFramesInFrameSetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.frameSetContainer !== undefined) {
+      CollectionObjectName.encode(message.frameSetContainer, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetNumberOfFramesInFrameSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetNumberOfFramesInFrameSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.frameSetContainer = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetNumberOfFramesInFrameSetRequest>): GetNumberOfFramesInFrameSetRequest {
+    return GetNumberOfFramesInFrameSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetNumberOfFramesInFrameSetRequest>): GetNumberOfFramesInFrameSetRequest {
+    const message = createBaseGetNumberOfFramesInFrameSetRequest();
+    message.frameSetContainer = (object.frameSetContainer !== undefined && object.frameSetContainer !== null)
+      ? CollectionObjectName.fromPartial(object.frameSetContainer)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetNumberOfFramesInFrameSetResult(): GetNumberOfFramesInFrameSetResult {
+  return { totalCount: undefined, execution: undefined };
+}
+
+export const GetNumberOfFramesInFrameSetResult: MessageFns<GetNumberOfFramesInFrameSetResult> = {
+  encode(message: GetNumberOfFramesInFrameSetResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.totalCount !== undefined) {
+      writer.uint32(8).int32(message.totalCount);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetNumberOfFramesInFrameSetResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetNumberOfFramesInFrameSetResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.totalCount = reader.int32();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetNumberOfFramesInFrameSetResult>): GetNumberOfFramesInFrameSetResult {
+    return GetNumberOfFramesInFrameSetResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetNumberOfFramesInFrameSetResult>): GetNumberOfFramesInFrameSetResult {
+    const message = createBaseGetNumberOfFramesInFrameSetResult();
+    message.totalCount = object.totalCount ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetNumberOfPointsInGroupRequest(): GetNumberOfPointsInGroupRequest {
+  return { groupName: undefined };
+}
+
+export const GetNumberOfPointsInGroupRequest: MessageFns<GetNumberOfPointsInGroupRequest> = {
+  encode(message: GetNumberOfPointsInGroupRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.groupName !== undefined) {
+      CollectionObjectName.encode(message.groupName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetNumberOfPointsInGroupRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetNumberOfPointsInGroupRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.groupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetNumberOfPointsInGroupRequest>): GetNumberOfPointsInGroupRequest {
+    return GetNumberOfPointsInGroupRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetNumberOfPointsInGroupRequest>): GetNumberOfPointsInGroupRequest {
+    const message = createBaseGetNumberOfPointsInGroupRequest();
+    message.groupName = (object.groupName !== undefined && object.groupName !== null)
+      ? CollectionObjectName.fromPartial(object.groupName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetNumberOfPointsInGroupResult(): GetNumberOfPointsInGroupResult {
+  return { totalCount: undefined, execution: undefined };
+}
+
+export const GetNumberOfPointsInGroupResult: MessageFns<GetNumberOfPointsInGroupResult> = {
+  encode(message: GetNumberOfPointsInGroupResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.totalCount !== undefined) {
+      writer.uint32(8).int32(message.totalCount);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetNumberOfPointsInGroupResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetNumberOfPointsInGroupResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.totalCount = reader.int32();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetNumberOfPointsInGroupResult>): GetNumberOfPointsInGroupResult {
+    return GetNumberOfPointsInGroupResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetNumberOfPointsInGroupResult>): GetNumberOfPointsInGroupResult {
+    const message = createBaseGetNumberOfPointsInGroupResult();
+    message.totalCount = object.totalCount ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetNumberOfPointsInPointSetRequest(): GetNumberOfPointsInPointSetRequest {
+  return { pointSetContainer: undefined };
+}
+
+export const GetNumberOfPointsInPointSetRequest: MessageFns<GetNumberOfPointsInPointSetRequest> = {
+  encode(message: GetNumberOfPointsInPointSetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointSetContainer !== undefined) {
+      CollectionObjectName.encode(message.pointSetContainer, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetNumberOfPointsInPointSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetNumberOfPointsInPointSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointSetContainer = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetNumberOfPointsInPointSetRequest>): GetNumberOfPointsInPointSetRequest {
+    return GetNumberOfPointsInPointSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetNumberOfPointsInPointSetRequest>): GetNumberOfPointsInPointSetRequest {
+    const message = createBaseGetNumberOfPointsInPointSetRequest();
+    message.pointSetContainer = (object.pointSetContainer !== undefined && object.pointSetContainer !== null)
+      ? CollectionObjectName.fromPartial(object.pointSetContainer)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetNumberOfPointsInPointSetResult(): GetNumberOfPointsInPointSetResult {
+  return { totalCount: undefined, execution: undefined };
+}
+
+export const GetNumberOfPointsInPointSetResult: MessageFns<GetNumberOfPointsInPointSetResult> = {
+  encode(message: GetNumberOfPointsInPointSetResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.totalCount !== undefined) {
+      writer.uint32(8).int32(message.totalCount);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetNumberOfPointsInPointSetResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetNumberOfPointsInPointSetResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.totalCount = reader.int32();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetNumberOfPointsInPointSetResult>): GetNumberOfPointsInPointSetResult {
+    return GetNumberOfPointsInPointSetResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetNumberOfPointsInPointSetResult>): GetNumberOfPointsInPointSetResult {
+    const message = createBaseGetNumberOfPointsInPointSetResult();
+    message.totalCount = object.totalCount ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetObjectReportingFrameRequest(): GetObjectReportingFrameRequest {
+  return { objectName: undefined };
+}
+
+export const GetObjectReportingFrameRequest: MessageFns<GetObjectReportingFrameRequest> = {
+  encode(message: GetObjectReportingFrameRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.objectName !== undefined) {
+      CollectionObjectName.encode(message.objectName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetObjectReportingFrameRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetObjectReportingFrameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.objectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetObjectReportingFrameRequest>): GetObjectReportingFrameRequest {
+    return GetObjectReportingFrameRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetObjectReportingFrameRequest>): GetObjectReportingFrameRequest {
+    const message = createBaseGetObjectReportingFrameRequest();
+    message.objectName = (object.objectName !== undefined && object.objectName !== null)
+      ? CollectionObjectName.fromPartial(object.objectName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetObjectReportingFrameResult(): GetObjectReportingFrameResult {
+  return { reportingFrame: undefined, execution: undefined };
+}
+
+export const GetObjectReportingFrameResult: MessageFns<GetObjectReportingFrameResult> = {
+  encode(message: GetObjectReportingFrameResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.reportingFrame !== undefined) {
+      CollectionObjectName.encode(message.reportingFrame, writer.uint32(10).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetObjectReportingFrameResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetObjectReportingFrameResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.reportingFrame = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetObjectReportingFrameResult>): GetObjectReportingFrameResult {
+    return GetObjectReportingFrameResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetObjectReportingFrameResult>): GetObjectReportingFrameResult {
+    const message = createBaseGetObjectReportingFrameResult();
+    message.reportingFrame = (object.reportingFrame !== undefined && object.reportingFrame !== null)
+      ? CollectionObjectName.fromPartial(object.reportingFrame)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPlanePropertiesRequest(): GetPlanePropertiesRequest {
+  return { planeName: undefined };
+}
+
+export const GetPlanePropertiesRequest: MessageFns<GetPlanePropertiesRequest> = {
+  encode(message: GetPlanePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.planeName !== undefined) {
+      CollectionObjectName.encode(message.planeName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPlanePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPlanePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.planeName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPlanePropertiesRequest>): GetPlanePropertiesRequest {
+    return GetPlanePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPlanePropertiesRequest>): GetPlanePropertiesRequest {
+    const message = createBaseGetPlanePropertiesRequest();
+    message.planeName = (object.planeName !== undefined && object.planeName !== null)
+      ? CollectionObjectName.fromPartial(object.planeName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPlanePropertiesResult(): GetPlanePropertiesResult {
+  return { normalDirection: undefined, pointOnPlane: undefined, dParameter: undefined, execution: undefined };
+}
+
+export const GetPlanePropertiesResult: MessageFns<GetPlanePropertiesResult> = {
+  encode(message: GetPlanePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.normalDirection !== undefined) {
+      Vector.encode(message.normalDirection, writer.uint32(10).fork()).join();
+    }
+    if (message.pointOnPlane !== undefined) {
+      Vector.encode(message.pointOnPlane, writer.uint32(18).fork()).join();
+    }
+    if (message.dParameter !== undefined) {
+      writer.uint32(25).double(message.dParameter);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPlanePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPlanePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.normalDirection = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pointOnPlane = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.dParameter = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPlanePropertiesResult>): GetPlanePropertiesResult {
+    return GetPlanePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPlanePropertiesResult>): GetPlanePropertiesResult {
+    const message = createBaseGetPlanePropertiesResult();
+    message.normalDirection = (object.normalDirection !== undefined && object.normalDirection !== null)
+      ? Vector.fromPartial(object.normalDirection)
+      : undefined;
+    message.pointOnPlane = (object.pointOnPlane !== undefined && object.pointOnPlane !== null)
+      ? Vector.fromPartial(object.pointOnPlane)
+      : undefined;
+    message.dParameter = object.dParameter ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointCoordinateRequest(): GetPointCoordinateRequest {
+  return { pointName: undefined };
+}
+
+export const GetPointCoordinateRequest: MessageFns<GetPointCoordinateRequest> = {
+  encode(message: GetPointCoordinateRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointCoordinateRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointCoordinateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointCoordinateRequest>): GetPointCoordinateRequest {
+    return GetPointCoordinateRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointCoordinateRequest>): GetPointCoordinateRequest {
+    const message = createBaseGetPointCoordinateRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointCoordinateResult(): GetPointCoordinateResult {
+  return {
+    vectorRepresentation: undefined,
+    xValue: undefined,
+    yValue: undefined,
+    zValue: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetPointCoordinateResult: MessageFns<GetPointCoordinateResult> = {
+  encode(message: GetPointCoordinateResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.vectorRepresentation !== undefined) {
+      Vector.encode(message.vectorRepresentation, writer.uint32(10).fork()).join();
+    }
+    if (message.xValue !== undefined) {
+      writer.uint32(17).double(message.xValue);
+    }
+    if (message.yValue !== undefined) {
+      writer.uint32(25).double(message.yValue);
+    }
+    if (message.zValue !== undefined) {
+      writer.uint32(33).double(message.zValue);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointCoordinateResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointCoordinateResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vectorRepresentation = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.xValue = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.yValue = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.zValue = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointCoordinateResult>): GetPointCoordinateResult {
+    return GetPointCoordinateResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointCoordinateResult>): GetPointCoordinateResult {
+    const message = createBaseGetPointCoordinateResult();
+    message.vectorRepresentation = (object.vectorRepresentation !== undefined && object.vectorRepresentation !== null)
+      ? Vector.fromPartial(object.vectorRepresentation)
+      : undefined;
+    message.xValue = object.xValue ?? undefined;
+    message.yValue = object.yValue ?? undefined;
+    message.zValue = object.zValue ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointCoordinateCylindricalRequest(): GetPointCoordinateCylindricalRequest {
+  return { pointName: undefined };
+}
+
+export const GetPointCoordinateCylindricalRequest: MessageFns<GetPointCoordinateCylindricalRequest> = {
+  encode(message: GetPointCoordinateCylindricalRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointCoordinateCylindricalRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointCoordinateCylindricalRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointCoordinateCylindricalRequest>): GetPointCoordinateCylindricalRequest {
+    return GetPointCoordinateCylindricalRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointCoordinateCylindricalRequest>): GetPointCoordinateCylindricalRequest {
+    const message = createBaseGetPointCoordinateCylindricalRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointCoordinateCylindricalResult(): GetPointCoordinateCylindricalResult {
+  return { radiusValue: undefined, thetaValue: undefined, zValue: undefined, execution: undefined };
+}
+
+export const GetPointCoordinateCylindricalResult: MessageFns<GetPointCoordinateCylindricalResult> = {
+  encode(message: GetPointCoordinateCylindricalResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.radiusValue !== undefined) {
+      writer.uint32(9).double(message.radiusValue);
+    }
+    if (message.thetaValue !== undefined) {
+      writer.uint32(17).double(message.thetaValue);
+    }
+    if (message.zValue !== undefined) {
+      writer.uint32(25).double(message.zValue);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointCoordinateCylindricalResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointCoordinateCylindricalResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.radiusValue = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.thetaValue = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.zValue = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointCoordinateCylindricalResult>): GetPointCoordinateCylindricalResult {
+    return GetPointCoordinateCylindricalResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointCoordinateCylindricalResult>): GetPointCoordinateCylindricalResult {
+    const message = createBaseGetPointCoordinateCylindricalResult();
+    message.radiusValue = object.radiusValue ?? undefined;
+    message.thetaValue = object.thetaValue ?? undefined;
+    message.zValue = object.zValue ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointCoordinatePolarRequest(): GetPointCoordinatePolarRequest {
+  return { pointName: undefined };
+}
+
+export const GetPointCoordinatePolarRequest: MessageFns<GetPointCoordinatePolarRequest> = {
+  encode(message: GetPointCoordinatePolarRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointCoordinatePolarRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointCoordinatePolarRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointCoordinatePolarRequest>): GetPointCoordinatePolarRequest {
+    return GetPointCoordinatePolarRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointCoordinatePolarRequest>): GetPointCoordinatePolarRequest {
+    const message = createBaseGetPointCoordinatePolarRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointCoordinatePolarResult(): GetPointCoordinatePolarResult {
+  return { radiusValue: undefined, thetaValue: undefined, phiValue: undefined, execution: undefined };
+}
+
+export const GetPointCoordinatePolarResult: MessageFns<GetPointCoordinatePolarResult> = {
+  encode(message: GetPointCoordinatePolarResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.radiusValue !== undefined) {
+      writer.uint32(9).double(message.radiusValue);
+    }
+    if (message.thetaValue !== undefined) {
+      writer.uint32(17).double(message.thetaValue);
+    }
+    if (message.phiValue !== undefined) {
+      writer.uint32(25).double(message.phiValue);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointCoordinatePolarResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointCoordinatePolarResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.radiusValue = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.thetaValue = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.phiValue = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointCoordinatePolarResult>): GetPointCoordinatePolarResult {
+    return GetPointCoordinatePolarResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointCoordinatePolarResult>): GetPointCoordinatePolarResult {
+    const message = createBaseGetPointCoordinatePolarResult();
+    message.radiusValue = object.radiusValue ?? undefined;
+    message.thetaValue = object.thetaValue ?? undefined;
+    message.phiValue = object.phiValue ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointPropertiesRequest(): GetPointPropertiesRequest {
+  return { pointName: undefined };
+}
+
+export const GetPointPropertiesRequest: MessageFns<GetPointPropertiesRequest> = {
+  encode(message: GetPointPropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointPropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointPropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointPropertiesRequest>): GetPointPropertiesRequest {
+    return GetPointPropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointPropertiesRequest>): GetPointPropertiesRequest {
+    const message = createBaseGetPointPropertiesRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointPropertiesResult(): GetPointPropertiesResult {
+  return {
+    planarOffset: undefined,
+    radialOffset: undefined,
+    ux: undefined,
+    uy: undefined,
+    uz: undefined,
+    umag: undefined,
+    positionTolerance: undefined,
+    componentWeights: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetPointPropertiesResult: MessageFns<GetPointPropertiesResult> = {
+  encode(message: GetPointPropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.planarOffset !== undefined) {
+      writer.uint32(9).double(message.planarOffset);
+    }
+    if (message.radialOffset !== undefined) {
+      writer.uint32(17).double(message.radialOffset);
+    }
+    if (message.ux !== undefined) {
+      writer.uint32(25).double(message.ux);
+    }
+    if (message.uy !== undefined) {
+      writer.uint32(33).double(message.uy);
+    }
+    if (message.uz !== undefined) {
+      writer.uint32(41).double(message.uz);
+    }
+    if (message.umag !== undefined) {
+      writer.uint32(49).double(message.umag);
+    }
+    if (message.positionTolerance !== undefined) {
+      ToleranceVectorOptions.encode(message.positionTolerance, writer.uint32(58).fork()).join();
+    }
+    if (message.componentWeights !== undefined) {
+      Vector.encode(message.componentWeights, writer.uint32(66).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointPropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointPropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.planarOffset = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.radialOffset = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.ux = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.uy = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.uz = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.umag = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.positionTolerance = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.componentWeights = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointPropertiesResult>): GetPointPropertiesResult {
+    return GetPointPropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointPropertiesResult>): GetPointPropertiesResult {
+    const message = createBaseGetPointPropertiesResult();
+    message.planarOffset = object.planarOffset ?? undefined;
+    message.radialOffset = object.radialOffset ?? undefined;
+    message.ux = object.ux ?? undefined;
+    message.uy = object.uy ?? undefined;
+    message.uz = object.uz ?? undefined;
+    message.umag = object.umag ?? undefined;
+    message.positionTolerance = (object.positionTolerance !== undefined && object.positionTolerance !== null)
+      ? ToleranceVectorOptions.fromPartial(object.positionTolerance)
+      : undefined;
+    message.componentWeights = (object.componentWeights !== undefined && object.componentWeights !== null)
+      ? Vector.fromPartial(object.componentWeights)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointToLineDistanceRequest(): GetPointToLineDistanceRequest {
+  return { point: undefined, line: undefined };
+}
+
+export const GetPointToLineDistanceRequest: MessageFns<GetPointToLineDistanceRequest> = {
+  encode(message: GetPointToLineDistanceRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.point !== undefined) {
+      PointName.encode(message.point, writer.uint32(10).fork()).join();
+    }
+    if (message.line !== undefined) {
+      CollectionObjectName.encode(message.line, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointToLineDistanceRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointToLineDistanceRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.point = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.line = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointToLineDistanceRequest>): GetPointToLineDistanceRequest {
+    return GetPointToLineDistanceRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointToLineDistanceRequest>): GetPointToLineDistanceRequest {
+    const message = createBaseGetPointToLineDistanceRequest();
+    message.point = (object.point !== undefined && object.point !== null)
+      ? PointName.fromPartial(object.point)
+      : undefined;
+    message.line = (object.line !== undefined && object.line !== null)
+      ? CollectionObjectName.fromPartial(object.line)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointToLineDistanceResult(): GetPointToLineDistanceResult {
+  return {
+    vectorRepresentation: undefined,
+    xValue: undefined,
+    yValue: undefined,
+    zValue: undefined,
+    magnitude: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetPointToLineDistanceResult: MessageFns<GetPointToLineDistanceResult> = {
+  encode(message: GetPointToLineDistanceResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.vectorRepresentation !== undefined) {
+      Vector.encode(message.vectorRepresentation, writer.uint32(10).fork()).join();
+    }
+    if (message.xValue !== undefined) {
+      writer.uint32(17).double(message.xValue);
+    }
+    if (message.yValue !== undefined) {
+      writer.uint32(25).double(message.yValue);
+    }
+    if (message.zValue !== undefined) {
+      writer.uint32(33).double(message.zValue);
+    }
+    if (message.magnitude !== undefined) {
+      writer.uint32(41).double(message.magnitude);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointToLineDistanceResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointToLineDistanceResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vectorRepresentation = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.xValue = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.yValue = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.zValue = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.magnitude = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointToLineDistanceResult>): GetPointToLineDistanceResult {
+    return GetPointToLineDistanceResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointToLineDistanceResult>): GetPointToLineDistanceResult {
+    const message = createBaseGetPointToLineDistanceResult();
+    message.vectorRepresentation = (object.vectorRepresentation !== undefined && object.vectorRepresentation !== null)
+      ? Vector.fromPartial(object.vectorRepresentation)
+      : undefined;
+    message.xValue = object.xValue ?? undefined;
+    message.yValue = object.yValue ?? undefined;
+    message.zValue = object.zValue ?? undefined;
+    message.magnitude = object.magnitude ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointToPointDistanceRequest(): GetPointToPointDistanceRequest {
+  return { firstPoint: undefined, secondPoint: undefined };
+}
+
+export const GetPointToPointDistanceRequest: MessageFns<GetPointToPointDistanceRequest> = {
+  encode(message: GetPointToPointDistanceRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.firstPoint !== undefined) {
+      PointName.encode(message.firstPoint, writer.uint32(10).fork()).join();
+    }
+    if (message.secondPoint !== undefined) {
+      PointName.encode(message.secondPoint, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointToPointDistanceRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointToPointDistanceRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.firstPoint = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.secondPoint = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointToPointDistanceRequest>): GetPointToPointDistanceRequest {
+    return GetPointToPointDistanceRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointToPointDistanceRequest>): GetPointToPointDistanceRequest {
+    const message = createBaseGetPointToPointDistanceRequest();
+    message.firstPoint = (object.firstPoint !== undefined && object.firstPoint !== null)
+      ? PointName.fromPartial(object.firstPoint)
+      : undefined;
+    message.secondPoint = (object.secondPoint !== undefined && object.secondPoint !== null)
+      ? PointName.fromPartial(object.secondPoint)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointToPointDistanceResult(): GetPointToPointDistanceResult {
+  return {
+    vectorRepresentation: undefined,
+    xValue: undefined,
+    yValue: undefined,
+    zValue: undefined,
+    magnitude: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetPointToPointDistanceResult: MessageFns<GetPointToPointDistanceResult> = {
+  encode(message: GetPointToPointDistanceResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.vectorRepresentation !== undefined) {
+      Vector.encode(message.vectorRepresentation, writer.uint32(10).fork()).join();
+    }
+    if (message.xValue !== undefined) {
+      writer.uint32(17).double(message.xValue);
+    }
+    if (message.yValue !== undefined) {
+      writer.uint32(25).double(message.yValue);
+    }
+    if (message.zValue !== undefined) {
+      writer.uint32(33).double(message.zValue);
+    }
+    if (message.magnitude !== undefined) {
+      writer.uint32(41).double(message.magnitude);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointToPointDistanceResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointToPointDistanceResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vectorRepresentation = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.xValue = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.yValue = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.zValue = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.magnitude = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointToPointDistanceResult>): GetPointToPointDistanceResult {
+    return GetPointToPointDistanceResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointToPointDistanceResult>): GetPointToPointDistanceResult {
+    const message = createBaseGetPointToPointDistanceResult();
+    message.vectorRepresentation = (object.vectorRepresentation !== undefined && object.vectorRepresentation !== null)
+      ? Vector.fromPartial(object.vectorRepresentation)
+      : undefined;
+    message.xValue = object.xValue ?? undefined;
+    message.yValue = object.yValue ?? undefined;
+    message.zValue = object.zValue ?? undefined;
+    message.magnitude = object.magnitude ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointToleranceRequest(): GetPointToleranceRequest {
+  return { pointName: undefined };
+}
+
+export const GetPointToleranceRequest: MessageFns<GetPointToleranceRequest> = {
+  encode(message: GetPointToleranceRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointToleranceRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointToleranceRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointToleranceRequest>): GetPointToleranceRequest {
+    return GetPointToleranceRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointToleranceRequest>): GetPointToleranceRequest {
+    const message = createBaseGetPointToleranceRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointToleranceResult(): GetPointToleranceResult {
+  return {
+    useHighXTolerance: undefined,
+    highXTolerance: undefined,
+    useHighYTolerance: undefined,
+    highYTolerance: undefined,
+    useHighZTolerance: undefined,
+    highZTolerance: undefined,
+    useHighMagTolerance: undefined,
+    highMagTolerance: undefined,
+    useLowXTolerance: undefined,
+    lowXTolerance: undefined,
+    useLowYTolerance: undefined,
+    lowYTolerance: undefined,
+    useLowZTolerance: undefined,
+    lowZTolerance: undefined,
+    useLowMagTolerance: undefined,
+    lowMagTolerance: undefined,
+    vectorTolerance: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetPointToleranceResult: MessageFns<GetPointToleranceResult> = {
+  encode(message: GetPointToleranceResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.useHighXTolerance !== undefined) {
+      writer.uint32(8).bool(message.useHighXTolerance);
+    }
+    if (message.highXTolerance !== undefined) {
+      writer.uint32(17).double(message.highXTolerance);
+    }
+    if (message.useHighYTolerance !== undefined) {
+      writer.uint32(24).bool(message.useHighYTolerance);
+    }
+    if (message.highYTolerance !== undefined) {
+      writer.uint32(33).double(message.highYTolerance);
+    }
+    if (message.useHighZTolerance !== undefined) {
+      writer.uint32(40).bool(message.useHighZTolerance);
+    }
+    if (message.highZTolerance !== undefined) {
+      writer.uint32(49).double(message.highZTolerance);
+    }
+    if (message.useHighMagTolerance !== undefined) {
+      writer.uint32(56).bool(message.useHighMagTolerance);
+    }
+    if (message.highMagTolerance !== undefined) {
+      writer.uint32(65).double(message.highMagTolerance);
+    }
+    if (message.useLowXTolerance !== undefined) {
+      writer.uint32(72).bool(message.useLowXTolerance);
+    }
+    if (message.lowXTolerance !== undefined) {
+      writer.uint32(81).double(message.lowXTolerance);
+    }
+    if (message.useLowYTolerance !== undefined) {
+      writer.uint32(88).bool(message.useLowYTolerance);
+    }
+    if (message.lowYTolerance !== undefined) {
+      writer.uint32(97).double(message.lowYTolerance);
+    }
+    if (message.useLowZTolerance !== undefined) {
+      writer.uint32(104).bool(message.useLowZTolerance);
+    }
+    if (message.lowZTolerance !== undefined) {
+      writer.uint32(113).double(message.lowZTolerance);
+    }
+    if (message.useLowMagTolerance !== undefined) {
+      writer.uint32(120).bool(message.useLowMagTolerance);
+    }
+    if (message.lowMagTolerance !== undefined) {
+      writer.uint32(129).double(message.lowMagTolerance);
+    }
+    if (message.vectorTolerance !== undefined) {
+      ToleranceVectorOptions.encode(message.vectorTolerance, writer.uint32(138).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointToleranceResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointToleranceResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.useHighXTolerance = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.highXTolerance = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.useHighYTolerance = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.highYTolerance = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.useHighZTolerance = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.highZTolerance = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.useHighMagTolerance = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 65) {
+            break;
+          }
+
+          message.highMagTolerance = reader.double();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.useLowXTolerance = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 81) {
+            break;
+          }
+
+          message.lowXTolerance = reader.double();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.useLowYTolerance = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 97) {
+            break;
+          }
+
+          message.lowYTolerance = reader.double();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.useLowZTolerance = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 113) {
+            break;
+          }
+
+          message.lowZTolerance = reader.double();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.useLowMagTolerance = reader.bool();
+          continue;
+        }
+        case 16: {
+          if (tag !== 129) {
+            break;
+          }
+
+          message.lowMagTolerance = reader.double();
+          continue;
+        }
+        case 17: {
+          if (tag !== 138) {
+            break;
+          }
+
+          message.vectorTolerance = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointToleranceResult>): GetPointToleranceResult {
+    return GetPointToleranceResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetPointToleranceResult>): GetPointToleranceResult {
+    const message = createBaseGetPointToleranceResult();
+    message.useHighXTolerance = object.useHighXTolerance ?? undefined;
+    message.highXTolerance = object.highXTolerance ?? undefined;
+    message.useHighYTolerance = object.useHighYTolerance ?? undefined;
+    message.highYTolerance = object.highYTolerance ?? undefined;
+    message.useHighZTolerance = object.useHighZTolerance ?? undefined;
+    message.highZTolerance = object.highZTolerance ?? undefined;
+    message.useHighMagTolerance = object.useHighMagTolerance ?? undefined;
+    message.highMagTolerance = object.highMagTolerance ?? undefined;
+    message.useLowXTolerance = object.useLowXTolerance ?? undefined;
+    message.lowXTolerance = object.lowXTolerance ?? undefined;
+    message.useLowYTolerance = object.useLowYTolerance ?? undefined;
+    message.lowYTolerance = object.lowYTolerance ?? undefined;
+    message.useLowZTolerance = object.useLowZTolerance ?? undefined;
+    message.lowZTolerance = object.lowZTolerance ?? undefined;
+    message.useLowMagTolerance = object.useLowMagTolerance ?? undefined;
+    message.lowMagTolerance = object.lowMagTolerance ?? undefined;
+    message.vectorTolerance = (object.vectorTolerance !== undefined && object.vectorTolerance !== null)
+      ? ToleranceVectorOptions.fromPartial(object.vectorTolerance)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetSlotPropertiesRequest(): GetSlotPropertiesRequest {
+  return { slotName: undefined };
+}
+
+export const GetSlotPropertiesRequest: MessageFns<GetSlotPropertiesRequest> = {
+  encode(message: GetSlotPropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.slotName !== undefined) {
+      CollectionObjectName.encode(message.slotName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetSlotPropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetSlotPropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.slotName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetSlotPropertiesRequest>): GetSlotPropertiesRequest {
+    return GetSlotPropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetSlotPropertiesRequest>): GetSlotPropertiesRequest {
+    const message = createBaseGetSlotPropertiesRequest();
+    message.slotName = (object.slotName !== undefined && object.slotName !== null)
+      ? CollectionObjectName.fromPartial(object.slotName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetSlotPropertiesResult(): GetSlotPropertiesResult {
+  return {
+    slotTransformInWorkingCoordinates: undefined,
+    centerInWorkingCoordinates: undefined,
+    normalDirectionInWorkingCoordinates: undefined,
+    slotLength: undefined,
+    slotWidth: undefined,
+    roundSlotType: undefined,
+    centerlinePt1InWorkingCoordinates: undefined,
+    centerlinePt2InWorkingCoordinates: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetSlotPropertiesResult: MessageFns<GetSlotPropertiesResult> = {
+  encode(message: GetSlotPropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.slotTransformInWorkingCoordinates !== undefined) {
+      Transform.encode(message.slotTransformInWorkingCoordinates, writer.uint32(10).fork()).join();
+    }
+    if (message.centerInWorkingCoordinates !== undefined) {
+      Vector.encode(message.centerInWorkingCoordinates, writer.uint32(18).fork()).join();
+    }
+    if (message.normalDirectionInWorkingCoordinates !== undefined) {
+      Vector.encode(message.normalDirectionInWorkingCoordinates, writer.uint32(26).fork()).join();
+    }
+    if (message.slotLength !== undefined) {
+      writer.uint32(33).double(message.slotLength);
+    }
+    if (message.slotWidth !== undefined) {
+      writer.uint32(41).double(message.slotWidth);
+    }
+    if (message.roundSlotType !== undefined) {
+      writer.uint32(48).bool(message.roundSlotType);
+    }
+    if (message.centerlinePt1InWorkingCoordinates !== undefined) {
+      Vector.encode(message.centerlinePt1InWorkingCoordinates, writer.uint32(58).fork()).join();
+    }
+    if (message.centerlinePt2InWorkingCoordinates !== undefined) {
+      Vector.encode(message.centerlinePt2InWorkingCoordinates, writer.uint32(66).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetSlotPropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetSlotPropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.slotTransformInWorkingCoordinates = Transform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.centerInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.normalDirectionInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.slotLength = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.slotWidth = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.roundSlotType = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.centerlinePt1InWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.centerlinePt2InWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetSlotPropertiesResult>): GetSlotPropertiesResult {
+    return GetSlotPropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetSlotPropertiesResult>): GetSlotPropertiesResult {
+    const message = createBaseGetSlotPropertiesResult();
+    message.slotTransformInWorkingCoordinates =
+      (object.slotTransformInWorkingCoordinates !== undefined && object.slotTransformInWorkingCoordinates !== null)
+        ? Transform.fromPartial(object.slotTransformInWorkingCoordinates)
+        : undefined;
+    message.centerInWorkingCoordinates =
+      (object.centerInWorkingCoordinates !== undefined && object.centerInWorkingCoordinates !== null)
+        ? Vector.fromPartial(object.centerInWorkingCoordinates)
+        : undefined;
+    message.normalDirectionInWorkingCoordinates =
+      (object.normalDirectionInWorkingCoordinates !== undefined && object.normalDirectionInWorkingCoordinates !== null)
+        ? Vector.fromPartial(object.normalDirectionInWorkingCoordinates)
+        : undefined;
+    message.slotLength = object.slotLength ?? undefined;
+    message.slotWidth = object.slotWidth ?? undefined;
+    message.roundSlotType = object.roundSlotType ?? undefined;
+    message.centerlinePt1InWorkingCoordinates =
+      (object.centerlinePt1InWorkingCoordinates !== undefined && object.centerlinePt1InWorkingCoordinates !== null)
+        ? Vector.fromPartial(object.centerlinePt1InWorkingCoordinates)
+        : undefined;
+    message.centerlinePt2InWorkingCoordinates =
+      (object.centerlinePt2InWorkingCoordinates !== undefined && object.centerlinePt2InWorkingCoordinates !== null)
+        ? Vector.fromPartial(object.centerlinePt2InWorkingCoordinates)
+        : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetSpherePropertiesRequest(): GetSpherePropertiesRequest {
+  return { sphereName: undefined };
+}
+
+export const GetSpherePropertiesRequest: MessageFns<GetSpherePropertiesRequest> = {
+  encode(message: GetSpherePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.sphereName !== undefined) {
+      CollectionObjectName.encode(message.sphereName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetSpherePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetSpherePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.sphereName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetSpherePropertiesRequest>): GetSpherePropertiesRequest {
+    return GetSpherePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetSpherePropertiesRequest>): GetSpherePropertiesRequest {
+    const message = createBaseGetSpherePropertiesRequest();
+    message.sphereName = (object.sphereName !== undefined && object.sphereName !== null)
+      ? CollectionObjectName.fromPartial(object.sphereName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetSpherePropertiesResult(): GetSpherePropertiesResult {
+  return { centerCoordinate: undefined, radius: undefined, diameter: undefined, execution: undefined };
+}
+
+export const GetSpherePropertiesResult: MessageFns<GetSpherePropertiesResult> = {
+  encode(message: GetSpherePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.centerCoordinate !== undefined) {
+      Vector.encode(message.centerCoordinate, writer.uint32(10).fork()).join();
+    }
+    if (message.radius !== undefined) {
+      writer.uint32(17).double(message.radius);
+    }
+    if (message.diameter !== undefined) {
+      writer.uint32(25).double(message.diameter);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetSpherePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetSpherePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.centerCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.radius = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.diameter = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetSpherePropertiesResult>): GetSpherePropertiesResult {
+    return GetSpherePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetSpherePropertiesResult>): GetSpherePropertiesResult {
+    const message = createBaseGetSpherePropertiesResult();
+    message.centerCoordinate = (object.centerCoordinate !== undefined && object.centerCoordinate !== null)
+      ? Vector.fromPartial(object.centerCoordinate)
+      : undefined;
+    message.radius = object.radius ?? undefined;
+    message.diameter = object.diameter ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetSurfacePhysicalStatsRequest(): GetSurfacePhysicalStatsRequest {
+  return { surfaceName: undefined };
+}
+
+export const GetSurfacePhysicalStatsRequest: MessageFns<GetSurfacePhysicalStatsRequest> = {
+  encode(message: GetSurfacePhysicalStatsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.surfaceName !== undefined) {
+      CollectionObjectName.encode(message.surfaceName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetSurfacePhysicalStatsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetSurfacePhysicalStatsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.surfaceName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetSurfacePhysicalStatsRequest>): GetSurfacePhysicalStatsRequest {
+    return GetSurfacePhysicalStatsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetSurfacePhysicalStatsRequest>): GetSurfacePhysicalStatsRequest {
+    const message = createBaseGetSurfacePhysicalStatsRequest();
+    message.surfaceName = (object.surfaceName !== undefined && object.surfaceName !== null)
+      ? CollectionObjectName.fromPartial(object.surfaceName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetSurfacePhysicalStatsResult(): GetSurfacePhysicalStatsResult {
+  return { volume: undefined, area: undefined, execution: undefined };
+}
+
+export const GetSurfacePhysicalStatsResult: MessageFns<GetSurfacePhysicalStatsResult> = {
+  encode(message: GetSurfacePhysicalStatsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.volume !== undefined) {
+      writer.uint32(9).double(message.volume);
+    }
+    if (message.area !== undefined) {
+      writer.uint32(17).double(message.area);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetSurfacePhysicalStatsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetSurfacePhysicalStatsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.volume = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.area = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetSurfacePhysicalStatsResult>): GetSurfacePhysicalStatsResult {
+    return GetSurfacePhysicalStatsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetSurfacePhysicalStatsResult>): GetSurfacePhysicalStatsResult {
+    const message = createBaseGetSurfacePhysicalStatsResult();
+    message.volume = object.volume ?? undefined;
+    message.area = object.area ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetTimestampForIthFrameInFrameSetRequest(): GetTimestampForIthFrameInFrameSetRequest {
+  return { frameSet: undefined, frameSetIndex: undefined };
+}
+
+export const GetTimestampForIthFrameInFrameSetRequest: MessageFns<GetTimestampForIthFrameInFrameSetRequest> = {
+  encode(message: GetTimestampForIthFrameInFrameSetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.frameSet !== undefined) {
+      CollectionObjectName.encode(message.frameSet, writer.uint32(10).fork()).join();
+    }
+    if (message.frameSetIndex !== undefined) {
+      writer.uint32(16).int32(message.frameSetIndex);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTimestampForIthFrameInFrameSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTimestampForIthFrameInFrameSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.frameSet = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.frameSetIndex = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTimestampForIthFrameInFrameSetRequest>): GetTimestampForIthFrameInFrameSetRequest {
+    return GetTimestampForIthFrameInFrameSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTimestampForIthFrameInFrameSetRequest>): GetTimestampForIthFrameInFrameSetRequest {
+    const message = createBaseGetTimestampForIthFrameInFrameSetRequest();
+    message.frameSet = (object.frameSet !== undefined && object.frameSet !== null)
+      ? CollectionObjectName.fromPartial(object.frameSet)
+      : undefined;
+    message.frameSetIndex = object.frameSetIndex ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetTimestampForIthFrameInFrameSetResult(): GetTimestampForIthFrameInFrameSetResult {
+  return { timestamp: undefined, execution: undefined };
+}
+
+export const GetTimestampForIthFrameInFrameSetResult: MessageFns<GetTimestampForIthFrameInFrameSetResult> = {
+  encode(message: GetTimestampForIthFrameInFrameSetResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.timestamp !== undefined) {
+      writer.uint32(9).double(message.timestamp);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTimestampForIthFrameInFrameSetResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTimestampForIthFrameInFrameSetResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.timestamp = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTimestampForIthFrameInFrameSetResult>): GetTimestampForIthFrameInFrameSetResult {
+    return GetTimestampForIthFrameInFrameSetResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTimestampForIthFrameInFrameSetResult>): GetTimestampForIthFrameInFrameSetResult {
+    const message = createBaseGetTimestampForIthFrameInFrameSetResult();
+    message.timestamp = object.timestamp ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetTimestampForIthPointInPointSetRequest(): GetTimestampForIthPointInPointSetRequest {
+  return { pointSet: undefined, pointSetIndex: undefined };
+}
+
+export const GetTimestampForIthPointInPointSetRequest: MessageFns<GetTimestampForIthPointInPointSetRequest> = {
+  encode(message: GetTimestampForIthPointInPointSetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointSet !== undefined) {
+      CollectionObjectName.encode(message.pointSet, writer.uint32(10).fork()).join();
+    }
+    if (message.pointSetIndex !== undefined) {
+      writer.uint32(16).int32(message.pointSetIndex);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTimestampForIthPointInPointSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTimestampForIthPointInPointSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointSet = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.pointSetIndex = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTimestampForIthPointInPointSetRequest>): GetTimestampForIthPointInPointSetRequest {
+    return GetTimestampForIthPointInPointSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTimestampForIthPointInPointSetRequest>): GetTimestampForIthPointInPointSetRequest {
+    const message = createBaseGetTimestampForIthPointInPointSetRequest();
+    message.pointSet = (object.pointSet !== undefined && object.pointSet !== null)
+      ? CollectionObjectName.fromPartial(object.pointSet)
+      : undefined;
+    message.pointSetIndex = object.pointSetIndex ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetTimestampForIthPointInPointSetResult(): GetTimestampForIthPointInPointSetResult {
+  return { timestamp: undefined, execution: undefined };
+}
+
+export const GetTimestampForIthPointInPointSetResult: MessageFns<GetTimestampForIthPointInPointSetResult> = {
+  encode(message: GetTimestampForIthPointInPointSetResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.timestamp !== undefined) {
+      writer.uint32(9).double(message.timestamp);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTimestampForIthPointInPointSetResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTimestampForIthPointInPointSetResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.timestamp = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTimestampForIthPointInPointSetResult>): GetTimestampForIthPointInPointSetResult {
+    return GetTimestampForIthPointInPointSetResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTimestampForIthPointInPointSetResult>): GetTimestampForIthPointInPointSetResult {
+    const message = createBaseGetTimestampForIthPointInPointSetResult();
+    message.timestamp = object.timestamp ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetTorusPropertiesRequest(): GetTorusPropertiesRequest {
+  return { torusName: undefined };
+}
+
+export const GetTorusPropertiesRequest: MessageFns<GetTorusPropertiesRequest> = {
+  encode(message: GetTorusPropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.torusName !== undefined) {
+      CollectionObjectName.encode(message.torusName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTorusPropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTorusPropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.torusName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTorusPropertiesRequest>): GetTorusPropertiesRequest {
+    return GetTorusPropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTorusPropertiesRequest>): GetTorusPropertiesRequest {
+    const message = createBaseGetTorusPropertiesRequest();
+    message.torusName = (object.torusName !== undefined && object.torusName !== null)
+      ? CollectionObjectName.fromPartial(object.torusName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetTorusPropertiesResult(): GetTorusPropertiesResult {
+  return {
+    centerCoordinate: undefined,
+    normalDirection: undefined,
+    majorRadius: undefined,
+    minorRadius: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetTorusPropertiesResult: MessageFns<GetTorusPropertiesResult> = {
+  encode(message: GetTorusPropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.centerCoordinate !== undefined) {
+      Vector.encode(message.centerCoordinate, writer.uint32(10).fork()).join();
+    }
+    if (message.normalDirection !== undefined) {
+      Vector.encode(message.normalDirection, writer.uint32(18).fork()).join();
+    }
+    if (message.majorRadius !== undefined) {
+      writer.uint32(25).double(message.majorRadius);
+    }
+    if (message.minorRadius !== undefined) {
+      writer.uint32(33).double(message.minorRadius);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTorusPropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTorusPropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.centerCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.normalDirection = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.majorRadius = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.minorRadius = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTorusPropertiesResult>): GetTorusPropertiesResult {
+    return GetTorusPropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTorusPropertiesResult>): GetTorusPropertiesResult {
+    const message = createBaseGetTorusPropertiesResult();
+    message.centerCoordinate = (object.centerCoordinate !== undefined && object.centerCoordinate !== null)
+      ? Vector.fromPartial(object.centerCoordinate)
+      : undefined;
+    message.normalDirection = (object.normalDirection !== undefined && object.normalDirection !== null)
+      ? Vector.fromPartial(object.normalDirection)
+      : undefined;
+    message.majorRadius = object.majorRadius ?? undefined;
+    message.minorRadius = object.minorRadius ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetTransformForIthFrameInFrameSetRequest(): GetTransformForIthFrameInFrameSetRequest {
+  return { frameSet: undefined, frameSetIndex: undefined };
+}
+
+export const GetTransformForIthFrameInFrameSetRequest: MessageFns<GetTransformForIthFrameInFrameSetRequest> = {
+  encode(message: GetTransformForIthFrameInFrameSetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.frameSet !== undefined) {
+      CollectionObjectName.encode(message.frameSet, writer.uint32(10).fork()).join();
+    }
+    if (message.frameSetIndex !== undefined) {
+      writer.uint32(16).int32(message.frameSetIndex);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTransformForIthFrameInFrameSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTransformForIthFrameInFrameSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.frameSet = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.frameSetIndex = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTransformForIthFrameInFrameSetRequest>): GetTransformForIthFrameInFrameSetRequest {
+    return GetTransformForIthFrameInFrameSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTransformForIthFrameInFrameSetRequest>): GetTransformForIthFrameInFrameSetRequest {
+    const message = createBaseGetTransformForIthFrameInFrameSetRequest();
+    message.frameSet = (object.frameSet !== undefined && object.frameSet !== null)
+      ? CollectionObjectName.fromPartial(object.frameSet)
+      : undefined;
+    message.frameSetIndex = object.frameSetIndex ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetTransformForIthFrameInFrameSetResult(): GetTransformForIthFrameInFrameSetResult {
+  return { transformInWorking: undefined, execution: undefined };
+}
+
+export const GetTransformForIthFrameInFrameSetResult: MessageFns<GetTransformForIthFrameInFrameSetResult> = {
+  encode(message: GetTransformForIthFrameInFrameSetResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.transformInWorking !== undefined) {
+      Transform.encode(message.transformInWorking, writer.uint32(10).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTransformForIthFrameInFrameSetResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTransformForIthFrameInFrameSetResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.transformInWorking = Transform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTransformForIthFrameInFrameSetResult>): GetTransformForIthFrameInFrameSetResult {
+    return GetTransformForIthFrameInFrameSetResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTransformForIthFrameInFrameSetResult>): GetTransformForIthFrameInFrameSetResult {
+    const message = createBaseGetTransformForIthFrameInFrameSetResult();
+    message.transformInWorking = (object.transformInWorking !== undefined && object.transformInWorking !== null)
+      ? Transform.fromPartial(object.transformInWorking)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGroupToSurfaceFitRequest(): GroupToSurfaceFitRequest {
+  return {
+    groupToFit: undefined,
+    surface: undefined,
+    doConventionalFit: undefined,
+    rmsTolerance00ForNone: undefined,
+    maximumAbsoluteTolerance00ForNone: undefined,
+  };
+}
+
+export const GroupToSurfaceFitRequest: MessageFns<GroupToSurfaceFitRequest> = {
+  encode(message: GroupToSurfaceFitRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.groupToFit !== undefined) {
+      CollectionObjectName.encode(message.groupToFit, writer.uint32(10).fork()).join();
+    }
+    if (message.surface !== undefined) {
+      CollectionObjectName.encode(message.surface, writer.uint32(18).fork()).join();
+    }
+    if (message.doConventionalFit !== undefined) {
+      writer.uint32(24).bool(message.doConventionalFit);
+    }
+    if (message.rmsTolerance00ForNone !== undefined) {
+      writer.uint32(33).double(message.rmsTolerance00ForNone);
+    }
+    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
+      writer.uint32(41).double(message.maximumAbsoluteTolerance00ForNone);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupToSurfaceFitRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGroupToSurfaceFitRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.groupToFit = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.surface = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.doConventionalFit = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.rmsTolerance00ForNone = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GroupToSurfaceFitRequest>): GroupToSurfaceFitRequest {
+    return GroupToSurfaceFitRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GroupToSurfaceFitRequest>): GroupToSurfaceFitRequest {
+    const message = createBaseGroupToSurfaceFitRequest();
+    message.groupToFit = (object.groupToFit !== undefined && object.groupToFit !== null)
+      ? CollectionObjectName.fromPartial(object.groupToFit)
+      : undefined;
+    message.surface = (object.surface !== undefined && object.surface !== null)
+      ? CollectionObjectName.fromPartial(object.surface)
+      : undefined;
+    message.doConventionalFit = object.doConventionalFit ?? undefined;
+    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
+    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGroupToSurfaceFitResult(): GroupToSurfaceFitResult {
+  return {
+    optimumTransform: undefined,
+    rmsDeviation: undefined,
+    maximumAbsoluteDeviation: undefined,
+    execution: undefined,
+  };
+}
+
+export const GroupToSurfaceFitResult: MessageFns<GroupToSurfaceFitResult> = {
+  encode(message: GroupToSurfaceFitResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.optimumTransform !== undefined) {
+      WorldTransform.encode(message.optimumTransform, writer.uint32(10).fork()).join();
+    }
+    if (message.rmsDeviation !== undefined) {
+      writer.uint32(17).double(message.rmsDeviation);
+    }
+    if (message.maximumAbsoluteDeviation !== undefined) {
+      writer.uint32(25).double(message.maximumAbsoluteDeviation);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupToSurfaceFitResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGroupToSurfaceFitResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.optimumTransform = WorldTransform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.rmsDeviation = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.maximumAbsoluteDeviation = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GroupToSurfaceFitResult>): GroupToSurfaceFitResult {
+    return GroupToSurfaceFitResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GroupToSurfaceFitResult>): GroupToSurfaceFitResult {
+    const message = createBaseGroupToSurfaceFitResult();
+    message.optimumTransform = (object.optimumTransform !== undefined && object.optimumTransform !== null)
+      ? WorldTransform.fromPartial(object.optimumTransform)
+      : undefined;
+    message.rmsDeviation = object.rmsDeviation ?? undefined;
+    message.maximumAbsoluteDeviation = object.maximumAbsoluteDeviation ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportGeometryFitProfilesRequest(): ImportGeometryFitProfilesRequest {
+  return { geometryFitProfilesFilePath: undefined, overwriteProfilesWithSameName: undefined };
+}
+
+export const ImportGeometryFitProfilesRequest: MessageFns<ImportGeometryFitProfilesRequest> = {
+  encode(message: ImportGeometryFitProfilesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.geometryFitProfilesFilePath !== undefined) {
+      FileReference.encode(message.geometryFitProfilesFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.overwriteProfilesWithSameName !== undefined) {
+      writer.uint32(16).bool(message.overwriteProfilesWithSameName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportGeometryFitProfilesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportGeometryFitProfilesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.geometryFitProfilesFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.overwriteProfilesWithSameName = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportGeometryFitProfilesRequest>): ImportGeometryFitProfilesRequest {
+    return ImportGeometryFitProfilesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportGeometryFitProfilesRequest>): ImportGeometryFitProfilesRequest {
+    const message = createBaseImportGeometryFitProfilesRequest();
+    message.geometryFitProfilesFilePath =
+      (object.geometryFitProfilesFilePath !== undefined && object.geometryFitProfilesFilePath !== null)
+        ? FileReference.fromPartial(object.geometryFitProfilesFilePath)
+        : undefined;
+    message.overwriteProfilesWithSameName = object.overwriteProfilesWithSameName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportGeometryFitProfilesResult(): ImportGeometryFitProfilesResult {
+  return { execution: undefined };
+}
+
+export const ImportGeometryFitProfilesResult: MessageFns<ImportGeometryFitProfilesResult> = {
+  encode(message: ImportGeometryFitProfilesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportGeometryFitProfilesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportGeometryFitProfilesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportGeometryFitProfilesResult>): ImportGeometryFitProfilesResult {
+    return ImportGeometryFitProfilesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportGeometryFitProfilesResult>): ImportGeometryFitProfilesResult {
+    const message = createBaseImportGeometryFitProfilesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseIsObjectOfTypeRequest(): IsObjectOfTypeRequest {
+  return { objectName: undefined, objectType: undefined };
+}
+
+export const IsObjectOfTypeRequest: MessageFns<IsObjectOfTypeRequest> = {
+  encode(message: IsObjectOfTypeRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.objectName !== undefined) {
+      CollectionObjectName.encode(message.objectName, writer.uint32(10).fork()).join();
+    }
+    if (message.objectType !== undefined) {
+      writer.uint32(16).int32(message.objectType);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): IsObjectOfTypeRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsObjectOfTypeRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.objectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.objectType = reader.int32() as any;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<IsObjectOfTypeRequest>): IsObjectOfTypeRequest {
+    return IsObjectOfTypeRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<IsObjectOfTypeRequest>): IsObjectOfTypeRequest {
+    const message = createBaseIsObjectOfTypeRequest();
+    message.objectName = (object.objectName !== undefined && object.objectName !== null)
+      ? CollectionObjectName.fromPartial(object.objectName)
+      : undefined;
+    message.objectType = object.objectType ?? undefined;
+    return message;
+  },
+};
+
+function createBaseIsObjectOfTypeResult(): IsObjectOfTypeResult {
+  return { resultant: undefined, execution: undefined };
+}
+
+export const IsObjectOfTypeResult: MessageFns<IsObjectOfTypeResult> = {
+  encode(message: IsObjectOfTypeResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.resultant !== undefined) {
+      writer.uint32(8).bool(message.resultant);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): IsObjectOfTypeResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsObjectOfTypeResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.resultant = reader.bool();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<IsObjectOfTypeResult>): IsObjectOfTypeResult {
+    return IsObjectOfTypeResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<IsObjectOfTypeResult>): IsObjectOfTypeResult {
+    const message = createBaseIsObjectOfTypeResult();
+    message.resultant = object.resultant ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeCircleFitProfileRequest(): MakeCircleFitProfileRequest {
+  return {
+    fitProfileName: undefined,
+    measuredSideForRadialOffset: undefined,
+    overrideRadialOffset10UseCurrent: undefined,
+    measuredSideForPlanarOffset: undefined,
+    overridePlanarOffset10UseCurrent: undefined,
+    planarOffsetDirection: undefined,
+    lockRadius10DoNotLock: undefined,
+    circleComputationTechnique: undefined,
+    reverseNormalVectorAfterFit: undefined,
+    makeCardinalPoints: undefined,
+    cardinalPt1Center: undefined,
+    cardinalPt2PointOnNormal: undefined,
+  };
+}
+
+export const MakeCircleFitProfileRequest: MessageFns<MakeCircleFitProfileRequest> = {
+  encode(message: MakeCircleFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(10).string(message.fitProfileName);
+    }
+    if (message.measuredSideForRadialOffset !== undefined) {
+      writer.uint32(16).int32(message.measuredSideForRadialOffset);
+    }
+    if (message.overrideRadialOffset10UseCurrent !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    }
+    if (message.measuredSideForPlanarOffset !== undefined) {
+      writer.uint32(32).int32(message.measuredSideForPlanarOffset);
+    }
+    if (message.overridePlanarOffset10UseCurrent !== undefined) {
+      writer.uint32(41).double(message.overridePlanarOffset10UseCurrent);
+    }
+    if (message.planarOffsetDirection !== undefined) {
+      writer.uint32(48).int32(message.planarOffsetDirection);
+    }
+    if (message.lockRadius10DoNotLock !== undefined) {
+      writer.uint32(57).double(message.lockRadius10DoNotLock);
+    }
+    if (message.circleComputationTechnique !== undefined) {
+      writer.uint32(64).int32(message.circleComputationTechnique);
+    }
+    if (message.reverseNormalVectorAfterFit !== undefined) {
+      writer.uint32(72).bool(message.reverseNormalVectorAfterFit);
+    }
+    if (message.makeCardinalPoints !== undefined) {
+      writer.uint32(80).bool(message.makeCardinalPoints);
+    }
+    if (message.cardinalPt1Center !== undefined) {
+      writer.uint32(88).bool(message.cardinalPt1Center);
+    }
+    if (message.cardinalPt2PointOnNormal !== undefined) {
+      writer.uint32(96).bool(message.cardinalPt2PointOnNormal);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeCircleFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeCircleFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.measuredSideForRadialOffset = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.overrideRadialOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.measuredSideForPlanarOffset = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.overridePlanarOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.planarOffsetDirection = reader.int32() as any;
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.lockRadius10DoNotLock = reader.double();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.circleComputationTechnique = reader.int32() as any;
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.reverseNormalVectorAfterFit = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.makeCardinalPoints = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.cardinalPt1Center = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.cardinalPt2PointOnNormal = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeCircleFitProfileRequest>): MakeCircleFitProfileRequest {
+    return MakeCircleFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeCircleFitProfileRequest>): MakeCircleFitProfileRequest {
+    const message = createBaseMakeCircleFitProfileRequest();
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
+    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.measuredSideForPlanarOffset = object.measuredSideForPlanarOffset ?? undefined;
+    message.overridePlanarOffset10UseCurrent = object.overridePlanarOffset10UseCurrent ?? undefined;
+    message.planarOffsetDirection = object.planarOffsetDirection ?? undefined;
+    message.lockRadius10DoNotLock = object.lockRadius10DoNotLock ?? undefined;
+    message.circleComputationTechnique = object.circleComputationTechnique ?? undefined;
+    message.reverseNormalVectorAfterFit = object.reverseNormalVectorAfterFit ?? undefined;
+    message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
+    message.cardinalPt1Center = object.cardinalPt1Center ?? undefined;
+    message.cardinalPt2PointOnNormal = object.cardinalPt2PointOnNormal ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeCircleFitProfileResult(): MakeCircleFitProfileResult {
+  return { execution: undefined };
+}
+
+export const MakeCircleFitProfileResult: MessageFns<MakeCircleFitProfileResult> = {
+  encode(message: MakeCircleFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeCircleFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeCircleFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeCircleFitProfileResult>): MakeCircleFitProfileResult {
+    return MakeCircleFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeCircleFitProfileResult>): MakeCircleFitProfileResult {
+    const message = createBaseMakeCircleFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeConeFitProfileRequest(): MakeConeFitProfileRequest {
+  return {
+    fitProfileName: undefined,
+    measuredSideForRadialOffset: undefined,
+    overrideRadialOffset10UseCurrent: undefined,
+    lockAngleInDegrees10DoNotLock: undefined,
+    useExhaustiveSearch: undefined,
+    makeCardinalPoints: undefined,
+    cardinalPt1Vertex: undefined,
+    cardinalPt2PointOnAxis: undefined,
+    cardinalPt3CutPointOnAxis: undefined,
+  };
+}
+
+export const MakeConeFitProfileRequest: MessageFns<MakeConeFitProfileRequest> = {
+  encode(message: MakeConeFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(10).string(message.fitProfileName);
+    }
+    if (message.measuredSideForRadialOffset !== undefined) {
+      writer.uint32(16).int32(message.measuredSideForRadialOffset);
+    }
+    if (message.overrideRadialOffset10UseCurrent !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    }
+    if (message.lockAngleInDegrees10DoNotLock !== undefined) {
+      writer.uint32(33).double(message.lockAngleInDegrees10DoNotLock);
+    }
+    if (message.useExhaustiveSearch !== undefined) {
+      writer.uint32(40).bool(message.useExhaustiveSearch);
+    }
+    if (message.makeCardinalPoints !== undefined) {
+      writer.uint32(48).bool(message.makeCardinalPoints);
+    }
+    if (message.cardinalPt1Vertex !== undefined) {
+      writer.uint32(56).bool(message.cardinalPt1Vertex);
+    }
+    if (message.cardinalPt2PointOnAxis !== undefined) {
+      writer.uint32(64).bool(message.cardinalPt2PointOnAxis);
+    }
+    if (message.cardinalPt3CutPointOnAxis !== undefined) {
+      writer.uint32(72).bool(message.cardinalPt3CutPointOnAxis);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeConeFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeConeFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.measuredSideForRadialOffset = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.overrideRadialOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.lockAngleInDegrees10DoNotLock = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.useExhaustiveSearch = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.makeCardinalPoints = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.cardinalPt1Vertex = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.cardinalPt2PointOnAxis = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.cardinalPt3CutPointOnAxis = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeConeFitProfileRequest>): MakeConeFitProfileRequest {
+    return MakeConeFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeConeFitProfileRequest>): MakeConeFitProfileRequest {
+    const message = createBaseMakeConeFitProfileRequest();
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
+    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.lockAngleInDegrees10DoNotLock = object.lockAngleInDegrees10DoNotLock ?? undefined;
+    message.useExhaustiveSearch = object.useExhaustiveSearch ?? undefined;
+    message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
+    message.cardinalPt1Vertex = object.cardinalPt1Vertex ?? undefined;
+    message.cardinalPt2PointOnAxis = object.cardinalPt2PointOnAxis ?? undefined;
+    message.cardinalPt3CutPointOnAxis = object.cardinalPt3CutPointOnAxis ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeConeFitProfileResult(): MakeConeFitProfileResult {
+  return { execution: undefined };
+}
+
+export const MakeConeFitProfileResult: MessageFns<MakeConeFitProfileResult> = {
+  encode(message: MakeConeFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeConeFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeConeFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeConeFitProfileResult>): MakeConeFitProfileResult {
+    return MakeConeFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeConeFitProfileResult>): MakeConeFitProfileResult {
+    const message = createBaseMakeConeFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeCylinderFitProfileRequest(): MakeCylinderFitProfileRequest {
+  return {
+    fitProfileName: undefined,
+    measuredSideForRadialOffset: undefined,
+    overrideRadialOffset10UseCurrent: undefined,
+    lockRadius10DoNotLock: undefined,
+    lockedRadiusFitMethod: undefined,
+    constrainToNominalAxis: undefined,
+    constrainToNominalOrientation: undefined,
+    alignWithNominal: undefined,
+    reverseAxis: undefined,
+    setAxisFirstToLastPoint: undefined,
+    cylinderComputationTechnique: undefined,
+    useExhaustiveSearch: undefined,
+    makeCardinalPoints: undefined,
+    cardinalPt1BeginPt: undefined,
+    cardinalPt2EndPt: undefined,
+    cardinalPt3Center: undefined,
+  };
+}
+
+export const MakeCylinderFitProfileRequest: MessageFns<MakeCylinderFitProfileRequest> = {
+  encode(message: MakeCylinderFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(10).string(message.fitProfileName);
+    }
+    if (message.measuredSideForRadialOffset !== undefined) {
+      writer.uint32(16).int32(message.measuredSideForRadialOffset);
+    }
+    if (message.overrideRadialOffset10UseCurrent !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    }
+    if (message.lockRadius10DoNotLock !== undefined) {
+      writer.uint32(33).double(message.lockRadius10DoNotLock);
+    }
+    if (message.lockedRadiusFitMethod !== undefined) {
+      writer.uint32(40).int32(message.lockedRadiusFitMethod);
+    }
+    if (message.constrainToNominalAxis !== undefined) {
+      writer.uint32(48).bool(message.constrainToNominalAxis);
+    }
+    if (message.constrainToNominalOrientation !== undefined) {
+      writer.uint32(56).bool(message.constrainToNominalOrientation);
+    }
+    if (message.alignWithNominal !== undefined) {
+      writer.uint32(64).bool(message.alignWithNominal);
+    }
+    if (message.reverseAxis !== undefined) {
+      writer.uint32(72).bool(message.reverseAxis);
+    }
+    if (message.setAxisFirstToLastPoint !== undefined) {
+      writer.uint32(80).bool(message.setAxisFirstToLastPoint);
+    }
+    if (message.cylinderComputationTechnique !== undefined) {
+      writer.uint32(88).int32(message.cylinderComputationTechnique);
+    }
+    if (message.useExhaustiveSearch !== undefined) {
+      writer.uint32(96).bool(message.useExhaustiveSearch);
+    }
+    if (message.makeCardinalPoints !== undefined) {
+      writer.uint32(104).bool(message.makeCardinalPoints);
+    }
+    if (message.cardinalPt1BeginPt !== undefined) {
+      writer.uint32(112).bool(message.cardinalPt1BeginPt);
+    }
+    if (message.cardinalPt2EndPt !== undefined) {
+      writer.uint32(120).bool(message.cardinalPt2EndPt);
+    }
+    if (message.cardinalPt3Center !== undefined) {
+      writer.uint32(128).bool(message.cardinalPt3Center);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeCylinderFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeCylinderFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.measuredSideForRadialOffset = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.overrideRadialOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.lockRadius10DoNotLock = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.lockedRadiusFitMethod = reader.int32() as any;
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.constrainToNominalAxis = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.constrainToNominalOrientation = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.alignWithNominal = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.reverseAxis = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.setAxisFirstToLastPoint = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.cylinderComputationTechnique = reader.int32() as any;
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.useExhaustiveSearch = reader.bool();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.makeCardinalPoints = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.cardinalPt1BeginPt = reader.bool();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.cardinalPt2EndPt = reader.bool();
+          continue;
+        }
+        case 16: {
+          if (tag !== 128) {
+            break;
+          }
+
+          message.cardinalPt3Center = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeCylinderFitProfileRequest>): MakeCylinderFitProfileRequest {
+    return MakeCylinderFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeCylinderFitProfileRequest>): MakeCylinderFitProfileRequest {
+    const message = createBaseMakeCylinderFitProfileRequest();
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
+    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.lockRadius10DoNotLock = object.lockRadius10DoNotLock ?? undefined;
+    message.lockedRadiusFitMethod = object.lockedRadiusFitMethod ?? undefined;
+    message.constrainToNominalAxis = object.constrainToNominalAxis ?? undefined;
+    message.constrainToNominalOrientation = object.constrainToNominalOrientation ?? undefined;
+    message.alignWithNominal = object.alignWithNominal ?? undefined;
+    message.reverseAxis = object.reverseAxis ?? undefined;
+    message.setAxisFirstToLastPoint = object.setAxisFirstToLastPoint ?? undefined;
+    message.cylinderComputationTechnique = object.cylinderComputationTechnique ?? undefined;
+    message.useExhaustiveSearch = object.useExhaustiveSearch ?? undefined;
+    message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
+    message.cardinalPt1BeginPt = object.cardinalPt1BeginPt ?? undefined;
+    message.cardinalPt2EndPt = object.cardinalPt2EndPt ?? undefined;
+    message.cardinalPt3Center = object.cardinalPt3Center ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeCylinderFitProfileResult(): MakeCylinderFitProfileResult {
+  return { execution: undefined };
+}
+
+export const MakeCylinderFitProfileResult: MessageFns<MakeCylinderFitProfileResult> = {
+  encode(message: MakeCylinderFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeCylinderFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeCylinderFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeCylinderFitProfileResult>): MakeCylinderFitProfileResult {
+    return MakeCylinderFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeCylinderFitProfileResult>): MakeCylinderFitProfileResult {
+    const message = createBaseMakeCylinderFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeEllipseFitProfileRequest(): MakeEllipseFitProfileRequest {
+  return {
+    fitProfileName: undefined,
+    measuredSideForRadialOffset: undefined,
+    overrideRadialOffset10UseCurrent: undefined,
+    measuredSideForPlanarOffset: undefined,
+    overridePlanarOffset10UseCurrent: undefined,
+    planarOffsetDirection: undefined,
+    reverseNormalVectorAfterFit: undefined,
+    makeCardinalPoints: undefined,
+    cardinalPt1Center: undefined,
+    cardinalPt2PointOnNormal: undefined,
+    cardinalPt3FocalPt1: undefined,
+    cardinalPt4FocalPt2: undefined,
+  };
+}
+
+export const MakeEllipseFitProfileRequest: MessageFns<MakeEllipseFitProfileRequest> = {
+  encode(message: MakeEllipseFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(10).string(message.fitProfileName);
+    }
+    if (message.measuredSideForRadialOffset !== undefined) {
+      writer.uint32(16).int32(message.measuredSideForRadialOffset);
+    }
+    if (message.overrideRadialOffset10UseCurrent !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    }
+    if (message.measuredSideForPlanarOffset !== undefined) {
+      writer.uint32(32).int32(message.measuredSideForPlanarOffset);
+    }
+    if (message.overridePlanarOffset10UseCurrent !== undefined) {
+      writer.uint32(41).double(message.overridePlanarOffset10UseCurrent);
+    }
+    if (message.planarOffsetDirection !== undefined) {
+      writer.uint32(48).int32(message.planarOffsetDirection);
+    }
+    if (message.reverseNormalVectorAfterFit !== undefined) {
+      writer.uint32(56).bool(message.reverseNormalVectorAfterFit);
+    }
+    if (message.makeCardinalPoints !== undefined) {
+      writer.uint32(64).bool(message.makeCardinalPoints);
+    }
+    if (message.cardinalPt1Center !== undefined) {
+      writer.uint32(72).bool(message.cardinalPt1Center);
+    }
+    if (message.cardinalPt2PointOnNormal !== undefined) {
+      writer.uint32(80).bool(message.cardinalPt2PointOnNormal);
+    }
+    if (message.cardinalPt3FocalPt1 !== undefined) {
+      writer.uint32(88).bool(message.cardinalPt3FocalPt1);
+    }
+    if (message.cardinalPt4FocalPt2 !== undefined) {
+      writer.uint32(96).bool(message.cardinalPt4FocalPt2);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeEllipseFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeEllipseFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.measuredSideForRadialOffset = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.overrideRadialOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.measuredSideForPlanarOffset = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.overridePlanarOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.planarOffsetDirection = reader.int32() as any;
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.reverseNormalVectorAfterFit = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.makeCardinalPoints = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.cardinalPt1Center = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.cardinalPt2PointOnNormal = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.cardinalPt3FocalPt1 = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.cardinalPt4FocalPt2 = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeEllipseFitProfileRequest>): MakeEllipseFitProfileRequest {
+    return MakeEllipseFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeEllipseFitProfileRequest>): MakeEllipseFitProfileRequest {
+    const message = createBaseMakeEllipseFitProfileRequest();
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
+    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.measuredSideForPlanarOffset = object.measuredSideForPlanarOffset ?? undefined;
+    message.overridePlanarOffset10UseCurrent = object.overridePlanarOffset10UseCurrent ?? undefined;
+    message.planarOffsetDirection = object.planarOffsetDirection ?? undefined;
+    message.reverseNormalVectorAfterFit = object.reverseNormalVectorAfterFit ?? undefined;
+    message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
+    message.cardinalPt1Center = object.cardinalPt1Center ?? undefined;
+    message.cardinalPt2PointOnNormal = object.cardinalPt2PointOnNormal ?? undefined;
+    message.cardinalPt3FocalPt1 = object.cardinalPt3FocalPt1 ?? undefined;
+    message.cardinalPt4FocalPt2 = object.cardinalPt4FocalPt2 ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeEllipseFitProfileResult(): MakeEllipseFitProfileResult {
+  return { execution: undefined };
+}
+
+export const MakeEllipseFitProfileResult: MessageFns<MakeEllipseFitProfileResult> = {
+  encode(message: MakeEllipseFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeEllipseFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeEllipseFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeEllipseFitProfileResult>): MakeEllipseFitProfileResult {
+    return MakeEllipseFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeEllipseFitProfileResult>): MakeEllipseFitProfileResult {
+    const message = createBaseMakeEllipseFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeLineFitProfileRequest(): MakeLineFitProfileRequest {
+  return {
+    fitProfileName: undefined,
+    reverseNormalVectorAfterFit: undefined,
+    makeCardinalPoints: undefined,
+    cardinalPt1PointA: undefined,
+    cardinalPt2PointB: undefined,
+    cardinalPt3MidPoint: undefined,
+  };
+}
+
+export const MakeLineFitProfileRequest: MessageFns<MakeLineFitProfileRequest> = {
+  encode(message: MakeLineFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(10).string(message.fitProfileName);
+    }
+    if (message.reverseNormalVectorAfterFit !== undefined) {
+      writer.uint32(16).bool(message.reverseNormalVectorAfterFit);
+    }
+    if (message.makeCardinalPoints !== undefined) {
+      writer.uint32(24).bool(message.makeCardinalPoints);
+    }
+    if (message.cardinalPt1PointA !== undefined) {
+      writer.uint32(32).bool(message.cardinalPt1PointA);
+    }
+    if (message.cardinalPt2PointB !== undefined) {
+      writer.uint32(40).bool(message.cardinalPt2PointB);
+    }
+    if (message.cardinalPt3MidPoint !== undefined) {
+      writer.uint32(48).bool(message.cardinalPt3MidPoint);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeLineFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeLineFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.reverseNormalVectorAfterFit = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.makeCardinalPoints = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.cardinalPt1PointA = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.cardinalPt2PointB = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.cardinalPt3MidPoint = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeLineFitProfileRequest>): MakeLineFitProfileRequest {
+    return MakeLineFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeLineFitProfileRequest>): MakeLineFitProfileRequest {
+    const message = createBaseMakeLineFitProfileRequest();
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.reverseNormalVectorAfterFit = object.reverseNormalVectorAfterFit ?? undefined;
+    message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
+    message.cardinalPt1PointA = object.cardinalPt1PointA ?? undefined;
+    message.cardinalPt2PointB = object.cardinalPt2PointB ?? undefined;
+    message.cardinalPt3MidPoint = object.cardinalPt3MidPoint ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeLineFitProfileResult(): MakeLineFitProfileResult {
+  return { execution: undefined };
+}
+
+export const MakeLineFitProfileResult: MessageFns<MakeLineFitProfileResult> = {
+  encode(message: MakeLineFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeLineFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeLineFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeLineFitProfileResult>): MakeLineFitProfileResult {
+    return MakeLineFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeLineFitProfileResult>): MakeLineFitProfileResult {
+    const message = createBaseMakeLineFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeParaboloidFitProfileRequest(): MakeParaboloidFitProfileRequest {
+  return {
+    fitProfileName: undefined,
+    measuredSideForRadialOffset: undefined,
+    overrideRadialOffset10UseCurrent: undefined,
+    lockFocalLength10DoNotLock: undefined,
+    degreeOfFreedom: undefined,
+    makeCardinalPoints: undefined,
+    cardinalPt1Vertex: undefined,
+    cardinalPt2FocalPoint: undefined,
+  };
+}
+
+export const MakeParaboloidFitProfileRequest: MessageFns<MakeParaboloidFitProfileRequest> = {
+  encode(message: MakeParaboloidFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(10).string(message.fitProfileName);
+    }
+    if (message.measuredSideForRadialOffset !== undefined) {
+      writer.uint32(16).int32(message.measuredSideForRadialOffset);
+    }
+    if (message.overrideRadialOffset10UseCurrent !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    }
+    if (message.lockFocalLength10DoNotLock !== undefined) {
+      writer.uint32(33).double(message.lockFocalLength10DoNotLock);
+    }
+    if (message.degreeOfFreedom !== undefined) {
+      writer.uint32(40).int32(message.degreeOfFreedom);
+    }
+    if (message.makeCardinalPoints !== undefined) {
+      writer.uint32(48).bool(message.makeCardinalPoints);
+    }
+    if (message.cardinalPt1Vertex !== undefined) {
+      writer.uint32(56).bool(message.cardinalPt1Vertex);
+    }
+    if (message.cardinalPt2FocalPoint !== undefined) {
+      writer.uint32(64).bool(message.cardinalPt2FocalPoint);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeParaboloidFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeParaboloidFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.measuredSideForRadialOffset = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.overrideRadialOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.lockFocalLength10DoNotLock = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.degreeOfFreedom = reader.int32() as any;
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.makeCardinalPoints = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.cardinalPt1Vertex = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.cardinalPt2FocalPoint = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeParaboloidFitProfileRequest>): MakeParaboloidFitProfileRequest {
+    return MakeParaboloidFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeParaboloidFitProfileRequest>): MakeParaboloidFitProfileRequest {
+    const message = createBaseMakeParaboloidFitProfileRequest();
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
+    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.lockFocalLength10DoNotLock = object.lockFocalLength10DoNotLock ?? undefined;
+    message.degreeOfFreedom = object.degreeOfFreedom ?? undefined;
+    message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
+    message.cardinalPt1Vertex = object.cardinalPt1Vertex ?? undefined;
+    message.cardinalPt2FocalPoint = object.cardinalPt2FocalPoint ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeParaboloidFitProfileResult(): MakeParaboloidFitProfileResult {
+  return { execution: undefined };
+}
+
+export const MakeParaboloidFitProfileResult: MessageFns<MakeParaboloidFitProfileResult> = {
+  encode(message: MakeParaboloidFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeParaboloidFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeParaboloidFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeParaboloidFitProfileResult>): MakeParaboloidFitProfileResult {
+    return MakeParaboloidFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeParaboloidFitProfileResult>): MakeParaboloidFitProfileResult {
+    const message = createBaseMakeParaboloidFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakePlaneFitProfileRequest(): MakePlaneFitProfileRequest {
+  return {
+    fitProfileName: undefined,
+    measuredSideForPlanarOffset: undefined,
+    overridePlanarOffset10UseCurrent: undefined,
+    planarOffsetDirection: undefined,
+    reverseNormalVectorAfterFit: undefined,
+    makeCardinalPoints: undefined,
+    cardinalPt1Centroid: undefined,
+    cardinalPt2PointOnNormal: undefined,
+  };
+}
+
+export const MakePlaneFitProfileRequest: MessageFns<MakePlaneFitProfileRequest> = {
+  encode(message: MakePlaneFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(10).string(message.fitProfileName);
+    }
+    if (message.measuredSideForPlanarOffset !== undefined) {
+      writer.uint32(16).int32(message.measuredSideForPlanarOffset);
+    }
+    if (message.overridePlanarOffset10UseCurrent !== undefined) {
+      writer.uint32(25).double(message.overridePlanarOffset10UseCurrent);
+    }
+    if (message.planarOffsetDirection !== undefined) {
+      writer.uint32(32).int32(message.planarOffsetDirection);
+    }
+    if (message.reverseNormalVectorAfterFit !== undefined) {
+      writer.uint32(40).bool(message.reverseNormalVectorAfterFit);
+    }
+    if (message.makeCardinalPoints !== undefined) {
+      writer.uint32(48).bool(message.makeCardinalPoints);
+    }
+    if (message.cardinalPt1Centroid !== undefined) {
+      writer.uint32(56).bool(message.cardinalPt1Centroid);
+    }
+    if (message.cardinalPt2PointOnNormal !== undefined) {
+      writer.uint32(64).bool(message.cardinalPt2PointOnNormal);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePlaneFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePlaneFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.measuredSideForPlanarOffset = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.overridePlanarOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.planarOffsetDirection = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.reverseNormalVectorAfterFit = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.makeCardinalPoints = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.cardinalPt1Centroid = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.cardinalPt2PointOnNormal = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePlaneFitProfileRequest>): MakePlaneFitProfileRequest {
+    return MakePlaneFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakePlaneFitProfileRequest>): MakePlaneFitProfileRequest {
+    const message = createBaseMakePlaneFitProfileRequest();
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.measuredSideForPlanarOffset = object.measuredSideForPlanarOffset ?? undefined;
+    message.overridePlanarOffset10UseCurrent = object.overridePlanarOffset10UseCurrent ?? undefined;
+    message.planarOffsetDirection = object.planarOffsetDirection ?? undefined;
+    message.reverseNormalVectorAfterFit = object.reverseNormalVectorAfterFit ?? undefined;
+    message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
+    message.cardinalPt1Centroid = object.cardinalPt1Centroid ?? undefined;
+    message.cardinalPt2PointOnNormal = object.cardinalPt2PointOnNormal ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakePlaneFitProfileResult(): MakePlaneFitProfileResult {
+  return { execution: undefined };
+}
+
+export const MakePlaneFitProfileResult: MessageFns<MakePlaneFitProfileResult> = {
+  encode(message: MakePlaneFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePlaneFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePlaneFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePlaneFitProfileResult>): MakePlaneFitProfileResult {
+    return MakePlaneFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakePlaneFitProfileResult>): MakePlaneFitProfileResult {
+    const message = createBaseMakePlaneFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeSlotFitProfileRequest(): MakeSlotFitProfileRequest {
+  return {
+    fitProfileName: undefined,
+    measuredSideForRadialOffset: undefined,
+    overrideRadialOffset10UseCurrent: undefined,
+    measuredSideForPlanarOffset: undefined,
+    overridePlanarOffset10UseCurrent: undefined,
+    planarOffsetDirection: undefined,
+    slotType: undefined,
+    slotComputationTechnique: undefined,
+    reverseNormalVectorAfterFit: undefined,
+    makeCardinalPoints: undefined,
+    cardinalPt1Center: undefined,
+    cardinalPt2PointOnNormal: undefined,
+    cardinalPt3CenterlinePt1: undefined,
+    cardinalPt4CenterlinePt2: undefined,
+  };
+}
+
+export const MakeSlotFitProfileRequest: MessageFns<MakeSlotFitProfileRequest> = {
+  encode(message: MakeSlotFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(10).string(message.fitProfileName);
+    }
+    if (message.measuredSideForRadialOffset !== undefined) {
+      writer.uint32(16).int32(message.measuredSideForRadialOffset);
+    }
+    if (message.overrideRadialOffset10UseCurrent !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    }
+    if (message.measuredSideForPlanarOffset !== undefined) {
+      writer.uint32(32).int32(message.measuredSideForPlanarOffset);
+    }
+    if (message.overridePlanarOffset10UseCurrent !== undefined) {
+      writer.uint32(41).double(message.overridePlanarOffset10UseCurrent);
+    }
+    if (message.planarOffsetDirection !== undefined) {
+      writer.uint32(48).int32(message.planarOffsetDirection);
+    }
+    if (message.slotType !== undefined) {
+      writer.uint32(56).int32(message.slotType);
+    }
+    if (message.slotComputationTechnique !== undefined) {
+      writer.uint32(64).int32(message.slotComputationTechnique);
+    }
+    if (message.reverseNormalVectorAfterFit !== undefined) {
+      writer.uint32(72).bool(message.reverseNormalVectorAfterFit);
+    }
+    if (message.makeCardinalPoints !== undefined) {
+      writer.uint32(80).bool(message.makeCardinalPoints);
+    }
+    if (message.cardinalPt1Center !== undefined) {
+      writer.uint32(88).bool(message.cardinalPt1Center);
+    }
+    if (message.cardinalPt2PointOnNormal !== undefined) {
+      writer.uint32(96).bool(message.cardinalPt2PointOnNormal);
+    }
+    if (message.cardinalPt3CenterlinePt1 !== undefined) {
+      writer.uint32(104).bool(message.cardinalPt3CenterlinePt1);
+    }
+    if (message.cardinalPt4CenterlinePt2 !== undefined) {
+      writer.uint32(112).bool(message.cardinalPt4CenterlinePt2);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeSlotFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeSlotFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.measuredSideForRadialOffset = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.overrideRadialOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.measuredSideForPlanarOffset = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.overridePlanarOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.planarOffsetDirection = reader.int32() as any;
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.slotType = reader.int32() as any;
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.slotComputationTechnique = reader.int32() as any;
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.reverseNormalVectorAfterFit = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.makeCardinalPoints = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.cardinalPt1Center = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.cardinalPt2PointOnNormal = reader.bool();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.cardinalPt3CenterlinePt1 = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.cardinalPt4CenterlinePt2 = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeSlotFitProfileRequest>): MakeSlotFitProfileRequest {
+    return MakeSlotFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeSlotFitProfileRequest>): MakeSlotFitProfileRequest {
+    const message = createBaseMakeSlotFitProfileRequest();
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
+    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.measuredSideForPlanarOffset = object.measuredSideForPlanarOffset ?? undefined;
+    message.overridePlanarOffset10UseCurrent = object.overridePlanarOffset10UseCurrent ?? undefined;
+    message.planarOffsetDirection = object.planarOffsetDirection ?? undefined;
+    message.slotType = object.slotType ?? undefined;
+    message.slotComputationTechnique = object.slotComputationTechnique ?? undefined;
+    message.reverseNormalVectorAfterFit = object.reverseNormalVectorAfterFit ?? undefined;
+    message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
+    message.cardinalPt1Center = object.cardinalPt1Center ?? undefined;
+    message.cardinalPt2PointOnNormal = object.cardinalPt2PointOnNormal ?? undefined;
+    message.cardinalPt3CenterlinePt1 = object.cardinalPt3CenterlinePt1 ?? undefined;
+    message.cardinalPt4CenterlinePt2 = object.cardinalPt4CenterlinePt2 ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeSlotFitProfileResult(): MakeSlotFitProfileResult {
+  return { execution: undefined };
+}
+
+export const MakeSlotFitProfileResult: MessageFns<MakeSlotFitProfileResult> = {
+  encode(message: MakeSlotFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeSlotFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeSlotFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeSlotFitProfileResult>): MakeSlotFitProfileResult {
+    return MakeSlotFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeSlotFitProfileResult>): MakeSlotFitProfileResult {
+    const message = createBaseMakeSlotFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeSphereFitProfileRequest(): MakeSphereFitProfileRequest {
+  return {
+    fitProfileName: undefined,
+    measuredSideForRadialOffset: undefined,
+    overrideRadialOffset10UseCurrent: undefined,
+    lockRadius10DoNotLock: undefined,
+    makeCardinalPoints: undefined,
+    cardinalPt1Center: undefined,
+    computationMethod: undefined,
+  };
+}
+
+export const MakeSphereFitProfileRequest: MessageFns<MakeSphereFitProfileRequest> = {
+  encode(message: MakeSphereFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(10).string(message.fitProfileName);
+    }
+    if (message.measuredSideForRadialOffset !== undefined) {
+      writer.uint32(16).int32(message.measuredSideForRadialOffset);
+    }
+    if (message.overrideRadialOffset10UseCurrent !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    }
+    if (message.lockRadius10DoNotLock !== undefined) {
+      writer.uint32(33).double(message.lockRadius10DoNotLock);
+    }
+    if (message.makeCardinalPoints !== undefined) {
+      writer.uint32(40).bool(message.makeCardinalPoints);
+    }
+    if (message.cardinalPt1Center !== undefined) {
+      writer.uint32(48).bool(message.cardinalPt1Center);
+    }
+    if (message.computationMethod !== undefined) {
+      writer.uint32(56).int32(message.computationMethod);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeSphereFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeSphereFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.measuredSideForRadialOffset = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.overrideRadialOffset10UseCurrent = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.lockRadius10DoNotLock = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.makeCardinalPoints = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.cardinalPt1Center = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.computationMethod = reader.int32() as any;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeSphereFitProfileRequest>): MakeSphereFitProfileRequest {
+    return MakeSphereFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeSphereFitProfileRequest>): MakeSphereFitProfileRequest {
+    const message = createBaseMakeSphereFitProfileRequest();
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
+    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.lockRadius10DoNotLock = object.lockRadius10DoNotLock ?? undefined;
+    message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
+    message.cardinalPt1Center = object.cardinalPt1Center ?? undefined;
+    message.computationMethod = object.computationMethod ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeSphereFitProfileResult(): MakeSphereFitProfileResult {
+  return { execution: undefined };
+}
+
+export const MakeSphereFitProfileResult: MessageFns<MakeSphereFitProfileResult> = {
+  encode(message: MakeSphereFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeSphereFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeSphereFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeSphereFitProfileResult>): MakeSphereFitProfileResult {
+    return MakeSphereFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeSphereFitProfileResult>): MakeSphereFitProfileResult {
+    const message = createBaseMakeSphereFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMushroomTargetHoleInspectionRequest(): MushroomTargetHoleInspectionRequest {
+  return {
+    namePrefixForIntermediateConstructions: undefined,
+    spherePointsGroupName: undefined,
+    sphereTargetRadius: undefined,
+    targetContactPlane: undefined,
+    pointToCreateAtHole: undefined,
+  };
+}
+
+export const MushroomTargetHoleInspectionRequest: MessageFns<MushroomTargetHoleInspectionRequest> = {
+  encode(message: MushroomTargetHoleInspectionRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.namePrefixForIntermediateConstructions !== undefined) {
+      writer.uint32(10).string(message.namePrefixForIntermediateConstructions);
+    }
+    if (message.spherePointsGroupName !== undefined) {
+      CollectionObjectName.encode(message.spherePointsGroupName, writer.uint32(18).fork()).join();
+    }
+    if (message.sphereTargetRadius !== undefined) {
+      writer.uint32(25).double(message.sphereTargetRadius);
+    }
+    if (message.targetContactPlane !== undefined) {
+      CollectionObjectName.encode(message.targetContactPlane, writer.uint32(34).fork()).join();
+    }
+    if (message.pointToCreateAtHole !== undefined) {
+      PointName.encode(message.pointToCreateAtHole, writer.uint32(42).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MushroomTargetHoleInspectionRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMushroomTargetHoleInspectionRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.namePrefixForIntermediateConstructions = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.spherePointsGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.sphereTargetRadius = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.targetContactPlane = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.pointToCreateAtHole = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MushroomTargetHoleInspectionRequest>): MushroomTargetHoleInspectionRequest {
+    return MushroomTargetHoleInspectionRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MushroomTargetHoleInspectionRequest>): MushroomTargetHoleInspectionRequest {
+    const message = createBaseMushroomTargetHoleInspectionRequest();
+    message.namePrefixForIntermediateConstructions = object.namePrefixForIntermediateConstructions ?? undefined;
+    message.spherePointsGroupName =
+      (object.spherePointsGroupName !== undefined && object.spherePointsGroupName !== null)
+        ? CollectionObjectName.fromPartial(object.spherePointsGroupName)
+        : undefined;
+    message.sphereTargetRadius = object.sphereTargetRadius ?? undefined;
+    message.targetContactPlane = (object.targetContactPlane !== undefined && object.targetContactPlane !== null)
+      ? CollectionObjectName.fromPartial(object.targetContactPlane)
+      : undefined;
+    message.pointToCreateAtHole = (object.pointToCreateAtHole !== undefined && object.pointToCreateAtHole !== null)
+      ? PointName.fromPartial(object.pointToCreateAtHole)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMushroomTargetHoleInspectionResult(): MushroomTargetHoleInspectionResult {
+  return { sphereFitRmsError: undefined, sphereFitMaxError: undefined, execution: undefined };
+}
+
+export const MushroomTargetHoleInspectionResult: MessageFns<MushroomTargetHoleInspectionResult> = {
+  encode(message: MushroomTargetHoleInspectionResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.sphereFitRmsError !== undefined) {
+      writer.uint32(9).double(message.sphereFitRmsError);
+    }
+    if (message.sphereFitMaxError !== undefined) {
+      writer.uint32(17).double(message.sphereFitMaxError);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MushroomTargetHoleInspectionResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMushroomTargetHoleInspectionResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.sphereFitRmsError = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.sphereFitMaxError = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MushroomTargetHoleInspectionResult>): MushroomTargetHoleInspectionResult {
+    return MushroomTargetHoleInspectionResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MushroomTargetHoleInspectionResult>): MushroomTargetHoleInspectionResult {
+    const message = createBaseMushroomTargetHoleInspectionResult();
+    message.sphereFitRmsError = object.sphereFitRmsError ?? undefined;
+    message.sphereFitMaxError = object.sphereFitMaxError ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBasePatchNormalShiftHolePinRequest(): PatchNormalShiftHolePinRequest {
+  return {
+    planePointsGroupName: undefined,
+    perimeterPointsGroupName: undefined,
+    resultingPointName: undefined,
+    additionalMaterialThickness: undefined,
+  };
+}
+
+export const PatchNormalShiftHolePinRequest: MessageFns<PatchNormalShiftHolePinRequest> = {
+  encode(message: PatchNormalShiftHolePinRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.planePointsGroupName !== undefined) {
+      CollectionObjectName.encode(message.planePointsGroupName, writer.uint32(10).fork()).join();
+    }
+    if (message.perimeterPointsGroupName !== undefined) {
+      CollectionObjectName.encode(message.perimeterPointsGroupName, writer.uint32(18).fork()).join();
+    }
+    if (message.resultingPointName !== undefined) {
+      PointName.encode(message.resultingPointName, writer.uint32(26).fork()).join();
+    }
+    if (message.additionalMaterialThickness !== undefined) {
+      writer.uint32(33).double(message.additionalMaterialThickness);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PatchNormalShiftHolePinRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePatchNormalShiftHolePinRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.planePointsGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.perimeterPointsGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.resultingPointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.additionalMaterialThickness = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PatchNormalShiftHolePinRequest>): PatchNormalShiftHolePinRequest {
+    return PatchNormalShiftHolePinRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PatchNormalShiftHolePinRequest>): PatchNormalShiftHolePinRequest {
+    const message = createBasePatchNormalShiftHolePinRequest();
+    message.planePointsGroupName = (object.planePointsGroupName !== undefined && object.planePointsGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.planePointsGroupName)
+      : undefined;
+    message.perimeterPointsGroupName =
+      (object.perimeterPointsGroupName !== undefined && object.perimeterPointsGroupName !== null)
+        ? CollectionObjectName.fromPartial(object.perimeterPointsGroupName)
+        : undefined;
+    message.resultingPointName = (object.resultingPointName !== undefined && object.resultingPointName !== null)
+      ? PointName.fromPartial(object.resultingPointName)
+      : undefined;
+    message.additionalMaterialThickness = object.additionalMaterialThickness ?? undefined;
+    return message;
+  },
+};
+
+function createBasePatchNormalShiftHolePinResult(): PatchNormalShiftHolePinResult {
+  return { execution: undefined };
+}
+
+export const PatchNormalShiftHolePinResult: MessageFns<PatchNormalShiftHolePinResult> = {
+  encode(message: PatchNormalShiftHolePinResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PatchNormalShiftHolePinResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePatchNormalShiftHolePinResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PatchNormalShiftHolePinResult>): PatchNormalShiftHolePinResult {
+    return PatchNormalShiftHolePinResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PatchNormalShiftHolePinResult>): PatchNormalShiftHolePinResult {
+    const message = createBasePatchNormalShiftHolePinResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBasePatchNormalShiftPointRequest(): PatchNormalShiftPointRequest {
+  return {
+    planePointsGroupName: undefined,
+    pointToShift: undefined,
+    resultingPointName: undefined,
+    additionalMaterialThickness: undefined,
+  };
+}
+
+export const PatchNormalShiftPointRequest: MessageFns<PatchNormalShiftPointRequest> = {
+  encode(message: PatchNormalShiftPointRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.planePointsGroupName !== undefined) {
+      CollectionObjectName.encode(message.planePointsGroupName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointToShift !== undefined) {
+      PointName.encode(message.pointToShift, writer.uint32(18).fork()).join();
+    }
+    if (message.resultingPointName !== undefined) {
+      PointName.encode(message.resultingPointName, writer.uint32(26).fork()).join();
+    }
+    if (message.additionalMaterialThickness !== undefined) {
+      writer.uint32(33).double(message.additionalMaterialThickness);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PatchNormalShiftPointRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePatchNormalShiftPointRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.planePointsGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pointToShift = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.resultingPointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.additionalMaterialThickness = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PatchNormalShiftPointRequest>): PatchNormalShiftPointRequest {
+    return PatchNormalShiftPointRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PatchNormalShiftPointRequest>): PatchNormalShiftPointRequest {
+    const message = createBasePatchNormalShiftPointRequest();
+    message.planePointsGroupName = (object.planePointsGroupName !== undefined && object.planePointsGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.planePointsGroupName)
+      : undefined;
+    message.pointToShift = (object.pointToShift !== undefined && object.pointToShift !== null)
+      ? PointName.fromPartial(object.pointToShift)
+      : undefined;
+    message.resultingPointName = (object.resultingPointName !== undefined && object.resultingPointName !== null)
+      ? PointName.fromPartial(object.resultingPointName)
+      : undefined;
+    message.additionalMaterialThickness = object.additionalMaterialThickness ?? undefined;
+    return message;
+  },
+};
+
+function createBasePatchNormalShiftPointResult(): PatchNormalShiftPointResult {
+  return { execution: undefined };
+}
+
+export const PatchNormalShiftPointResult: MessageFns<PatchNormalShiftPointResult> = {
+  encode(message: PatchNormalShiftPointResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PatchNormalShiftPointResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePatchNormalShiftPointResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PatchNormalShiftPointResult>): PatchNormalShiftPointResult {
+    return PatchNormalShiftPointResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PatchNormalShiftPointResult>): PatchNormalShiftPointResult {
+    const message = createBasePatchNormalShiftPointResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryCloudsToObjectsRequest(): QueryCloudsToObjectsRequest {
+  return {
+    cloudNames: [],
+    objectNames: [],
+    resultingObjectName: undefined,
+    projectionOptions: undefined,
+    proximity: undefined,
+    skipFactor: undefined,
+    rmsTolerance00ForNone: undefined,
+    maximumAbsoluteTolerance00ForNone: undefined,
+  };
+}
+
+export const QueryCloudsToObjectsRequest: MessageFns<QueryCloudsToObjectsRequest> = {
+  encode(message: QueryCloudsToObjectsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.cloudNames !== undefined && message.cloudNames.length !== 0) {
+      for (const v of message.cloudNames) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.objectNames !== undefined && message.objectNames.length !== 0) {
+      for (const v of message.objectNames) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.resultingObjectName !== undefined) {
+      CollectionObjectName.encode(message.resultingObjectName, writer.uint32(26).fork()).join();
+    }
+    if (message.projectionOptions !== undefined) {
+      ProjectionOptions.encode(message.projectionOptions, writer.uint32(34).fork()).join();
+    }
+    if (message.proximity !== undefined) {
+      writer.uint32(41).double(message.proximity);
+    }
+    if (message.skipFactor !== undefined) {
+      writer.uint32(48).int32(message.skipFactor);
+    }
+    if (message.rmsTolerance00ForNone !== undefined) {
+      writer.uint32(57).double(message.rmsTolerance00ForNone);
+    }
+    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
+      writer.uint32(65).double(message.maximumAbsoluteTolerance00ForNone);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryCloudsToObjectsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryCloudsToObjectsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.cloudNames!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectNames!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.resultingObjectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.projectionOptions = ProjectionOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.proximity = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.skipFactor = reader.int32();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.rmsTolerance00ForNone = reader.double();
+          continue;
+        }
+        case 8: {
+          if (tag !== 65) {
+            break;
+          }
+
+          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryCloudsToObjectsRequest>): QueryCloudsToObjectsRequest {
+    return QueryCloudsToObjectsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryCloudsToObjectsRequest>): QueryCloudsToObjectsRequest {
+    const message = createBaseQueryCloudsToObjectsRequest();
+    message.cloudNames = object.cloudNames?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.objectNames = object.objectNames?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
+      ? CollectionObjectName.fromPartial(object.resultingObjectName)
+      : undefined;
+    message.projectionOptions = (object.projectionOptions !== undefined && object.projectionOptions !== null)
+      ? ProjectionOptions.fromPartial(object.projectionOptions)
+      : undefined;
+    message.proximity = object.proximity ?? undefined;
+    message.skipFactor = object.skipFactor ?? undefined;
+    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
+    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    return message;
+  },
+};
+
+function createBaseQueryCloudsToObjectsResult(): QueryCloudsToObjectsResult {
+  return { rmsDeviation: undefined, maximumAbsoluteDeviation: undefined, execution: undefined };
+}
+
+export const QueryCloudsToObjectsResult: MessageFns<QueryCloudsToObjectsResult> = {
+  encode(message: QueryCloudsToObjectsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.rmsDeviation !== undefined) {
+      writer.uint32(9).double(message.rmsDeviation);
+    }
+    if (message.maximumAbsoluteDeviation !== undefined) {
+      writer.uint32(17).double(message.maximumAbsoluteDeviation);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryCloudsToObjectsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryCloudsToObjectsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.rmsDeviation = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.maximumAbsoluteDeviation = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryCloudsToObjectsResult>): QueryCloudsToObjectsResult {
+    return QueryCloudsToObjectsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryCloudsToObjectsResult>): QueryCloudsToObjectsResult {
+    const message = createBaseQueryCloudsToObjectsResult();
+    message.rmsDeviation = object.rmsDeviation ?? undefined;
+    message.maximumAbsoluteDeviation = object.maximumAbsoluteDeviation ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryCloudsToSurfaceRequest(): QueryCloudsToSurfaceRequest {
+  return {
+    cloudNames: [],
+    filterSurfaceName: undefined,
+    resultingObjectName: undefined,
+    projectionOptions: undefined,
+    proximity: undefined,
+    skipFactor: undefined,
+    rmsTolerance00ForNone: undefined,
+    maximumAbsoluteTolerance00ForNone: undefined,
+  };
+}
+
+export const QueryCloudsToSurfaceRequest: MessageFns<QueryCloudsToSurfaceRequest> = {
+  encode(message: QueryCloudsToSurfaceRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.cloudNames !== undefined && message.cloudNames.length !== 0) {
+      for (const v of message.cloudNames) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.filterSurfaceName !== undefined) {
+      CollectionObjectName.encode(message.filterSurfaceName, writer.uint32(18).fork()).join();
+    }
+    if (message.resultingObjectName !== undefined) {
+      CollectionObjectName.encode(message.resultingObjectName, writer.uint32(26).fork()).join();
+    }
+    if (message.projectionOptions !== undefined) {
+      ProjectionOptions.encode(message.projectionOptions, writer.uint32(34).fork()).join();
+    }
+    if (message.proximity !== undefined) {
+      writer.uint32(41).double(message.proximity);
+    }
+    if (message.skipFactor !== undefined) {
+      writer.uint32(48).int32(message.skipFactor);
+    }
+    if (message.rmsTolerance00ForNone !== undefined) {
+      writer.uint32(57).double(message.rmsTolerance00ForNone);
+    }
+    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
+      writer.uint32(65).double(message.maximumAbsoluteTolerance00ForNone);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryCloudsToSurfaceRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryCloudsToSurfaceRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.cloudNames!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.filterSurfaceName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.resultingObjectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.projectionOptions = ProjectionOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.proximity = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.skipFactor = reader.int32();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.rmsTolerance00ForNone = reader.double();
+          continue;
+        }
+        case 8: {
+          if (tag !== 65) {
+            break;
+          }
+
+          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryCloudsToSurfaceRequest>): QueryCloudsToSurfaceRequest {
+    return QueryCloudsToSurfaceRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryCloudsToSurfaceRequest>): QueryCloudsToSurfaceRequest {
+    const message = createBaseQueryCloudsToSurfaceRequest();
+    message.cloudNames = object.cloudNames?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.filterSurfaceName = (object.filterSurfaceName !== undefined && object.filterSurfaceName !== null)
+      ? CollectionObjectName.fromPartial(object.filterSurfaceName)
+      : undefined;
+    message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
+      ? CollectionObjectName.fromPartial(object.resultingObjectName)
+      : undefined;
+    message.projectionOptions = (object.projectionOptions !== undefined && object.projectionOptions !== null)
+      ? ProjectionOptions.fromPartial(object.projectionOptions)
+      : undefined;
+    message.proximity = object.proximity ?? undefined;
+    message.skipFactor = object.skipFactor ?? undefined;
+    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
+    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    return message;
+  },
+};
+
+function createBaseQueryCloudsToSurfaceResult(): QueryCloudsToSurfaceResult {
+  return { rmsDeviation: undefined, maximumAbsoluteDeviation: undefined, execution: undefined };
+}
+
+export const QueryCloudsToSurfaceResult: MessageFns<QueryCloudsToSurfaceResult> = {
+  encode(message: QueryCloudsToSurfaceResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.rmsDeviation !== undefined) {
+      writer.uint32(9).double(message.rmsDeviation);
+    }
+    if (message.maximumAbsoluteDeviation !== undefined) {
+      writer.uint32(17).double(message.maximumAbsoluteDeviation);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryCloudsToSurfaceResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryCloudsToSurfaceResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.rmsDeviation = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.maximumAbsoluteDeviation = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryCloudsToSurfaceResult>): QueryCloudsToSurfaceResult {
+    return QueryCloudsToSurfaceResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryCloudsToSurfaceResult>): QueryCloudsToSurfaceResult {
+    const message = createBaseQueryCloudsToSurfaceResult();
+    message.rmsDeviation = object.rmsDeviation ?? undefined;
+    message.maximumAbsoluteDeviation = object.maximumAbsoluteDeviation ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryFrameToFrameRequest(): QueryFrameToFrameRequest {
+  return { referenceFrameName: undefined, correspondingFrameName: undefined };
+}
+
+export const QueryFrameToFrameRequest: MessageFns<QueryFrameToFrameRequest> = {
+  encode(message: QueryFrameToFrameRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.referenceFrameName !== undefined) {
+      CollectionObjectName.encode(message.referenceFrameName, writer.uint32(10).fork()).join();
+    }
+    if (message.correspondingFrameName !== undefined) {
+      CollectionObjectName.encode(message.correspondingFrameName, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryFrameToFrameRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryFrameToFrameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.referenceFrameName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.correspondingFrameName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryFrameToFrameRequest>): QueryFrameToFrameRequest {
+    return QueryFrameToFrameRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryFrameToFrameRequest>): QueryFrameToFrameRequest {
+    const message = createBaseQueryFrameToFrameRequest();
+    message.referenceFrameName = (object.referenceFrameName !== undefined && object.referenceFrameName !== null)
+      ? CollectionObjectName.fromPartial(object.referenceFrameName)
+      : undefined;
+    message.correspondingFrameName =
+      (object.correspondingFrameName !== undefined && object.correspondingFrameName !== null)
+        ? CollectionObjectName.fromPartial(object.correspondingFrameName)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryFrameToFrameResult(): QueryFrameToFrameResult {
+  return {
+    x: undefined,
+    y: undefined,
+    z: undefined,
+    rxRoll: undefined,
+    ryPitch: undefined,
+    rzYaw: undefined,
+    execution: undefined,
+  };
+}
+
+export const QueryFrameToFrameResult: MessageFns<QueryFrameToFrameResult> = {
+  encode(message: QueryFrameToFrameResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.x !== undefined) {
+      writer.uint32(9).double(message.x);
+    }
+    if (message.y !== undefined) {
+      writer.uint32(17).double(message.y);
+    }
+    if (message.z !== undefined) {
+      writer.uint32(25).double(message.z);
+    }
+    if (message.rxRoll !== undefined) {
+      writer.uint32(33).double(message.rxRoll);
+    }
+    if (message.ryPitch !== undefined) {
+      writer.uint32(41).double(message.ryPitch);
+    }
+    if (message.rzYaw !== undefined) {
+      writer.uint32(49).double(message.rzYaw);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryFrameToFrameResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryFrameToFrameResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.x = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.y = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.z = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.rxRoll = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.ryPitch = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.rzYaw = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryFrameToFrameResult>): QueryFrameToFrameResult {
+    return QueryFrameToFrameResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryFrameToFrameResult>): QueryFrameToFrameResult {
+    const message = createBaseQueryFrameToFrameResult();
+    message.x = object.x ?? undefined;
+    message.y = object.y ?? undefined;
+    message.z = object.z ?? undefined;
+    message.rxRoll = object.rxRoll ?? undefined;
+    message.ryPitch = object.ryPitch ?? undefined;
+    message.rzYaw = object.rzYaw ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryGroupsToObjectsRequest(): QueryGroupsToObjectsRequest {
+  return {
+    groupNameListGroupsToProject: [],
+    objectNameListObjectsToProjectTo: [],
+    resultingObjectName: undefined,
+    projectionOptions: undefined,
+    rmsTolerance00ForNone: undefined,
+    maximumAbsoluteTolerance00ForNone: undefined,
+    showResultsDialog: undefined,
+  };
+}
+
+export const QueryGroupsToObjectsRequest: MessageFns<QueryGroupsToObjectsRequest> = {
+  encode(message: QueryGroupsToObjectsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.groupNameListGroupsToProject !== undefined && message.groupNameListGroupsToProject.length !== 0) {
+      for (const v of message.groupNameListGroupsToProject) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (
+      message.objectNameListObjectsToProjectTo !== undefined && message.objectNameListObjectsToProjectTo.length !== 0
+    ) {
+      for (const v of message.objectNameListObjectsToProjectTo) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.resultingObjectName !== undefined) {
+      CollectionObjectName.encode(message.resultingObjectName, writer.uint32(26).fork()).join();
+    }
+    if (message.projectionOptions !== undefined) {
+      ProjectionOptions.encode(message.projectionOptions, writer.uint32(34).fork()).join();
+    }
+    if (message.rmsTolerance00ForNone !== undefined) {
+      writer.uint32(41).double(message.rmsTolerance00ForNone);
+    }
+    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
+      writer.uint32(49).double(message.maximumAbsoluteTolerance00ForNone);
+    }
+    if (message.showResultsDialog !== undefined) {
+      writer.uint32(56).bool(message.showResultsDialog);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryGroupsToObjectsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGroupsToObjectsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.groupNameListGroupsToProject!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectNameListObjectsToProjectTo!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.resultingObjectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.projectionOptions = ProjectionOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.rmsTolerance00ForNone = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.showResultsDialog = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryGroupsToObjectsRequest>): QueryGroupsToObjectsRequest {
+    return QueryGroupsToObjectsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryGroupsToObjectsRequest>): QueryGroupsToObjectsRequest {
+    const message = createBaseQueryGroupsToObjectsRequest();
+    message.groupNameListGroupsToProject =
+      object.groupNameListGroupsToProject?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.objectNameListObjectsToProjectTo =
+      object.objectNameListObjectsToProjectTo?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
+      ? CollectionObjectName.fromPartial(object.resultingObjectName)
+      : undefined;
+    message.projectionOptions = (object.projectionOptions !== undefined && object.projectionOptions !== null)
+      ? ProjectionOptions.fromPartial(object.projectionOptions)
+      : undefined;
+    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
+    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    message.showResultsDialog = object.showResultsDialog ?? undefined;
+    return message;
+  },
+};
+
+function createBaseQueryGroupsToObjectsResult(): QueryGroupsToObjectsResult {
+  return {
+    rmsDeviation: undefined,
+    maxAbsoluteDeviation: undefined,
+    averageDeviation: undefined,
+    standardDeviation: undefined,
+    execution: undefined,
+  };
+}
+
+export const QueryGroupsToObjectsResult: MessageFns<QueryGroupsToObjectsResult> = {
+  encode(message: QueryGroupsToObjectsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.rmsDeviation !== undefined) {
+      writer.uint32(9).double(message.rmsDeviation);
+    }
+    if (message.maxAbsoluteDeviation !== undefined) {
+      writer.uint32(17).double(message.maxAbsoluteDeviation);
+    }
+    if (message.averageDeviation !== undefined) {
+      writer.uint32(25).double(message.averageDeviation);
+    }
+    if (message.standardDeviation !== undefined) {
+      writer.uint32(33).double(message.standardDeviation);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryGroupsToObjectsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGroupsToObjectsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.rmsDeviation = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.maxAbsoluteDeviation = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.averageDeviation = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.standardDeviation = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryGroupsToObjectsResult>): QueryGroupsToObjectsResult {
+    return QueryGroupsToObjectsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryGroupsToObjectsResult>): QueryGroupsToObjectsResult {
+    const message = createBaseQueryGroupsToObjectsResult();
+    message.rmsDeviation = object.rmsDeviation ?? undefined;
+    message.maxAbsoluteDeviation = object.maxAbsoluteDeviation ?? undefined;
+    message.averageDeviation = object.averageDeviation ?? undefined;
+    message.standardDeviation = object.standardDeviation ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointToObjectsRequest(): QueryPointToObjectsRequest {
+  return { pointName: undefined, objects: [], ignoreTargetOffset: undefined };
+}
+
+export const QueryPointToObjectsRequest: MessageFns<QueryPointToObjectsRequest> = {
+  encode(message: QueryPointToObjectsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    if (message.objects !== undefined && message.objects.length !== 0) {
+      for (const v of message.objects) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.ignoreTargetOffset !== undefined) {
+      writer.uint32(24).bool(message.ignoreTargetOffset);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointToObjectsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointToObjectsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objects!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.ignoreTargetOffset = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointToObjectsRequest>): QueryPointToObjectsRequest {
+    return QueryPointToObjectsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointToObjectsRequest>): QueryPointToObjectsRequest {
+    const message = createBaseQueryPointToObjectsRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    message.objects = object.objects?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.ignoreTargetOffset = object.ignoreTargetOffset ?? undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointToObjectsResult(): QueryPointToObjectsResult {
+  return {
+    dX: undefined,
+    dY: undefined,
+    dZ: undefined,
+    dMag: undefined,
+    resultantObject: undefined,
+    execution: undefined,
+  };
+}
+
+export const QueryPointToObjectsResult: MessageFns<QueryPointToObjectsResult> = {
+  encode(message: QueryPointToObjectsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dX !== undefined) {
+      writer.uint32(9).double(message.dX);
+    }
+    if (message.dY !== undefined) {
+      writer.uint32(17).double(message.dY);
+    }
+    if (message.dZ !== undefined) {
+      writer.uint32(25).double(message.dZ);
+    }
+    if (message.dMag !== undefined) {
+      writer.uint32(33).double(message.dMag);
+    }
+    if (message.resultantObject !== undefined) {
+      CollectionObjectName.encode(message.resultantObject, writer.uint32(42).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointToObjectsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointToObjectsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.dX = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.dY = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.dZ = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.dMag = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.resultantObject = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointToObjectsResult>): QueryPointToObjectsResult {
+    return QueryPointToObjectsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointToObjectsResult>): QueryPointToObjectsResult {
+    const message = createBaseQueryPointToObjectsResult();
+    message.dX = object.dX ?? undefined;
+    message.dY = object.dY ?? undefined;
+    message.dZ = object.dZ ?? undefined;
+    message.dMag = object.dMag ?? undefined;
+    message.resultantObject = (object.resultantObject !== undefined && object.resultantObject !== null)
+      ? CollectionObjectName.fromPartial(object.resultantObject)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointToPointAlongCurveRequest(): QueryPointToPointAlongCurveRequest {
+  return { value1stPoint: undefined, value2ndPoint: undefined, curve: undefined };
+}
+
+export const QueryPointToPointAlongCurveRequest: MessageFns<QueryPointToPointAlongCurveRequest> = {
+  encode(message: QueryPointToPointAlongCurveRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.value1stPoint !== undefined) {
+      PointName.encode(message.value1stPoint, writer.uint32(10).fork()).join();
+    }
+    if (message.value2ndPoint !== undefined) {
+      PointName.encode(message.value2ndPoint, writer.uint32(18).fork()).join();
+    }
+    if (message.curve !== undefined) {
+      CollectionObjectName.encode(message.curve, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointToPointAlongCurveRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointToPointAlongCurveRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.value1stPoint = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value2ndPoint = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.curve = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointToPointAlongCurveRequest>): QueryPointToPointAlongCurveRequest {
+    return QueryPointToPointAlongCurveRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointToPointAlongCurveRequest>): QueryPointToPointAlongCurveRequest {
+    const message = createBaseQueryPointToPointAlongCurveRequest();
+    message.value1stPoint = (object.value1stPoint !== undefined && object.value1stPoint !== null)
+      ? PointName.fromPartial(object.value1stPoint)
+      : undefined;
+    message.value2ndPoint = (object.value2ndPoint !== undefined && object.value2ndPoint !== null)
+      ? PointName.fromPartial(object.value2ndPoint)
+      : undefined;
+    message.curve = (object.curve !== undefined && object.curve !== null)
+      ? CollectionObjectName.fromPartial(object.curve)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointToPointAlongCurveResult(): QueryPointToPointAlongCurveResult {
+  return { distanceAlongCurve: undefined, execution: undefined };
+}
+
+export const QueryPointToPointAlongCurveResult: MessageFns<QueryPointToPointAlongCurveResult> = {
+  encode(message: QueryPointToPointAlongCurveResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.distanceAlongCurve !== undefined) {
+      writer.uint32(9).double(message.distanceAlongCurve);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointToPointAlongCurveResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointToPointAlongCurveResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.distanceAlongCurve = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointToPointAlongCurveResult>): QueryPointToPointAlongCurveResult {
+    return QueryPointToPointAlongCurveResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointToPointAlongCurveResult>): QueryPointToPointAlongCurveResult {
+    const message = createBaseQueryPointToPointAlongCurveResult();
+    message.distanceAlongCurve = object.distanceAlongCurve ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointsToCircleRequest(): QueryPointsToCircleRequest {
+  return {
+    circleName: undefined,
+    pointGroupName: undefined,
+    isInsideMeasurement: undefined,
+    autoScaleVectorsToOfRadius: undefined,
+    vectorGroupNameForRadial: undefined,
+    vectorGroupNameForPlanar: undefined,
+    vectorGroupNameForCombined: undefined,
+  };
+}
+
+export const QueryPointsToCircleRequest: MessageFns<QueryPointsToCircleRequest> = {
+  encode(message: QueryPointsToCircleRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.circleName !== undefined) {
+      CollectionObjectName.encode(message.circleName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointGroupName !== undefined) {
+      CollectionObjectName.encode(message.pointGroupName, writer.uint32(18).fork()).join();
+    }
+    if (message.isInsideMeasurement !== undefined) {
+      writer.uint32(24).bool(message.isInsideMeasurement);
+    }
+    if (message.autoScaleVectorsToOfRadius !== undefined) {
+      writer.uint32(32).int32(message.autoScaleVectorsToOfRadius);
+    }
+    if (message.vectorGroupNameForRadial !== undefined) {
+      CollectionObjectName.encode(message.vectorGroupNameForRadial, writer.uint32(42).fork()).join();
+    }
+    if (message.vectorGroupNameForPlanar !== undefined) {
+      CollectionObjectName.encode(message.vectorGroupNameForPlanar, writer.uint32(50).fork()).join();
+    }
+    if (message.vectorGroupNameForCombined !== undefined) {
+      CollectionObjectName.encode(message.vectorGroupNameForCombined, writer.uint32(58).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointsToCircleRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointsToCircleRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.circleName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pointGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.isInsideMeasurement = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.autoScaleVectorsToOfRadius = reader.int32();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.vectorGroupNameForRadial = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.vectorGroupNameForPlanar = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.vectorGroupNameForCombined = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointsToCircleRequest>): QueryPointsToCircleRequest {
+    return QueryPointsToCircleRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointsToCircleRequest>): QueryPointsToCircleRequest {
+    const message = createBaseQueryPointsToCircleRequest();
+    message.circleName = (object.circleName !== undefined && object.circleName !== null)
+      ? CollectionObjectName.fromPartial(object.circleName)
+      : undefined;
+    message.pointGroupName = (object.pointGroupName !== undefined && object.pointGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.pointGroupName)
+      : undefined;
+    message.isInsideMeasurement = object.isInsideMeasurement ?? undefined;
+    message.autoScaleVectorsToOfRadius = object.autoScaleVectorsToOfRadius ?? undefined;
+    message.vectorGroupNameForRadial =
+      (object.vectorGroupNameForRadial !== undefined && object.vectorGroupNameForRadial !== null)
+        ? CollectionObjectName.fromPartial(object.vectorGroupNameForRadial)
+        : undefined;
+    message.vectorGroupNameForPlanar =
+      (object.vectorGroupNameForPlanar !== undefined && object.vectorGroupNameForPlanar !== null)
+        ? CollectionObjectName.fromPartial(object.vectorGroupNameForPlanar)
+        : undefined;
+    message.vectorGroupNameForCombined =
+      (object.vectorGroupNameForCombined !== undefined && object.vectorGroupNameForCombined !== null)
+        ? CollectionObjectName.fromPartial(object.vectorGroupNameForCombined)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointsToCircleResult(): QueryPointsToCircleResult {
+  return { execution: undefined };
+}
+
+export const QueryPointsToCircleResult: MessageFns<QueryPointsToCircleResult> = {
+  encode(message: QueryPointsToCircleResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointsToCircleResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointsToCircleResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointsToCircleResult>): QueryPointsToCircleResult {
+    return QueryPointsToCircleResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointsToCircleResult>): QueryPointsToCircleResult {
+    const message = createBaseQueryPointsToCircleResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointsToObjectsRequest(): QueryPointsToObjectsRequest {
+  return {
+    pointNames: [],
+    objectNameListObjectsToProjectTo: [],
+    resultingObjectName: undefined,
+    projectionOptions: undefined,
+    rmsTolerance00ForNone: undefined,
+    maximumAbsoluteTolerance00ForNone: undefined,
+    showResultsDialog: undefined,
+  };
+}
+
+export const QueryPointsToObjectsRequest: MessageFns<QueryPointsToObjectsRequest> = {
+  encode(message: QueryPointsToObjectsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointNames !== undefined && message.pointNames.length !== 0) {
+      for (const v of message.pointNames) {
+        PointName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (
+      message.objectNameListObjectsToProjectTo !== undefined && message.objectNameListObjectsToProjectTo.length !== 0
+    ) {
+      for (const v of message.objectNameListObjectsToProjectTo) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.resultingObjectName !== undefined) {
+      CollectionObjectName.encode(message.resultingObjectName, writer.uint32(26).fork()).join();
+    }
+    if (message.projectionOptions !== undefined) {
+      ProjectionOptions.encode(message.projectionOptions, writer.uint32(34).fork()).join();
+    }
+    if (message.rmsTolerance00ForNone !== undefined) {
+      writer.uint32(41).double(message.rmsTolerance00ForNone);
+    }
+    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
+      writer.uint32(49).double(message.maximumAbsoluteTolerance00ForNone);
+    }
+    if (message.showResultsDialog !== undefined) {
+      writer.uint32(56).bool(message.showResultsDialog);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointsToObjectsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointsToObjectsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointNames!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectNameListObjectsToProjectTo!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.resultingObjectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.projectionOptions = ProjectionOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.rmsTolerance00ForNone = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.showResultsDialog = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointsToObjectsRequest>): QueryPointsToObjectsRequest {
+    return QueryPointsToObjectsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointsToObjectsRequest>): QueryPointsToObjectsRequest {
+    const message = createBaseQueryPointsToObjectsRequest();
+    message.pointNames = object.pointNames?.map((e) => PointName.fromPartial(e)) || [];
+    message.objectNameListObjectsToProjectTo =
+      object.objectNameListObjectsToProjectTo?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
+      ? CollectionObjectName.fromPartial(object.resultingObjectName)
+      : undefined;
+    message.projectionOptions = (object.projectionOptions !== undefined && object.projectionOptions !== null)
+      ? ProjectionOptions.fromPartial(object.projectionOptions)
+      : undefined;
+    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
+    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    message.showResultsDialog = object.showResultsDialog ?? undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointsToObjectsResult(): QueryPointsToObjectsResult {
+  return {
+    rmsDeviation: undefined,
+    maxAbsoluteDeviation: undefined,
+    averageDeviation: undefined,
+    standardDeviation: undefined,
+    execution: undefined,
+  };
+}
+
+export const QueryPointsToObjectsResult: MessageFns<QueryPointsToObjectsResult> = {
+  encode(message: QueryPointsToObjectsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.rmsDeviation !== undefined) {
+      writer.uint32(9).double(message.rmsDeviation);
+    }
+    if (message.maxAbsoluteDeviation !== undefined) {
+      writer.uint32(17).double(message.maxAbsoluteDeviation);
+    }
+    if (message.averageDeviation !== undefined) {
+      writer.uint32(25).double(message.averageDeviation);
+    }
+    if (message.standardDeviation !== undefined) {
+      writer.uint32(33).double(message.standardDeviation);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointsToObjectsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointsToObjectsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.rmsDeviation = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.maxAbsoluteDeviation = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.averageDeviation = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.standardDeviation = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointsToObjectsResult>): QueryPointsToObjectsResult {
+    return QueryPointsToObjectsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointsToObjectsResult>): QueryPointsToObjectsResult {
+    const message = createBaseQueryPointsToObjectsResult();
+    message.rmsDeviation = object.rmsDeviation ?? undefined;
+    message.maxAbsoluteDeviation = object.maxAbsoluteDeviation ?? undefined;
+    message.averageDeviation = object.averageDeviation ?? undefined;
+    message.standardDeviation = object.standardDeviation ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointsToSinglePointRequest(): QueryPointsToSinglePointRequest {
+  return { pointNames: [], singlePoint: undefined, showVectorProperties: undefined };
+}
+
+export const QueryPointsToSinglePointRequest: MessageFns<QueryPointsToSinglePointRequest> = {
+  encode(message: QueryPointsToSinglePointRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointNames !== undefined && message.pointNames.length !== 0) {
+      for (const v of message.pointNames) {
+        PointName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.singlePoint !== undefined) {
+      PointName.encode(message.singlePoint, writer.uint32(18).fork()).join();
+    }
+    if (message.showVectorProperties !== undefined) {
+      writer.uint32(24).bool(message.showVectorProperties);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointsToSinglePointRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointsToSinglePointRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointNames!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.singlePoint = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.showVectorProperties = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointsToSinglePointRequest>): QueryPointsToSinglePointRequest {
+    return QueryPointsToSinglePointRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointsToSinglePointRequest>): QueryPointsToSinglePointRequest {
+    const message = createBaseQueryPointsToSinglePointRequest();
+    message.pointNames = object.pointNames?.map((e) => PointName.fromPartial(e)) || [];
+    message.singlePoint = (object.singlePoint !== undefined && object.singlePoint !== null)
+      ? PointName.fromPartial(object.singlePoint)
+      : undefined;
+    message.showVectorProperties = object.showVectorProperties ?? undefined;
+    return message;
+  },
+};
+
+function createBaseQueryPointsToSinglePointResult(): QueryPointsToSinglePointResult {
+  return { execution: undefined };
+}
+
+export const QueryPointsToSinglePointResult: MessageFns<QueryPointsToSinglePointResult> = {
+  encode(message: QueryPointsToSinglePointResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryPointsToSinglePointResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPointsToSinglePointResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<QueryPointsToSinglePointResult>): QueryPointsToSinglePointResult {
+    return QueryPointsToSinglePointResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<QueryPointsToSinglePointResult>): QueryPointsToSinglePointResult {
+    const message = createBaseQueryPointsToSinglePointResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseReComputeCalculatedItemsRequest(): ReComputeCalculatedItemsRequest {
+  return {
+    targetsFromShots: undefined,
+    hiddenPoints: undefined,
+    relationships: undefined,
+    refreshFilteredCloudData: undefined,
+  };
+}
+
+export const ReComputeCalculatedItemsRequest: MessageFns<ReComputeCalculatedItemsRequest> = {
+  encode(message: ReComputeCalculatedItemsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.targetsFromShots !== undefined) {
+      writer.uint32(8).bool(message.targetsFromShots);
+    }
+    if (message.hiddenPoints !== undefined) {
+      writer.uint32(16).bool(message.hiddenPoints);
+    }
+    if (message.relationships !== undefined) {
+      writer.uint32(24).bool(message.relationships);
+    }
+    if (message.refreshFilteredCloudData !== undefined) {
+      writer.uint32(32).bool(message.refreshFilteredCloudData);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReComputeCalculatedItemsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReComputeCalculatedItemsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.targetsFromShots = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.hiddenPoints = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.relationships = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.refreshFilteredCloudData = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReComputeCalculatedItemsRequest>): ReComputeCalculatedItemsRequest {
+    return ReComputeCalculatedItemsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReComputeCalculatedItemsRequest>): ReComputeCalculatedItemsRequest {
+    const message = createBaseReComputeCalculatedItemsRequest();
+    message.targetsFromShots = object.targetsFromShots ?? undefined;
+    message.hiddenPoints = object.hiddenPoints ?? undefined;
+    message.relationships = object.relationships ?? undefined;
+    message.refreshFilteredCloudData = object.refreshFilteredCloudData ?? undefined;
+    return message;
+  },
+};
+
+function createBaseReComputeCalculatedItemsResult(): ReComputeCalculatedItemsResult {
+  return { execution: undefined };
+}
+
+export const ReComputeCalculatedItemsResult: MessageFns<ReComputeCalculatedItemsResult> = {
+  encode(message: ReComputeCalculatedItemsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReComputeCalculatedItemsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReComputeCalculatedItemsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReComputeCalculatedItemsResult>): ReComputeCalculatedItemsResult {
+    return ReComputeCalculatedItemsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReComputeCalculatedItemsResult>): ReComputeCalculatedItemsResult {
+    const message = createBaseReComputeCalculatedItemsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseRenamePointsBasedOnInterPointDistanceToReferencePointsRequest(): RenamePointsBasedOnInterPointDistanceToReferencePointsRequest {
+  return {
+    referenceGroupName: undefined,
+    groupToRenamePoints: undefined,
+    distanceThreshold: undefined,
+    verifyResults: undefined,
+  };
+}
+
+export const RenamePointsBasedOnInterPointDistanceToReferencePointsRequest: MessageFns<
+  RenamePointsBasedOnInterPointDistanceToReferencePointsRequest
+> = {
+  encode(
+    message: RenamePointsBasedOnInterPointDistanceToReferencePointsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.referenceGroupName !== undefined) {
+      CollectionObjectName.encode(message.referenceGroupName, writer.uint32(10).fork()).join();
+    }
+    if (message.groupToRenamePoints !== undefined) {
+      CollectionObjectName.encode(message.groupToRenamePoints, writer.uint32(18).fork()).join();
+    }
+    if (message.distanceThreshold !== undefined) {
+      writer.uint32(25).double(message.distanceThreshold);
+    }
+    if (message.verifyResults !== undefined) {
+      writer.uint32(32).bool(message.verifyResults);
+    }
+    return writer;
+  },
+
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): RenamePointsBasedOnInterPointDistanceToReferencePointsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRenamePointsBasedOnInterPointDistanceToReferencePointsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.referenceGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupToRenamePoints = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.distanceThreshold = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.verifyResults = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<RenamePointsBasedOnInterPointDistanceToReferencePointsRequest>,
+  ): RenamePointsBasedOnInterPointDistanceToReferencePointsRequest {
+    return RenamePointsBasedOnInterPointDistanceToReferencePointsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<RenamePointsBasedOnInterPointDistanceToReferencePointsRequest>,
+  ): RenamePointsBasedOnInterPointDistanceToReferencePointsRequest {
+    const message = createBaseRenamePointsBasedOnInterPointDistanceToReferencePointsRequest();
+    message.referenceGroupName = (object.referenceGroupName !== undefined && object.referenceGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.referenceGroupName)
+      : undefined;
+    message.groupToRenamePoints = (object.groupToRenamePoints !== undefined && object.groupToRenamePoints !== null)
+      ? CollectionObjectName.fromPartial(object.groupToRenamePoints)
+      : undefined;
+    message.distanceThreshold = object.distanceThreshold ?? undefined;
+    message.verifyResults = object.verifyResults ?? undefined;
+    return message;
+  },
+};
+
+function createBaseRenamePointsBasedOnInterPointDistanceToReferencePointsResult(): RenamePointsBasedOnInterPointDistanceToReferencePointsResult {
+  return { execution: undefined };
+}
+
+export const RenamePointsBasedOnInterPointDistanceToReferencePointsResult: MessageFns<
+  RenamePointsBasedOnInterPointDistanceToReferencePointsResult
+> = {
+  encode(
+    message: RenamePointsBasedOnInterPointDistanceToReferencePointsResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): RenamePointsBasedOnInterPointDistanceToReferencePointsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRenamePointsBasedOnInterPointDistanceToReferencePointsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<RenamePointsBasedOnInterPointDistanceToReferencePointsResult>,
+  ): RenamePointsBasedOnInterPointDistanceToReferencePointsResult {
+    return RenamePointsBasedOnInterPointDistanceToReferencePointsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<RenamePointsBasedOnInterPointDistanceToReferencePointsResult>,
+  ): RenamePointsBasedOnInterPointDistanceToReferencePointsResult {
+    const message = createBaseRenamePointsBasedOnInterPointDistanceToReferencePointsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseRenamePointsBasedOnProximityToReferencePointsRequest(): RenamePointsBasedOnProximityToReferencePointsRequest {
+  return {
+    referenceGroupName: undefined,
+    groupToRenamePoints: undefined,
+    proximityThreshold: undefined,
+    verifyResults: undefined,
+    renameAllProximatePoints: undefined,
+  };
+}
+
+export const RenamePointsBasedOnProximityToReferencePointsRequest: MessageFns<
+  RenamePointsBasedOnProximityToReferencePointsRequest
+> = {
+  encode(
+    message: RenamePointsBasedOnProximityToReferencePointsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.referenceGroupName !== undefined) {
+      CollectionObjectName.encode(message.referenceGroupName, writer.uint32(10).fork()).join();
+    }
+    if (message.groupToRenamePoints !== undefined) {
+      CollectionObjectName.encode(message.groupToRenamePoints, writer.uint32(18).fork()).join();
+    }
+    if (message.proximityThreshold !== undefined) {
+      writer.uint32(25).double(message.proximityThreshold);
+    }
+    if (message.verifyResults !== undefined) {
+      writer.uint32(32).bool(message.verifyResults);
+    }
+    if (message.renameAllProximatePoints !== undefined) {
+      writer.uint32(40).bool(message.renameAllProximatePoints);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RenamePointsBasedOnProximityToReferencePointsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRenamePointsBasedOnProximityToReferencePointsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.referenceGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupToRenamePoints = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.proximityThreshold = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.verifyResults = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.renameAllProximatePoints = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<RenamePointsBasedOnProximityToReferencePointsRequest>,
+  ): RenamePointsBasedOnProximityToReferencePointsRequest {
+    return RenamePointsBasedOnProximityToReferencePointsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<RenamePointsBasedOnProximityToReferencePointsRequest>,
+  ): RenamePointsBasedOnProximityToReferencePointsRequest {
+    const message = createBaseRenamePointsBasedOnProximityToReferencePointsRequest();
+    message.referenceGroupName = (object.referenceGroupName !== undefined && object.referenceGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.referenceGroupName)
+      : undefined;
+    message.groupToRenamePoints = (object.groupToRenamePoints !== undefined && object.groupToRenamePoints !== null)
+      ? CollectionObjectName.fromPartial(object.groupToRenamePoints)
+      : undefined;
+    message.proximityThreshold = object.proximityThreshold ?? undefined;
+    message.verifyResults = object.verifyResults ?? undefined;
+    message.renameAllProximatePoints = object.renameAllProximatePoints ?? undefined;
+    return message;
+  },
+};
+
+function createBaseRenamePointsBasedOnProximityToReferencePointsResult(): RenamePointsBasedOnProximityToReferencePointsResult {
+  return { execution: undefined };
+}
+
+export const RenamePointsBasedOnProximityToReferencePointsResult: MessageFns<
+  RenamePointsBasedOnProximityToReferencePointsResult
+> = {
+  encode(
+    message: RenamePointsBasedOnProximityToReferencePointsResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RenamePointsBasedOnProximityToReferencePointsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRenamePointsBasedOnProximityToReferencePointsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<RenamePointsBasedOnProximityToReferencePointsResult>,
+  ): RenamePointsBasedOnProximityToReferencePointsResult {
+    return RenamePointsBasedOnProximityToReferencePointsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<RenamePointsBasedOnProximityToReferencePointsResult>,
+  ): RenamePointsBasedOnProximityToReferencePointsResult {
+    const message = createBaseRenamePointsBasedOnProximityToReferencePointsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseReverseBSplinesRequest(): ReverseBSplinesRequest {
+  return { bSplineList: [] };
+}
+
+export const ReverseBSplinesRequest: MessageFns<ReverseBSplinesRequest> = {
+  encode(message: ReverseBSplinesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.bSplineList !== undefined && message.bSplineList.length !== 0) {
+      for (const v of message.bSplineList) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReverseBSplinesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReverseBSplinesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.bSplineList!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReverseBSplinesRequest>): ReverseBSplinesRequest {
+    return ReverseBSplinesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReverseBSplinesRequest>): ReverseBSplinesRequest {
+    const message = createBaseReverseBSplinesRequest();
+    message.bSplineList = object.bSplineList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseReverseBSplinesResult(): ReverseBSplinesResult {
+  return { execution: undefined };
+}
+
+export const ReverseBSplinesResult: MessageFns<ReverseBSplinesResult> = {
+  encode(message: ReverseBSplinesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReverseBSplinesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReverseBSplinesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReverseBSplinesResult>): ReverseBSplinesResult {
+    return ReverseBSplinesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReverseBSplinesResult>): ReverseBSplinesResult {
+    const message = createBaseReverseBSplinesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseReversePlaneNormalsRequest(): ReversePlaneNormalsRequest {
+  return { planeList: [] };
+}
+
+export const ReversePlaneNormalsRequest: MessageFns<ReversePlaneNormalsRequest> = {
+  encode(message: ReversePlaneNormalsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.planeList !== undefined && message.planeList.length !== 0) {
+      for (const v of message.planeList) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReversePlaneNormalsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReversePlaneNormalsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.planeList!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReversePlaneNormalsRequest>): ReversePlaneNormalsRequest {
+    return ReversePlaneNormalsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReversePlaneNormalsRequest>): ReversePlaneNormalsRequest {
+    const message = createBaseReversePlaneNormalsRequest();
+    message.planeList = object.planeList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseReversePlaneNormalsResult(): ReversePlaneNormalsResult {
+  return { execution: undefined };
+}
+
+export const ReversePlaneNormalsResult: MessageFns<ReversePlaneNormalsResult> = {
+  encode(message: ReversePlaneNormalsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReversePlaneNormalsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReversePlaneNormalsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReversePlaneNormalsResult>): ReversePlaneNormalsResult {
+    return ReversePlaneNormalsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReversePlaneNormalsResult>): ReversePlaneNormalsResult {
+    const message = createBaseReversePlaneNormalsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseReverseSurfaceNormalsRequest(): ReverseSurfaceNormalsRequest {
+  return { surfaceList: [] };
+}
+
+export const ReverseSurfaceNormalsRequest: MessageFns<ReverseSurfaceNormalsRequest> = {
+  encode(message: ReverseSurfaceNormalsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.surfaceList !== undefined && message.surfaceList.length !== 0) {
+      for (const v of message.surfaceList) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReverseSurfaceNormalsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReverseSurfaceNormalsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.surfaceList!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReverseSurfaceNormalsRequest>): ReverseSurfaceNormalsRequest {
+    return ReverseSurfaceNormalsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReverseSurfaceNormalsRequest>): ReverseSurfaceNormalsRequest {
+    const message = createBaseReverseSurfaceNormalsRequest();
+    message.surfaceList = object.surfaceList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseReverseSurfaceNormalsResult(): ReverseSurfaceNormalsResult {
+  return { execution: undefined };
+}
+
+export const ReverseSurfaceNormalsResult: MessageFns<ReverseSurfaceNormalsResult> = {
+  encode(message: ReverseSurfaceNormalsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ReverseSurfaceNormalsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReverseSurfaceNormalsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ReverseSurfaceNormalsResult>): ReverseSurfaceNormalsResult {
+    return ReverseSurfaceNormalsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ReverseSurfaceNormalsResult>): ReverseSurfaceNormalsResult {
+    const message = createBaseReverseSurfaceNormalsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetCirclePropertiesRequest(): SetCirclePropertiesRequest {
+  return { circleName: undefined, centerCoordinate: undefined, normalDirection: undefined, radius: undefined };
+}
+
+export const SetCirclePropertiesRequest: MessageFns<SetCirclePropertiesRequest> = {
+  encode(message: SetCirclePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.circleName !== undefined) {
+      CollectionObjectName.encode(message.circleName, writer.uint32(10).fork()).join();
+    }
+    if (message.centerCoordinate !== undefined) {
+      Vector.encode(message.centerCoordinate, writer.uint32(18).fork()).join();
+    }
+    if (message.normalDirection !== undefined) {
+      Vector.encode(message.normalDirection, writer.uint32(26).fork()).join();
+    }
+    if (message.radius !== undefined) {
+      writer.uint32(33).double(message.radius);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetCirclePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetCirclePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.circleName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.centerCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.normalDirection = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.radius = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetCirclePropertiesRequest>): SetCirclePropertiesRequest {
+    return SetCirclePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetCirclePropertiesRequest>): SetCirclePropertiesRequest {
+    const message = createBaseSetCirclePropertiesRequest();
+    message.circleName = (object.circleName !== undefined && object.circleName !== null)
+      ? CollectionObjectName.fromPartial(object.circleName)
+      : undefined;
+    message.centerCoordinate = (object.centerCoordinate !== undefined && object.centerCoordinate !== null)
+      ? Vector.fromPartial(object.centerCoordinate)
+      : undefined;
+    message.normalDirection = (object.normalDirection !== undefined && object.normalDirection !== null)
+      ? Vector.fromPartial(object.normalDirection)
+      : undefined;
+    message.radius = object.radius ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetCirclePropertiesResult(): SetCirclePropertiesResult {
+  return { execution: undefined };
+}
+
+export const SetCirclePropertiesResult: MessageFns<SetCirclePropertiesResult> = {
+  encode(message: SetCirclePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetCirclePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetCirclePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetCirclePropertiesResult>): SetCirclePropertiesResult {
+    return SetCirclePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetCirclePropertiesResult>): SetCirclePropertiesResult {
+    const message = createBaseSetCirclePropertiesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetConePropertiesRequest(): SetConePropertiesRequest {
+  return {
+    coneName: undefined,
+    coneEndPointInWorkingCoordinates: undefined,
+    coneAxisInWorkingCoordinates: undefined,
+    coneLength: undefined,
+    coneThetaStart: undefined,
+    coneThetaSpan: undefined,
+    coneIncludedAngle: undefined,
+    cutLengthFromApex: undefined,
+  };
+}
+
+export const SetConePropertiesRequest: MessageFns<SetConePropertiesRequest> = {
+  encode(message: SetConePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.coneName !== undefined) {
+      CollectionObjectName.encode(message.coneName, writer.uint32(10).fork()).join();
+    }
+    if (message.coneEndPointInWorkingCoordinates !== undefined) {
+      Vector.encode(message.coneEndPointInWorkingCoordinates, writer.uint32(18).fork()).join();
+    }
+    if (message.coneAxisInWorkingCoordinates !== undefined) {
+      Vector.encode(message.coneAxisInWorkingCoordinates, writer.uint32(26).fork()).join();
+    }
+    if (message.coneLength !== undefined) {
+      writer.uint32(33).double(message.coneLength);
+    }
+    if (message.coneThetaStart !== undefined) {
+      writer.uint32(41).double(message.coneThetaStart);
+    }
+    if (message.coneThetaSpan !== undefined) {
+      writer.uint32(49).double(message.coneThetaSpan);
+    }
+    if (message.coneIncludedAngle !== undefined) {
+      writer.uint32(57).double(message.coneIncludedAngle);
+    }
+    if (message.cutLengthFromApex !== undefined) {
+      writer.uint32(65).double(message.cutLengthFromApex);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetConePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetConePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.coneName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.coneEndPointInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.coneAxisInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.coneLength = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.coneThetaStart = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.coneThetaSpan = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.coneIncludedAngle = reader.double();
+          continue;
+        }
+        case 8: {
+          if (tag !== 65) {
+            break;
+          }
+
+          message.cutLengthFromApex = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetConePropertiesRequest>): SetConePropertiesRequest {
+    return SetConePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetConePropertiesRequest>): SetConePropertiesRequest {
+    const message = createBaseSetConePropertiesRequest();
+    message.coneName = (object.coneName !== undefined && object.coneName !== null)
+      ? CollectionObjectName.fromPartial(object.coneName)
+      : undefined;
+    message.coneEndPointInWorkingCoordinates =
+      (object.coneEndPointInWorkingCoordinates !== undefined && object.coneEndPointInWorkingCoordinates !== null)
+        ? Vector.fromPartial(object.coneEndPointInWorkingCoordinates)
+        : undefined;
+    message.coneAxisInWorkingCoordinates =
+      (object.coneAxisInWorkingCoordinates !== undefined && object.coneAxisInWorkingCoordinates !== null)
+        ? Vector.fromPartial(object.coneAxisInWorkingCoordinates)
+        : undefined;
+    message.coneLength = object.coneLength ?? undefined;
+    message.coneThetaStart = object.coneThetaStart ?? undefined;
+    message.coneThetaSpan = object.coneThetaSpan ?? undefined;
+    message.coneIncludedAngle = object.coneIncludedAngle ?? undefined;
+    message.cutLengthFromApex = object.cutLengthFromApex ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetConePropertiesResult(): SetConePropertiesResult {
+  return { execution: undefined };
+}
+
+export const SetConePropertiesResult: MessageFns<SetConePropertiesResult> = {
+  encode(message: SetConePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetConePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetConePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetConePropertiesResult>): SetConePropertiesResult {
+    return SetConePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetConePropertiesResult>): SetConePropertiesResult {
+    const message = createBaseSetConePropertiesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetCylinderPropertiesRequest(): SetCylinderPropertiesRequest {
+  return {
+    cylinderName: undefined,
+    beginCoordinate: undefined,
+    axisDirection: undefined,
+    length: undefined,
+    diameter: undefined,
+    nominalsPointInward: undefined,
+    facets: undefined,
+    enableThetaExtentDisplayMode: undefined,
+    thetaStartInDegrees: undefined,
+    thetaSpanInDegrees: undefined,
+  };
+}
+
+export const SetCylinderPropertiesRequest: MessageFns<SetCylinderPropertiesRequest> = {
+  encode(message: SetCylinderPropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.cylinderName !== undefined) {
+      CollectionObjectName.encode(message.cylinderName, writer.uint32(10).fork()).join();
+    }
+    if (message.beginCoordinate !== undefined) {
+      Vector.encode(message.beginCoordinate, writer.uint32(18).fork()).join();
+    }
+    if (message.axisDirection !== undefined) {
+      Vector.encode(message.axisDirection, writer.uint32(26).fork()).join();
+    }
+    if (message.length !== undefined) {
+      writer.uint32(33).double(message.length);
+    }
+    if (message.diameter !== undefined) {
+      writer.uint32(41).double(message.diameter);
+    }
+    if (message.nominalsPointInward !== undefined) {
+      writer.uint32(48).bool(message.nominalsPointInward);
+    }
+    if (message.facets !== undefined) {
+      writer.uint32(56).int32(message.facets);
+    }
+    if (message.enableThetaExtentDisplayMode !== undefined) {
+      writer.uint32(64).bool(message.enableThetaExtentDisplayMode);
+    }
+    if (message.thetaStartInDegrees !== undefined) {
+      writer.uint32(73).double(message.thetaStartInDegrees);
+    }
+    if (message.thetaSpanInDegrees !== undefined) {
+      writer.uint32(81).double(message.thetaSpanInDegrees);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetCylinderPropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetCylinderPropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.cylinderName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.beginCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.axisDirection = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.length = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.diameter = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.nominalsPointInward = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.facets = reader.int32();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.enableThetaExtentDisplayMode = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 73) {
+            break;
+          }
+
+          message.thetaStartInDegrees = reader.double();
+          continue;
+        }
+        case 10: {
+          if (tag !== 81) {
+            break;
+          }
+
+          message.thetaSpanInDegrees = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetCylinderPropertiesRequest>): SetCylinderPropertiesRequest {
+    return SetCylinderPropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetCylinderPropertiesRequest>): SetCylinderPropertiesRequest {
+    const message = createBaseSetCylinderPropertiesRequest();
+    message.cylinderName = (object.cylinderName !== undefined && object.cylinderName !== null)
+      ? CollectionObjectName.fromPartial(object.cylinderName)
+      : undefined;
+    message.beginCoordinate = (object.beginCoordinate !== undefined && object.beginCoordinate !== null)
+      ? Vector.fromPartial(object.beginCoordinate)
+      : undefined;
+    message.axisDirection = (object.axisDirection !== undefined && object.axisDirection !== null)
+      ? Vector.fromPartial(object.axisDirection)
+      : undefined;
+    message.length = object.length ?? undefined;
+    message.diameter = object.diameter ?? undefined;
+    message.nominalsPointInward = object.nominalsPointInward ?? undefined;
+    message.facets = object.facets ?? undefined;
+    message.enableThetaExtentDisplayMode = object.enableThetaExtentDisplayMode ?? undefined;
+    message.thetaStartInDegrees = object.thetaStartInDegrees ?? undefined;
+    message.thetaSpanInDegrees = object.thetaSpanInDegrees ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetCylinderPropertiesResult(): SetCylinderPropertiesResult {
+  return { execution: undefined };
+}
+
+export const SetCylinderPropertiesResult: MessageFns<SetCylinderPropertiesResult> = {
+  encode(message: SetCylinderPropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetCylinderPropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetCylinderPropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetCylinderPropertiesResult>): SetCylinderPropertiesResult {
+    return SetCylinderPropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetCylinderPropertiesResult>): SetCylinderPropertiesResult {
+    const message = createBaseSetCylinderPropertiesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetDefaultColorizationOptionsRequest(): SetDefaultColorizationOptionsRequest {
+  return { colorizationOptions: undefined };
+}
+
+export const SetDefaultColorizationOptionsRequest: MessageFns<SetDefaultColorizationOptionsRequest> = {
+  encode(message: SetDefaultColorizationOptionsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.colorizationOptions !== undefined) {
+      ColorizationOptions.encode(message.colorizationOptions, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetDefaultColorizationOptionsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetDefaultColorizationOptionsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.colorizationOptions = ColorizationOptions.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetDefaultColorizationOptionsRequest>): SetDefaultColorizationOptionsRequest {
+    return SetDefaultColorizationOptionsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetDefaultColorizationOptionsRequest>): SetDefaultColorizationOptionsRequest {
+    const message = createBaseSetDefaultColorizationOptionsRequest();
+    message.colorizationOptions = (object.colorizationOptions !== undefined && object.colorizationOptions !== null)
+      ? ColorizationOptions.fromPartial(object.colorizationOptions)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetDefaultColorizationOptionsResult(): SetDefaultColorizationOptionsResult {
+  return { execution: undefined };
+}
+
+export const SetDefaultColorizationOptionsResult: MessageFns<SetDefaultColorizationOptionsResult> = {
+  encode(message: SetDefaultColorizationOptionsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetDefaultColorizationOptionsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetDefaultColorizationOptionsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetDefaultColorizationOptionsResult>): SetDefaultColorizationOptionsResult {
+    return SetDefaultColorizationOptionsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetDefaultColorizationOptionsResult>): SetDefaultColorizationOptionsResult {
+    const message = createBaseSetDefaultColorizationOptionsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetEllipsePropertiesRequest(): SetEllipsePropertiesRequest {
+  return {
+    ellipseName: undefined,
+    centerCoordinate: undefined,
+    normalDirection: undefined,
+    majorAxisRadius: undefined,
+    minorAxisRadius: undefined,
+  };
+}
+
+export const SetEllipsePropertiesRequest: MessageFns<SetEllipsePropertiesRequest> = {
+  encode(message: SetEllipsePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.ellipseName !== undefined) {
+      CollectionObjectName.encode(message.ellipseName, writer.uint32(10).fork()).join();
+    }
+    if (message.centerCoordinate !== undefined) {
+      Vector.encode(message.centerCoordinate, writer.uint32(18).fork()).join();
+    }
+    if (message.normalDirection !== undefined) {
+      Vector.encode(message.normalDirection, writer.uint32(26).fork()).join();
+    }
+    if (message.majorAxisRadius !== undefined) {
+      writer.uint32(33).double(message.majorAxisRadius);
+    }
+    if (message.minorAxisRadius !== undefined) {
+      writer.uint32(41).double(message.minorAxisRadius);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetEllipsePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetEllipsePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ellipseName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.centerCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.normalDirection = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.majorAxisRadius = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.minorAxisRadius = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetEllipsePropertiesRequest>): SetEllipsePropertiesRequest {
+    return SetEllipsePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetEllipsePropertiesRequest>): SetEllipsePropertiesRequest {
+    const message = createBaseSetEllipsePropertiesRequest();
+    message.ellipseName = (object.ellipseName !== undefined && object.ellipseName !== null)
+      ? CollectionObjectName.fromPartial(object.ellipseName)
+      : undefined;
+    message.centerCoordinate = (object.centerCoordinate !== undefined && object.centerCoordinate !== null)
+      ? Vector.fromPartial(object.centerCoordinate)
+      : undefined;
+    message.normalDirection = (object.normalDirection !== undefined && object.normalDirection !== null)
+      ? Vector.fromPartial(object.normalDirection)
+      : undefined;
+    message.majorAxisRadius = object.majorAxisRadius ?? undefined;
+    message.minorAxisRadius = object.minorAxisRadius ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetEllipsePropertiesResult(): SetEllipsePropertiesResult {
+  return { execution: undefined };
+}
+
+export const SetEllipsePropertiesResult: MessageFns<SetEllipsePropertiesResult> = {
+  encode(message: SetEllipsePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetEllipsePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetEllipsePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetEllipsePropertiesResult>): SetEllipsePropertiesResult {
+    return SetEllipsePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetEllipsePropertiesResult>): SetEllipsePropertiesResult {
+    const message = createBaseSetEllipsePropertiesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetGeometryRelationshipFitProfileRequest(): SetGeometryRelationshipFitProfileRequest {
+  return {
+    geometryType: undefined,
+    relationshipRefList: [],
+    fitProfileName: undefined,
+    applyCardinalPointSettings: undefined,
+  };
+}
+
+export const SetGeometryRelationshipFitProfileRequest: MessageFns<SetGeometryRelationshipFitProfileRequest> = {
+  encode(message: SetGeometryRelationshipFitProfileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.geometryType !== undefined) {
+      writer.uint32(8).int32(message.geometryType);
+    }
+    if (message.relationshipRefList !== undefined && message.relationshipRefList.length !== 0) {
+      for (const v of message.relationshipRefList) {
+        CollectionItemName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(26).string(message.fitProfileName);
+    }
+    if (message.applyCardinalPointSettings !== undefined) {
+      writer.uint32(32).bool(message.applyCardinalPointSettings);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetGeometryRelationshipFitProfileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetGeometryRelationshipFitProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.geometryType = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.relationshipRefList!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.applyCardinalPointSettings = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetGeometryRelationshipFitProfileRequest>): SetGeometryRelationshipFitProfileRequest {
+    return SetGeometryRelationshipFitProfileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetGeometryRelationshipFitProfileRequest>): SetGeometryRelationshipFitProfileRequest {
+    const message = createBaseSetGeometryRelationshipFitProfileRequest();
+    message.geometryType = object.geometryType ?? undefined;
+    message.relationshipRefList = object.relationshipRefList?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    message.applyCardinalPointSettings = object.applyCardinalPointSettings ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetGeometryRelationshipFitProfileResult(): SetGeometryRelationshipFitProfileResult {
+  return { execution: undefined };
+}
+
+export const SetGeometryRelationshipFitProfileResult: MessageFns<SetGeometryRelationshipFitProfileResult> = {
+  encode(message: SetGeometryRelationshipFitProfileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetGeometryRelationshipFitProfileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetGeometryRelationshipFitProfileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetGeometryRelationshipFitProfileResult>): SetGeometryRelationshipFitProfileResult {
+    return SetGeometryRelationshipFitProfileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetGeometryRelationshipFitProfileResult>): SetGeometryRelationshipFitProfileResult {
+    const message = createBaseSetGeometryRelationshipFitProfileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetLinePropertiesRequest(): SetLinePropertiesRequest {
+  return { lineName: undefined, beginCoordinate: undefined, endCoordinate: undefined, lengthOptional: undefined };
+}
+
+export const SetLinePropertiesRequest: MessageFns<SetLinePropertiesRequest> = {
+  encode(message: SetLinePropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.lineName !== undefined) {
+      CollectionObjectName.encode(message.lineName, writer.uint32(10).fork()).join();
+    }
+    if (message.beginCoordinate !== undefined) {
+      Vector.encode(message.beginCoordinate, writer.uint32(18).fork()).join();
+    }
+    if (message.endCoordinate !== undefined) {
+      Vector.encode(message.endCoordinate, writer.uint32(26).fork()).join();
+    }
+    if (message.lengthOptional !== undefined) {
+      writer.uint32(33).double(message.lengthOptional);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetLinePropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetLinePropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.lineName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.beginCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.endCoordinate = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.lengthOptional = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetLinePropertiesRequest>): SetLinePropertiesRequest {
+    return SetLinePropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetLinePropertiesRequest>): SetLinePropertiesRequest {
+    const message = createBaseSetLinePropertiesRequest();
+    message.lineName = (object.lineName !== undefined && object.lineName !== null)
+      ? CollectionObjectName.fromPartial(object.lineName)
+      : undefined;
+    message.beginCoordinate = (object.beginCoordinate !== undefined && object.beginCoordinate !== null)
+      ? Vector.fromPartial(object.beginCoordinate)
+      : undefined;
+    message.endCoordinate = (object.endCoordinate !== undefined && object.endCoordinate !== null)
+      ? Vector.fromPartial(object.endCoordinate)
+      : undefined;
+    message.lengthOptional = object.lengthOptional ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetLinePropertiesResult(): SetLinePropertiesResult {
+  return { execution: undefined };
+}
+
+export const SetLinePropertiesResult: MessageFns<SetLinePropertiesResult> = {
+  encode(message: SetLinePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetLinePropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetLinePropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetLinePropertiesResult>): SetLinePropertiesResult {
+    return SetLinePropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetLinePropertiesResult>): SetLinePropertiesResult {
+    const message = createBaseSetLinePropertiesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetMeasurementAuxiliaryDataRequest(): SetMeasurementAuxiliaryDataRequest {
+  return { pointName: undefined, auxiliaryName: undefined, value: undefined, units: undefined };
+}
+
+export const SetMeasurementAuxiliaryDataRequest: MessageFns<SetMeasurementAuxiliaryDataRequest> = {
+  encode(message: SetMeasurementAuxiliaryDataRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
+    }
+    if (message.auxiliaryName !== undefined) {
+      writer.uint32(18).string(message.auxiliaryName);
+    }
+    if (message.value !== undefined) {
+      writer.uint32(25).double(message.value);
+    }
+    if (message.units !== undefined) {
+      writer.uint32(34).string(message.units);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetMeasurementAuxiliaryDataRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetMeasurementAuxiliaryDataRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.auxiliaryName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.value = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.units = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetMeasurementAuxiliaryDataRequest>): SetMeasurementAuxiliaryDataRequest {
+    return SetMeasurementAuxiliaryDataRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetMeasurementAuxiliaryDataRequest>): SetMeasurementAuxiliaryDataRequest {
+    const message = createBaseSetMeasurementAuxiliaryDataRequest();
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
+    message.auxiliaryName = object.auxiliaryName ?? undefined;
+    message.value = object.value ?? undefined;
+    message.units = object.units ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetMeasurementAuxiliaryDataResult(): SetMeasurementAuxiliaryDataResult {
+  return { execution: undefined };
+}
+
+export const SetMeasurementAuxiliaryDataResult: MessageFns<SetMeasurementAuxiliaryDataResult> = {
+  encode(message: SetMeasurementAuxiliaryDataResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetMeasurementAuxiliaryDataResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetMeasurementAuxiliaryDataResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetMeasurementAuxiliaryDataResult>): SetMeasurementAuxiliaryDataResult {
+    return SetMeasurementAuxiliaryDataResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetMeasurementAuxiliaryDataResult>): SetMeasurementAuxiliaryDataResult {
+    const message = createBaseSetMeasurementAuxiliaryDataResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetObjectReportingFrameRequest(): SetObjectReportingFrameRequest {
+  return { objectName: undefined, reportingFrame: undefined };
+}
+
+export const SetObjectReportingFrameRequest: MessageFns<SetObjectReportingFrameRequest> = {
+  encode(message: SetObjectReportingFrameRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.objectName !== undefined) {
+      CollectionObjectName.encode(message.objectName, writer.uint32(10).fork()).join();
+    }
+    if (message.reportingFrame !== undefined) {
+      CollectionObjectName.encode(message.reportingFrame, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetObjectReportingFrameRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetObjectReportingFrameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.objectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.reportingFrame = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetObjectReportingFrameRequest>): SetObjectReportingFrameRequest {
+    return SetObjectReportingFrameRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetObjectReportingFrameRequest>): SetObjectReportingFrameRequest {
+    const message = createBaseSetObjectReportingFrameRequest();
+    message.objectName = (object.objectName !== undefined && object.objectName !== null)
+      ? CollectionObjectName.fromPartial(object.objectName)
+      : undefined;
+    message.reportingFrame = (object.reportingFrame !== undefined && object.reportingFrame !== null)
+      ? CollectionObjectName.fromPartial(object.reportingFrame)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetObjectReportingFrameResult(): SetObjectReportingFrameResult {
+  return { execution: undefined };
+}
+
+export const SetObjectReportingFrameResult: MessageFns<SetObjectReportingFrameResult> = {
+  encode(message: SetObjectReportingFrameResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetObjectReportingFrameResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetObjectReportingFrameResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetObjectReportingFrameResult>): SetObjectReportingFrameResult {
+    return SetObjectReportingFrameResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetObjectReportingFrameResult>): SetObjectReportingFrameResult {
+    const message = createBaseSetObjectReportingFrameResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetPointPropertiesRequest(): SetPointPropertiesRequest {
+  return {
+    pointNameList: [],
+    planarOffset: undefined,
+    radialOffset: undefined,
+    positionTolerance: undefined,
+    componentWeights: undefined,
+  };
+}
+
+export const SetPointPropertiesRequest: MessageFns<SetPointPropertiesRequest> = {
+  encode(message: SetPointPropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointNameList !== undefined && message.pointNameList.length !== 0) {
+      for (const v of message.pointNameList) {
+        PointName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.planarOffset !== undefined) {
+      writer.uint32(17).double(message.planarOffset);
+    }
+    if (message.radialOffset !== undefined) {
+      writer.uint32(25).double(message.radialOffset);
+    }
+    if (message.positionTolerance !== undefined) {
+      ToleranceVectorOptions.encode(message.positionTolerance, writer.uint32(34).fork()).join();
+    }
+    if (message.componentWeights !== undefined) {
+      Vector.encode(message.componentWeights, writer.uint32(42).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetPointPropertiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetPointPropertiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointNameList!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.planarOffset = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.radialOffset = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.positionTolerance = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.componentWeights = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetPointPropertiesRequest>): SetPointPropertiesRequest {
+    return SetPointPropertiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetPointPropertiesRequest>): SetPointPropertiesRequest {
+    const message = createBaseSetPointPropertiesRequest();
+    message.pointNameList = object.pointNameList?.map((e) => PointName.fromPartial(e)) || [];
+    message.planarOffset = object.planarOffset ?? undefined;
+    message.radialOffset = object.radialOffset ?? undefined;
+    message.positionTolerance = (object.positionTolerance !== undefined && object.positionTolerance !== null)
+      ? ToleranceVectorOptions.fromPartial(object.positionTolerance)
+      : undefined;
+    message.componentWeights = (object.componentWeights !== undefined && object.componentWeights !== null)
+      ? Vector.fromPartial(object.componentWeights)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetPointPropertiesResult(): SetPointPropertiesResult {
+  return { execution: undefined };
+}
+
+export const SetPointPropertiesResult: MessageFns<SetPointPropertiesResult> = {
+  encode(message: SetPointPropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetPointPropertiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetPointPropertiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetPointPropertiesResult>): SetPointPropertiesResult {
+    return SetPointPropertiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetPointPropertiesResult>): SetPointPropertiesResult {
+    const message = createBaseSetPointPropertiesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetPointWeightsFromUncertaintiesRequest(): SetPointWeightsFromUncertaintiesRequest {
+  return {
+    pointNameList: [],
+    uncertaintyReferenceFrameMode: undefined,
+    reportingFrame: undefined,
+    weightNormalizationMode: undefined,
+    fixedWeightValue: undefined,
+    outputWeightedPointGroup: undefined,
+  };
+}
+
+export const SetPointWeightsFromUncertaintiesRequest: MessageFns<SetPointWeightsFromUncertaintiesRequest> = {
+  encode(message: SetPointWeightsFromUncertaintiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.pointNameList !== undefined && message.pointNameList.length !== 0) {
+      for (const v of message.pointNameList) {
+        PointName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.uncertaintyReferenceFrameMode !== undefined) {
+      writer.uint32(18).string(message.uncertaintyReferenceFrameMode);
+    }
+    if (message.reportingFrame !== undefined) {
+      CollectionObjectName.encode(message.reportingFrame, writer.uint32(26).fork()).join();
+    }
+    if (message.weightNormalizationMode !== undefined) {
+      writer.uint32(34).string(message.weightNormalizationMode);
+    }
+    if (message.fixedWeightValue !== undefined) {
+      writer.uint32(41).double(message.fixedWeightValue);
+    }
+    if (message.outputWeightedPointGroup !== undefined) {
+      CollectionObjectName.encode(message.outputWeightedPointGroup, writer.uint32(50).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetPointWeightsFromUncertaintiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetPointWeightsFromUncertaintiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointNameList!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.uncertaintyReferenceFrameMode = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.reportingFrame = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.weightNormalizationMode = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.fixedWeightValue = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.outputWeightedPointGroup = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetPointWeightsFromUncertaintiesRequest>): SetPointWeightsFromUncertaintiesRequest {
+    return SetPointWeightsFromUncertaintiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetPointWeightsFromUncertaintiesRequest>): SetPointWeightsFromUncertaintiesRequest {
+    const message = createBaseSetPointWeightsFromUncertaintiesRequest();
+    message.pointNameList = object.pointNameList?.map((e) => PointName.fromPartial(e)) || [];
+    message.uncertaintyReferenceFrameMode = object.uncertaintyReferenceFrameMode ?? undefined;
+    message.reportingFrame = (object.reportingFrame !== undefined && object.reportingFrame !== null)
+      ? CollectionObjectName.fromPartial(object.reportingFrame)
+      : undefined;
+    message.weightNormalizationMode = object.weightNormalizationMode ?? undefined;
+    message.fixedWeightValue = object.fixedWeightValue ?? undefined;
+    message.outputWeightedPointGroup =
+      (object.outputWeightedPointGroup !== undefined && object.outputWeightedPointGroup !== null)
+        ? CollectionObjectName.fromPartial(object.outputWeightedPointGroup)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseSetPointWeightsFromUncertaintiesResult(): SetPointWeightsFromUncertaintiesResult {
+  return { outputWeightedPointList: [], execution: undefined };
+}
+
+export const SetPointWeightsFromUncertaintiesResult: MessageFns<SetPointWeightsFromUncertaintiesResult> = {
+  encode(message: SetPointWeightsFromUncertaintiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.outputWeightedPointList !== undefined && message.outputWeightedPointList.length !== 0) {
+      for (const v of message.outputWeightedPointList) {
+        PointName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetPointWeightsFromUncertaintiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetPointWeightsFromUncertaintiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.outputWeightedPointList!.push(el);
+          }
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetPointWeightsFromUncertaintiesResult>): SetPointWeightsFromUncertaintiesResult {
+    return SetPointWeightsFromUncertaintiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetPointWeightsFromUncertaintiesResult>): SetPointWeightsFromUncertaintiesResult {
+    const message = createBaseSetPointWeightsFromUncertaintiesResult();
+    message.outputWeightedPointList = object.outputWeightedPointList?.map((e) => PointName.fromPartial(e)) || [];
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetTransformForIthFrameInFrameSetRequest(): SetTransformForIthFrameInFrameSetRequest {
+  return { frameSet: undefined, frameSetIndex: undefined, transformInWorking: undefined };
+}
+
+export const SetTransformForIthFrameInFrameSetRequest: MessageFns<SetTransformForIthFrameInFrameSetRequest> = {
+  encode(message: SetTransformForIthFrameInFrameSetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.frameSet !== undefined) {
+      CollectionObjectName.encode(message.frameSet, writer.uint32(10).fork()).join();
+    }
+    if (message.frameSetIndex !== undefined) {
+      writer.uint32(16).int32(message.frameSetIndex);
+    }
+    if (message.transformInWorking !== undefined) {
+      Transform.encode(message.transformInWorking, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetTransformForIthFrameInFrameSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetTransformForIthFrameInFrameSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.frameSet = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.frameSetIndex = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.transformInWorking = Transform.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetTransformForIthFrameInFrameSetRequest>): SetTransformForIthFrameInFrameSetRequest {
+    return SetTransformForIthFrameInFrameSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetTransformForIthFrameInFrameSetRequest>): SetTransformForIthFrameInFrameSetRequest {
+    const message = createBaseSetTransformForIthFrameInFrameSetRequest();
+    message.frameSet = (object.frameSet !== undefined && object.frameSet !== null)
+      ? CollectionObjectName.fromPartial(object.frameSet)
+      : undefined;
+    message.frameSetIndex = object.frameSetIndex ?? undefined;
+    message.transformInWorking = (object.transformInWorking !== undefined && object.transformInWorking !== null)
+      ? Transform.fromPartial(object.transformInWorking)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetTransformForIthFrameInFrameSetResult(): SetTransformForIthFrameInFrameSetResult {
+  return { execution: undefined };
+}
+
+export const SetTransformForIthFrameInFrameSetResult: MessageFns<SetTransformForIthFrameInFrameSetResult> = {
+  encode(message: SetTransformForIthFrameInFrameSetResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetTransformForIthFrameInFrameSetResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetTransformForIthFrameInFrameSetResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetTransformForIthFrameInFrameSetResult>): SetTransformForIthFrameInFrameSetResult {
+    return SetTransformForIthFrameInFrameSetResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetTransformForIthFrameInFrameSetResult>): SetTransformForIthFrameInFrameSetResult {
+    const message = createBaseSetTransformForIthFrameInFrameSetResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSphereAxisCheckRequest(): SphereAxisCheckRequest {
+  return {
+    spherePointsGroupName: undefined,
+    sphereTargetRadius: undefined,
+    pointToCreateAtSphereCenter: undefined,
+    lineDefiningTheAxis: undefined,
+  };
+}
+
+export const SphereAxisCheckRequest: MessageFns<SphereAxisCheckRequest> = {
+  encode(message: SphereAxisCheckRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.spherePointsGroupName !== undefined) {
+      CollectionObjectName.encode(message.spherePointsGroupName, writer.uint32(10).fork()).join();
+    }
+    if (message.sphereTargetRadius !== undefined) {
+      writer.uint32(17).double(message.sphereTargetRadius);
+    }
+    if (message.pointToCreateAtSphereCenter !== undefined) {
+      PointName.encode(message.pointToCreateAtSphereCenter, writer.uint32(26).fork()).join();
+    }
+    if (message.lineDefiningTheAxis !== undefined) {
+      CollectionObjectName.encode(message.lineDefiningTheAxis, writer.uint32(34).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SphereAxisCheckRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSphereAxisCheckRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.spherePointsGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.sphereTargetRadius = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.pointToCreateAtSphereCenter = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.lineDefiningTheAxis = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SphereAxisCheckRequest>): SphereAxisCheckRequest {
+    return SphereAxisCheckRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SphereAxisCheckRequest>): SphereAxisCheckRequest {
+    const message = createBaseSphereAxisCheckRequest();
+    message.spherePointsGroupName =
+      (object.spherePointsGroupName !== undefined && object.spherePointsGroupName !== null)
+        ? CollectionObjectName.fromPartial(object.spherePointsGroupName)
+        : undefined;
+    message.sphereTargetRadius = object.sphereTargetRadius ?? undefined;
+    message.pointToCreateAtSphereCenter =
+      (object.pointToCreateAtSphereCenter !== undefined && object.pointToCreateAtSphereCenter !== null)
+        ? PointName.fromPartial(object.pointToCreateAtSphereCenter)
+        : undefined;
+    message.lineDefiningTheAxis = (object.lineDefiningTheAxis !== undefined && object.lineDefiningTheAxis !== null)
+      ? CollectionObjectName.fromPartial(object.lineDefiningTheAxis)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSphereAxisCheckResult(): SphereAxisCheckResult {
+  return {
+    sphereFitRmsError: undefined,
+    sphereFitMaxError: undefined,
+    vectorRepresentation: undefined,
+    xValue: undefined,
+    yValue: undefined,
+    zValue: undefined,
+    magnitude: undefined,
+    execution: undefined,
+  };
+}
+
+export const SphereAxisCheckResult: MessageFns<SphereAxisCheckResult> = {
+  encode(message: SphereAxisCheckResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.sphereFitRmsError !== undefined) {
+      writer.uint32(9).double(message.sphereFitRmsError);
+    }
+    if (message.sphereFitMaxError !== undefined) {
+      writer.uint32(17).double(message.sphereFitMaxError);
+    }
+    if (message.vectorRepresentation !== undefined) {
+      Vector.encode(message.vectorRepresentation, writer.uint32(26).fork()).join();
+    }
+    if (message.xValue !== undefined) {
+      writer.uint32(33).double(message.xValue);
+    }
+    if (message.yValue !== undefined) {
+      writer.uint32(41).double(message.yValue);
+    }
+    if (message.zValue !== undefined) {
+      writer.uint32(49).double(message.zValue);
+    }
+    if (message.magnitude !== undefined) {
+      writer.uint32(57).double(message.magnitude);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SphereAxisCheckResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSphereAxisCheckResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.sphereFitRmsError = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.sphereFitMaxError = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.vectorRepresentation = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.xValue = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.yValue = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.zValue = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.magnitude = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SphereAxisCheckResult>): SphereAxisCheckResult {
+    return SphereAxisCheckResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SphereAxisCheckResult>): SphereAxisCheckResult {
+    const message = createBaseSphereAxisCheckResult();
+    message.sphereFitRmsError = object.sphereFitRmsError ?? undefined;
+    message.sphereFitMaxError = object.sphereFitMaxError ?? undefined;
+    message.vectorRepresentation = (object.vectorRepresentation !== undefined && object.vectorRepresentation !== null)
+      ? Vector.fromPartial(object.vectorRepresentation)
+      : undefined;
+    message.xValue = object.xValue ?? undefined;
+    message.yValue = object.yValue ?? undefined;
+    message.zValue = object.zValue ?? undefined;
+    message.magnitude = object.magnitude ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTemperatureCompensateAGroupRequest(): TemperatureCompensateAGroupRequest {
+  return {
+    originalGroup: undefined,
+    scalingOriginCoordinateFrame: undefined,
+    materialCte1DegF: undefined,
+    initialTemperatureF: undefined,
+    finalTemperatureF: undefined,
+    scaledGroupName: undefined,
+  };
+}
+
+export const TemperatureCompensateAGroupRequest: MessageFns<TemperatureCompensateAGroupRequest> = {
+  encode(message: TemperatureCompensateAGroupRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.originalGroup !== undefined) {
+      CollectionObjectName.encode(message.originalGroup, writer.uint32(10).fork()).join();
+    }
+    if (message.scalingOriginCoordinateFrame !== undefined) {
+      FrameName.encode(message.scalingOriginCoordinateFrame, writer.uint32(18).fork()).join();
+    }
+    if (message.materialCte1DegF !== undefined) {
+      writer.uint32(25).double(message.materialCte1DegF);
+    }
+    if (message.initialTemperatureF !== undefined) {
+      writer.uint32(33).double(message.initialTemperatureF);
+    }
+    if (message.finalTemperatureF !== undefined) {
+      writer.uint32(41).double(message.finalTemperatureF);
+    }
+    if (message.scaledGroupName !== undefined) {
+      CollectionObjectName.encode(message.scaledGroupName, writer.uint32(50).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TemperatureCompensateAGroupRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTemperatureCompensateAGroupRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.originalGroup = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.scalingOriginCoordinateFrame = FrameName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.materialCte1DegF = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.initialTemperatureF = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.finalTemperatureF = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.scaledGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<TemperatureCompensateAGroupRequest>): TemperatureCompensateAGroupRequest {
+    return TemperatureCompensateAGroupRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<TemperatureCompensateAGroupRequest>): TemperatureCompensateAGroupRequest {
+    const message = createBaseTemperatureCompensateAGroupRequest();
+    message.originalGroup = (object.originalGroup !== undefined && object.originalGroup !== null)
+      ? CollectionObjectName.fromPartial(object.originalGroup)
+      : undefined;
+    message.scalingOriginCoordinateFrame =
+      (object.scalingOriginCoordinateFrame !== undefined && object.scalingOriginCoordinateFrame !== null)
+        ? FrameName.fromPartial(object.scalingOriginCoordinateFrame)
+        : undefined;
+    message.materialCte1DegF = object.materialCte1DegF ?? undefined;
+    message.initialTemperatureF = object.initialTemperatureF ?? undefined;
+    message.finalTemperatureF = object.finalTemperatureF ?? undefined;
+    message.scaledGroupName = (object.scaledGroupName !== undefined && object.scaledGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.scaledGroupName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTemperatureCompensateAGroupResult(): TemperatureCompensateAGroupResult {
+  return { execution: undefined };
+}
+
+export const TemperatureCompensateAGroupResult: MessageFns<TemperatureCompensateAGroupResult> = {
+  encode(message: TemperatureCompensateAGroupResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TemperatureCompensateAGroupResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTemperatureCompensateAGroupResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<TemperatureCompensateAGroupResult>): TemperatureCompensateAGroupResult {
+    return TemperatureCompensateAGroupResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<TemperatureCompensateAGroupResult>): TemperatureCompensateAGroupResult {
+    const message = createBaseTemperatureCompensateAGroupResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTransformObjectsFrameToFrameRequest(): TransformObjectsFrameToFrameRequest {
+  return { objectNameList: [], initialFrameName: undefined, destinationFrameName: undefined, numberOfSteps: undefined };
+}
+
+export const TransformObjectsFrameToFrameRequest: MessageFns<TransformObjectsFrameToFrameRequest> = {
+  encode(message: TransformObjectsFrameToFrameRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.objectNameList !== undefined && message.objectNameList.length !== 0) {
+      for (const v of message.objectNameList) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.initialFrameName !== undefined) {
+      CollectionObjectName.encode(message.initialFrameName, writer.uint32(18).fork()).join();
+    }
+    if (message.destinationFrameName !== undefined) {
+      CollectionObjectName.encode(message.destinationFrameName, writer.uint32(26).fork()).join();
+    }
+    if (message.numberOfSteps !== undefined) {
+      writer.uint32(32).int32(message.numberOfSteps);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TransformObjectsFrameToFrameRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransformObjectsFrameToFrameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectNameList!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.initialFrameName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.destinationFrameName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.numberOfSteps = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<TransformObjectsFrameToFrameRequest>): TransformObjectsFrameToFrameRequest {
+    return TransformObjectsFrameToFrameRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<TransformObjectsFrameToFrameRequest>): TransformObjectsFrameToFrameRequest {
+    const message = createBaseTransformObjectsFrameToFrameRequest();
+    message.objectNameList = object.objectNameList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.initialFrameName = (object.initialFrameName !== undefined && object.initialFrameName !== null)
+      ? CollectionObjectName.fromPartial(object.initialFrameName)
+      : undefined;
+    message.destinationFrameName = (object.destinationFrameName !== undefined && object.destinationFrameName !== null)
+      ? CollectionObjectName.fromPartial(object.destinationFrameName)
+      : undefined;
+    message.numberOfSteps = object.numberOfSteps ?? undefined;
+    return message;
+  },
+};
+
+function createBaseTransformObjectsFrameToFrameResult(): TransformObjectsFrameToFrameResult {
+  return { execution: undefined };
+}
+
+export const TransformObjectsFrameToFrameResult: MessageFns<TransformObjectsFrameToFrameResult> = {
+  encode(message: TransformObjectsFrameToFrameResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TransformObjectsFrameToFrameResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransformObjectsFrameToFrameResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<TransformObjectsFrameToFrameResult>): TransformObjectsFrameToFrameResult {
+    return TransformObjectsFrameToFrameResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<TransformObjectsFrameToFrameResult>): TransformObjectsFrameToFrameResult {
+    const message = createBaseTransformObjectsFrameToFrameResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTransformObjectsByDeltaAboutWorkingFrameRequest(): TransformObjectsByDeltaAboutWorkingFrameRequest {
+  return { objectsToTransform: [], deltaTransform: undefined };
+}
+
+export const TransformObjectsByDeltaAboutWorkingFrameRequest: MessageFns<
+  TransformObjectsByDeltaAboutWorkingFrameRequest
+> = {
+  encode(
+    message: TransformObjectsByDeltaAboutWorkingFrameRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.objectsToTransform !== undefined && message.objectsToTransform.length !== 0) {
+      for (const v of message.objectsToTransform) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.deltaTransform !== undefined) {
+      Transform.encode(message.deltaTransform, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TransformObjectsByDeltaAboutWorkingFrameRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransformObjectsByDeltaAboutWorkingFrameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectsToTransform!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.deltaTransform = Transform.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<TransformObjectsByDeltaAboutWorkingFrameRequest>,
+  ): TransformObjectsByDeltaAboutWorkingFrameRequest {
+    return TransformObjectsByDeltaAboutWorkingFrameRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<TransformObjectsByDeltaAboutWorkingFrameRequest>,
+  ): TransformObjectsByDeltaAboutWorkingFrameRequest {
+    const message = createBaseTransformObjectsByDeltaAboutWorkingFrameRequest();
+    message.objectsToTransform = object.objectsToTransform?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.deltaTransform = (object.deltaTransform !== undefined && object.deltaTransform !== null)
+      ? Transform.fromPartial(object.deltaTransform)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTransformObjectsByDeltaAboutWorkingFrameResult(): TransformObjectsByDeltaAboutWorkingFrameResult {
+  return { execution: undefined };
+}
+
+export const TransformObjectsByDeltaAboutWorkingFrameResult: MessageFns<
+  TransformObjectsByDeltaAboutWorkingFrameResult
+> = {
+  encode(
+    message: TransformObjectsByDeltaAboutWorkingFrameResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TransformObjectsByDeltaAboutWorkingFrameResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransformObjectsByDeltaAboutWorkingFrameResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<TransformObjectsByDeltaAboutWorkingFrameResult>,
+  ): TransformObjectsByDeltaAboutWorkingFrameResult {
+    return TransformObjectsByDeltaAboutWorkingFrameResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<TransformObjectsByDeltaAboutWorkingFrameResult>,
+  ): TransformObjectsByDeltaAboutWorkingFrameResult {
+    const message = createBaseTransformObjectsByDeltaAboutWorkingFrameResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTransformObjectsByDeltaWorldTransformOperatorRequest(): TransformObjectsByDeltaWorldTransformOperatorRequest {
+  return { objectsToTransform: [], deltaTransform: undefined };
+}
+
+export const TransformObjectsByDeltaWorldTransformOperatorRequest: MessageFns<
+  TransformObjectsByDeltaWorldTransformOperatorRequest
+> = {
+  encode(
+    message: TransformObjectsByDeltaWorldTransformOperatorRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.objectsToTransform !== undefined && message.objectsToTransform.length !== 0) {
+      for (const v of message.objectsToTransform) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.deltaTransform !== undefined) {
+      WorldTransform.encode(message.deltaTransform, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TransformObjectsByDeltaWorldTransformOperatorRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransformObjectsByDeltaWorldTransformOperatorRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectsToTransform!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.deltaTransform = WorldTransform.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<TransformObjectsByDeltaWorldTransformOperatorRequest>,
+  ): TransformObjectsByDeltaWorldTransformOperatorRequest {
+    return TransformObjectsByDeltaWorldTransformOperatorRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<TransformObjectsByDeltaWorldTransformOperatorRequest>,
+  ): TransformObjectsByDeltaWorldTransformOperatorRequest {
+    const message = createBaseTransformObjectsByDeltaWorldTransformOperatorRequest();
+    message.objectsToTransform = object.objectsToTransform?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.deltaTransform = (object.deltaTransform !== undefined && object.deltaTransform !== null)
+      ? WorldTransform.fromPartial(object.deltaTransform)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTransformObjectsByDeltaWorldTransformOperatorResult(): TransformObjectsByDeltaWorldTransformOperatorResult {
+  return { execution: undefined };
+}
+
+export const TransformObjectsByDeltaWorldTransformOperatorResult: MessageFns<
+  TransformObjectsByDeltaWorldTransformOperatorResult
+> = {
+  encode(
+    message: TransformObjectsByDeltaWorldTransformOperatorResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TransformObjectsByDeltaWorldTransformOperatorResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransformObjectsByDeltaWorldTransformOperatorResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<TransformObjectsByDeltaWorldTransformOperatorResult>,
+  ): TransformObjectsByDeltaWorldTransformOperatorResult {
+    return TransformObjectsByDeltaWorldTransformOperatorResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<TransformObjectsByDeltaWorldTransformOperatorResult>,
+  ): TransformObjectsByDeltaWorldTransformOperatorResult {
+    const message = createBaseTransformObjectsByDeltaWorldTransformOperatorResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTranslateObjectsByDeltaRequest(): TranslateObjectsByDeltaRequest {
+  return { objectsToTranslate: [], deltaTranslation: undefined };
+}
+
+export const TranslateObjectsByDeltaRequest: MessageFns<TranslateObjectsByDeltaRequest> = {
+  encode(message: TranslateObjectsByDeltaRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.objectsToTranslate !== undefined && message.objectsToTranslate.length !== 0) {
+      for (const v of message.objectsToTranslate) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.deltaTranslation !== undefined) {
+      Vector.encode(message.deltaTranslation, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TranslateObjectsByDeltaRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTranslateObjectsByDeltaRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectsToTranslate!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.deltaTranslation = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<TranslateObjectsByDeltaRequest>): TranslateObjectsByDeltaRequest {
+    return TranslateObjectsByDeltaRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<TranslateObjectsByDeltaRequest>): TranslateObjectsByDeltaRequest {
+    const message = createBaseTranslateObjectsByDeltaRequest();
+    message.objectsToTranslate = object.objectsToTranslate?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.deltaTranslation = (object.deltaTranslation !== undefined && object.deltaTranslation !== null)
+      ? Vector.fromPartial(object.deltaTranslation)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTranslateObjectsByDeltaResult(): TranslateObjectsByDeltaResult {
+  return { execution: undefined };
+}
+
+export const TranslateObjectsByDeltaResult: MessageFns<TranslateObjectsByDeltaResult> = {
+  encode(message: TranslateObjectsByDeltaResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TranslateObjectsByDeltaResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTranslateObjectsByDeltaResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<TranslateObjectsByDeltaResult>): TranslateObjectsByDeltaResult {
+    return TranslateObjectsByDeltaResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<TranslateObjectsByDeltaResult>): TranslateObjectsByDeltaResult {
+    const message = createBaseTranslateObjectsByDeltaResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
 export type AnalysisOperationsService = typeof AnalysisOperationsService;
 export const AnalysisOperationsService = {
-  /** Executes the "Get i-th Collection Name" MP command. */
-  getIThCollectionName: {
-    path: "/briosa.AnalysisOperations/GetIThCollectionName" as const,
+  angleBetweenLineAndPlane: {
+    path: "/briosa.AnalysisOperations/AngleBetweenLineAndPlane" as const,
     requestStream: false as const,
     responseStream: false as const,
-    requestSerialize: (value: GetIThCollectionNameRequest): Buffer =>
-      Buffer.from(GetIThCollectionNameRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): GetIThCollectionNameRequest => GetIThCollectionNameRequest.decode(value),
-    responseSerialize: (value: GetIThCollectionNameResult): Buffer =>
-      Buffer.from(GetIThCollectionNameResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): GetIThCollectionNameResult => GetIThCollectionNameResult.decode(value),
+    requestSerialize: (value: AngleBetweenLineAndPlaneRequest): Buffer =>
+      Buffer.from(AngleBetweenLineAndPlaneRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): AngleBetweenLineAndPlaneRequest =>
+      AngleBetweenLineAndPlaneRequest.decode(value),
+    responseSerialize: (value: AngleBetweenLineAndPlaneResult): Buffer =>
+      Buffer.from(AngleBetweenLineAndPlaneResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): AngleBetweenLineAndPlaneResult =>
+      AngleBetweenLineAndPlaneResult.decode(value),
   },
-  /** Executes the "Get Number of Collections" MP command. */
+  angleBetweenTwoLines: {
+    path: "/briosa.AnalysisOperations/AngleBetweenTwoLines" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: AngleBetweenTwoLinesRequest): Buffer =>
+      Buffer.from(AngleBetweenTwoLinesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): AngleBetweenTwoLinesRequest => AngleBetweenTwoLinesRequest.decode(value),
+    responseSerialize: (value: AngleBetweenTwoLinesResult): Buffer =>
+      Buffer.from(AngleBetweenTwoLinesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): AngleBetweenTwoLinesResult => AngleBetweenTwoLinesResult.decode(value),
+  },
+  angleBetweenTwoPlanesNormals: {
+    path: "/briosa.AnalysisOperations/AngleBetweenTwoPlanesNormals" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: AngleBetweenTwoPlanesNormalsRequest): Buffer =>
+      Buffer.from(AngleBetweenTwoPlanesNormalsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): AngleBetweenTwoPlanesNormalsRequest =>
+      AngleBetweenTwoPlanesNormalsRequest.decode(value),
+    responseSerialize: (value: AngleBetweenTwoPlanesNormalsResult): Buffer =>
+      Buffer.from(AngleBetweenTwoPlanesNormalsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): AngleBetweenTwoPlanesNormalsResult =>
+      AngleBetweenTwoPlanesNormalsResult.decode(value),
+  },
+  bestFitTransformationGroupToGroup: {
+    path: "/briosa.AnalysisOperations/BestFitTransformationGroupToGroup" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: BestFitTransformationGroupToGroupRequest): Buffer =>
+      Buffer.from(BestFitTransformationGroupToGroupRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): BestFitTransformationGroupToGroupRequest =>
+      BestFitTransformationGroupToGroupRequest.decode(value),
+    responseSerialize: (value: BestFitTransformationGroupToGroupResult): Buffer =>
+      Buffer.from(BestFitTransformationGroupToGroupResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): BestFitTransformationGroupToGroupResult =>
+      BestFitTransformationGroupToGroupResult.decode(value),
+  },
+  computeGroupToGroupOrientationRxRyRz: {
+    path: "/briosa.AnalysisOperations/ComputeGroupToGroupOrientationRxRyRz" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ComputeGroupToGroupOrientationRxRyRzRequest): Buffer =>
+      Buffer.from(ComputeGroupToGroupOrientationRxRyRzRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ComputeGroupToGroupOrientationRxRyRzRequest =>
+      ComputeGroupToGroupOrientationRxRyRzRequest.decode(value),
+    responseSerialize: (value: ComputeGroupToGroupOrientationRxRyRzResult): Buffer =>
+      Buffer.from(ComputeGroupToGroupOrientationRxRyRzResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ComputeGroupToGroupOrientationRxRyRzResult =>
+      ComputeGroupToGroupOrientationRxRyRzResult.decode(value),
+  },
+  createPointUncertaintyCloudPointSets: {
+    path: "/briosa.AnalysisOperations/CreatePointUncertaintyCloudPointSets" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: CreatePointUncertaintyCloudPointSetsRequest): Buffer =>
+      Buffer.from(CreatePointUncertaintyCloudPointSetsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): CreatePointUncertaintyCloudPointSetsRequest =>
+      CreatePointUncertaintyCloudPointSetsRequest.decode(value),
+    responseSerialize: (value: CreatePointUncertaintyCloudPointSetsResult): Buffer =>
+      Buffer.from(CreatePointUncertaintyCloudPointSetsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): CreatePointUncertaintyCloudPointSetsResult =>
+      CreatePointUncertaintyCloudPointSetsResult.decode(value),
+  },
+  createPointUncertaintyFields: {
+    path: "/briosa.AnalysisOperations/CreatePointUncertaintyFields" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: CreatePointUncertaintyFieldsRequest): Buffer =>
+      Buffer.from(CreatePointUncertaintyFieldsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): CreatePointUncertaintyFieldsRequest =>
+      CreatePointUncertaintyFieldsRequest.decode(value),
+    responseSerialize: (value: CreatePointUncertaintyFieldsResult): Buffer =>
+      Buffer.from(CreatePointUncertaintyFieldsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): CreatePointUncertaintyFieldsResult =>
+      CreatePointUncertaintyFieldsResult.decode(value),
+  },
+  fitGeometryToPointGroup: {
+    path: "/briosa.AnalysisOperations/FitGeometryToPointGroup" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: FitGeometryToPointGroupRequest): Buffer =>
+      Buffer.from(FitGeometryToPointGroupRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): FitGeometryToPointGroupRequest => FitGeometryToPointGroupRequest.decode(value),
+    responseSerialize: (value: FitGeometryToPointGroupResult): Buffer =>
+      Buffer.from(FitGeometryToPointGroupResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): FitGeometryToPointGroupResult => FitGeometryToPointGroupResult.decode(value),
+  },
+  fitGeometryToPointGroupProjectedToPlane: {
+    path: "/briosa.AnalysisOperations/FitGeometryToPointGroupProjectedToPlane" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: FitGeometryToPointGroupProjectedToPlaneRequest): Buffer =>
+      Buffer.from(FitGeometryToPointGroupProjectedToPlaneRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): FitGeometryToPointGroupProjectedToPlaneRequest =>
+      FitGeometryToPointGroupProjectedToPlaneRequest.decode(value),
+    responseSerialize: (value: FitGeometryToPointGroupProjectedToPlaneResult): Buffer =>
+      Buffer.from(FitGeometryToPointGroupProjectedToPlaneResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): FitGeometryToPointGroupProjectedToPlaneResult =>
+      FitGeometryToPointGroupProjectedToPlaneResult.decode(value),
+  },
+  fitGeometryToPoints: {
+    path: "/briosa.AnalysisOperations/FitGeometryToPoints" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: FitGeometryToPointsRequest): Buffer =>
+      Buffer.from(FitGeometryToPointsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): FitGeometryToPointsRequest => FitGeometryToPointsRequest.decode(value),
+    responseSerialize: (value: FitGeometryToPointsResult): Buffer =>
+      Buffer.from(FitGeometryToPointsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): FitGeometryToPointsResult => FitGeometryToPointsResult.decode(value),
+  },
+  getBSplineProperties: {
+    path: "/briosa.AnalysisOperations/GetBSplineProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetBSplinePropertiesRequest): Buffer =>
+      Buffer.from(GetBSplinePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetBSplinePropertiesRequest => GetBSplinePropertiesRequest.decode(value),
+    responseSerialize: (value: GetBSplinePropertiesResult): Buffer =>
+      Buffer.from(GetBSplinePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetBSplinePropertiesResult => GetBSplinePropertiesResult.decode(value),
+  },
+  getCircleProperties: {
+    path: "/briosa.AnalysisOperations/GetCircleProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetCirclePropertiesRequest): Buffer =>
+      Buffer.from(GetCirclePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetCirclePropertiesRequest => GetCirclePropertiesRequest.decode(value),
+    responseSerialize: (value: GetCirclePropertiesResult): Buffer =>
+      Buffer.from(GetCirclePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetCirclePropertiesResult => GetCirclePropertiesResult.decode(value),
+  },
+  getConeProperties: {
+    path: "/briosa.AnalysisOperations/GetConeProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetConePropertiesRequest): Buffer =>
+      Buffer.from(GetConePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetConePropertiesRequest => GetConePropertiesRequest.decode(value),
+    responseSerialize: (value: GetConePropertiesResult): Buffer =>
+      Buffer.from(GetConePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetConePropertiesResult => GetConePropertiesResult.decode(value),
+  },
+  getCoordinateForIthPointInPointSet: {
+    path: "/briosa.AnalysisOperations/GetCoordinateForIthPointInPointSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetCoordinateForIthPointInPointSetRequest): Buffer =>
+      Buffer.from(GetCoordinateForIthPointInPointSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetCoordinateForIthPointInPointSetRequest =>
+      GetCoordinateForIthPointInPointSetRequest.decode(value),
+    responseSerialize: (value: GetCoordinateForIthPointInPointSetResult): Buffer =>
+      Buffer.from(GetCoordinateForIthPointInPointSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetCoordinateForIthPointInPointSetResult =>
+      GetCoordinateForIthPointInPointSetResult.decode(value),
+  },
+  getCylinderProperties: {
+    path: "/briosa.AnalysisOperations/GetCylinderProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetCylinderPropertiesRequest): Buffer =>
+      Buffer.from(GetCylinderPropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetCylinderPropertiesRequest => GetCylinderPropertiesRequest.decode(value),
+    responseSerialize: (value: GetCylinderPropertiesResult): Buffer =>
+      Buffer.from(GetCylinderPropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetCylinderPropertiesResult => GetCylinderPropertiesResult.decode(value),
+  },
+  getEllipseProperties: {
+    path: "/briosa.AnalysisOperations/GetEllipseProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetEllipsePropertiesRequest): Buffer =>
+      Buffer.from(GetEllipsePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetEllipsePropertiesRequest => GetEllipsePropertiesRequest.decode(value),
+    responseSerialize: (value: GetEllipsePropertiesResult): Buffer =>
+      Buffer.from(GetEllipsePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetEllipsePropertiesResult => GetEllipsePropertiesResult.decode(value),
+  },
+  getEulerParametersForFrame: {
+    path: "/briosa.AnalysisOperations/GetEulerParametersForFrame" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetEulerParametersForFrameRequest): Buffer =>
+      Buffer.from(GetEulerParametersForFrameRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetEulerParametersForFrameRequest =>
+      GetEulerParametersForFrameRequest.decode(value),
+    responseSerialize: (value: GetEulerParametersForFrameResult): Buffer =>
+      Buffer.from(GetEulerParametersForFrameResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetEulerParametersForFrameResult =>
+      GetEulerParametersForFrameResult.decode(value),
+  },
+  getEulerParametersForIthFrameInFrameSet: {
+    path: "/briosa.AnalysisOperations/GetEulerParametersForIthFrameInFrameSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetEulerParametersForIthFrameInFrameSetRequest): Buffer =>
+      Buffer.from(GetEulerParametersForIthFrameInFrameSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetEulerParametersForIthFrameInFrameSetRequest =>
+      GetEulerParametersForIthFrameInFrameSetRequest.decode(value),
+    responseSerialize: (value: GetEulerParametersForIthFrameInFrameSetResult): Buffer =>
+      Buffer.from(GetEulerParametersForIthFrameInFrameSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetEulerParametersForIthFrameInFrameSetResult =>
+      GetEulerParametersForIthFrameInFrameSetResult.decode(value),
+  },
+  getIthCollectionName: {
+    path: "/briosa.AnalysisOperations/GetIthCollectionName" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetIthCollectionNameRequest): Buffer =>
+      Buffer.from(GetIthCollectionNameRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetIthCollectionNameRequest => GetIthCollectionNameRequest.decode(value),
+    responseSerialize: (value: GetIthCollectionNameResult): Buffer =>
+      Buffer.from(GetIthCollectionNameResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetIthCollectionNameResult => GetIthCollectionNameResult.decode(value),
+  },
+  getIthPointFromGroup: {
+    path: "/briosa.AnalysisOperations/GetIthPointFromGroup" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetIthPointFromGroupRequest): Buffer =>
+      Buffer.from(GetIthPointFromGroupRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetIthPointFromGroupRequest => GetIthPointFromGroupRequest.decode(value),
+    responseSerialize: (value: GetIthPointFromGroupResult): Buffer =>
+      Buffer.from(GetIthPointFromGroupResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetIthPointFromGroupResult => GetIthPointFromGroupResult.decode(value),
+  },
+  getLineProperties: {
+    path: "/briosa.AnalysisOperations/GetLineProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetLinePropertiesRequest): Buffer =>
+      Buffer.from(GetLinePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetLinePropertiesRequest => GetLinePropertiesRequest.decode(value),
+    responseSerialize: (value: GetLinePropertiesResult): Buffer =>
+      Buffer.from(GetLinePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetLinePropertiesResult => GetLinePropertiesResult.decode(value),
+  },
+  getMeasurementAuxiliaryData: {
+    path: "/briosa.AnalysisOperations/GetMeasurementAuxiliaryData" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetMeasurementAuxiliaryDataRequest): Buffer =>
+      Buffer.from(GetMeasurementAuxiliaryDataRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetMeasurementAuxiliaryDataRequest =>
+      GetMeasurementAuxiliaryDataRequest.decode(value),
+    responseSerialize: (value: GetMeasurementAuxiliaryDataResult): Buffer =>
+      Buffer.from(GetMeasurementAuxiliaryDataResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetMeasurementAuxiliaryDataResult =>
+      GetMeasurementAuxiliaryDataResult.decode(value),
+  },
+  getMeasurementInfoData: {
+    path: "/briosa.AnalysisOperations/GetMeasurementInfoData" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetMeasurementInfoDataRequest): Buffer =>
+      Buffer.from(GetMeasurementInfoDataRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetMeasurementInfoDataRequest => GetMeasurementInfoDataRequest.decode(value),
+    responseSerialize: (value: GetMeasurementInfoDataResult): Buffer =>
+      Buffer.from(GetMeasurementInfoDataResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetMeasurementInfoDataResult => GetMeasurementInfoDataResult.decode(value),
+  },
+  getMeasurementWeatherData: {
+    path: "/briosa.AnalysisOperations/GetMeasurementWeatherData" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetMeasurementWeatherDataRequest): Buffer =>
+      Buffer.from(GetMeasurementWeatherDataRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetMeasurementWeatherDataRequest =>
+      GetMeasurementWeatherDataRequest.decode(value),
+    responseSerialize: (value: GetMeasurementWeatherDataResult): Buffer =>
+      Buffer.from(GetMeasurementWeatherDataResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetMeasurementWeatherDataResult =>
+      GetMeasurementWeatherDataResult.decode(value),
+  },
   getNumberOfCollections: {
     path: "/briosa.AnalysisOperations/GetNumberOfCollections" as const,
     requestStream: false as const,
@@ -272,47 +16768,2343 @@ export const AnalysisOperationsService = {
       Buffer.from(GetNumberOfCollectionsResult.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetNumberOfCollectionsResult => GetNumberOfCollectionsResult.decode(value),
   },
+  getNumberOfFramesInFrameSet: {
+    path: "/briosa.AnalysisOperations/GetNumberOfFramesInFrameSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetNumberOfFramesInFrameSetRequest): Buffer =>
+      Buffer.from(GetNumberOfFramesInFrameSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetNumberOfFramesInFrameSetRequest =>
+      GetNumberOfFramesInFrameSetRequest.decode(value),
+    responseSerialize: (value: GetNumberOfFramesInFrameSetResult): Buffer =>
+      Buffer.from(GetNumberOfFramesInFrameSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetNumberOfFramesInFrameSetResult =>
+      GetNumberOfFramesInFrameSetResult.decode(value),
+  },
+  getNumberOfPointsInGroup: {
+    path: "/briosa.AnalysisOperations/GetNumberOfPointsInGroup" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetNumberOfPointsInGroupRequest): Buffer =>
+      Buffer.from(GetNumberOfPointsInGroupRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetNumberOfPointsInGroupRequest =>
+      GetNumberOfPointsInGroupRequest.decode(value),
+    responseSerialize: (value: GetNumberOfPointsInGroupResult): Buffer =>
+      Buffer.from(GetNumberOfPointsInGroupResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetNumberOfPointsInGroupResult =>
+      GetNumberOfPointsInGroupResult.decode(value),
+  },
+  getNumberOfPointsInPointSet: {
+    path: "/briosa.AnalysisOperations/GetNumberOfPointsInPointSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetNumberOfPointsInPointSetRequest): Buffer =>
+      Buffer.from(GetNumberOfPointsInPointSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetNumberOfPointsInPointSetRequest =>
+      GetNumberOfPointsInPointSetRequest.decode(value),
+    responseSerialize: (value: GetNumberOfPointsInPointSetResult): Buffer =>
+      Buffer.from(GetNumberOfPointsInPointSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetNumberOfPointsInPointSetResult =>
+      GetNumberOfPointsInPointSetResult.decode(value),
+  },
+  getObjectReportingFrame: {
+    path: "/briosa.AnalysisOperations/GetObjectReportingFrame" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetObjectReportingFrameRequest): Buffer =>
+      Buffer.from(GetObjectReportingFrameRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetObjectReportingFrameRequest => GetObjectReportingFrameRequest.decode(value),
+    responseSerialize: (value: GetObjectReportingFrameResult): Buffer =>
+      Buffer.from(GetObjectReportingFrameResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetObjectReportingFrameResult => GetObjectReportingFrameResult.decode(value),
+  },
+  getPlaneProperties: {
+    path: "/briosa.AnalysisOperations/GetPlaneProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPlanePropertiesRequest): Buffer =>
+      Buffer.from(GetPlanePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPlanePropertiesRequest => GetPlanePropertiesRequest.decode(value),
+    responseSerialize: (value: GetPlanePropertiesResult): Buffer =>
+      Buffer.from(GetPlanePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPlanePropertiesResult => GetPlanePropertiesResult.decode(value),
+  },
+  getPointCoordinate: {
+    path: "/briosa.AnalysisOperations/GetPointCoordinate" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointCoordinateRequest): Buffer =>
+      Buffer.from(GetPointCoordinateRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointCoordinateRequest => GetPointCoordinateRequest.decode(value),
+    responseSerialize: (value: GetPointCoordinateResult): Buffer =>
+      Buffer.from(GetPointCoordinateResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointCoordinateResult => GetPointCoordinateResult.decode(value),
+  },
+  getPointCoordinateCylindrical: {
+    path: "/briosa.AnalysisOperations/GetPointCoordinateCylindrical" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointCoordinateCylindricalRequest): Buffer =>
+      Buffer.from(GetPointCoordinateCylindricalRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointCoordinateCylindricalRequest =>
+      GetPointCoordinateCylindricalRequest.decode(value),
+    responseSerialize: (value: GetPointCoordinateCylindricalResult): Buffer =>
+      Buffer.from(GetPointCoordinateCylindricalResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointCoordinateCylindricalResult =>
+      GetPointCoordinateCylindricalResult.decode(value),
+  },
+  getPointCoordinatePolar: {
+    path: "/briosa.AnalysisOperations/GetPointCoordinatePolar" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointCoordinatePolarRequest): Buffer =>
+      Buffer.from(GetPointCoordinatePolarRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointCoordinatePolarRequest => GetPointCoordinatePolarRequest.decode(value),
+    responseSerialize: (value: GetPointCoordinatePolarResult): Buffer =>
+      Buffer.from(GetPointCoordinatePolarResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointCoordinatePolarResult => GetPointCoordinatePolarResult.decode(value),
+  },
+  getPointProperties: {
+    path: "/briosa.AnalysisOperations/GetPointProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointPropertiesRequest): Buffer =>
+      Buffer.from(GetPointPropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointPropertiesRequest => GetPointPropertiesRequest.decode(value),
+    responseSerialize: (value: GetPointPropertiesResult): Buffer =>
+      Buffer.from(GetPointPropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointPropertiesResult => GetPointPropertiesResult.decode(value),
+  },
+  getPointToLineDistance: {
+    path: "/briosa.AnalysisOperations/GetPointToLineDistance" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointToLineDistanceRequest): Buffer =>
+      Buffer.from(GetPointToLineDistanceRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointToLineDistanceRequest => GetPointToLineDistanceRequest.decode(value),
+    responseSerialize: (value: GetPointToLineDistanceResult): Buffer =>
+      Buffer.from(GetPointToLineDistanceResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointToLineDistanceResult => GetPointToLineDistanceResult.decode(value),
+  },
+  getPointToPointDistance: {
+    path: "/briosa.AnalysisOperations/GetPointToPointDistance" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointToPointDistanceRequest): Buffer =>
+      Buffer.from(GetPointToPointDistanceRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointToPointDistanceRequest => GetPointToPointDistanceRequest.decode(value),
+    responseSerialize: (value: GetPointToPointDistanceResult): Buffer =>
+      Buffer.from(GetPointToPointDistanceResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointToPointDistanceResult => GetPointToPointDistanceResult.decode(value),
+  },
+  getPointTolerance: {
+    path: "/briosa.AnalysisOperations/GetPointTolerance" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointToleranceRequest): Buffer =>
+      Buffer.from(GetPointToleranceRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointToleranceRequest => GetPointToleranceRequest.decode(value),
+    responseSerialize: (value: GetPointToleranceResult): Buffer =>
+      Buffer.from(GetPointToleranceResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointToleranceResult => GetPointToleranceResult.decode(value),
+  },
+  getSlotProperties: {
+    path: "/briosa.AnalysisOperations/GetSlotProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetSlotPropertiesRequest): Buffer =>
+      Buffer.from(GetSlotPropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetSlotPropertiesRequest => GetSlotPropertiesRequest.decode(value),
+    responseSerialize: (value: GetSlotPropertiesResult): Buffer =>
+      Buffer.from(GetSlotPropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetSlotPropertiesResult => GetSlotPropertiesResult.decode(value),
+  },
+  getSphereProperties: {
+    path: "/briosa.AnalysisOperations/GetSphereProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetSpherePropertiesRequest): Buffer =>
+      Buffer.from(GetSpherePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetSpherePropertiesRequest => GetSpherePropertiesRequest.decode(value),
+    responseSerialize: (value: GetSpherePropertiesResult): Buffer =>
+      Buffer.from(GetSpherePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetSpherePropertiesResult => GetSpherePropertiesResult.decode(value),
+  },
+  getSurfacePhysicalStats: {
+    path: "/briosa.AnalysisOperations/GetSurfacePhysicalStats" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetSurfacePhysicalStatsRequest): Buffer =>
+      Buffer.from(GetSurfacePhysicalStatsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetSurfacePhysicalStatsRequest => GetSurfacePhysicalStatsRequest.decode(value),
+    responseSerialize: (value: GetSurfacePhysicalStatsResult): Buffer =>
+      Buffer.from(GetSurfacePhysicalStatsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetSurfacePhysicalStatsResult => GetSurfacePhysicalStatsResult.decode(value),
+  },
+  getTimestampForIthFrameInFrameSet: {
+    path: "/briosa.AnalysisOperations/GetTimestampForIthFrameInFrameSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetTimestampForIthFrameInFrameSetRequest): Buffer =>
+      Buffer.from(GetTimestampForIthFrameInFrameSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetTimestampForIthFrameInFrameSetRequest =>
+      GetTimestampForIthFrameInFrameSetRequest.decode(value),
+    responseSerialize: (value: GetTimestampForIthFrameInFrameSetResult): Buffer =>
+      Buffer.from(GetTimestampForIthFrameInFrameSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetTimestampForIthFrameInFrameSetResult =>
+      GetTimestampForIthFrameInFrameSetResult.decode(value),
+  },
+  getTimestampForIthPointInPointSet: {
+    path: "/briosa.AnalysisOperations/GetTimestampForIthPointInPointSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetTimestampForIthPointInPointSetRequest): Buffer =>
+      Buffer.from(GetTimestampForIthPointInPointSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetTimestampForIthPointInPointSetRequest =>
+      GetTimestampForIthPointInPointSetRequest.decode(value),
+    responseSerialize: (value: GetTimestampForIthPointInPointSetResult): Buffer =>
+      Buffer.from(GetTimestampForIthPointInPointSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetTimestampForIthPointInPointSetResult =>
+      GetTimestampForIthPointInPointSetResult.decode(value),
+  },
+  getTorusProperties: {
+    path: "/briosa.AnalysisOperations/GetTorusProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetTorusPropertiesRequest): Buffer =>
+      Buffer.from(GetTorusPropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetTorusPropertiesRequest => GetTorusPropertiesRequest.decode(value),
+    responseSerialize: (value: GetTorusPropertiesResult): Buffer =>
+      Buffer.from(GetTorusPropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetTorusPropertiesResult => GetTorusPropertiesResult.decode(value),
+  },
+  getTransformForIthFrameInFrameSet: {
+    path: "/briosa.AnalysisOperations/GetTransformForIthFrameInFrameSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetTransformForIthFrameInFrameSetRequest): Buffer =>
+      Buffer.from(GetTransformForIthFrameInFrameSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetTransformForIthFrameInFrameSetRequest =>
+      GetTransformForIthFrameInFrameSetRequest.decode(value),
+    responseSerialize: (value: GetTransformForIthFrameInFrameSetResult): Buffer =>
+      Buffer.from(GetTransformForIthFrameInFrameSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetTransformForIthFrameInFrameSetResult =>
+      GetTransformForIthFrameInFrameSetResult.decode(value),
+  },
+  groupToSurfaceFit: {
+    path: "/briosa.AnalysisOperations/GroupToSurfaceFit" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GroupToSurfaceFitRequest): Buffer =>
+      Buffer.from(GroupToSurfaceFitRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GroupToSurfaceFitRequest => GroupToSurfaceFitRequest.decode(value),
+    responseSerialize: (value: GroupToSurfaceFitResult): Buffer =>
+      Buffer.from(GroupToSurfaceFitResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GroupToSurfaceFitResult => GroupToSurfaceFitResult.decode(value),
+  },
+  importGeometryFitProfiles: {
+    path: "/briosa.AnalysisOperations/ImportGeometryFitProfiles" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportGeometryFitProfilesRequest): Buffer =>
+      Buffer.from(ImportGeometryFitProfilesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportGeometryFitProfilesRequest =>
+      ImportGeometryFitProfilesRequest.decode(value),
+    responseSerialize: (value: ImportGeometryFitProfilesResult): Buffer =>
+      Buffer.from(ImportGeometryFitProfilesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportGeometryFitProfilesResult =>
+      ImportGeometryFitProfilesResult.decode(value),
+  },
+  isObjectOfType: {
+    path: "/briosa.AnalysisOperations/IsObjectOfType" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: IsObjectOfTypeRequest): Buffer =>
+      Buffer.from(IsObjectOfTypeRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): IsObjectOfTypeRequest => IsObjectOfTypeRequest.decode(value),
+    responseSerialize: (value: IsObjectOfTypeResult): Buffer =>
+      Buffer.from(IsObjectOfTypeResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): IsObjectOfTypeResult => IsObjectOfTypeResult.decode(value),
+  },
+  makeCircleFitProfile: {
+    path: "/briosa.AnalysisOperations/MakeCircleFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeCircleFitProfileRequest): Buffer =>
+      Buffer.from(MakeCircleFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeCircleFitProfileRequest => MakeCircleFitProfileRequest.decode(value),
+    responseSerialize: (value: MakeCircleFitProfileResult): Buffer =>
+      Buffer.from(MakeCircleFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeCircleFitProfileResult => MakeCircleFitProfileResult.decode(value),
+  },
+  makeConeFitProfile: {
+    path: "/briosa.AnalysisOperations/MakeConeFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeConeFitProfileRequest): Buffer =>
+      Buffer.from(MakeConeFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeConeFitProfileRequest => MakeConeFitProfileRequest.decode(value),
+    responseSerialize: (value: MakeConeFitProfileResult): Buffer =>
+      Buffer.from(MakeConeFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeConeFitProfileResult => MakeConeFitProfileResult.decode(value),
+  },
+  makeCylinderFitProfile: {
+    path: "/briosa.AnalysisOperations/MakeCylinderFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeCylinderFitProfileRequest): Buffer =>
+      Buffer.from(MakeCylinderFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeCylinderFitProfileRequest => MakeCylinderFitProfileRequest.decode(value),
+    responseSerialize: (value: MakeCylinderFitProfileResult): Buffer =>
+      Buffer.from(MakeCylinderFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeCylinderFitProfileResult => MakeCylinderFitProfileResult.decode(value),
+  },
+  makeEllipseFitProfile: {
+    path: "/briosa.AnalysisOperations/MakeEllipseFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeEllipseFitProfileRequest): Buffer =>
+      Buffer.from(MakeEllipseFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeEllipseFitProfileRequest => MakeEllipseFitProfileRequest.decode(value),
+    responseSerialize: (value: MakeEllipseFitProfileResult): Buffer =>
+      Buffer.from(MakeEllipseFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeEllipseFitProfileResult => MakeEllipseFitProfileResult.decode(value),
+  },
+  makeLineFitProfile: {
+    path: "/briosa.AnalysisOperations/MakeLineFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeLineFitProfileRequest): Buffer =>
+      Buffer.from(MakeLineFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeLineFitProfileRequest => MakeLineFitProfileRequest.decode(value),
+    responseSerialize: (value: MakeLineFitProfileResult): Buffer =>
+      Buffer.from(MakeLineFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeLineFitProfileResult => MakeLineFitProfileResult.decode(value),
+  },
+  makeParaboloidFitProfile: {
+    path: "/briosa.AnalysisOperations/MakeParaboloidFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeParaboloidFitProfileRequest): Buffer =>
+      Buffer.from(MakeParaboloidFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeParaboloidFitProfileRequest =>
+      MakeParaboloidFitProfileRequest.decode(value),
+    responseSerialize: (value: MakeParaboloidFitProfileResult): Buffer =>
+      Buffer.from(MakeParaboloidFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeParaboloidFitProfileResult =>
+      MakeParaboloidFitProfileResult.decode(value),
+  },
+  makePlaneFitProfile: {
+    path: "/briosa.AnalysisOperations/MakePlaneFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakePlaneFitProfileRequest): Buffer =>
+      Buffer.from(MakePlaneFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakePlaneFitProfileRequest => MakePlaneFitProfileRequest.decode(value),
+    responseSerialize: (value: MakePlaneFitProfileResult): Buffer =>
+      Buffer.from(MakePlaneFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakePlaneFitProfileResult => MakePlaneFitProfileResult.decode(value),
+  },
+  makeSlotFitProfile: {
+    path: "/briosa.AnalysisOperations/MakeSlotFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeSlotFitProfileRequest): Buffer =>
+      Buffer.from(MakeSlotFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeSlotFitProfileRequest => MakeSlotFitProfileRequest.decode(value),
+    responseSerialize: (value: MakeSlotFitProfileResult): Buffer =>
+      Buffer.from(MakeSlotFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeSlotFitProfileResult => MakeSlotFitProfileResult.decode(value),
+  },
+  makeSphereFitProfile: {
+    path: "/briosa.AnalysisOperations/MakeSphereFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeSphereFitProfileRequest): Buffer =>
+      Buffer.from(MakeSphereFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeSphereFitProfileRequest => MakeSphereFitProfileRequest.decode(value),
+    responseSerialize: (value: MakeSphereFitProfileResult): Buffer =>
+      Buffer.from(MakeSphereFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeSphereFitProfileResult => MakeSphereFitProfileResult.decode(value),
+  },
+  mushroomTargetHoleInspection: {
+    path: "/briosa.AnalysisOperations/MushroomTargetHoleInspection" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MushroomTargetHoleInspectionRequest): Buffer =>
+      Buffer.from(MushroomTargetHoleInspectionRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MushroomTargetHoleInspectionRequest =>
+      MushroomTargetHoleInspectionRequest.decode(value),
+    responseSerialize: (value: MushroomTargetHoleInspectionResult): Buffer =>
+      Buffer.from(MushroomTargetHoleInspectionResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MushroomTargetHoleInspectionResult =>
+      MushroomTargetHoleInspectionResult.decode(value),
+  },
+  patchNormalShiftHolePin: {
+    path: "/briosa.AnalysisOperations/PatchNormalShiftHolePin" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: PatchNormalShiftHolePinRequest): Buffer =>
+      Buffer.from(PatchNormalShiftHolePinRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): PatchNormalShiftHolePinRequest => PatchNormalShiftHolePinRequest.decode(value),
+    responseSerialize: (value: PatchNormalShiftHolePinResult): Buffer =>
+      Buffer.from(PatchNormalShiftHolePinResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): PatchNormalShiftHolePinResult => PatchNormalShiftHolePinResult.decode(value),
+  },
+  patchNormalShiftPoint: {
+    path: "/briosa.AnalysisOperations/PatchNormalShiftPoint" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: PatchNormalShiftPointRequest): Buffer =>
+      Buffer.from(PatchNormalShiftPointRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): PatchNormalShiftPointRequest => PatchNormalShiftPointRequest.decode(value),
+    responseSerialize: (value: PatchNormalShiftPointResult): Buffer =>
+      Buffer.from(PatchNormalShiftPointResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): PatchNormalShiftPointResult => PatchNormalShiftPointResult.decode(value),
+  },
+  queryCloudsToObjects: {
+    path: "/briosa.AnalysisOperations/QueryCloudsToObjects" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: QueryCloudsToObjectsRequest): Buffer =>
+      Buffer.from(QueryCloudsToObjectsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): QueryCloudsToObjectsRequest => QueryCloudsToObjectsRequest.decode(value),
+    responseSerialize: (value: QueryCloudsToObjectsResult): Buffer =>
+      Buffer.from(QueryCloudsToObjectsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): QueryCloudsToObjectsResult => QueryCloudsToObjectsResult.decode(value),
+  },
+  queryCloudsToSurface: {
+    path: "/briosa.AnalysisOperations/QueryCloudsToSurface" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: QueryCloudsToSurfaceRequest): Buffer =>
+      Buffer.from(QueryCloudsToSurfaceRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): QueryCloudsToSurfaceRequest => QueryCloudsToSurfaceRequest.decode(value),
+    responseSerialize: (value: QueryCloudsToSurfaceResult): Buffer =>
+      Buffer.from(QueryCloudsToSurfaceResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): QueryCloudsToSurfaceResult => QueryCloudsToSurfaceResult.decode(value),
+  },
+  queryFrameToFrame: {
+    path: "/briosa.AnalysisOperations/QueryFrameToFrame" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: QueryFrameToFrameRequest): Buffer =>
+      Buffer.from(QueryFrameToFrameRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): QueryFrameToFrameRequest => QueryFrameToFrameRequest.decode(value),
+    responseSerialize: (value: QueryFrameToFrameResult): Buffer =>
+      Buffer.from(QueryFrameToFrameResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): QueryFrameToFrameResult => QueryFrameToFrameResult.decode(value),
+  },
+  queryGroupsToObjects: {
+    path: "/briosa.AnalysisOperations/QueryGroupsToObjects" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: QueryGroupsToObjectsRequest): Buffer =>
+      Buffer.from(QueryGroupsToObjectsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): QueryGroupsToObjectsRequest => QueryGroupsToObjectsRequest.decode(value),
+    responseSerialize: (value: QueryGroupsToObjectsResult): Buffer =>
+      Buffer.from(QueryGroupsToObjectsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): QueryGroupsToObjectsResult => QueryGroupsToObjectsResult.decode(value),
+  },
+  queryPointToObjects: {
+    path: "/briosa.AnalysisOperations/QueryPointToObjects" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: QueryPointToObjectsRequest): Buffer =>
+      Buffer.from(QueryPointToObjectsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): QueryPointToObjectsRequest => QueryPointToObjectsRequest.decode(value),
+    responseSerialize: (value: QueryPointToObjectsResult): Buffer =>
+      Buffer.from(QueryPointToObjectsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): QueryPointToObjectsResult => QueryPointToObjectsResult.decode(value),
+  },
+  queryPointToPointAlongCurve: {
+    path: "/briosa.AnalysisOperations/QueryPointToPointAlongCurve" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: QueryPointToPointAlongCurveRequest): Buffer =>
+      Buffer.from(QueryPointToPointAlongCurveRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): QueryPointToPointAlongCurveRequest =>
+      QueryPointToPointAlongCurveRequest.decode(value),
+    responseSerialize: (value: QueryPointToPointAlongCurveResult): Buffer =>
+      Buffer.from(QueryPointToPointAlongCurveResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): QueryPointToPointAlongCurveResult =>
+      QueryPointToPointAlongCurveResult.decode(value),
+  },
+  queryPointsToCircle: {
+    path: "/briosa.AnalysisOperations/QueryPointsToCircle" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: QueryPointsToCircleRequest): Buffer =>
+      Buffer.from(QueryPointsToCircleRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): QueryPointsToCircleRequest => QueryPointsToCircleRequest.decode(value),
+    responseSerialize: (value: QueryPointsToCircleResult): Buffer =>
+      Buffer.from(QueryPointsToCircleResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): QueryPointsToCircleResult => QueryPointsToCircleResult.decode(value),
+  },
+  queryPointsToObjects: {
+    path: "/briosa.AnalysisOperations/QueryPointsToObjects" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: QueryPointsToObjectsRequest): Buffer =>
+      Buffer.from(QueryPointsToObjectsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): QueryPointsToObjectsRequest => QueryPointsToObjectsRequest.decode(value),
+    responseSerialize: (value: QueryPointsToObjectsResult): Buffer =>
+      Buffer.from(QueryPointsToObjectsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): QueryPointsToObjectsResult => QueryPointsToObjectsResult.decode(value),
+  },
+  queryPointsToSinglePoint: {
+    path: "/briosa.AnalysisOperations/QueryPointsToSinglePoint" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: QueryPointsToSinglePointRequest): Buffer =>
+      Buffer.from(QueryPointsToSinglePointRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): QueryPointsToSinglePointRequest =>
+      QueryPointsToSinglePointRequest.decode(value),
+    responseSerialize: (value: QueryPointsToSinglePointResult): Buffer =>
+      Buffer.from(QueryPointsToSinglePointResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): QueryPointsToSinglePointResult =>
+      QueryPointsToSinglePointResult.decode(value),
+  },
+  reComputeCalculatedItems: {
+    path: "/briosa.AnalysisOperations/ReComputeCalculatedItems" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ReComputeCalculatedItemsRequest): Buffer =>
+      Buffer.from(ReComputeCalculatedItemsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ReComputeCalculatedItemsRequest =>
+      ReComputeCalculatedItemsRequest.decode(value),
+    responseSerialize: (value: ReComputeCalculatedItemsResult): Buffer =>
+      Buffer.from(ReComputeCalculatedItemsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ReComputeCalculatedItemsResult =>
+      ReComputeCalculatedItemsResult.decode(value),
+  },
+  renamePointsBasedOnInterPointDistanceToReferencePoints: {
+    path: "/briosa.AnalysisOperations/RenamePointsBasedOnInterPointDistanceToReferencePoints" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: RenamePointsBasedOnInterPointDistanceToReferencePointsRequest): Buffer =>
+      Buffer.from(RenamePointsBasedOnInterPointDistanceToReferencePointsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): RenamePointsBasedOnInterPointDistanceToReferencePointsRequest =>
+      RenamePointsBasedOnInterPointDistanceToReferencePointsRequest.decode(value),
+    responseSerialize: (value: RenamePointsBasedOnInterPointDistanceToReferencePointsResult): Buffer =>
+      Buffer.from(RenamePointsBasedOnInterPointDistanceToReferencePointsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): RenamePointsBasedOnInterPointDistanceToReferencePointsResult =>
+      RenamePointsBasedOnInterPointDistanceToReferencePointsResult.decode(value),
+  },
+  renamePointsBasedOnProximityToReferencePoints: {
+    path: "/briosa.AnalysisOperations/RenamePointsBasedOnProximityToReferencePoints" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: RenamePointsBasedOnProximityToReferencePointsRequest): Buffer =>
+      Buffer.from(RenamePointsBasedOnProximityToReferencePointsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): RenamePointsBasedOnProximityToReferencePointsRequest =>
+      RenamePointsBasedOnProximityToReferencePointsRequest.decode(value),
+    responseSerialize: (value: RenamePointsBasedOnProximityToReferencePointsResult): Buffer =>
+      Buffer.from(RenamePointsBasedOnProximityToReferencePointsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): RenamePointsBasedOnProximityToReferencePointsResult =>
+      RenamePointsBasedOnProximityToReferencePointsResult.decode(value),
+  },
+  reverseBSplines: {
+    path: "/briosa.AnalysisOperations/ReverseBSplines" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ReverseBSplinesRequest): Buffer =>
+      Buffer.from(ReverseBSplinesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ReverseBSplinesRequest => ReverseBSplinesRequest.decode(value),
+    responseSerialize: (value: ReverseBSplinesResult): Buffer =>
+      Buffer.from(ReverseBSplinesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ReverseBSplinesResult => ReverseBSplinesResult.decode(value),
+  },
+  reversePlaneNormals: {
+    path: "/briosa.AnalysisOperations/ReversePlaneNormals" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ReversePlaneNormalsRequest): Buffer =>
+      Buffer.from(ReversePlaneNormalsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ReversePlaneNormalsRequest => ReversePlaneNormalsRequest.decode(value),
+    responseSerialize: (value: ReversePlaneNormalsResult): Buffer =>
+      Buffer.from(ReversePlaneNormalsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ReversePlaneNormalsResult => ReversePlaneNormalsResult.decode(value),
+  },
+  reverseSurfaceNormals: {
+    path: "/briosa.AnalysisOperations/ReverseSurfaceNormals" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ReverseSurfaceNormalsRequest): Buffer =>
+      Buffer.from(ReverseSurfaceNormalsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ReverseSurfaceNormalsRequest => ReverseSurfaceNormalsRequest.decode(value),
+    responseSerialize: (value: ReverseSurfaceNormalsResult): Buffer =>
+      Buffer.from(ReverseSurfaceNormalsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ReverseSurfaceNormalsResult => ReverseSurfaceNormalsResult.decode(value),
+  },
+  setCircleProperties: {
+    path: "/briosa.AnalysisOperations/SetCircleProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetCirclePropertiesRequest): Buffer =>
+      Buffer.from(SetCirclePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetCirclePropertiesRequest => SetCirclePropertiesRequest.decode(value),
+    responseSerialize: (value: SetCirclePropertiesResult): Buffer =>
+      Buffer.from(SetCirclePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetCirclePropertiesResult => SetCirclePropertiesResult.decode(value),
+  },
+  setConeProperties: {
+    path: "/briosa.AnalysisOperations/SetConeProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetConePropertiesRequest): Buffer =>
+      Buffer.from(SetConePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetConePropertiesRequest => SetConePropertiesRequest.decode(value),
+    responseSerialize: (value: SetConePropertiesResult): Buffer =>
+      Buffer.from(SetConePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetConePropertiesResult => SetConePropertiesResult.decode(value),
+  },
+  setCylinderProperties: {
+    path: "/briosa.AnalysisOperations/SetCylinderProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetCylinderPropertiesRequest): Buffer =>
+      Buffer.from(SetCylinderPropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetCylinderPropertiesRequest => SetCylinderPropertiesRequest.decode(value),
+    responseSerialize: (value: SetCylinderPropertiesResult): Buffer =>
+      Buffer.from(SetCylinderPropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetCylinderPropertiesResult => SetCylinderPropertiesResult.decode(value),
+  },
+  setDefaultColorizationOptions: {
+    path: "/briosa.AnalysisOperations/SetDefaultColorizationOptions" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetDefaultColorizationOptionsRequest): Buffer =>
+      Buffer.from(SetDefaultColorizationOptionsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetDefaultColorizationOptionsRequest =>
+      SetDefaultColorizationOptionsRequest.decode(value),
+    responseSerialize: (value: SetDefaultColorizationOptionsResult): Buffer =>
+      Buffer.from(SetDefaultColorizationOptionsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetDefaultColorizationOptionsResult =>
+      SetDefaultColorizationOptionsResult.decode(value),
+  },
+  setEllipseProperties: {
+    path: "/briosa.AnalysisOperations/SetEllipseProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetEllipsePropertiesRequest): Buffer =>
+      Buffer.from(SetEllipsePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetEllipsePropertiesRequest => SetEllipsePropertiesRequest.decode(value),
+    responseSerialize: (value: SetEllipsePropertiesResult): Buffer =>
+      Buffer.from(SetEllipsePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetEllipsePropertiesResult => SetEllipsePropertiesResult.decode(value),
+  },
+  setGeometryRelationshipFitProfile: {
+    path: "/briosa.AnalysisOperations/SetGeometryRelationshipFitProfile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetGeometryRelationshipFitProfileRequest): Buffer =>
+      Buffer.from(SetGeometryRelationshipFitProfileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetGeometryRelationshipFitProfileRequest =>
+      SetGeometryRelationshipFitProfileRequest.decode(value),
+    responseSerialize: (value: SetGeometryRelationshipFitProfileResult): Buffer =>
+      Buffer.from(SetGeometryRelationshipFitProfileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetGeometryRelationshipFitProfileResult =>
+      SetGeometryRelationshipFitProfileResult.decode(value),
+  },
+  setLineProperties: {
+    path: "/briosa.AnalysisOperations/SetLineProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetLinePropertiesRequest): Buffer =>
+      Buffer.from(SetLinePropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetLinePropertiesRequest => SetLinePropertiesRequest.decode(value),
+    responseSerialize: (value: SetLinePropertiesResult): Buffer =>
+      Buffer.from(SetLinePropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetLinePropertiesResult => SetLinePropertiesResult.decode(value),
+  },
+  setMeasurementAuxiliaryData: {
+    path: "/briosa.AnalysisOperations/SetMeasurementAuxiliaryData" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetMeasurementAuxiliaryDataRequest): Buffer =>
+      Buffer.from(SetMeasurementAuxiliaryDataRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetMeasurementAuxiliaryDataRequest =>
+      SetMeasurementAuxiliaryDataRequest.decode(value),
+    responseSerialize: (value: SetMeasurementAuxiliaryDataResult): Buffer =>
+      Buffer.from(SetMeasurementAuxiliaryDataResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetMeasurementAuxiliaryDataResult =>
+      SetMeasurementAuxiliaryDataResult.decode(value),
+  },
+  setObjectReportingFrame: {
+    path: "/briosa.AnalysisOperations/SetObjectReportingFrame" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetObjectReportingFrameRequest): Buffer =>
+      Buffer.from(SetObjectReportingFrameRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetObjectReportingFrameRequest => SetObjectReportingFrameRequest.decode(value),
+    responseSerialize: (value: SetObjectReportingFrameResult): Buffer =>
+      Buffer.from(SetObjectReportingFrameResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetObjectReportingFrameResult => SetObjectReportingFrameResult.decode(value),
+  },
+  setPointProperties: {
+    path: "/briosa.AnalysisOperations/SetPointProperties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetPointPropertiesRequest): Buffer =>
+      Buffer.from(SetPointPropertiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetPointPropertiesRequest => SetPointPropertiesRequest.decode(value),
+    responseSerialize: (value: SetPointPropertiesResult): Buffer =>
+      Buffer.from(SetPointPropertiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetPointPropertiesResult => SetPointPropertiesResult.decode(value),
+  },
+  setPointWeightsFromUncertainties: {
+    path: "/briosa.AnalysisOperations/SetPointWeightsFromUncertainties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetPointWeightsFromUncertaintiesRequest): Buffer =>
+      Buffer.from(SetPointWeightsFromUncertaintiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetPointWeightsFromUncertaintiesRequest =>
+      SetPointWeightsFromUncertaintiesRequest.decode(value),
+    responseSerialize: (value: SetPointWeightsFromUncertaintiesResult): Buffer =>
+      Buffer.from(SetPointWeightsFromUncertaintiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetPointWeightsFromUncertaintiesResult =>
+      SetPointWeightsFromUncertaintiesResult.decode(value),
+  },
+  setTransformForIthFrameInFrameSet: {
+    path: "/briosa.AnalysisOperations/SetTransformForIthFrameInFrameSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetTransformForIthFrameInFrameSetRequest): Buffer =>
+      Buffer.from(SetTransformForIthFrameInFrameSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetTransformForIthFrameInFrameSetRequest =>
+      SetTransformForIthFrameInFrameSetRequest.decode(value),
+    responseSerialize: (value: SetTransformForIthFrameInFrameSetResult): Buffer =>
+      Buffer.from(SetTransformForIthFrameInFrameSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetTransformForIthFrameInFrameSetResult =>
+      SetTransformForIthFrameInFrameSetResult.decode(value),
+  },
+  sphereAxisCheck: {
+    path: "/briosa.AnalysisOperations/SphereAxisCheck" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SphereAxisCheckRequest): Buffer =>
+      Buffer.from(SphereAxisCheckRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SphereAxisCheckRequest => SphereAxisCheckRequest.decode(value),
+    responseSerialize: (value: SphereAxisCheckResult): Buffer =>
+      Buffer.from(SphereAxisCheckResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SphereAxisCheckResult => SphereAxisCheckResult.decode(value),
+  },
+  temperatureCompensateAGroup: {
+    path: "/briosa.AnalysisOperations/TemperatureCompensateAGroup" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: TemperatureCompensateAGroupRequest): Buffer =>
+      Buffer.from(TemperatureCompensateAGroupRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TemperatureCompensateAGroupRequest =>
+      TemperatureCompensateAGroupRequest.decode(value),
+    responseSerialize: (value: TemperatureCompensateAGroupResult): Buffer =>
+      Buffer.from(TemperatureCompensateAGroupResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TemperatureCompensateAGroupResult =>
+      TemperatureCompensateAGroupResult.decode(value),
+  },
+  transformObjectsFrameToFrame: {
+    path: "/briosa.AnalysisOperations/TransformObjectsFrameToFrame" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: TransformObjectsFrameToFrameRequest): Buffer =>
+      Buffer.from(TransformObjectsFrameToFrameRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TransformObjectsFrameToFrameRequest =>
+      TransformObjectsFrameToFrameRequest.decode(value),
+    responseSerialize: (value: TransformObjectsFrameToFrameResult): Buffer =>
+      Buffer.from(TransformObjectsFrameToFrameResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TransformObjectsFrameToFrameResult =>
+      TransformObjectsFrameToFrameResult.decode(value),
+  },
+  transformObjectsByDeltaAboutWorkingFrame: {
+    path: "/briosa.AnalysisOperations/TransformObjectsByDeltaAboutWorkingFrame" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: TransformObjectsByDeltaAboutWorkingFrameRequest): Buffer =>
+      Buffer.from(TransformObjectsByDeltaAboutWorkingFrameRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TransformObjectsByDeltaAboutWorkingFrameRequest =>
+      TransformObjectsByDeltaAboutWorkingFrameRequest.decode(value),
+    responseSerialize: (value: TransformObjectsByDeltaAboutWorkingFrameResult): Buffer =>
+      Buffer.from(TransformObjectsByDeltaAboutWorkingFrameResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TransformObjectsByDeltaAboutWorkingFrameResult =>
+      TransformObjectsByDeltaAboutWorkingFrameResult.decode(value),
+  },
+  transformObjectsByDeltaWorldTransformOperator: {
+    path: "/briosa.AnalysisOperations/TransformObjectsByDeltaWorldTransformOperator" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: TransformObjectsByDeltaWorldTransformOperatorRequest): Buffer =>
+      Buffer.from(TransformObjectsByDeltaWorldTransformOperatorRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TransformObjectsByDeltaWorldTransformOperatorRequest =>
+      TransformObjectsByDeltaWorldTransformOperatorRequest.decode(value),
+    responseSerialize: (value: TransformObjectsByDeltaWorldTransformOperatorResult): Buffer =>
+      Buffer.from(TransformObjectsByDeltaWorldTransformOperatorResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TransformObjectsByDeltaWorldTransformOperatorResult =>
+      TransformObjectsByDeltaWorldTransformOperatorResult.decode(value),
+  },
+  translateObjectsByDelta: {
+    path: "/briosa.AnalysisOperations/TranslateObjectsByDelta" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: TranslateObjectsByDeltaRequest): Buffer =>
+      Buffer.from(TranslateObjectsByDeltaRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TranslateObjectsByDeltaRequest => TranslateObjectsByDeltaRequest.decode(value),
+    responseSerialize: (value: TranslateObjectsByDeltaResult): Buffer =>
+      Buffer.from(TranslateObjectsByDeltaResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TranslateObjectsByDeltaResult => TranslateObjectsByDeltaResult.decode(value),
+  },
 } as const;
 
 export interface AnalysisOperationsServer extends UntypedServiceImplementation {
-  /** Executes the "Get i-th Collection Name" MP command. */
-  getIThCollectionName: handleUnaryCall<GetIThCollectionNameRequest, GetIThCollectionNameResult>;
-  /** Executes the "Get Number of Collections" MP command. */
+  angleBetweenLineAndPlane: handleUnaryCall<AngleBetweenLineAndPlaneRequest, AngleBetweenLineAndPlaneResult>;
+  angleBetweenTwoLines: handleUnaryCall<AngleBetweenTwoLinesRequest, AngleBetweenTwoLinesResult>;
+  angleBetweenTwoPlanesNormals: handleUnaryCall<
+    AngleBetweenTwoPlanesNormalsRequest,
+    AngleBetweenTwoPlanesNormalsResult
+  >;
+  bestFitTransformationGroupToGroup: handleUnaryCall<
+    BestFitTransformationGroupToGroupRequest,
+    BestFitTransformationGroupToGroupResult
+  >;
+  computeGroupToGroupOrientationRxRyRz: handleUnaryCall<
+    ComputeGroupToGroupOrientationRxRyRzRequest,
+    ComputeGroupToGroupOrientationRxRyRzResult
+  >;
+  createPointUncertaintyCloudPointSets: handleUnaryCall<
+    CreatePointUncertaintyCloudPointSetsRequest,
+    CreatePointUncertaintyCloudPointSetsResult
+  >;
+  createPointUncertaintyFields: handleUnaryCall<
+    CreatePointUncertaintyFieldsRequest,
+    CreatePointUncertaintyFieldsResult
+  >;
+  fitGeometryToPointGroup: handleUnaryCall<FitGeometryToPointGroupRequest, FitGeometryToPointGroupResult>;
+  fitGeometryToPointGroupProjectedToPlane: handleUnaryCall<
+    FitGeometryToPointGroupProjectedToPlaneRequest,
+    FitGeometryToPointGroupProjectedToPlaneResult
+  >;
+  fitGeometryToPoints: handleUnaryCall<FitGeometryToPointsRequest, FitGeometryToPointsResult>;
+  getBSplineProperties: handleUnaryCall<GetBSplinePropertiesRequest, GetBSplinePropertiesResult>;
+  getCircleProperties: handleUnaryCall<GetCirclePropertiesRequest, GetCirclePropertiesResult>;
+  getConeProperties: handleUnaryCall<GetConePropertiesRequest, GetConePropertiesResult>;
+  getCoordinateForIthPointInPointSet: handleUnaryCall<
+    GetCoordinateForIthPointInPointSetRequest,
+    GetCoordinateForIthPointInPointSetResult
+  >;
+  getCylinderProperties: handleUnaryCall<GetCylinderPropertiesRequest, GetCylinderPropertiesResult>;
+  getEllipseProperties: handleUnaryCall<GetEllipsePropertiesRequest, GetEllipsePropertiesResult>;
+  getEulerParametersForFrame: handleUnaryCall<GetEulerParametersForFrameRequest, GetEulerParametersForFrameResult>;
+  getEulerParametersForIthFrameInFrameSet: handleUnaryCall<
+    GetEulerParametersForIthFrameInFrameSetRequest,
+    GetEulerParametersForIthFrameInFrameSetResult
+  >;
+  getIthCollectionName: handleUnaryCall<GetIthCollectionNameRequest, GetIthCollectionNameResult>;
+  getIthPointFromGroup: handleUnaryCall<GetIthPointFromGroupRequest, GetIthPointFromGroupResult>;
+  getLineProperties: handleUnaryCall<GetLinePropertiesRequest, GetLinePropertiesResult>;
+  getMeasurementAuxiliaryData: handleUnaryCall<GetMeasurementAuxiliaryDataRequest, GetMeasurementAuxiliaryDataResult>;
+  getMeasurementInfoData: handleUnaryCall<GetMeasurementInfoDataRequest, GetMeasurementInfoDataResult>;
+  getMeasurementWeatherData: handleUnaryCall<GetMeasurementWeatherDataRequest, GetMeasurementWeatherDataResult>;
   getNumberOfCollections: handleUnaryCall<GetNumberOfCollectionsRequest, GetNumberOfCollectionsResult>;
+  getNumberOfFramesInFrameSet: handleUnaryCall<GetNumberOfFramesInFrameSetRequest, GetNumberOfFramesInFrameSetResult>;
+  getNumberOfPointsInGroup: handleUnaryCall<GetNumberOfPointsInGroupRequest, GetNumberOfPointsInGroupResult>;
+  getNumberOfPointsInPointSet: handleUnaryCall<GetNumberOfPointsInPointSetRequest, GetNumberOfPointsInPointSetResult>;
+  getObjectReportingFrame: handleUnaryCall<GetObjectReportingFrameRequest, GetObjectReportingFrameResult>;
+  getPlaneProperties: handleUnaryCall<GetPlanePropertiesRequest, GetPlanePropertiesResult>;
+  getPointCoordinate: handleUnaryCall<GetPointCoordinateRequest, GetPointCoordinateResult>;
+  getPointCoordinateCylindrical: handleUnaryCall<
+    GetPointCoordinateCylindricalRequest,
+    GetPointCoordinateCylindricalResult
+  >;
+  getPointCoordinatePolar: handleUnaryCall<GetPointCoordinatePolarRequest, GetPointCoordinatePolarResult>;
+  getPointProperties: handleUnaryCall<GetPointPropertiesRequest, GetPointPropertiesResult>;
+  getPointToLineDistance: handleUnaryCall<GetPointToLineDistanceRequest, GetPointToLineDistanceResult>;
+  getPointToPointDistance: handleUnaryCall<GetPointToPointDistanceRequest, GetPointToPointDistanceResult>;
+  getPointTolerance: handleUnaryCall<GetPointToleranceRequest, GetPointToleranceResult>;
+  getSlotProperties: handleUnaryCall<GetSlotPropertiesRequest, GetSlotPropertiesResult>;
+  getSphereProperties: handleUnaryCall<GetSpherePropertiesRequest, GetSpherePropertiesResult>;
+  getSurfacePhysicalStats: handleUnaryCall<GetSurfacePhysicalStatsRequest, GetSurfacePhysicalStatsResult>;
+  getTimestampForIthFrameInFrameSet: handleUnaryCall<
+    GetTimestampForIthFrameInFrameSetRequest,
+    GetTimestampForIthFrameInFrameSetResult
+  >;
+  getTimestampForIthPointInPointSet: handleUnaryCall<
+    GetTimestampForIthPointInPointSetRequest,
+    GetTimestampForIthPointInPointSetResult
+  >;
+  getTorusProperties: handleUnaryCall<GetTorusPropertiesRequest, GetTorusPropertiesResult>;
+  getTransformForIthFrameInFrameSet: handleUnaryCall<
+    GetTransformForIthFrameInFrameSetRequest,
+    GetTransformForIthFrameInFrameSetResult
+  >;
+  groupToSurfaceFit: handleUnaryCall<GroupToSurfaceFitRequest, GroupToSurfaceFitResult>;
+  importGeometryFitProfiles: handleUnaryCall<ImportGeometryFitProfilesRequest, ImportGeometryFitProfilesResult>;
+  isObjectOfType: handleUnaryCall<IsObjectOfTypeRequest, IsObjectOfTypeResult>;
+  makeCircleFitProfile: handleUnaryCall<MakeCircleFitProfileRequest, MakeCircleFitProfileResult>;
+  makeConeFitProfile: handleUnaryCall<MakeConeFitProfileRequest, MakeConeFitProfileResult>;
+  makeCylinderFitProfile: handleUnaryCall<MakeCylinderFitProfileRequest, MakeCylinderFitProfileResult>;
+  makeEllipseFitProfile: handleUnaryCall<MakeEllipseFitProfileRequest, MakeEllipseFitProfileResult>;
+  makeLineFitProfile: handleUnaryCall<MakeLineFitProfileRequest, MakeLineFitProfileResult>;
+  makeParaboloidFitProfile: handleUnaryCall<MakeParaboloidFitProfileRequest, MakeParaboloidFitProfileResult>;
+  makePlaneFitProfile: handleUnaryCall<MakePlaneFitProfileRequest, MakePlaneFitProfileResult>;
+  makeSlotFitProfile: handleUnaryCall<MakeSlotFitProfileRequest, MakeSlotFitProfileResult>;
+  makeSphereFitProfile: handleUnaryCall<MakeSphereFitProfileRequest, MakeSphereFitProfileResult>;
+  mushroomTargetHoleInspection: handleUnaryCall<
+    MushroomTargetHoleInspectionRequest,
+    MushroomTargetHoleInspectionResult
+  >;
+  patchNormalShiftHolePin: handleUnaryCall<PatchNormalShiftHolePinRequest, PatchNormalShiftHolePinResult>;
+  patchNormalShiftPoint: handleUnaryCall<PatchNormalShiftPointRequest, PatchNormalShiftPointResult>;
+  queryCloudsToObjects: handleUnaryCall<QueryCloudsToObjectsRequest, QueryCloudsToObjectsResult>;
+  queryCloudsToSurface: handleUnaryCall<QueryCloudsToSurfaceRequest, QueryCloudsToSurfaceResult>;
+  queryFrameToFrame: handleUnaryCall<QueryFrameToFrameRequest, QueryFrameToFrameResult>;
+  queryGroupsToObjects: handleUnaryCall<QueryGroupsToObjectsRequest, QueryGroupsToObjectsResult>;
+  queryPointToObjects: handleUnaryCall<QueryPointToObjectsRequest, QueryPointToObjectsResult>;
+  queryPointToPointAlongCurve: handleUnaryCall<QueryPointToPointAlongCurveRequest, QueryPointToPointAlongCurveResult>;
+  queryPointsToCircle: handleUnaryCall<QueryPointsToCircleRequest, QueryPointsToCircleResult>;
+  queryPointsToObjects: handleUnaryCall<QueryPointsToObjectsRequest, QueryPointsToObjectsResult>;
+  queryPointsToSinglePoint: handleUnaryCall<QueryPointsToSinglePointRequest, QueryPointsToSinglePointResult>;
+  reComputeCalculatedItems: handleUnaryCall<ReComputeCalculatedItemsRequest, ReComputeCalculatedItemsResult>;
+  renamePointsBasedOnInterPointDistanceToReferencePoints: handleUnaryCall<
+    RenamePointsBasedOnInterPointDistanceToReferencePointsRequest,
+    RenamePointsBasedOnInterPointDistanceToReferencePointsResult
+  >;
+  renamePointsBasedOnProximityToReferencePoints: handleUnaryCall<
+    RenamePointsBasedOnProximityToReferencePointsRequest,
+    RenamePointsBasedOnProximityToReferencePointsResult
+  >;
+  reverseBSplines: handleUnaryCall<ReverseBSplinesRequest, ReverseBSplinesResult>;
+  reversePlaneNormals: handleUnaryCall<ReversePlaneNormalsRequest, ReversePlaneNormalsResult>;
+  reverseSurfaceNormals: handleUnaryCall<ReverseSurfaceNormalsRequest, ReverseSurfaceNormalsResult>;
+  setCircleProperties: handleUnaryCall<SetCirclePropertiesRequest, SetCirclePropertiesResult>;
+  setConeProperties: handleUnaryCall<SetConePropertiesRequest, SetConePropertiesResult>;
+  setCylinderProperties: handleUnaryCall<SetCylinderPropertiesRequest, SetCylinderPropertiesResult>;
+  setDefaultColorizationOptions: handleUnaryCall<
+    SetDefaultColorizationOptionsRequest,
+    SetDefaultColorizationOptionsResult
+  >;
+  setEllipseProperties: handleUnaryCall<SetEllipsePropertiesRequest, SetEllipsePropertiesResult>;
+  setGeometryRelationshipFitProfile: handleUnaryCall<
+    SetGeometryRelationshipFitProfileRequest,
+    SetGeometryRelationshipFitProfileResult
+  >;
+  setLineProperties: handleUnaryCall<SetLinePropertiesRequest, SetLinePropertiesResult>;
+  setMeasurementAuxiliaryData: handleUnaryCall<SetMeasurementAuxiliaryDataRequest, SetMeasurementAuxiliaryDataResult>;
+  setObjectReportingFrame: handleUnaryCall<SetObjectReportingFrameRequest, SetObjectReportingFrameResult>;
+  setPointProperties: handleUnaryCall<SetPointPropertiesRequest, SetPointPropertiesResult>;
+  setPointWeightsFromUncertainties: handleUnaryCall<
+    SetPointWeightsFromUncertaintiesRequest,
+    SetPointWeightsFromUncertaintiesResult
+  >;
+  setTransformForIthFrameInFrameSet: handleUnaryCall<
+    SetTransformForIthFrameInFrameSetRequest,
+    SetTransformForIthFrameInFrameSetResult
+  >;
+  sphereAxisCheck: handleUnaryCall<SphereAxisCheckRequest, SphereAxisCheckResult>;
+  temperatureCompensateAGroup: handleUnaryCall<TemperatureCompensateAGroupRequest, TemperatureCompensateAGroupResult>;
+  transformObjectsFrameToFrame: handleUnaryCall<
+    TransformObjectsFrameToFrameRequest,
+    TransformObjectsFrameToFrameResult
+  >;
+  transformObjectsByDeltaAboutWorkingFrame: handleUnaryCall<
+    TransformObjectsByDeltaAboutWorkingFrameRequest,
+    TransformObjectsByDeltaAboutWorkingFrameResult
+  >;
+  transformObjectsByDeltaWorldTransformOperator: handleUnaryCall<
+    TransformObjectsByDeltaWorldTransformOperatorRequest,
+    TransformObjectsByDeltaWorldTransformOperatorResult
+  >;
+  translateObjectsByDelta: handleUnaryCall<TranslateObjectsByDeltaRequest, TranslateObjectsByDeltaResult>;
 }
 
 export interface AnalysisOperationsClient extends Client {
-  /** Executes the "Get i-th Collection Name" MP command. */
-  getIThCollectionName(
-    request: GetIThCollectionNameRequest,
-    callback: (error: ServiceError | null, response: GetIThCollectionNameResult) => void,
+  angleBetweenLineAndPlane(
+    request: AngleBetweenLineAndPlaneRequest,
+    callback: (error: ServiceError | null, response: AngleBetweenLineAndPlaneResult) => void,
   ): ClientUnaryCall;
-  getIThCollectionName(
-    request: GetIThCollectionNameRequest,
+  angleBetweenLineAndPlane(
+    request: AngleBetweenLineAndPlaneRequest,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: GetIThCollectionNameResult) => void,
+    callback: (error: ServiceError | null, response: AngleBetweenLineAndPlaneResult) => void,
   ): ClientUnaryCall;
-  getIThCollectionName(
-    request: GetIThCollectionNameRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: GetIThCollectionNameResult) => void,
-  ): ClientUnaryCall;
-  /** Executes the "Get Number of Collections" MP command. */
-  getNumberOfCollections(
-    request: GetNumberOfCollectionsRequest,
-    callback: (error: ServiceError | null, response: GetNumberOfCollectionsResult) => void,
-  ): ClientUnaryCall;
-  getNumberOfCollections(
-    request: GetNumberOfCollectionsRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: GetNumberOfCollectionsResult) => void,
-  ): ClientUnaryCall;
-  getNumberOfCollections(
-    request: GetNumberOfCollectionsRequest,
+  angleBetweenLineAndPlane(
+    request: AngleBetweenLineAndPlaneRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: AngleBetweenLineAndPlaneResult) => void,
+  ): ClientUnaryCall;
+  angleBetweenTwoLines(
+    request: AngleBetweenTwoLinesRequest,
+    callback: (error: ServiceError | null, response: AngleBetweenTwoLinesResult) => void,
+  ): ClientUnaryCall;
+  angleBetweenTwoLines(
+    request: AngleBetweenTwoLinesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: AngleBetweenTwoLinesResult) => void,
+  ): ClientUnaryCall;
+  angleBetweenTwoLines(
+    request: AngleBetweenTwoLinesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: AngleBetweenTwoLinesResult) => void,
+  ): ClientUnaryCall;
+  angleBetweenTwoPlanesNormals(
+    request: AngleBetweenTwoPlanesNormalsRequest,
+    callback: (error: ServiceError | null, response: AngleBetweenTwoPlanesNormalsResult) => void,
+  ): ClientUnaryCall;
+  angleBetweenTwoPlanesNormals(
+    request: AngleBetweenTwoPlanesNormalsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: AngleBetweenTwoPlanesNormalsResult) => void,
+  ): ClientUnaryCall;
+  angleBetweenTwoPlanesNormals(
+    request: AngleBetweenTwoPlanesNormalsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: AngleBetweenTwoPlanesNormalsResult) => void,
+  ): ClientUnaryCall;
+  bestFitTransformationGroupToGroup(
+    request: BestFitTransformationGroupToGroupRequest,
+    callback: (error: ServiceError | null, response: BestFitTransformationGroupToGroupResult) => void,
+  ): ClientUnaryCall;
+  bestFitTransformationGroupToGroup(
+    request: BestFitTransformationGroupToGroupRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: BestFitTransformationGroupToGroupResult) => void,
+  ): ClientUnaryCall;
+  bestFitTransformationGroupToGroup(
+    request: BestFitTransformationGroupToGroupRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: BestFitTransformationGroupToGroupResult) => void,
+  ): ClientUnaryCall;
+  computeGroupToGroupOrientationRxRyRz(
+    request: ComputeGroupToGroupOrientationRxRyRzRequest,
+    callback: (error: ServiceError | null, response: ComputeGroupToGroupOrientationRxRyRzResult) => void,
+  ): ClientUnaryCall;
+  computeGroupToGroupOrientationRxRyRz(
+    request: ComputeGroupToGroupOrientationRxRyRzRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ComputeGroupToGroupOrientationRxRyRzResult) => void,
+  ): ClientUnaryCall;
+  computeGroupToGroupOrientationRxRyRz(
+    request: ComputeGroupToGroupOrientationRxRyRzRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ComputeGroupToGroupOrientationRxRyRzResult) => void,
+  ): ClientUnaryCall;
+  createPointUncertaintyCloudPointSets(
+    request: CreatePointUncertaintyCloudPointSetsRequest,
+    callback: (error: ServiceError | null, response: CreatePointUncertaintyCloudPointSetsResult) => void,
+  ): ClientUnaryCall;
+  createPointUncertaintyCloudPointSets(
+    request: CreatePointUncertaintyCloudPointSetsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: CreatePointUncertaintyCloudPointSetsResult) => void,
+  ): ClientUnaryCall;
+  createPointUncertaintyCloudPointSets(
+    request: CreatePointUncertaintyCloudPointSetsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: CreatePointUncertaintyCloudPointSetsResult) => void,
+  ): ClientUnaryCall;
+  createPointUncertaintyFields(
+    request: CreatePointUncertaintyFieldsRequest,
+    callback: (error: ServiceError | null, response: CreatePointUncertaintyFieldsResult) => void,
+  ): ClientUnaryCall;
+  createPointUncertaintyFields(
+    request: CreatePointUncertaintyFieldsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: CreatePointUncertaintyFieldsResult) => void,
+  ): ClientUnaryCall;
+  createPointUncertaintyFields(
+    request: CreatePointUncertaintyFieldsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: CreatePointUncertaintyFieldsResult) => void,
+  ): ClientUnaryCall;
+  fitGeometryToPointGroup(
+    request: FitGeometryToPointGroupRequest,
+    callback: (error: ServiceError | null, response: FitGeometryToPointGroupResult) => void,
+  ): ClientUnaryCall;
+  fitGeometryToPointGroup(
+    request: FitGeometryToPointGroupRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: FitGeometryToPointGroupResult) => void,
+  ): ClientUnaryCall;
+  fitGeometryToPointGroup(
+    request: FitGeometryToPointGroupRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: FitGeometryToPointGroupResult) => void,
+  ): ClientUnaryCall;
+  fitGeometryToPointGroupProjectedToPlane(
+    request: FitGeometryToPointGroupProjectedToPlaneRequest,
+    callback: (error: ServiceError | null, response: FitGeometryToPointGroupProjectedToPlaneResult) => void,
+  ): ClientUnaryCall;
+  fitGeometryToPointGroupProjectedToPlane(
+    request: FitGeometryToPointGroupProjectedToPlaneRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: FitGeometryToPointGroupProjectedToPlaneResult) => void,
+  ): ClientUnaryCall;
+  fitGeometryToPointGroupProjectedToPlane(
+    request: FitGeometryToPointGroupProjectedToPlaneRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: FitGeometryToPointGroupProjectedToPlaneResult) => void,
+  ): ClientUnaryCall;
+  fitGeometryToPoints(
+    request: FitGeometryToPointsRequest,
+    callback: (error: ServiceError | null, response: FitGeometryToPointsResult) => void,
+  ): ClientUnaryCall;
+  fitGeometryToPoints(
+    request: FitGeometryToPointsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: FitGeometryToPointsResult) => void,
+  ): ClientUnaryCall;
+  fitGeometryToPoints(
+    request: FitGeometryToPointsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: FitGeometryToPointsResult) => void,
+  ): ClientUnaryCall;
+  getBSplineProperties(
+    request: GetBSplinePropertiesRequest,
+    callback: (error: ServiceError | null, response: GetBSplinePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getBSplineProperties(
+    request: GetBSplinePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetBSplinePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getBSplineProperties(
+    request: GetBSplinePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetBSplinePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getCircleProperties(
+    request: GetCirclePropertiesRequest,
+    callback: (error: ServiceError | null, response: GetCirclePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getCircleProperties(
+    request: GetCirclePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetCirclePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getCircleProperties(
+    request: GetCirclePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetCirclePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getConeProperties(
+    request: GetConePropertiesRequest,
+    callback: (error: ServiceError | null, response: GetConePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getConeProperties(
+    request: GetConePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetConePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getConeProperties(
+    request: GetConePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetConePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getCoordinateForIthPointInPointSet(
+    request: GetCoordinateForIthPointInPointSetRequest,
+    callback: (error: ServiceError | null, response: GetCoordinateForIthPointInPointSetResult) => void,
+  ): ClientUnaryCall;
+  getCoordinateForIthPointInPointSet(
+    request: GetCoordinateForIthPointInPointSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetCoordinateForIthPointInPointSetResult) => void,
+  ): ClientUnaryCall;
+  getCoordinateForIthPointInPointSet(
+    request: GetCoordinateForIthPointInPointSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetCoordinateForIthPointInPointSetResult) => void,
+  ): ClientUnaryCall;
+  getCylinderProperties(
+    request: GetCylinderPropertiesRequest,
+    callback: (error: ServiceError | null, response: GetCylinderPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getCylinderProperties(
+    request: GetCylinderPropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetCylinderPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getCylinderProperties(
+    request: GetCylinderPropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetCylinderPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getEllipseProperties(
+    request: GetEllipsePropertiesRequest,
+    callback: (error: ServiceError | null, response: GetEllipsePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getEllipseProperties(
+    request: GetEllipsePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetEllipsePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getEllipseProperties(
+    request: GetEllipsePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetEllipsePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getEulerParametersForFrame(
+    request: GetEulerParametersForFrameRequest,
+    callback: (error: ServiceError | null, response: GetEulerParametersForFrameResult) => void,
+  ): ClientUnaryCall;
+  getEulerParametersForFrame(
+    request: GetEulerParametersForFrameRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetEulerParametersForFrameResult) => void,
+  ): ClientUnaryCall;
+  getEulerParametersForFrame(
+    request: GetEulerParametersForFrameRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetEulerParametersForFrameResult) => void,
+  ): ClientUnaryCall;
+  getEulerParametersForIthFrameInFrameSet(
+    request: GetEulerParametersForIthFrameInFrameSetRequest,
+    callback: (error: ServiceError | null, response: GetEulerParametersForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getEulerParametersForIthFrameInFrameSet(
+    request: GetEulerParametersForIthFrameInFrameSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetEulerParametersForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getEulerParametersForIthFrameInFrameSet(
+    request: GetEulerParametersForIthFrameInFrameSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetEulerParametersForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getIthCollectionName(
+    request: GetIthCollectionNameRequest,
+    callback: (error: ServiceError | null, response: GetIthCollectionNameResult) => void,
+  ): ClientUnaryCall;
+  getIthCollectionName(
+    request: GetIthCollectionNameRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetIthCollectionNameResult) => void,
+  ): ClientUnaryCall;
+  getIthCollectionName(
+    request: GetIthCollectionNameRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetIthCollectionNameResult) => void,
+  ): ClientUnaryCall;
+  getIthPointFromGroup(
+    request: GetIthPointFromGroupRequest,
+    callback: (error: ServiceError | null, response: GetIthPointFromGroupResult) => void,
+  ): ClientUnaryCall;
+  getIthPointFromGroup(
+    request: GetIthPointFromGroupRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetIthPointFromGroupResult) => void,
+  ): ClientUnaryCall;
+  getIthPointFromGroup(
+    request: GetIthPointFromGroupRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetIthPointFromGroupResult) => void,
+  ): ClientUnaryCall;
+  getLineProperties(
+    request: GetLinePropertiesRequest,
+    callback: (error: ServiceError | null, response: GetLinePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getLineProperties(
+    request: GetLinePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetLinePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getLineProperties(
+    request: GetLinePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetLinePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getMeasurementAuxiliaryData(
+    request: GetMeasurementAuxiliaryDataRequest,
+    callback: (error: ServiceError | null, response: GetMeasurementAuxiliaryDataResult) => void,
+  ): ClientUnaryCall;
+  getMeasurementAuxiliaryData(
+    request: GetMeasurementAuxiliaryDataRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetMeasurementAuxiliaryDataResult) => void,
+  ): ClientUnaryCall;
+  getMeasurementAuxiliaryData(
+    request: GetMeasurementAuxiliaryDataRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetMeasurementAuxiliaryDataResult) => void,
+  ): ClientUnaryCall;
+  getMeasurementInfoData(
+    request: GetMeasurementInfoDataRequest,
+    callback: (error: ServiceError | null, response: GetMeasurementInfoDataResult) => void,
+  ): ClientUnaryCall;
+  getMeasurementInfoData(
+    request: GetMeasurementInfoDataRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetMeasurementInfoDataResult) => void,
+  ): ClientUnaryCall;
+  getMeasurementInfoData(
+    request: GetMeasurementInfoDataRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetMeasurementInfoDataResult) => void,
+  ): ClientUnaryCall;
+  getMeasurementWeatherData(
+    request: GetMeasurementWeatherDataRequest,
+    callback: (error: ServiceError | null, response: GetMeasurementWeatherDataResult) => void,
+  ): ClientUnaryCall;
+  getMeasurementWeatherData(
+    request: GetMeasurementWeatherDataRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetMeasurementWeatherDataResult) => void,
+  ): ClientUnaryCall;
+  getMeasurementWeatherData(
+    request: GetMeasurementWeatherDataRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetMeasurementWeatherDataResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfCollections(
+    request: GetNumberOfCollectionsRequest,
     callback: (error: ServiceError | null, response: GetNumberOfCollectionsResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfCollections(
+    request: GetNumberOfCollectionsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetNumberOfCollectionsResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfCollections(
+    request: GetNumberOfCollectionsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetNumberOfCollectionsResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfFramesInFrameSet(
+    request: GetNumberOfFramesInFrameSetRequest,
+    callback: (error: ServiceError | null, response: GetNumberOfFramesInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfFramesInFrameSet(
+    request: GetNumberOfFramesInFrameSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetNumberOfFramesInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfFramesInFrameSet(
+    request: GetNumberOfFramesInFrameSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetNumberOfFramesInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfPointsInGroup(
+    request: GetNumberOfPointsInGroupRequest,
+    callback: (error: ServiceError | null, response: GetNumberOfPointsInGroupResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfPointsInGroup(
+    request: GetNumberOfPointsInGroupRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetNumberOfPointsInGroupResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfPointsInGroup(
+    request: GetNumberOfPointsInGroupRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetNumberOfPointsInGroupResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfPointsInPointSet(
+    request: GetNumberOfPointsInPointSetRequest,
+    callback: (error: ServiceError | null, response: GetNumberOfPointsInPointSetResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfPointsInPointSet(
+    request: GetNumberOfPointsInPointSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetNumberOfPointsInPointSetResult) => void,
+  ): ClientUnaryCall;
+  getNumberOfPointsInPointSet(
+    request: GetNumberOfPointsInPointSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetNumberOfPointsInPointSetResult) => void,
+  ): ClientUnaryCall;
+  getObjectReportingFrame(
+    request: GetObjectReportingFrameRequest,
+    callback: (error: ServiceError | null, response: GetObjectReportingFrameResult) => void,
+  ): ClientUnaryCall;
+  getObjectReportingFrame(
+    request: GetObjectReportingFrameRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetObjectReportingFrameResult) => void,
+  ): ClientUnaryCall;
+  getObjectReportingFrame(
+    request: GetObjectReportingFrameRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetObjectReportingFrameResult) => void,
+  ): ClientUnaryCall;
+  getPlaneProperties(
+    request: GetPlanePropertiesRequest,
+    callback: (error: ServiceError | null, response: GetPlanePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getPlaneProperties(
+    request: GetPlanePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPlanePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getPlaneProperties(
+    request: GetPlanePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPlanePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getPointCoordinate(
+    request: GetPointCoordinateRequest,
+    callback: (error: ServiceError | null, response: GetPointCoordinateResult) => void,
+  ): ClientUnaryCall;
+  getPointCoordinate(
+    request: GetPointCoordinateRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointCoordinateResult) => void,
+  ): ClientUnaryCall;
+  getPointCoordinate(
+    request: GetPointCoordinateRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointCoordinateResult) => void,
+  ): ClientUnaryCall;
+  getPointCoordinateCylindrical(
+    request: GetPointCoordinateCylindricalRequest,
+    callback: (error: ServiceError | null, response: GetPointCoordinateCylindricalResult) => void,
+  ): ClientUnaryCall;
+  getPointCoordinateCylindrical(
+    request: GetPointCoordinateCylindricalRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointCoordinateCylindricalResult) => void,
+  ): ClientUnaryCall;
+  getPointCoordinateCylindrical(
+    request: GetPointCoordinateCylindricalRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointCoordinateCylindricalResult) => void,
+  ): ClientUnaryCall;
+  getPointCoordinatePolar(
+    request: GetPointCoordinatePolarRequest,
+    callback: (error: ServiceError | null, response: GetPointCoordinatePolarResult) => void,
+  ): ClientUnaryCall;
+  getPointCoordinatePolar(
+    request: GetPointCoordinatePolarRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointCoordinatePolarResult) => void,
+  ): ClientUnaryCall;
+  getPointCoordinatePolar(
+    request: GetPointCoordinatePolarRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointCoordinatePolarResult) => void,
+  ): ClientUnaryCall;
+  getPointProperties(
+    request: GetPointPropertiesRequest,
+    callback: (error: ServiceError | null, response: GetPointPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getPointProperties(
+    request: GetPointPropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getPointProperties(
+    request: GetPointPropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getPointToLineDistance(
+    request: GetPointToLineDistanceRequest,
+    callback: (error: ServiceError | null, response: GetPointToLineDistanceResult) => void,
+  ): ClientUnaryCall;
+  getPointToLineDistance(
+    request: GetPointToLineDistanceRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointToLineDistanceResult) => void,
+  ): ClientUnaryCall;
+  getPointToLineDistance(
+    request: GetPointToLineDistanceRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointToLineDistanceResult) => void,
+  ): ClientUnaryCall;
+  getPointToPointDistance(
+    request: GetPointToPointDistanceRequest,
+    callback: (error: ServiceError | null, response: GetPointToPointDistanceResult) => void,
+  ): ClientUnaryCall;
+  getPointToPointDistance(
+    request: GetPointToPointDistanceRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointToPointDistanceResult) => void,
+  ): ClientUnaryCall;
+  getPointToPointDistance(
+    request: GetPointToPointDistanceRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointToPointDistanceResult) => void,
+  ): ClientUnaryCall;
+  getPointTolerance(
+    request: GetPointToleranceRequest,
+    callback: (error: ServiceError | null, response: GetPointToleranceResult) => void,
+  ): ClientUnaryCall;
+  getPointTolerance(
+    request: GetPointToleranceRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointToleranceResult) => void,
+  ): ClientUnaryCall;
+  getPointTolerance(
+    request: GetPointToleranceRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointToleranceResult) => void,
+  ): ClientUnaryCall;
+  getSlotProperties(
+    request: GetSlotPropertiesRequest,
+    callback: (error: ServiceError | null, response: GetSlotPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getSlotProperties(
+    request: GetSlotPropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetSlotPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getSlotProperties(
+    request: GetSlotPropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetSlotPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getSphereProperties(
+    request: GetSpherePropertiesRequest,
+    callback: (error: ServiceError | null, response: GetSpherePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getSphereProperties(
+    request: GetSpherePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetSpherePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getSphereProperties(
+    request: GetSpherePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetSpherePropertiesResult) => void,
+  ): ClientUnaryCall;
+  getSurfacePhysicalStats(
+    request: GetSurfacePhysicalStatsRequest,
+    callback: (error: ServiceError | null, response: GetSurfacePhysicalStatsResult) => void,
+  ): ClientUnaryCall;
+  getSurfacePhysicalStats(
+    request: GetSurfacePhysicalStatsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetSurfacePhysicalStatsResult) => void,
+  ): ClientUnaryCall;
+  getSurfacePhysicalStats(
+    request: GetSurfacePhysicalStatsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetSurfacePhysicalStatsResult) => void,
+  ): ClientUnaryCall;
+  getTimestampForIthFrameInFrameSet(
+    request: GetTimestampForIthFrameInFrameSetRequest,
+    callback: (error: ServiceError | null, response: GetTimestampForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getTimestampForIthFrameInFrameSet(
+    request: GetTimestampForIthFrameInFrameSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetTimestampForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getTimestampForIthFrameInFrameSet(
+    request: GetTimestampForIthFrameInFrameSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetTimestampForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getTimestampForIthPointInPointSet(
+    request: GetTimestampForIthPointInPointSetRequest,
+    callback: (error: ServiceError | null, response: GetTimestampForIthPointInPointSetResult) => void,
+  ): ClientUnaryCall;
+  getTimestampForIthPointInPointSet(
+    request: GetTimestampForIthPointInPointSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetTimestampForIthPointInPointSetResult) => void,
+  ): ClientUnaryCall;
+  getTimestampForIthPointInPointSet(
+    request: GetTimestampForIthPointInPointSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetTimestampForIthPointInPointSetResult) => void,
+  ): ClientUnaryCall;
+  getTorusProperties(
+    request: GetTorusPropertiesRequest,
+    callback: (error: ServiceError | null, response: GetTorusPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getTorusProperties(
+    request: GetTorusPropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetTorusPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getTorusProperties(
+    request: GetTorusPropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetTorusPropertiesResult) => void,
+  ): ClientUnaryCall;
+  getTransformForIthFrameInFrameSet(
+    request: GetTransformForIthFrameInFrameSetRequest,
+    callback: (error: ServiceError | null, response: GetTransformForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getTransformForIthFrameInFrameSet(
+    request: GetTransformForIthFrameInFrameSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetTransformForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  getTransformForIthFrameInFrameSet(
+    request: GetTransformForIthFrameInFrameSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetTransformForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  groupToSurfaceFit(
+    request: GroupToSurfaceFitRequest,
+    callback: (error: ServiceError | null, response: GroupToSurfaceFitResult) => void,
+  ): ClientUnaryCall;
+  groupToSurfaceFit(
+    request: GroupToSurfaceFitRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GroupToSurfaceFitResult) => void,
+  ): ClientUnaryCall;
+  groupToSurfaceFit(
+    request: GroupToSurfaceFitRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GroupToSurfaceFitResult) => void,
+  ): ClientUnaryCall;
+  importGeometryFitProfiles(
+    request: ImportGeometryFitProfilesRequest,
+    callback: (error: ServiceError | null, response: ImportGeometryFitProfilesResult) => void,
+  ): ClientUnaryCall;
+  importGeometryFitProfiles(
+    request: ImportGeometryFitProfilesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportGeometryFitProfilesResult) => void,
+  ): ClientUnaryCall;
+  importGeometryFitProfiles(
+    request: ImportGeometryFitProfilesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportGeometryFitProfilesResult) => void,
+  ): ClientUnaryCall;
+  isObjectOfType(
+    request: IsObjectOfTypeRequest,
+    callback: (error: ServiceError | null, response: IsObjectOfTypeResult) => void,
+  ): ClientUnaryCall;
+  isObjectOfType(
+    request: IsObjectOfTypeRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: IsObjectOfTypeResult) => void,
+  ): ClientUnaryCall;
+  isObjectOfType(
+    request: IsObjectOfTypeRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: IsObjectOfTypeResult) => void,
+  ): ClientUnaryCall;
+  makeCircleFitProfile(
+    request: MakeCircleFitProfileRequest,
+    callback: (error: ServiceError | null, response: MakeCircleFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeCircleFitProfile(
+    request: MakeCircleFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeCircleFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeCircleFitProfile(
+    request: MakeCircleFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeCircleFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeConeFitProfile(
+    request: MakeConeFitProfileRequest,
+    callback: (error: ServiceError | null, response: MakeConeFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeConeFitProfile(
+    request: MakeConeFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeConeFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeConeFitProfile(
+    request: MakeConeFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeConeFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeCylinderFitProfile(
+    request: MakeCylinderFitProfileRequest,
+    callback: (error: ServiceError | null, response: MakeCylinderFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeCylinderFitProfile(
+    request: MakeCylinderFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeCylinderFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeCylinderFitProfile(
+    request: MakeCylinderFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeCylinderFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeEllipseFitProfile(
+    request: MakeEllipseFitProfileRequest,
+    callback: (error: ServiceError | null, response: MakeEllipseFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeEllipseFitProfile(
+    request: MakeEllipseFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeEllipseFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeEllipseFitProfile(
+    request: MakeEllipseFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeEllipseFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeLineFitProfile(
+    request: MakeLineFitProfileRequest,
+    callback: (error: ServiceError | null, response: MakeLineFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeLineFitProfile(
+    request: MakeLineFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeLineFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeLineFitProfile(
+    request: MakeLineFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeLineFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeParaboloidFitProfile(
+    request: MakeParaboloidFitProfileRequest,
+    callback: (error: ServiceError | null, response: MakeParaboloidFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeParaboloidFitProfile(
+    request: MakeParaboloidFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeParaboloidFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeParaboloidFitProfile(
+    request: MakeParaboloidFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeParaboloidFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makePlaneFitProfile(
+    request: MakePlaneFitProfileRequest,
+    callback: (error: ServiceError | null, response: MakePlaneFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makePlaneFitProfile(
+    request: MakePlaneFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakePlaneFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makePlaneFitProfile(
+    request: MakePlaneFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakePlaneFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeSlotFitProfile(
+    request: MakeSlotFitProfileRequest,
+    callback: (error: ServiceError | null, response: MakeSlotFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeSlotFitProfile(
+    request: MakeSlotFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeSlotFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeSlotFitProfile(
+    request: MakeSlotFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeSlotFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeSphereFitProfile(
+    request: MakeSphereFitProfileRequest,
+    callback: (error: ServiceError | null, response: MakeSphereFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeSphereFitProfile(
+    request: MakeSphereFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeSphereFitProfileResult) => void,
+  ): ClientUnaryCall;
+  makeSphereFitProfile(
+    request: MakeSphereFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeSphereFitProfileResult) => void,
+  ): ClientUnaryCall;
+  mushroomTargetHoleInspection(
+    request: MushroomTargetHoleInspectionRequest,
+    callback: (error: ServiceError | null, response: MushroomTargetHoleInspectionResult) => void,
+  ): ClientUnaryCall;
+  mushroomTargetHoleInspection(
+    request: MushroomTargetHoleInspectionRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MushroomTargetHoleInspectionResult) => void,
+  ): ClientUnaryCall;
+  mushroomTargetHoleInspection(
+    request: MushroomTargetHoleInspectionRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MushroomTargetHoleInspectionResult) => void,
+  ): ClientUnaryCall;
+  patchNormalShiftHolePin(
+    request: PatchNormalShiftHolePinRequest,
+    callback: (error: ServiceError | null, response: PatchNormalShiftHolePinResult) => void,
+  ): ClientUnaryCall;
+  patchNormalShiftHolePin(
+    request: PatchNormalShiftHolePinRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: PatchNormalShiftHolePinResult) => void,
+  ): ClientUnaryCall;
+  patchNormalShiftHolePin(
+    request: PatchNormalShiftHolePinRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: PatchNormalShiftHolePinResult) => void,
+  ): ClientUnaryCall;
+  patchNormalShiftPoint(
+    request: PatchNormalShiftPointRequest,
+    callback: (error: ServiceError | null, response: PatchNormalShiftPointResult) => void,
+  ): ClientUnaryCall;
+  patchNormalShiftPoint(
+    request: PatchNormalShiftPointRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: PatchNormalShiftPointResult) => void,
+  ): ClientUnaryCall;
+  patchNormalShiftPoint(
+    request: PatchNormalShiftPointRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: PatchNormalShiftPointResult) => void,
+  ): ClientUnaryCall;
+  queryCloudsToObjects(
+    request: QueryCloudsToObjectsRequest,
+    callback: (error: ServiceError | null, response: QueryCloudsToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryCloudsToObjects(
+    request: QueryCloudsToObjectsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: QueryCloudsToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryCloudsToObjects(
+    request: QueryCloudsToObjectsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: QueryCloudsToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryCloudsToSurface(
+    request: QueryCloudsToSurfaceRequest,
+    callback: (error: ServiceError | null, response: QueryCloudsToSurfaceResult) => void,
+  ): ClientUnaryCall;
+  queryCloudsToSurface(
+    request: QueryCloudsToSurfaceRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: QueryCloudsToSurfaceResult) => void,
+  ): ClientUnaryCall;
+  queryCloudsToSurface(
+    request: QueryCloudsToSurfaceRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: QueryCloudsToSurfaceResult) => void,
+  ): ClientUnaryCall;
+  queryFrameToFrame(
+    request: QueryFrameToFrameRequest,
+    callback: (error: ServiceError | null, response: QueryFrameToFrameResult) => void,
+  ): ClientUnaryCall;
+  queryFrameToFrame(
+    request: QueryFrameToFrameRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: QueryFrameToFrameResult) => void,
+  ): ClientUnaryCall;
+  queryFrameToFrame(
+    request: QueryFrameToFrameRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: QueryFrameToFrameResult) => void,
+  ): ClientUnaryCall;
+  queryGroupsToObjects(
+    request: QueryGroupsToObjectsRequest,
+    callback: (error: ServiceError | null, response: QueryGroupsToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryGroupsToObjects(
+    request: QueryGroupsToObjectsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: QueryGroupsToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryGroupsToObjects(
+    request: QueryGroupsToObjectsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: QueryGroupsToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryPointToObjects(
+    request: QueryPointToObjectsRequest,
+    callback: (error: ServiceError | null, response: QueryPointToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryPointToObjects(
+    request: QueryPointToObjectsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: QueryPointToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryPointToObjects(
+    request: QueryPointToObjectsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: QueryPointToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryPointToPointAlongCurve(
+    request: QueryPointToPointAlongCurveRequest,
+    callback: (error: ServiceError | null, response: QueryPointToPointAlongCurveResult) => void,
+  ): ClientUnaryCall;
+  queryPointToPointAlongCurve(
+    request: QueryPointToPointAlongCurveRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: QueryPointToPointAlongCurveResult) => void,
+  ): ClientUnaryCall;
+  queryPointToPointAlongCurve(
+    request: QueryPointToPointAlongCurveRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: QueryPointToPointAlongCurveResult) => void,
+  ): ClientUnaryCall;
+  queryPointsToCircle(
+    request: QueryPointsToCircleRequest,
+    callback: (error: ServiceError | null, response: QueryPointsToCircleResult) => void,
+  ): ClientUnaryCall;
+  queryPointsToCircle(
+    request: QueryPointsToCircleRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: QueryPointsToCircleResult) => void,
+  ): ClientUnaryCall;
+  queryPointsToCircle(
+    request: QueryPointsToCircleRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: QueryPointsToCircleResult) => void,
+  ): ClientUnaryCall;
+  queryPointsToObjects(
+    request: QueryPointsToObjectsRequest,
+    callback: (error: ServiceError | null, response: QueryPointsToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryPointsToObjects(
+    request: QueryPointsToObjectsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: QueryPointsToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryPointsToObjects(
+    request: QueryPointsToObjectsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: QueryPointsToObjectsResult) => void,
+  ): ClientUnaryCall;
+  queryPointsToSinglePoint(
+    request: QueryPointsToSinglePointRequest,
+    callback: (error: ServiceError | null, response: QueryPointsToSinglePointResult) => void,
+  ): ClientUnaryCall;
+  queryPointsToSinglePoint(
+    request: QueryPointsToSinglePointRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: QueryPointsToSinglePointResult) => void,
+  ): ClientUnaryCall;
+  queryPointsToSinglePoint(
+    request: QueryPointsToSinglePointRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: QueryPointsToSinglePointResult) => void,
+  ): ClientUnaryCall;
+  reComputeCalculatedItems(
+    request: ReComputeCalculatedItemsRequest,
+    callback: (error: ServiceError | null, response: ReComputeCalculatedItemsResult) => void,
+  ): ClientUnaryCall;
+  reComputeCalculatedItems(
+    request: ReComputeCalculatedItemsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ReComputeCalculatedItemsResult) => void,
+  ): ClientUnaryCall;
+  reComputeCalculatedItems(
+    request: ReComputeCalculatedItemsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ReComputeCalculatedItemsResult) => void,
+  ): ClientUnaryCall;
+  renamePointsBasedOnInterPointDistanceToReferencePoints(
+    request: RenamePointsBasedOnInterPointDistanceToReferencePointsRequest,
+    callback: (
+      error: ServiceError | null,
+      response: RenamePointsBasedOnInterPointDistanceToReferencePointsResult,
+    ) => void,
+  ): ClientUnaryCall;
+  renamePointsBasedOnInterPointDistanceToReferencePoints(
+    request: RenamePointsBasedOnInterPointDistanceToReferencePointsRequest,
+    metadata: Metadata,
+    callback: (
+      error: ServiceError | null,
+      response: RenamePointsBasedOnInterPointDistanceToReferencePointsResult,
+    ) => void,
+  ): ClientUnaryCall;
+  renamePointsBasedOnInterPointDistanceToReferencePoints(
+    request: RenamePointsBasedOnInterPointDistanceToReferencePointsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (
+      error: ServiceError | null,
+      response: RenamePointsBasedOnInterPointDistanceToReferencePointsResult,
+    ) => void,
+  ): ClientUnaryCall;
+  renamePointsBasedOnProximityToReferencePoints(
+    request: RenamePointsBasedOnProximityToReferencePointsRequest,
+    callback: (error: ServiceError | null, response: RenamePointsBasedOnProximityToReferencePointsResult) => void,
+  ): ClientUnaryCall;
+  renamePointsBasedOnProximityToReferencePoints(
+    request: RenamePointsBasedOnProximityToReferencePointsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: RenamePointsBasedOnProximityToReferencePointsResult) => void,
+  ): ClientUnaryCall;
+  renamePointsBasedOnProximityToReferencePoints(
+    request: RenamePointsBasedOnProximityToReferencePointsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: RenamePointsBasedOnProximityToReferencePointsResult) => void,
+  ): ClientUnaryCall;
+  reverseBSplines(
+    request: ReverseBSplinesRequest,
+    callback: (error: ServiceError | null, response: ReverseBSplinesResult) => void,
+  ): ClientUnaryCall;
+  reverseBSplines(
+    request: ReverseBSplinesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ReverseBSplinesResult) => void,
+  ): ClientUnaryCall;
+  reverseBSplines(
+    request: ReverseBSplinesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ReverseBSplinesResult) => void,
+  ): ClientUnaryCall;
+  reversePlaneNormals(
+    request: ReversePlaneNormalsRequest,
+    callback: (error: ServiceError | null, response: ReversePlaneNormalsResult) => void,
+  ): ClientUnaryCall;
+  reversePlaneNormals(
+    request: ReversePlaneNormalsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ReversePlaneNormalsResult) => void,
+  ): ClientUnaryCall;
+  reversePlaneNormals(
+    request: ReversePlaneNormalsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ReversePlaneNormalsResult) => void,
+  ): ClientUnaryCall;
+  reverseSurfaceNormals(
+    request: ReverseSurfaceNormalsRequest,
+    callback: (error: ServiceError | null, response: ReverseSurfaceNormalsResult) => void,
+  ): ClientUnaryCall;
+  reverseSurfaceNormals(
+    request: ReverseSurfaceNormalsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ReverseSurfaceNormalsResult) => void,
+  ): ClientUnaryCall;
+  reverseSurfaceNormals(
+    request: ReverseSurfaceNormalsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ReverseSurfaceNormalsResult) => void,
+  ): ClientUnaryCall;
+  setCircleProperties(
+    request: SetCirclePropertiesRequest,
+    callback: (error: ServiceError | null, response: SetCirclePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setCircleProperties(
+    request: SetCirclePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetCirclePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setCircleProperties(
+    request: SetCirclePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetCirclePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setConeProperties(
+    request: SetConePropertiesRequest,
+    callback: (error: ServiceError | null, response: SetConePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setConeProperties(
+    request: SetConePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetConePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setConeProperties(
+    request: SetConePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetConePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setCylinderProperties(
+    request: SetCylinderPropertiesRequest,
+    callback: (error: ServiceError | null, response: SetCylinderPropertiesResult) => void,
+  ): ClientUnaryCall;
+  setCylinderProperties(
+    request: SetCylinderPropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetCylinderPropertiesResult) => void,
+  ): ClientUnaryCall;
+  setCylinderProperties(
+    request: SetCylinderPropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetCylinderPropertiesResult) => void,
+  ): ClientUnaryCall;
+  setDefaultColorizationOptions(
+    request: SetDefaultColorizationOptionsRequest,
+    callback: (error: ServiceError | null, response: SetDefaultColorizationOptionsResult) => void,
+  ): ClientUnaryCall;
+  setDefaultColorizationOptions(
+    request: SetDefaultColorizationOptionsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetDefaultColorizationOptionsResult) => void,
+  ): ClientUnaryCall;
+  setDefaultColorizationOptions(
+    request: SetDefaultColorizationOptionsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetDefaultColorizationOptionsResult) => void,
+  ): ClientUnaryCall;
+  setEllipseProperties(
+    request: SetEllipsePropertiesRequest,
+    callback: (error: ServiceError | null, response: SetEllipsePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setEllipseProperties(
+    request: SetEllipsePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetEllipsePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setEllipseProperties(
+    request: SetEllipsePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetEllipsePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setGeometryRelationshipFitProfile(
+    request: SetGeometryRelationshipFitProfileRequest,
+    callback: (error: ServiceError | null, response: SetGeometryRelationshipFitProfileResult) => void,
+  ): ClientUnaryCall;
+  setGeometryRelationshipFitProfile(
+    request: SetGeometryRelationshipFitProfileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetGeometryRelationshipFitProfileResult) => void,
+  ): ClientUnaryCall;
+  setGeometryRelationshipFitProfile(
+    request: SetGeometryRelationshipFitProfileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetGeometryRelationshipFitProfileResult) => void,
+  ): ClientUnaryCall;
+  setLineProperties(
+    request: SetLinePropertiesRequest,
+    callback: (error: ServiceError | null, response: SetLinePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setLineProperties(
+    request: SetLinePropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetLinePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setLineProperties(
+    request: SetLinePropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetLinePropertiesResult) => void,
+  ): ClientUnaryCall;
+  setMeasurementAuxiliaryData(
+    request: SetMeasurementAuxiliaryDataRequest,
+    callback: (error: ServiceError | null, response: SetMeasurementAuxiliaryDataResult) => void,
+  ): ClientUnaryCall;
+  setMeasurementAuxiliaryData(
+    request: SetMeasurementAuxiliaryDataRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetMeasurementAuxiliaryDataResult) => void,
+  ): ClientUnaryCall;
+  setMeasurementAuxiliaryData(
+    request: SetMeasurementAuxiliaryDataRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetMeasurementAuxiliaryDataResult) => void,
+  ): ClientUnaryCall;
+  setObjectReportingFrame(
+    request: SetObjectReportingFrameRequest,
+    callback: (error: ServiceError | null, response: SetObjectReportingFrameResult) => void,
+  ): ClientUnaryCall;
+  setObjectReportingFrame(
+    request: SetObjectReportingFrameRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetObjectReportingFrameResult) => void,
+  ): ClientUnaryCall;
+  setObjectReportingFrame(
+    request: SetObjectReportingFrameRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetObjectReportingFrameResult) => void,
+  ): ClientUnaryCall;
+  setPointProperties(
+    request: SetPointPropertiesRequest,
+    callback: (error: ServiceError | null, response: SetPointPropertiesResult) => void,
+  ): ClientUnaryCall;
+  setPointProperties(
+    request: SetPointPropertiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetPointPropertiesResult) => void,
+  ): ClientUnaryCall;
+  setPointProperties(
+    request: SetPointPropertiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetPointPropertiesResult) => void,
+  ): ClientUnaryCall;
+  setPointWeightsFromUncertainties(
+    request: SetPointWeightsFromUncertaintiesRequest,
+    callback: (error: ServiceError | null, response: SetPointWeightsFromUncertaintiesResult) => void,
+  ): ClientUnaryCall;
+  setPointWeightsFromUncertainties(
+    request: SetPointWeightsFromUncertaintiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetPointWeightsFromUncertaintiesResult) => void,
+  ): ClientUnaryCall;
+  setPointWeightsFromUncertainties(
+    request: SetPointWeightsFromUncertaintiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetPointWeightsFromUncertaintiesResult) => void,
+  ): ClientUnaryCall;
+  setTransformForIthFrameInFrameSet(
+    request: SetTransformForIthFrameInFrameSetRequest,
+    callback: (error: ServiceError | null, response: SetTransformForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  setTransformForIthFrameInFrameSet(
+    request: SetTransformForIthFrameInFrameSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetTransformForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  setTransformForIthFrameInFrameSet(
+    request: SetTransformForIthFrameInFrameSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetTransformForIthFrameInFrameSetResult) => void,
+  ): ClientUnaryCall;
+  sphereAxisCheck(
+    request: SphereAxisCheckRequest,
+    callback: (error: ServiceError | null, response: SphereAxisCheckResult) => void,
+  ): ClientUnaryCall;
+  sphereAxisCheck(
+    request: SphereAxisCheckRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SphereAxisCheckResult) => void,
+  ): ClientUnaryCall;
+  sphereAxisCheck(
+    request: SphereAxisCheckRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SphereAxisCheckResult) => void,
+  ): ClientUnaryCall;
+  temperatureCompensateAGroup(
+    request: TemperatureCompensateAGroupRequest,
+    callback: (error: ServiceError | null, response: TemperatureCompensateAGroupResult) => void,
+  ): ClientUnaryCall;
+  temperatureCompensateAGroup(
+    request: TemperatureCompensateAGroupRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: TemperatureCompensateAGroupResult) => void,
+  ): ClientUnaryCall;
+  temperatureCompensateAGroup(
+    request: TemperatureCompensateAGroupRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: TemperatureCompensateAGroupResult) => void,
+  ): ClientUnaryCall;
+  transformObjectsFrameToFrame(
+    request: TransformObjectsFrameToFrameRequest,
+    callback: (error: ServiceError | null, response: TransformObjectsFrameToFrameResult) => void,
+  ): ClientUnaryCall;
+  transformObjectsFrameToFrame(
+    request: TransformObjectsFrameToFrameRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: TransformObjectsFrameToFrameResult) => void,
+  ): ClientUnaryCall;
+  transformObjectsFrameToFrame(
+    request: TransformObjectsFrameToFrameRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: TransformObjectsFrameToFrameResult) => void,
+  ): ClientUnaryCall;
+  transformObjectsByDeltaAboutWorkingFrame(
+    request: TransformObjectsByDeltaAboutWorkingFrameRequest,
+    callback: (error: ServiceError | null, response: TransformObjectsByDeltaAboutWorkingFrameResult) => void,
+  ): ClientUnaryCall;
+  transformObjectsByDeltaAboutWorkingFrame(
+    request: TransformObjectsByDeltaAboutWorkingFrameRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: TransformObjectsByDeltaAboutWorkingFrameResult) => void,
+  ): ClientUnaryCall;
+  transformObjectsByDeltaAboutWorkingFrame(
+    request: TransformObjectsByDeltaAboutWorkingFrameRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: TransformObjectsByDeltaAboutWorkingFrameResult) => void,
+  ): ClientUnaryCall;
+  transformObjectsByDeltaWorldTransformOperator(
+    request: TransformObjectsByDeltaWorldTransformOperatorRequest,
+    callback: (error: ServiceError | null, response: TransformObjectsByDeltaWorldTransformOperatorResult) => void,
+  ): ClientUnaryCall;
+  transformObjectsByDeltaWorldTransformOperator(
+    request: TransformObjectsByDeltaWorldTransformOperatorRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: TransformObjectsByDeltaWorldTransformOperatorResult) => void,
+  ): ClientUnaryCall;
+  transformObjectsByDeltaWorldTransformOperator(
+    request: TransformObjectsByDeltaWorldTransformOperatorRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: TransformObjectsByDeltaWorldTransformOperatorResult) => void,
+  ): ClientUnaryCall;
+  translateObjectsByDelta(
+    request: TranslateObjectsByDeltaRequest,
+    callback: (error: ServiceError | null, response: TranslateObjectsByDeltaResult) => void,
+  ): ClientUnaryCall;
+  translateObjectsByDelta(
+    request: TranslateObjectsByDeltaRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: TranslateObjectsByDeltaResult) => void,
+  ): ClientUnaryCall;
+  translateObjectsByDelta(
+    request: TranslateObjectsByDeltaRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: TranslateObjectsByDeltaResult) => void,
   ): ClientUnaryCall;
 }
 

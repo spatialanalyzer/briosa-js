@@ -52,9 +52,11 @@ function parseArguments(arguments_) {
     throw new Error('Use --artifact <path> to select one protocol ZIP.');
   }
   if (
-    !['github_release', 'source_commit_bootstrap'].includes(
-      values.sourceChannel,
-    )
+    ![
+      'github_release',
+      'github_actions_artifact',
+      'source_commit_bootstrap',
+    ].includes(values.sourceChannel)
   ) {
     throw new Error('Unsupported protocol source channel.');
   }
