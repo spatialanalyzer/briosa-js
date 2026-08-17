@@ -1,5 +1,6 @@
 import {
   credentials,
+  Client,
   Metadata,
   type CallOptions,
   type ClientUnaryCall,
@@ -68,7 +69,21 @@ export interface ClientTransport {
     timeoutMs: number | null,
     signal?: AbortSignal,
   ): Promise<string>;
+  invokeOperation<TRequest, TResponse>(
+    service: string,
+    rpc: string,
+    request: TRequest,
+    requestCodec: OperationCodec<TRequest>,
+    responseCodec: OperationCodec<TResponse>,
+    timeoutMs: number | null,
+    signal?: AbortSignal,
+  ): Promise<TResponse>;
   close(): void;
+}
+
+export interface OperationCodec<T> {
+  encode(message: T): { finish(): Uint8Array };
+  decode(input: Uint8Array): T;
 }
 
 type UnaryInvoker<TResponse> = (
@@ -80,6 +95,7 @@ export class GrpcClientTransport implements ClientTransport {
   readonly #application: SpatialAnalyzerLifecycleClient;
   readonly #sdk: SpatialAnalyzerSdkLifecycleClient;
   readonly #fileOperations: FileOperationsClient;
+  readonly #operations: Client;
 
   constructor(target: string) {
     const channelCredentials = credentials.createInsecure();
@@ -93,6 +109,7 @@ export class GrpcClientTransport implements ClientTransport {
       channelCredentials,
     );
     this.#fileOperations = new FileOperationsClient(target, channelCredentials);
+    this.#operations = new Client(target, channelCredentials);
   }
 
   async getServerSnapshot(
@@ -281,11 +298,36 @@ export class GrpcClientTransport implements ClientTransport {
     return response.directory;
   }
 
+  invokeOperation<TRequest, TResponse>(
+    service: string,
+    rpc: string,
+    request: TRequest,
+    requestCodec: OperationCodec<TRequest>,
+    responseCodec: OperationCodec<TResponse>,
+    timeoutMs: number | null,
+    signal?: AbortSignal,
+  ): Promise<TResponse> {
+    return invokeUnary<TResponse>(
+      (callback) =>
+        this.#operations.makeUnaryRequest(
+          `/briosa.${service}/${rpc}`,
+          (value: TRequest) => Buffer.from(requestCodec.encode(value).finish()),
+          (value: Buffer) => responseCodec.decode(value),
+          request,
+          new Metadata(),
+          callOptions(timeoutMs),
+          (error, response) => callback(error, response as TResponse),
+        ),
+      signal,
+    );
+  }
+
   close(): void {
     this.#discovery.close();
     this.#application.close();
     this.#sdk.close();
     this.#fileOperations.close();
+    this.#operations.close();
   }
 }
 

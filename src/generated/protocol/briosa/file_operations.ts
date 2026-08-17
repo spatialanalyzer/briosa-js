@@ -19,18 +19,5716 @@ import {
   type UntypedServiceImplementation,
 } from "@grpc/grpc-js";
 import { MpExecutionDetails } from "./operation_outcomes.js";
+import {
+  AngularUnits,
+  AsciiFileFormat,
+  CollectionGroupName,
+  CollectionInstrumentId,
+  CollectionItemName,
+  CollectionName,
+  CollectionObjectName,
+  CollectionVectorGroupName,
+  CoordinateSystemType,
+  DistanceUnits,
+  ExportDataDelimeterType,
+  ExportTargetNameFormat,
+  ExportVectorNameFormat,
+  FileReference,
+  PointName,
+  Transform,
+  Vector,
+} from "./spatial_analyzer_values.js";
 
+/** No MP inputs. */
+export interface BackupNowRequest {
+}
+
+export interface BackupNowResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface CopyGeneralFileRequest {
+  sourceFileName?: FileReference | undefined;
+  destinationFileName?: FileReference | undefined;
+  overwrite?: boolean | undefined;
+}
+
+export interface CopyGeneralFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface DeleteGeneralFileRequest {
+  fileName?: FileReference | undefined;
+}
+
+export interface DeleteGeneralFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface DirectCadAccessRequest {
+  cadFileName?: FileReference | undefined;
+  importSolids?: boolean | undefined;
+  importSurfaces?: boolean | undefined;
+  importPolygonizedSurfaces?: boolean | undefined;
+  importAnnotations?: boolean | undefined;
+  importVectors?: boolean | undefined;
+  importPoints?: boolean | undefined;
+  pointGroupName?: string | undefined;
+  importAttributesMetadata?: boolean | undefined;
+  importCooordinateFrames?: boolean | undefined;
+  importPlanes?: boolean | undefined;
+  import3dCurvesLines?: boolean | undefined;
+  import3dCurvesCircles?: boolean | undefined;
+  import3dCurvesGeneralCurves?: boolean | undefined;
+  importConstructionGeometry?: boolean | undefined;
+  importHiddenEntities?: boolean | undefined;
+  importAllSurfacesAsMeshGraphicalEntities?: boolean | undefined;
+  doNotImportFillets?: boolean | undefined;
+  doNotImportDittos?: boolean | undefined;
+  dittoThreshold?: number | undefined;
+  centerViewOnImportedObjects?: boolean | undefined;
+  importIntoFoldersMatchingCadFileHierarchy?: boolean | undefined;
+  removeEmptyFolders?: boolean | undefined;
+  surfaceNormalsMode1Or2?: number | undefined;
+  promptOnMissingComponents?: boolean | undefined;
+  selectiveImport?: boolean | undefined;
+  surfaceCompatibilityMode?: boolean | undefined;
+  explodeSurfaces?: boolean | undefined;
+  cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile?: string | undefined;
+  buildCalloutViews?: boolean | undefined;
+}
+
+export interface DirectCadAccessResult {
+  importWarnings?: boolean | undefined;
+  importWarningMessages?: string | undefined;
+  extentsMin?: Vector | undefined;
+  extentsMax?: Vector | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportAsciiFrameSetRequest {
+  asciiFilePath?: FileReference | undefined;
+  frameSetContainer?: CollectionObjectName | undefined;
+  dataDelimiter?: ExportDataDelimeterType | undefined;
+  fileFormat?: AsciiFileFormat | undefined;
+  includeExportFormatInfo?: boolean | undefined;
+  decimalPrecision?: number | undefined;
+  append?: boolean | undefined;
+}
+
+export interface ExportAsciiFrameSetResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportAsciiFramesRequest {
+  asciiFilePath?: FileReference | undefined;
+  objectList?: CollectionObjectName[] | undefined;
+  exportFrameMode?: string | undefined;
+  overwriteExistingFile?: boolean | undefined;
+}
+
+export interface ExportAsciiFramesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportAsciiPointCloudsRequest {
+  asciiFilePath?: FileReference | undefined;
+  pointCloudList?: CollectionObjectName[] | undefined;
+  dataDelimiter?: ExportDataDelimeterType | undefined;
+  overwriteExistingFile?: boolean | undefined;
+  showProgressDialog?: boolean | undefined;
+  includeCloudPointLabeling?: boolean | undefined;
+  includeScanDirectionVector?: boolean | undefined;
+}
+
+export interface ExportAsciiPointCloudsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportAsciiPointSetRequest {
+  asciiFilePath?: FileReference | undefined;
+  pointSetContainer?: CollectionObjectName | undefined;
+  dataDelimiter?: ExportDataDelimeterType | undefined;
+  targetNameFormat?: ExportTargetNameFormat | undefined;
+  desiredCoordinateSystem?: CoordinateSystemType | undefined;
+  includeTargetOffsets?: boolean | undefined;
+  includeTimestamps?: boolean | undefined;
+  includeSaVersionAndFrameComments?: boolean | undefined;
+  includeAxisComments?: boolean | undefined;
+  includeExportFormatInfo?: boolean | undefined;
+  maximumPrecisionScientificNotation?: boolean | undefined;
+  decimalPrecision?: number | undefined;
+  append?: boolean | undefined;
+}
+
+export interface ExportAsciiPointSetResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportAsciiPointsRequest {
+  asciiFilePath?: FileReference | undefined;
+  groupNamesToExport?: CollectionGroupName[] | undefined;
+  dataDelimiter?: ExportDataDelimeterType | undefined;
+  targetNameFormat?: ExportTargetNameFormat | undefined;
+  desiredCoordinateSystem?: CoordinateSystemType | undefined;
+  includeTargetOffsets?: boolean | undefined;
+  includeTargetComments?: boolean | undefined;
+  includeTimestamps?: boolean | undefined;
+  includeTolerances?: boolean | undefined;
+  includeCoordinateUncertainties?: boolean | undefined;
+  includeSaVersionAndFrameComments?: boolean | undefined;
+  includeAxisComments?: boolean | undefined;
+  includeExportFormatInfo?: boolean | undefined;
+  includeWeights?: boolean | undefined;
+  includeMeasurementDetails?: boolean | undefined;
+  maximumPrecisionScientificNotation?: boolean | undefined;
+  decimalPrecision?: number | undefined;
+  append?: boolean | undefined;
+}
+
+export interface ExportAsciiPointsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportDxfRequest {
+  dxfFilePath?: FileReference | undefined;
+  pointNames?: PointName[] | undefined;
+  cloudNames?: CollectionObjectName[] | undefined;
+  includePointLabels?: boolean | undefined;
+}
+
+export interface ExportDxfResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportEmbeddedFileRequest {
+  embeddedFileCollectionName?: CollectionName | undefined;
+  embeddedFileName?: string | undefined;
+  externalFileName?: FileReference | undefined;
+  replaceExisting?: boolean | undefined;
+}
+
+export interface ExportEmbeddedFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportHiddenPointBarXmlFileRequest {
+  xmlFilePath?: FileReference | undefined;
+}
+
+export interface ExportHiddenPointBarXmlFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportIgesFileEntireModelRequest {
+  igesFilePath?: FileReference | undefined;
+}
+
+export interface ExportIgesFileEntireModelResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportIgesFilePartialModelRequest {
+  igesFilePath?: FileReference | undefined;
+  objectNameList?: CollectionObjectName[] | undefined;
+}
+
+export interface ExportIgesFilePartialModelResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportPtxPointCloudsRequest {
+  ptxFilePath?: FileReference | undefined;
+  pointCloudList?: CollectionObjectName[] | undefined;
+  overwriteExistingFile?: boolean | undefined;
+  showProgressDialog?: boolean | undefined;
+}
+
+export interface ExportPtxPointCloudsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportQdasCharacteristicsRequest {
+  qdasExportFilePath?: FileReference | undefined;
+  k1001PartNumber?: string | undefined;
+  k1002PartDescription?: string | undefined;
+  k1071SupplierNumber?: string | undefined;
+  k1072SupplierDescription?: string | undefined;
+  k1203ReasonForTest?: string | undefined;
+  k1303Plant?: string | undefined;
+  k1900PartRemark?: string | undefined;
+  k0006BatchNumber?: string | undefined;
+  k0014PartId?: string | undefined;
+  k0053OrderNumber?: string | undefined;
+  k0004DateTimeStamp?: string | undefined;
+  k0008OperatorIdentifier?: number | undefined;
+  k0010MachineIdentifier?: number | undefined;
+  k0012GageIdentifier?: number | undefined;
+  relationshipList?: CollectionItemName[] | undefined;
+  featureCheckList?: CollectionItemName[] | undefined;
+  vectorGroupList?: CollectionObjectName[] | undefined;
+}
+
+export interface ExportQdasCharacteristicsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportQdasDataListRequest {
+  qdasExportFilePath?: FileReference | undefined;
+}
+
+export interface ExportQdasDataListResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportScanStripeMeshToStlFileRequest {
+  stlFilePath?: FileReference | undefined;
+  mesh?: CollectionObjectName | undefined;
+}
+
+export interface ExportScanStripeMeshToStlFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportStepFileEntireModelRequest {
+  stepFilePath?: FileReference | undefined;
+}
+
+export interface ExportStepFileEntireModelResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportStepFilePartialModelRequest {
+  stepFilePath?: FileReference | undefined;
+  objectNameList?: CollectionObjectName[] | undefined;
+}
+
+export interface ExportStepFilePartialModelResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportVdaFsFileEntireModelRequest {
+  vdaFsFilePath?: FileReference | undefined;
+}
+
+export interface ExportVdaFsFileEntireModelResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportVdaFsFilePartialModelRequest {
+  vdaFsFilePath?: FileReference | undefined;
+  objectNameList?: CollectionObjectName[] | undefined;
+}
+
+export interface ExportVdaFsFilePartialModelResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExportVectorContainerToAsciiFileRequest {
+  asciiFilePath?: FileReference | undefined;
+  vectorGroupsToExport?: CollectionVectorGroupName[] | undefined;
+  overwriteExistingFileFalseAppend?: boolean | undefined;
+  useFullPrecisionScientificNotation?: boolean | undefined;
+  vectorNameFormat?: ExportVectorNameFormat | undefined;
+  includeVectorLength?: boolean | undefined;
+}
+
+export interface ExportVectorContainerToAsciiFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface FindFilesInDirectoryRequest {
+  directory?: string | undefined;
+  fileNamePattern?: string | undefined;
+  recursive?: boolean | undefined;
+}
+
+export interface FindFilesInDirectoryResult {
+  files?: string[] | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface FindSubDirectoriesInDirectoryRequest {
+  directory?: string | undefined;
+  recursive?: boolean | undefined;
+}
+
+export interface FindSubDirectoriesInDirectoryResult {
+  subDirectories?: string[] | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetBooleanFromDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  booleanName?: string | undefined;
+}
+
+export interface GetBooleanFromDataShareFileResult {
+  booleanValue?: boolean | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetDoubleFromDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  doubleName?: string | undefined;
+}
+
+export interface GetDoubleFromDataShareFileResult {
+  doubleValue?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetIntegerFromDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  integerName?: string | undefined;
+}
+
+export interface GetIntegerFromDataShareFileResult {
+  integerValue?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetQdasCatalogEntriesRequest {
+  kFieldTarget?: string | undefined;
+}
+
+export interface GetQdasCatalogEntriesResult {
+  catalogEntries?: string[] | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetStringFromDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  stringName?: string | undefined;
+}
+
+export interface GetStringFromDataShareFileResult {
+  stringValue?: string | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetTransformFromDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  transformName?: string | undefined;
+}
+
+export interface GetTransformFromDataShareFileResult {
+  transformValue?: Transform | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetVectorFromDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  vectorName?: string | undefined;
+}
+
+export interface GetVectorFromDataShareFileResult {
+  vectorValue?: Vector | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+/** No MP inputs. */
 export interface GetWorkingDirectoryRequest {
 }
 
 export interface GetWorkingDirectoryResult {
-  /** The MP return argument named "Directory". */
-  directory?:
-    | string
-    | undefined;
-  /** Explicit MP and result-only argument retrieval outcome. */
+  directory?: string | undefined;
   execution?: MpExecutionDetails | undefined;
 }
+
+export interface ImportAsciiPredefinedFormatsRequest {
+  asciiFilePath?: FileReference | undefined;
+  fileFormat?: AsciiFileFormat | undefined;
+  units?: DistanceUnits | undefined;
+  angularUnits?: AngularUnits | undefined;
+  groupName?: CollectionObjectName | undefined;
+  importAsCloud?: boolean | undefined;
+  ensureNewPointGroup?: boolean | undefined;
+  ensureUniqueNames?: boolean | undefined;
+}
+
+export interface ImportAsciiPredefinedFormatsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportAsciiPredefinedFrameSetFormatsRequest {
+  asciiFilePath?: FileReference | undefined;
+  fileFormat?: AsciiFileFormat | undefined;
+  units?: DistanceUnits | undefined;
+  angularUnits?: AngularUnits | undefined;
+  frameSetContainerName?: CollectionObjectName | undefined;
+  ensureUniqueName?: boolean | undefined;
+}
+
+export interface ImportAsciiPredefinedFrameSetFormatsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportE57FileRequest {
+  e57FilePath?: FileReference | undefined;
+  saveConvertedFile?: boolean | undefined;
+  useSquareRootOfIntensity?: boolean | undefined;
+  automaticallyCloseConverter?: boolean | undefined;
+  prioritizeColorOverIntensity?: boolean | undefined;
+  importScanBlocksAsSeparateClouds?: boolean | undefined;
+  units?: DistanceUnits | undefined;
+}
+
+export interface ImportE57FileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportFileAsEmbeddedFileRequest {
+  externalFileName?: FileReference | undefined;
+  replaceExisting?: boolean | undefined;
+}
+
+export interface ImportFileAsEmbeddedFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportFileAsPictureRequest {
+  externalFileName?: FileReference | undefined;
+  replaceExisting?: boolean | undefined;
+}
+
+export interface ImportFileAsPictureResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportHiddenPointBarXmlFileRequest {
+  xmlFilePath?: FileReference | undefined;
+  replaceExistingEntries?: boolean | undefined;
+}
+
+export interface ImportHiddenPointBarXmlFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportIgesFileRequest {
+  igesFilePath?: FileReference | undefined;
+}
+
+export interface ImportIgesFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportLeicaGsiFileRequest {
+  instrumentId?: CollectionInstrumentId | undefined;
+  groupName?: CollectionObjectName | undefined;
+  filePath?: FileReference | undefined;
+}
+
+export interface ImportLeicaGsiFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportLeicaSdbFileRequest {
+  instrumentId?: CollectionInstrumentId | undefined;
+  scanCloudName?: CollectionObjectName | undefined;
+  filePath?: FileReference | undefined;
+}
+
+export interface ImportLeicaSdbFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportMpFileAsEmbeddedMpRequest {
+  externalMpFileName?: FileReference | undefined;
+  replaceExisting?: boolean | undefined;
+}
+
+export interface ImportMpFileAsEmbeddedMpResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportNominalsFromXmlFileRequest {
+  filePath?: FileReference | undefined;
+}
+
+export interface ImportNominalsFromXmlFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportPolyworksFileRequest {
+  cloudName?: CollectionObjectName | undefined;
+  filePath?: FileReference | undefined;
+}
+
+export interface ImportPolyworksFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportQdasCatalogFileRequest {
+  qdasDfdFilePath?: FileReference | undefined;
+}
+
+export interface ImportQdasCatalogFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportSaFileRequest {
+  saFileName?: FileReference | undefined;
+  allowOperatorSelections?: boolean | undefined;
+  selectedCollectionsOptional?: string[] | undefined;
+}
+
+export interface ImportSaFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportSaWindowsPlacementRequest {
+  filePath?: FileReference | undefined;
+}
+
+export interface ImportSaWindowsPlacementResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportSatFileRequest {
+  satFilePath?: FileReference | undefined;
+}
+
+export interface ImportSatFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportStepFileRequest {
+  stepFilePath?: FileReference | undefined;
+  displayEntityFilters?: boolean | undefined;
+  displayResiduals?: boolean | undefined;
+}
+
+export interface ImportStepFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportStlFileRequest {
+  stlFilePath?: FileReference | undefined;
+  units?: DistanceUnits | undefined;
+  importMesh?: boolean | undefined;
+  importPointCloud?: boolean | undefined;
+}
+
+export interface ImportStlFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportVdaFsFileRequest {
+  vdaFsFilePath?: FileReference | undefined;
+}
+
+export interface ImportVdaFsFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportVstarsXyzFileRequest {
+  filePath?: FileReference | undefined;
+}
+
+export interface ImportVstarsXyzFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ImportVstarsCamerasRequest {
+  filePath?: FileReference | undefined;
+}
+
+export interface ImportVstarsCamerasResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface LoadHtmlFormRequest {
+  inputHtmlFormPath?: FileReference | undefined;
+  windowWidth?: number | undefined;
+  windowHeight?: number | undefined;
+  inputDataShareFilePath?: FileReference | undefined;
+  outputDataShareFilePath?: FileReference | undefined;
+  saveInBinaryFormat?: boolean | undefined;
+  saveButtonText?: string | undefined;
+  cancelButtonText?: string | undefined;
+  hideSaveAndCancelButtons?: boolean | undefined;
+}
+
+export interface LoadHtmlFormResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface LoadHtmlFormInEdgeBrowserRequest {
+  inputHtmlFormPath?: FileReference | undefined;
+  windowWidth?: number | undefined;
+  windowHeight?: number | undefined;
+  inputDataShareFilePath?: FileReference | undefined;
+  outputDataShareFilePath?: FileReference | undefined;
+  saveInBinaryFormat?: boolean | undefined;
+}
+
+export interface LoadHtmlFormInEdgeBrowserResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeEmbeddedFileNameListRequest {
+  collectionWildcardCriteria?: string | undefined;
+  fileNamePattern?: string | undefined;
+}
+
+export interface MakeEmbeddedFileNameListResult {
+  embeddedFiles?: string[] | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MergeMeasurementsIntoXmlFileRequest {
+  filePath?: FileReference | undefined;
+  groupName?: CollectionObjectName | undefined;
+}
+
+export interface MergeMeasurementsIntoXmlFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+/** No MP inputs. */
+export interface NewSaFileRequest {
+}
+
+export interface NewSaFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface OpenSaFileRequest {
+  saFileName?: FileReference | undefined;
+}
+
+export interface OpenSaFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface OpenTemplateFileRequest {
+  templateFileName?: FileReference | undefined;
+}
+
+export interface OpenTemplateFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface PopPolyBayAnalysisWindowRequest {
+  materialsFilePath?: string | undefined;
+  bayFilePath?: string | undefined;
+}
+
+export interface PopPolyBayAnalysisWindowResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface PrepareQdasDataListRequest {
+  k1001PartNumber?: string | undefined;
+  k1002PartDescription?: string | undefined;
+  k1071SupplierNumber?: string | undefined;
+  k1072SupplierDescription?: string | undefined;
+  k1203ReasonForTest?: string | undefined;
+  k1303Plant?: string | undefined;
+  k1900PartRemark?: string | undefined;
+  k0006BatchNumber?: string | undefined;
+  k0014PartId?: string | undefined;
+  k0053OrderNumber?: string | undefined;
+  k0004DateTimeStamp?: string | undefined;
+  k0008OperatorIdentifier?: number | undefined;
+  k0010MachineIdentifier?: number | undefined;
+  k0012GageIdentifier?: number | undefined;
+  relationshipList?: CollectionItemName[] | undefined;
+  featureCheckList?: CollectionItemName[] | undefined;
+  vectorGroupList?: CollectionObjectName[] | undefined;
+}
+
+export interface PrepareQdasDataListResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface RenameGeneralFileRequest {
+  sourceFileName?: FileReference | undefined;
+  destinationFileName?: FileReference | undefined;
+  overwrite?: boolean | undefined;
+}
+
+export interface RenameGeneralFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+/** No MP inputs. */
+export interface SaveRequest {
+}
+
+export interface SaveResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SaveAsReadOnlyTemplateRequest {
+  templateFileName?: FileReference | undefined;
+}
+
+export interface SaveAsReadOnlyTemplateResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SaveAsRequest {
+  fileName?: FileReference | undefined;
+  addSerialNumber?: boolean | undefined;
+  optionalNumber?: number | undefined;
+}
+
+export interface SaveAsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetBooleanInDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  booleanName?: string | undefined;
+  booleanValue?: boolean | undefined;
+}
+
+export interface SetBooleanInDataShareFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetDoubleInDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  doubleName?: string | undefined;
+  doubleValue?: number | undefined;
+}
+
+export interface SetDoubleInDataShareFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetIntegerInDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  integerName?: string | undefined;
+  integerValue?: number | undefined;
+}
+
+export interface SetIntegerInDataShareFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetStringInDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  stringName?: string | undefined;
+  stringValue?: string | undefined;
+}
+
+export interface SetStringInDataShareFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetTransformInDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  transformName?: string | undefined;
+  transformValue?: Transform | undefined;
+}
+
+export interface SetTransformInDataShareFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetVectorInDataShareFileRequest {
+  dataShareFilePath?: FileReference | undefined;
+  vectorName?: string | undefined;
+  vectorValue?: Vector | undefined;
+}
+
+export interface SetVectorInDataShareFileResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+/** No MP inputs. */
+export interface TerminateAllRunningMPsRequest {
+}
+
+export interface TerminateAllRunningMPsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface UseNrkxmlLibraryRequest {
+  useLibrary?: boolean | undefined;
+}
+
+export interface UseNrkxmlLibraryResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface VerifyGeneralFileExistsRequest {
+  fileName?: FileReference | undefined;
+}
+
+export interface VerifyGeneralFileExistsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface VerifyMpFileExistsRequest {
+  mpFileName?: FileReference | undefined;
+}
+
+export interface VerifyMpFileExistsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+function createBaseBackupNowRequest(): BackupNowRequest {
+  return {};
+}
+
+export const BackupNowRequest: MessageFns<BackupNowRequest> = {
+  encode(_: BackupNowRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): BackupNowRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBackupNowRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BackupNowRequest>): BackupNowRequest {
+    return BackupNowRequest.fromPartial(base ?? {});
+  },
+  fromPartial(_: DeepPartial<BackupNowRequest>): BackupNowRequest {
+    const message = createBaseBackupNowRequest();
+    return message;
+  },
+};
+
+function createBaseBackupNowResult(): BackupNowResult {
+  return { execution: undefined };
+}
+
+export const BackupNowResult: MessageFns<BackupNowResult> = {
+  encode(message: BackupNowResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): BackupNowResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBackupNowResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BackupNowResult>): BackupNowResult {
+    return BackupNowResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<BackupNowResult>): BackupNowResult {
+    const message = createBaseBackupNowResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseCopyGeneralFileRequest(): CopyGeneralFileRequest {
+  return { sourceFileName: undefined, destinationFileName: undefined, overwrite: undefined };
+}
+
+export const CopyGeneralFileRequest: MessageFns<CopyGeneralFileRequest> = {
+  encode(message: CopyGeneralFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.sourceFileName !== undefined) {
+      FileReference.encode(message.sourceFileName, writer.uint32(10).fork()).join();
+    }
+    if (message.destinationFileName !== undefined) {
+      FileReference.encode(message.destinationFileName, writer.uint32(18).fork()).join();
+    }
+    if (message.overwrite !== undefined) {
+      writer.uint32(24).bool(message.overwrite);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CopyGeneralFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCopyGeneralFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.sourceFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.destinationFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.overwrite = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CopyGeneralFileRequest>): CopyGeneralFileRequest {
+    return CopyGeneralFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CopyGeneralFileRequest>): CopyGeneralFileRequest {
+    const message = createBaseCopyGeneralFileRequest();
+    message.sourceFileName = (object.sourceFileName !== undefined && object.sourceFileName !== null)
+      ? FileReference.fromPartial(object.sourceFileName)
+      : undefined;
+    message.destinationFileName = (object.destinationFileName !== undefined && object.destinationFileName !== null)
+      ? FileReference.fromPartial(object.destinationFileName)
+      : undefined;
+    message.overwrite = object.overwrite ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCopyGeneralFileResult(): CopyGeneralFileResult {
+  return { execution: undefined };
+}
+
+export const CopyGeneralFileResult: MessageFns<CopyGeneralFileResult> = {
+  encode(message: CopyGeneralFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CopyGeneralFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCopyGeneralFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CopyGeneralFileResult>): CopyGeneralFileResult {
+    return CopyGeneralFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CopyGeneralFileResult>): CopyGeneralFileResult {
+    const message = createBaseCopyGeneralFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseDeleteGeneralFileRequest(): DeleteGeneralFileRequest {
+  return { fileName: undefined };
+}
+
+export const DeleteGeneralFileRequest: MessageFns<DeleteGeneralFileRequest> = {
+  encode(message: DeleteGeneralFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fileName !== undefined) {
+      FileReference.encode(message.fileName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DeleteGeneralFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteGeneralFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DeleteGeneralFileRequest>): DeleteGeneralFileRequest {
+    return DeleteGeneralFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<DeleteGeneralFileRequest>): DeleteGeneralFileRequest {
+    const message = createBaseDeleteGeneralFileRequest();
+    message.fileName = (object.fileName !== undefined && object.fileName !== null)
+      ? FileReference.fromPartial(object.fileName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseDeleteGeneralFileResult(): DeleteGeneralFileResult {
+  return { execution: undefined };
+}
+
+export const DeleteGeneralFileResult: MessageFns<DeleteGeneralFileResult> = {
+  encode(message: DeleteGeneralFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DeleteGeneralFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteGeneralFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DeleteGeneralFileResult>): DeleteGeneralFileResult {
+    return DeleteGeneralFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<DeleteGeneralFileResult>): DeleteGeneralFileResult {
+    const message = createBaseDeleteGeneralFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseDirectCadAccessRequest(): DirectCadAccessRequest {
+  return {
+    cadFileName: undefined,
+    importSolids: undefined,
+    importSurfaces: undefined,
+    importPolygonizedSurfaces: undefined,
+    importAnnotations: undefined,
+    importVectors: undefined,
+    importPoints: undefined,
+    pointGroupName: undefined,
+    importAttributesMetadata: undefined,
+    importCooordinateFrames: undefined,
+    importPlanes: undefined,
+    import3dCurvesLines: undefined,
+    import3dCurvesCircles: undefined,
+    import3dCurvesGeneralCurves: undefined,
+    importConstructionGeometry: undefined,
+    importHiddenEntities: undefined,
+    importAllSurfacesAsMeshGraphicalEntities: undefined,
+    doNotImportFillets: undefined,
+    doNotImportDittos: undefined,
+    dittoThreshold: undefined,
+    centerViewOnImportedObjects: undefined,
+    importIntoFoldersMatchingCadFileHierarchy: undefined,
+    removeEmptyFolders: undefined,
+    surfaceNormalsMode1Or2: undefined,
+    promptOnMissingComponents: undefined,
+    selectiveImport: undefined,
+    surfaceCompatibilityMode: undefined,
+    explodeSurfaces: undefined,
+    cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile: undefined,
+    buildCalloutViews: undefined,
+  };
+}
+
+export const DirectCadAccessRequest: MessageFns<DirectCadAccessRequest> = {
+  encode(message: DirectCadAccessRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.cadFileName !== undefined) {
+      FileReference.encode(message.cadFileName, writer.uint32(10).fork()).join();
+    }
+    if (message.importSolids !== undefined) {
+      writer.uint32(16).bool(message.importSolids);
+    }
+    if (message.importSurfaces !== undefined) {
+      writer.uint32(24).bool(message.importSurfaces);
+    }
+    if (message.importPolygonizedSurfaces !== undefined) {
+      writer.uint32(32).bool(message.importPolygonizedSurfaces);
+    }
+    if (message.importAnnotations !== undefined) {
+      writer.uint32(40).bool(message.importAnnotations);
+    }
+    if (message.importVectors !== undefined) {
+      writer.uint32(48).bool(message.importVectors);
+    }
+    if (message.importPoints !== undefined) {
+      writer.uint32(56).bool(message.importPoints);
+    }
+    if (message.pointGroupName !== undefined) {
+      writer.uint32(66).string(message.pointGroupName);
+    }
+    if (message.importAttributesMetadata !== undefined) {
+      writer.uint32(72).bool(message.importAttributesMetadata);
+    }
+    if (message.importCooordinateFrames !== undefined) {
+      writer.uint32(80).bool(message.importCooordinateFrames);
+    }
+    if (message.importPlanes !== undefined) {
+      writer.uint32(88).bool(message.importPlanes);
+    }
+    if (message.import3dCurvesLines !== undefined) {
+      writer.uint32(96).bool(message.import3dCurvesLines);
+    }
+    if (message.import3dCurvesCircles !== undefined) {
+      writer.uint32(104).bool(message.import3dCurvesCircles);
+    }
+    if (message.import3dCurvesGeneralCurves !== undefined) {
+      writer.uint32(112).bool(message.import3dCurvesGeneralCurves);
+    }
+    if (message.importConstructionGeometry !== undefined) {
+      writer.uint32(120).bool(message.importConstructionGeometry);
+    }
+    if (message.importHiddenEntities !== undefined) {
+      writer.uint32(128).bool(message.importHiddenEntities);
+    }
+    if (message.importAllSurfacesAsMeshGraphicalEntities !== undefined) {
+      writer.uint32(136).bool(message.importAllSurfacesAsMeshGraphicalEntities);
+    }
+    if (message.doNotImportFillets !== undefined) {
+      writer.uint32(144).bool(message.doNotImportFillets);
+    }
+    if (message.doNotImportDittos !== undefined) {
+      writer.uint32(152).bool(message.doNotImportDittos);
+    }
+    if (message.dittoThreshold !== undefined) {
+      writer.uint32(160).int32(message.dittoThreshold);
+    }
+    if (message.centerViewOnImportedObjects !== undefined) {
+      writer.uint32(168).bool(message.centerViewOnImportedObjects);
+    }
+    if (message.importIntoFoldersMatchingCadFileHierarchy !== undefined) {
+      writer.uint32(176).bool(message.importIntoFoldersMatchingCadFileHierarchy);
+    }
+    if (message.removeEmptyFolders !== undefined) {
+      writer.uint32(184).bool(message.removeEmptyFolders);
+    }
+    if (message.surfaceNormalsMode1Or2 !== undefined) {
+      writer.uint32(192).int32(message.surfaceNormalsMode1Or2);
+    }
+    if (message.promptOnMissingComponents !== undefined) {
+      writer.uint32(200).bool(message.promptOnMissingComponents);
+    }
+    if (message.selectiveImport !== undefined) {
+      writer.uint32(208).bool(message.selectiveImport);
+    }
+    if (message.surfaceCompatibilityMode !== undefined) {
+      writer.uint32(216).bool(message.surfaceCompatibilityMode);
+    }
+    if (message.explodeSurfaces !== undefined) {
+      writer.uint32(224).bool(message.explodeSurfaces);
+    }
+    if (message.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile !== undefined) {
+      writer.uint32(234).string(message.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile);
+    }
+    if (message.buildCalloutViews !== undefined) {
+      writer.uint32(240).bool(message.buildCalloutViews);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DirectCadAccessRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDirectCadAccessRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.cadFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.importSolids = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.importSurfaces = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.importPolygonizedSurfaces = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.importAnnotations = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.importVectors = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.importPoints = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.pointGroupName = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.importAttributesMetadata = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.importCooordinateFrames = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.importPlanes = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.import3dCurvesLines = reader.bool();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.import3dCurvesCircles = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.import3dCurvesGeneralCurves = reader.bool();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.importConstructionGeometry = reader.bool();
+          continue;
+        }
+        case 16: {
+          if (tag !== 128) {
+            break;
+          }
+
+          message.importHiddenEntities = reader.bool();
+          continue;
+        }
+        case 17: {
+          if (tag !== 136) {
+            break;
+          }
+
+          message.importAllSurfacesAsMeshGraphicalEntities = reader.bool();
+          continue;
+        }
+        case 18: {
+          if (tag !== 144) {
+            break;
+          }
+
+          message.doNotImportFillets = reader.bool();
+          continue;
+        }
+        case 19: {
+          if (tag !== 152) {
+            break;
+          }
+
+          message.doNotImportDittos = reader.bool();
+          continue;
+        }
+        case 20: {
+          if (tag !== 160) {
+            break;
+          }
+
+          message.dittoThreshold = reader.int32();
+          continue;
+        }
+        case 21: {
+          if (tag !== 168) {
+            break;
+          }
+
+          message.centerViewOnImportedObjects = reader.bool();
+          continue;
+        }
+        case 22: {
+          if (tag !== 176) {
+            break;
+          }
+
+          message.importIntoFoldersMatchingCadFileHierarchy = reader.bool();
+          continue;
+        }
+        case 23: {
+          if (tag !== 184) {
+            break;
+          }
+
+          message.removeEmptyFolders = reader.bool();
+          continue;
+        }
+        case 24: {
+          if (tag !== 192) {
+            break;
+          }
+
+          message.surfaceNormalsMode1Or2 = reader.int32();
+          continue;
+        }
+        case 25: {
+          if (tag !== 200) {
+            break;
+          }
+
+          message.promptOnMissingComponents = reader.bool();
+          continue;
+        }
+        case 26: {
+          if (tag !== 208) {
+            break;
+          }
+
+          message.selectiveImport = reader.bool();
+          continue;
+        }
+        case 27: {
+          if (tag !== 216) {
+            break;
+          }
+
+          message.surfaceCompatibilityMode = reader.bool();
+          continue;
+        }
+        case 28: {
+          if (tag !== 224) {
+            break;
+          }
+
+          message.explodeSurfaces = reader.bool();
+          continue;
+        }
+        case 29: {
+          if (tag !== 234) {
+            break;
+          }
+
+          message.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile = reader.string();
+          continue;
+        }
+        case 30: {
+          if (tag !== 240) {
+            break;
+          }
+
+          message.buildCalloutViews = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DirectCadAccessRequest>): DirectCadAccessRequest {
+    return DirectCadAccessRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<DirectCadAccessRequest>): DirectCadAccessRequest {
+    const message = createBaseDirectCadAccessRequest();
+    message.cadFileName = (object.cadFileName !== undefined && object.cadFileName !== null)
+      ? FileReference.fromPartial(object.cadFileName)
+      : undefined;
+    message.importSolids = object.importSolids ?? undefined;
+    message.importSurfaces = object.importSurfaces ?? undefined;
+    message.importPolygonizedSurfaces = object.importPolygonizedSurfaces ?? undefined;
+    message.importAnnotations = object.importAnnotations ?? undefined;
+    message.importVectors = object.importVectors ?? undefined;
+    message.importPoints = object.importPoints ?? undefined;
+    message.pointGroupName = object.pointGroupName ?? undefined;
+    message.importAttributesMetadata = object.importAttributesMetadata ?? undefined;
+    message.importCooordinateFrames = object.importCooordinateFrames ?? undefined;
+    message.importPlanes = object.importPlanes ?? undefined;
+    message.import3dCurvesLines = object.import3dCurvesLines ?? undefined;
+    message.import3dCurvesCircles = object.import3dCurvesCircles ?? undefined;
+    message.import3dCurvesGeneralCurves = object.import3dCurvesGeneralCurves ?? undefined;
+    message.importConstructionGeometry = object.importConstructionGeometry ?? undefined;
+    message.importHiddenEntities = object.importHiddenEntities ?? undefined;
+    message.importAllSurfacesAsMeshGraphicalEntities = object.importAllSurfacesAsMeshGraphicalEntities ?? undefined;
+    message.doNotImportFillets = object.doNotImportFillets ?? undefined;
+    message.doNotImportDittos = object.doNotImportDittos ?? undefined;
+    message.dittoThreshold = object.dittoThreshold ?? undefined;
+    message.centerViewOnImportedObjects = object.centerViewOnImportedObjects ?? undefined;
+    message.importIntoFoldersMatchingCadFileHierarchy = object.importIntoFoldersMatchingCadFileHierarchy ?? undefined;
+    message.removeEmptyFolders = object.removeEmptyFolders ?? undefined;
+    message.surfaceNormalsMode1Or2 = object.surfaceNormalsMode1Or2 ?? undefined;
+    message.promptOnMissingComponents = object.promptOnMissingComponents ?? undefined;
+    message.selectiveImport = object.selectiveImport ?? undefined;
+    message.surfaceCompatibilityMode = object.surfaceCompatibilityMode ?? undefined;
+    message.explodeSurfaces = object.explodeSurfaces ?? undefined;
+    message.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile =
+      object.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile ?? undefined;
+    message.buildCalloutViews = object.buildCalloutViews ?? undefined;
+    return message;
+  },
+};
+
+function createBaseDirectCadAccessResult(): DirectCadAccessResult {
+  return {
+    importWarnings: undefined,
+    importWarningMessages: undefined,
+    extentsMin: undefined,
+    extentsMax: undefined,
+    execution: undefined,
+  };
+}
+
+export const DirectCadAccessResult: MessageFns<DirectCadAccessResult> = {
+  encode(message: DirectCadAccessResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.importWarnings !== undefined) {
+      writer.uint32(8).bool(message.importWarnings);
+    }
+    if (message.importWarningMessages !== undefined) {
+      writer.uint32(18).string(message.importWarningMessages);
+    }
+    if (message.extentsMin !== undefined) {
+      Vector.encode(message.extentsMin, writer.uint32(26).fork()).join();
+    }
+    if (message.extentsMax !== undefined) {
+      Vector.encode(message.extentsMax, writer.uint32(34).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DirectCadAccessResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDirectCadAccessResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.importWarnings = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.importWarningMessages = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.extentsMin = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.extentsMax = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DirectCadAccessResult>): DirectCadAccessResult {
+    return DirectCadAccessResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<DirectCadAccessResult>): DirectCadAccessResult {
+    const message = createBaseDirectCadAccessResult();
+    message.importWarnings = object.importWarnings ?? undefined;
+    message.importWarningMessages = object.importWarningMessages ?? undefined;
+    message.extentsMin = (object.extentsMin !== undefined && object.extentsMin !== null)
+      ? Vector.fromPartial(object.extentsMin)
+      : undefined;
+    message.extentsMax = (object.extentsMax !== undefined && object.extentsMax !== null)
+      ? Vector.fromPartial(object.extentsMax)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiFrameSetRequest(): ExportAsciiFrameSetRequest {
+  return {
+    asciiFilePath: undefined,
+    frameSetContainer: undefined,
+    dataDelimiter: undefined,
+    fileFormat: undefined,
+    includeExportFormatInfo: undefined,
+    decimalPrecision: undefined,
+    append: undefined,
+  };
+}
+
+export const ExportAsciiFrameSetRequest: MessageFns<ExportAsciiFrameSetRequest> = {
+  encode(message: ExportAsciiFrameSetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.asciiFilePath !== undefined) {
+      FileReference.encode(message.asciiFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.frameSetContainer !== undefined) {
+      CollectionObjectName.encode(message.frameSetContainer, writer.uint32(18).fork()).join();
+    }
+    if (message.dataDelimiter !== undefined) {
+      writer.uint32(24).int32(message.dataDelimiter);
+    }
+    if (message.fileFormat !== undefined) {
+      writer.uint32(32).int32(message.fileFormat);
+    }
+    if (message.includeExportFormatInfo !== undefined) {
+      writer.uint32(40).bool(message.includeExportFormatInfo);
+    }
+    if (message.decimalPrecision !== undefined) {
+      writer.uint32(48).int32(message.decimalPrecision);
+    }
+    if (message.append !== undefined) {
+      writer.uint32(56).bool(message.append);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiFrameSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiFrameSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.asciiFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.frameSetContainer = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.dataDelimiter = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.fileFormat = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.includeExportFormatInfo = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.decimalPrecision = reader.int32();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.append = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiFrameSetRequest>): ExportAsciiFrameSetRequest {
+    return ExportAsciiFrameSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiFrameSetRequest>): ExportAsciiFrameSetRequest {
+    const message = createBaseExportAsciiFrameSetRequest();
+    message.asciiFilePath = (object.asciiFilePath !== undefined && object.asciiFilePath !== null)
+      ? FileReference.fromPartial(object.asciiFilePath)
+      : undefined;
+    message.frameSetContainer = (object.frameSetContainer !== undefined && object.frameSetContainer !== null)
+      ? CollectionObjectName.fromPartial(object.frameSetContainer)
+      : undefined;
+    message.dataDelimiter = object.dataDelimiter ?? undefined;
+    message.fileFormat = object.fileFormat ?? undefined;
+    message.includeExportFormatInfo = object.includeExportFormatInfo ?? undefined;
+    message.decimalPrecision = object.decimalPrecision ?? undefined;
+    message.append = object.append ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiFrameSetResult(): ExportAsciiFrameSetResult {
+  return { execution: undefined };
+}
+
+export const ExportAsciiFrameSetResult: MessageFns<ExportAsciiFrameSetResult> = {
+  encode(message: ExportAsciiFrameSetResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiFrameSetResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiFrameSetResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiFrameSetResult>): ExportAsciiFrameSetResult {
+    return ExportAsciiFrameSetResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiFrameSetResult>): ExportAsciiFrameSetResult {
+    const message = createBaseExportAsciiFrameSetResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiFramesRequest(): ExportAsciiFramesRequest {
+  return { asciiFilePath: undefined, objectList: [], exportFrameMode: undefined, overwriteExistingFile: undefined };
+}
+
+export const ExportAsciiFramesRequest: MessageFns<ExportAsciiFramesRequest> = {
+  encode(message: ExportAsciiFramesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.asciiFilePath !== undefined) {
+      FileReference.encode(message.asciiFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.objectList !== undefined && message.objectList.length !== 0) {
+      for (const v of message.objectList) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.exportFrameMode !== undefined) {
+      writer.uint32(26).string(message.exportFrameMode);
+    }
+    if (message.overwriteExistingFile !== undefined) {
+      writer.uint32(32).bool(message.overwriteExistingFile);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiFramesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiFramesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.asciiFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectList!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.exportFrameMode = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.overwriteExistingFile = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiFramesRequest>): ExportAsciiFramesRequest {
+    return ExportAsciiFramesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiFramesRequest>): ExportAsciiFramesRequest {
+    const message = createBaseExportAsciiFramesRequest();
+    message.asciiFilePath = (object.asciiFilePath !== undefined && object.asciiFilePath !== null)
+      ? FileReference.fromPartial(object.asciiFilePath)
+      : undefined;
+    message.objectList = object.objectList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.exportFrameMode = object.exportFrameMode ?? undefined;
+    message.overwriteExistingFile = object.overwriteExistingFile ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiFramesResult(): ExportAsciiFramesResult {
+  return { execution: undefined };
+}
+
+export const ExportAsciiFramesResult: MessageFns<ExportAsciiFramesResult> = {
+  encode(message: ExportAsciiFramesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiFramesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiFramesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiFramesResult>): ExportAsciiFramesResult {
+    return ExportAsciiFramesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiFramesResult>): ExportAsciiFramesResult {
+    const message = createBaseExportAsciiFramesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiPointCloudsRequest(): ExportAsciiPointCloudsRequest {
+  return {
+    asciiFilePath: undefined,
+    pointCloudList: [],
+    dataDelimiter: undefined,
+    overwriteExistingFile: undefined,
+    showProgressDialog: undefined,
+    includeCloudPointLabeling: undefined,
+    includeScanDirectionVector: undefined,
+  };
+}
+
+export const ExportAsciiPointCloudsRequest: MessageFns<ExportAsciiPointCloudsRequest> = {
+  encode(message: ExportAsciiPointCloudsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.asciiFilePath !== undefined) {
+      FileReference.encode(message.asciiFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.pointCloudList !== undefined && message.pointCloudList.length !== 0) {
+      for (const v of message.pointCloudList) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.dataDelimiter !== undefined) {
+      writer.uint32(24).int32(message.dataDelimiter);
+    }
+    if (message.overwriteExistingFile !== undefined) {
+      writer.uint32(32).bool(message.overwriteExistingFile);
+    }
+    if (message.showProgressDialog !== undefined) {
+      writer.uint32(40).bool(message.showProgressDialog);
+    }
+    if (message.includeCloudPointLabeling !== undefined) {
+      writer.uint32(48).bool(message.includeCloudPointLabeling);
+    }
+    if (message.includeScanDirectionVector !== undefined) {
+      writer.uint32(56).bool(message.includeScanDirectionVector);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiPointCloudsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiPointCloudsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.asciiFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointCloudList!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.dataDelimiter = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.overwriteExistingFile = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.showProgressDialog = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.includeCloudPointLabeling = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.includeScanDirectionVector = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiPointCloudsRequest>): ExportAsciiPointCloudsRequest {
+    return ExportAsciiPointCloudsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiPointCloudsRequest>): ExportAsciiPointCloudsRequest {
+    const message = createBaseExportAsciiPointCloudsRequest();
+    message.asciiFilePath = (object.asciiFilePath !== undefined && object.asciiFilePath !== null)
+      ? FileReference.fromPartial(object.asciiFilePath)
+      : undefined;
+    message.pointCloudList = object.pointCloudList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.dataDelimiter = object.dataDelimiter ?? undefined;
+    message.overwriteExistingFile = object.overwriteExistingFile ?? undefined;
+    message.showProgressDialog = object.showProgressDialog ?? undefined;
+    message.includeCloudPointLabeling = object.includeCloudPointLabeling ?? undefined;
+    message.includeScanDirectionVector = object.includeScanDirectionVector ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiPointCloudsResult(): ExportAsciiPointCloudsResult {
+  return { execution: undefined };
+}
+
+export const ExportAsciiPointCloudsResult: MessageFns<ExportAsciiPointCloudsResult> = {
+  encode(message: ExportAsciiPointCloudsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiPointCloudsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiPointCloudsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiPointCloudsResult>): ExportAsciiPointCloudsResult {
+    return ExportAsciiPointCloudsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiPointCloudsResult>): ExportAsciiPointCloudsResult {
+    const message = createBaseExportAsciiPointCloudsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiPointSetRequest(): ExportAsciiPointSetRequest {
+  return {
+    asciiFilePath: undefined,
+    pointSetContainer: undefined,
+    dataDelimiter: undefined,
+    targetNameFormat: undefined,
+    desiredCoordinateSystem: undefined,
+    includeTargetOffsets: undefined,
+    includeTimestamps: undefined,
+    includeSaVersionAndFrameComments: undefined,
+    includeAxisComments: undefined,
+    includeExportFormatInfo: undefined,
+    maximumPrecisionScientificNotation: undefined,
+    decimalPrecision: undefined,
+    append: undefined,
+  };
+}
+
+export const ExportAsciiPointSetRequest: MessageFns<ExportAsciiPointSetRequest> = {
+  encode(message: ExportAsciiPointSetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.asciiFilePath !== undefined) {
+      FileReference.encode(message.asciiFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.pointSetContainer !== undefined) {
+      CollectionObjectName.encode(message.pointSetContainer, writer.uint32(18).fork()).join();
+    }
+    if (message.dataDelimiter !== undefined) {
+      writer.uint32(24).int32(message.dataDelimiter);
+    }
+    if (message.targetNameFormat !== undefined) {
+      writer.uint32(32).int32(message.targetNameFormat);
+    }
+    if (message.desiredCoordinateSystem !== undefined) {
+      writer.uint32(40).int32(message.desiredCoordinateSystem);
+    }
+    if (message.includeTargetOffsets !== undefined) {
+      writer.uint32(48).bool(message.includeTargetOffsets);
+    }
+    if (message.includeTimestamps !== undefined) {
+      writer.uint32(56).bool(message.includeTimestamps);
+    }
+    if (message.includeSaVersionAndFrameComments !== undefined) {
+      writer.uint32(64).bool(message.includeSaVersionAndFrameComments);
+    }
+    if (message.includeAxisComments !== undefined) {
+      writer.uint32(72).bool(message.includeAxisComments);
+    }
+    if (message.includeExportFormatInfo !== undefined) {
+      writer.uint32(80).bool(message.includeExportFormatInfo);
+    }
+    if (message.maximumPrecisionScientificNotation !== undefined) {
+      writer.uint32(88).bool(message.maximumPrecisionScientificNotation);
+    }
+    if (message.decimalPrecision !== undefined) {
+      writer.uint32(96).int32(message.decimalPrecision);
+    }
+    if (message.append !== undefined) {
+      writer.uint32(104).bool(message.append);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiPointSetRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiPointSetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.asciiFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pointSetContainer = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.dataDelimiter = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.targetNameFormat = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.desiredCoordinateSystem = reader.int32() as any;
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.includeTargetOffsets = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.includeTimestamps = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.includeSaVersionAndFrameComments = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.includeAxisComments = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.includeExportFormatInfo = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.maximumPrecisionScientificNotation = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.decimalPrecision = reader.int32();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.append = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiPointSetRequest>): ExportAsciiPointSetRequest {
+    return ExportAsciiPointSetRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiPointSetRequest>): ExportAsciiPointSetRequest {
+    const message = createBaseExportAsciiPointSetRequest();
+    message.asciiFilePath = (object.asciiFilePath !== undefined && object.asciiFilePath !== null)
+      ? FileReference.fromPartial(object.asciiFilePath)
+      : undefined;
+    message.pointSetContainer = (object.pointSetContainer !== undefined && object.pointSetContainer !== null)
+      ? CollectionObjectName.fromPartial(object.pointSetContainer)
+      : undefined;
+    message.dataDelimiter = object.dataDelimiter ?? undefined;
+    message.targetNameFormat = object.targetNameFormat ?? undefined;
+    message.desiredCoordinateSystem = object.desiredCoordinateSystem ?? undefined;
+    message.includeTargetOffsets = object.includeTargetOffsets ?? undefined;
+    message.includeTimestamps = object.includeTimestamps ?? undefined;
+    message.includeSaVersionAndFrameComments = object.includeSaVersionAndFrameComments ?? undefined;
+    message.includeAxisComments = object.includeAxisComments ?? undefined;
+    message.includeExportFormatInfo = object.includeExportFormatInfo ?? undefined;
+    message.maximumPrecisionScientificNotation = object.maximumPrecisionScientificNotation ?? undefined;
+    message.decimalPrecision = object.decimalPrecision ?? undefined;
+    message.append = object.append ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiPointSetResult(): ExportAsciiPointSetResult {
+  return { execution: undefined };
+}
+
+export const ExportAsciiPointSetResult: MessageFns<ExportAsciiPointSetResult> = {
+  encode(message: ExportAsciiPointSetResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiPointSetResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiPointSetResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiPointSetResult>): ExportAsciiPointSetResult {
+    return ExportAsciiPointSetResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiPointSetResult>): ExportAsciiPointSetResult {
+    const message = createBaseExportAsciiPointSetResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiPointsRequest(): ExportAsciiPointsRequest {
+  return {
+    asciiFilePath: undefined,
+    groupNamesToExport: [],
+    dataDelimiter: undefined,
+    targetNameFormat: undefined,
+    desiredCoordinateSystem: undefined,
+    includeTargetOffsets: undefined,
+    includeTargetComments: undefined,
+    includeTimestamps: undefined,
+    includeTolerances: undefined,
+    includeCoordinateUncertainties: undefined,
+    includeSaVersionAndFrameComments: undefined,
+    includeAxisComments: undefined,
+    includeExportFormatInfo: undefined,
+    includeWeights: undefined,
+    includeMeasurementDetails: undefined,
+    maximumPrecisionScientificNotation: undefined,
+    decimalPrecision: undefined,
+    append: undefined,
+  };
+}
+
+export const ExportAsciiPointsRequest: MessageFns<ExportAsciiPointsRequest> = {
+  encode(message: ExportAsciiPointsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.asciiFilePath !== undefined) {
+      FileReference.encode(message.asciiFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.groupNamesToExport !== undefined && message.groupNamesToExport.length !== 0) {
+      for (const v of message.groupNamesToExport) {
+        CollectionGroupName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.dataDelimiter !== undefined) {
+      writer.uint32(24).int32(message.dataDelimiter);
+    }
+    if (message.targetNameFormat !== undefined) {
+      writer.uint32(32).int32(message.targetNameFormat);
+    }
+    if (message.desiredCoordinateSystem !== undefined) {
+      writer.uint32(40).int32(message.desiredCoordinateSystem);
+    }
+    if (message.includeTargetOffsets !== undefined) {
+      writer.uint32(48).bool(message.includeTargetOffsets);
+    }
+    if (message.includeTargetComments !== undefined) {
+      writer.uint32(56).bool(message.includeTargetComments);
+    }
+    if (message.includeTimestamps !== undefined) {
+      writer.uint32(64).bool(message.includeTimestamps);
+    }
+    if (message.includeTolerances !== undefined) {
+      writer.uint32(72).bool(message.includeTolerances);
+    }
+    if (message.includeCoordinateUncertainties !== undefined) {
+      writer.uint32(80).bool(message.includeCoordinateUncertainties);
+    }
+    if (message.includeSaVersionAndFrameComments !== undefined) {
+      writer.uint32(88).bool(message.includeSaVersionAndFrameComments);
+    }
+    if (message.includeAxisComments !== undefined) {
+      writer.uint32(96).bool(message.includeAxisComments);
+    }
+    if (message.includeExportFormatInfo !== undefined) {
+      writer.uint32(104).bool(message.includeExportFormatInfo);
+    }
+    if (message.includeWeights !== undefined) {
+      writer.uint32(112).bool(message.includeWeights);
+    }
+    if (message.includeMeasurementDetails !== undefined) {
+      writer.uint32(120).bool(message.includeMeasurementDetails);
+    }
+    if (message.maximumPrecisionScientificNotation !== undefined) {
+      writer.uint32(128).bool(message.maximumPrecisionScientificNotation);
+    }
+    if (message.decimalPrecision !== undefined) {
+      writer.uint32(136).int32(message.decimalPrecision);
+    }
+    if (message.append !== undefined) {
+      writer.uint32(144).bool(message.append);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiPointsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiPointsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.asciiFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionGroupName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.groupNamesToExport!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.dataDelimiter = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.targetNameFormat = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.desiredCoordinateSystem = reader.int32() as any;
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.includeTargetOffsets = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.includeTargetComments = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.includeTimestamps = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.includeTolerances = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.includeCoordinateUncertainties = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.includeSaVersionAndFrameComments = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.includeAxisComments = reader.bool();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.includeExportFormatInfo = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.includeWeights = reader.bool();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.includeMeasurementDetails = reader.bool();
+          continue;
+        }
+        case 16: {
+          if (tag !== 128) {
+            break;
+          }
+
+          message.maximumPrecisionScientificNotation = reader.bool();
+          continue;
+        }
+        case 17: {
+          if (tag !== 136) {
+            break;
+          }
+
+          message.decimalPrecision = reader.int32();
+          continue;
+        }
+        case 18: {
+          if (tag !== 144) {
+            break;
+          }
+
+          message.append = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiPointsRequest>): ExportAsciiPointsRequest {
+    return ExportAsciiPointsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiPointsRequest>): ExportAsciiPointsRequest {
+    const message = createBaseExportAsciiPointsRequest();
+    message.asciiFilePath = (object.asciiFilePath !== undefined && object.asciiFilePath !== null)
+      ? FileReference.fromPartial(object.asciiFilePath)
+      : undefined;
+    message.groupNamesToExport = object.groupNamesToExport?.map((e) => CollectionGroupName.fromPartial(e)) || [];
+    message.dataDelimiter = object.dataDelimiter ?? undefined;
+    message.targetNameFormat = object.targetNameFormat ?? undefined;
+    message.desiredCoordinateSystem = object.desiredCoordinateSystem ?? undefined;
+    message.includeTargetOffsets = object.includeTargetOffsets ?? undefined;
+    message.includeTargetComments = object.includeTargetComments ?? undefined;
+    message.includeTimestamps = object.includeTimestamps ?? undefined;
+    message.includeTolerances = object.includeTolerances ?? undefined;
+    message.includeCoordinateUncertainties = object.includeCoordinateUncertainties ?? undefined;
+    message.includeSaVersionAndFrameComments = object.includeSaVersionAndFrameComments ?? undefined;
+    message.includeAxisComments = object.includeAxisComments ?? undefined;
+    message.includeExportFormatInfo = object.includeExportFormatInfo ?? undefined;
+    message.includeWeights = object.includeWeights ?? undefined;
+    message.includeMeasurementDetails = object.includeMeasurementDetails ?? undefined;
+    message.maximumPrecisionScientificNotation = object.maximumPrecisionScientificNotation ?? undefined;
+    message.decimalPrecision = object.decimalPrecision ?? undefined;
+    message.append = object.append ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExportAsciiPointsResult(): ExportAsciiPointsResult {
+  return { execution: undefined };
+}
+
+export const ExportAsciiPointsResult: MessageFns<ExportAsciiPointsResult> = {
+  encode(message: ExportAsciiPointsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportAsciiPointsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportAsciiPointsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportAsciiPointsResult>): ExportAsciiPointsResult {
+    return ExportAsciiPointsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportAsciiPointsResult>): ExportAsciiPointsResult {
+    const message = createBaseExportAsciiPointsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportDxfRequest(): ExportDxfRequest {
+  return { dxfFilePath: undefined, pointNames: [], cloudNames: [], includePointLabels: undefined };
+}
+
+export const ExportDxfRequest: MessageFns<ExportDxfRequest> = {
+  encode(message: ExportDxfRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dxfFilePath !== undefined) {
+      FileReference.encode(message.dxfFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.pointNames !== undefined && message.pointNames.length !== 0) {
+      for (const v of message.pointNames) {
+        PointName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.cloudNames !== undefined && message.cloudNames.length !== 0) {
+      for (const v of message.cloudNames) {
+        CollectionObjectName.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.includePointLabels !== undefined) {
+      writer.uint32(32).bool(message.includePointLabels);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportDxfRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportDxfRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dxfFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointNames!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.cloudNames!.push(el);
+          }
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.includePointLabels = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportDxfRequest>): ExportDxfRequest {
+    return ExportDxfRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportDxfRequest>): ExportDxfRequest {
+    const message = createBaseExportDxfRequest();
+    message.dxfFilePath = (object.dxfFilePath !== undefined && object.dxfFilePath !== null)
+      ? FileReference.fromPartial(object.dxfFilePath)
+      : undefined;
+    message.pointNames = object.pointNames?.map((e) => PointName.fromPartial(e)) || [];
+    message.cloudNames = object.cloudNames?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.includePointLabels = object.includePointLabels ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExportDxfResult(): ExportDxfResult {
+  return { execution: undefined };
+}
+
+export const ExportDxfResult: MessageFns<ExportDxfResult> = {
+  encode(message: ExportDxfResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportDxfResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportDxfResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportDxfResult>): ExportDxfResult {
+    return ExportDxfResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportDxfResult>): ExportDxfResult {
+    const message = createBaseExportDxfResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportEmbeddedFileRequest(): ExportEmbeddedFileRequest {
+  return {
+    embeddedFileCollectionName: undefined,
+    embeddedFileName: undefined,
+    externalFileName: undefined,
+    replaceExisting: undefined,
+  };
+}
+
+export const ExportEmbeddedFileRequest: MessageFns<ExportEmbeddedFileRequest> = {
+  encode(message: ExportEmbeddedFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.embeddedFileCollectionName !== undefined) {
+      CollectionName.encode(message.embeddedFileCollectionName, writer.uint32(10).fork()).join();
+    }
+    if (message.embeddedFileName !== undefined) {
+      writer.uint32(18).string(message.embeddedFileName);
+    }
+    if (message.externalFileName !== undefined) {
+      FileReference.encode(message.externalFileName, writer.uint32(26).fork()).join();
+    }
+    if (message.replaceExisting !== undefined) {
+      writer.uint32(32).bool(message.replaceExisting);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportEmbeddedFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportEmbeddedFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.embeddedFileCollectionName = CollectionName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.embeddedFileName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.externalFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.replaceExisting = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportEmbeddedFileRequest>): ExportEmbeddedFileRequest {
+    return ExportEmbeddedFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportEmbeddedFileRequest>): ExportEmbeddedFileRequest {
+    const message = createBaseExportEmbeddedFileRequest();
+    message.embeddedFileCollectionName =
+      (object.embeddedFileCollectionName !== undefined && object.embeddedFileCollectionName !== null)
+        ? CollectionName.fromPartial(object.embeddedFileCollectionName)
+        : undefined;
+    message.embeddedFileName = object.embeddedFileName ?? undefined;
+    message.externalFileName = (object.externalFileName !== undefined && object.externalFileName !== null)
+      ? FileReference.fromPartial(object.externalFileName)
+      : undefined;
+    message.replaceExisting = object.replaceExisting ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExportEmbeddedFileResult(): ExportEmbeddedFileResult {
+  return { execution: undefined };
+}
+
+export const ExportEmbeddedFileResult: MessageFns<ExportEmbeddedFileResult> = {
+  encode(message: ExportEmbeddedFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportEmbeddedFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportEmbeddedFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportEmbeddedFileResult>): ExportEmbeddedFileResult {
+    return ExportEmbeddedFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportEmbeddedFileResult>): ExportEmbeddedFileResult {
+    const message = createBaseExportEmbeddedFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportHiddenPointBarXmlFileRequest(): ExportHiddenPointBarXmlFileRequest {
+  return { xmlFilePath: undefined };
+}
+
+export const ExportHiddenPointBarXmlFileRequest: MessageFns<ExportHiddenPointBarXmlFileRequest> = {
+  encode(message: ExportHiddenPointBarXmlFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.xmlFilePath !== undefined) {
+      FileReference.encode(message.xmlFilePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportHiddenPointBarXmlFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportHiddenPointBarXmlFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.xmlFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportHiddenPointBarXmlFileRequest>): ExportHiddenPointBarXmlFileRequest {
+    return ExportHiddenPointBarXmlFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportHiddenPointBarXmlFileRequest>): ExportHiddenPointBarXmlFileRequest {
+    const message = createBaseExportHiddenPointBarXmlFileRequest();
+    message.xmlFilePath = (object.xmlFilePath !== undefined && object.xmlFilePath !== null)
+      ? FileReference.fromPartial(object.xmlFilePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportHiddenPointBarXmlFileResult(): ExportHiddenPointBarXmlFileResult {
+  return { execution: undefined };
+}
+
+export const ExportHiddenPointBarXmlFileResult: MessageFns<ExportHiddenPointBarXmlFileResult> = {
+  encode(message: ExportHiddenPointBarXmlFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportHiddenPointBarXmlFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportHiddenPointBarXmlFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportHiddenPointBarXmlFileResult>): ExportHiddenPointBarXmlFileResult {
+    return ExportHiddenPointBarXmlFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportHiddenPointBarXmlFileResult>): ExportHiddenPointBarXmlFileResult {
+    const message = createBaseExportHiddenPointBarXmlFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportIgesFileEntireModelRequest(): ExportIgesFileEntireModelRequest {
+  return { igesFilePath: undefined };
+}
+
+export const ExportIgesFileEntireModelRequest: MessageFns<ExportIgesFileEntireModelRequest> = {
+  encode(message: ExportIgesFileEntireModelRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.igesFilePath !== undefined) {
+      FileReference.encode(message.igesFilePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportIgesFileEntireModelRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportIgesFileEntireModelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.igesFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportIgesFileEntireModelRequest>): ExportIgesFileEntireModelRequest {
+    return ExportIgesFileEntireModelRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportIgesFileEntireModelRequest>): ExportIgesFileEntireModelRequest {
+    const message = createBaseExportIgesFileEntireModelRequest();
+    message.igesFilePath = (object.igesFilePath !== undefined && object.igesFilePath !== null)
+      ? FileReference.fromPartial(object.igesFilePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportIgesFileEntireModelResult(): ExportIgesFileEntireModelResult {
+  return { execution: undefined };
+}
+
+export const ExportIgesFileEntireModelResult: MessageFns<ExportIgesFileEntireModelResult> = {
+  encode(message: ExportIgesFileEntireModelResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportIgesFileEntireModelResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportIgesFileEntireModelResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportIgesFileEntireModelResult>): ExportIgesFileEntireModelResult {
+    return ExportIgesFileEntireModelResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportIgesFileEntireModelResult>): ExportIgesFileEntireModelResult {
+    const message = createBaseExportIgesFileEntireModelResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportIgesFilePartialModelRequest(): ExportIgesFilePartialModelRequest {
+  return { igesFilePath: undefined, objectNameList: [] };
+}
+
+export const ExportIgesFilePartialModelRequest: MessageFns<ExportIgesFilePartialModelRequest> = {
+  encode(message: ExportIgesFilePartialModelRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.igesFilePath !== undefined) {
+      FileReference.encode(message.igesFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.objectNameList !== undefined && message.objectNameList.length !== 0) {
+      for (const v of message.objectNameList) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportIgesFilePartialModelRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportIgesFilePartialModelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.igesFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectNameList!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportIgesFilePartialModelRequest>): ExportIgesFilePartialModelRequest {
+    return ExportIgesFilePartialModelRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportIgesFilePartialModelRequest>): ExportIgesFilePartialModelRequest {
+    const message = createBaseExportIgesFilePartialModelRequest();
+    message.igesFilePath = (object.igesFilePath !== undefined && object.igesFilePath !== null)
+      ? FileReference.fromPartial(object.igesFilePath)
+      : undefined;
+    message.objectNameList = object.objectNameList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseExportIgesFilePartialModelResult(): ExportIgesFilePartialModelResult {
+  return { execution: undefined };
+}
+
+export const ExportIgesFilePartialModelResult: MessageFns<ExportIgesFilePartialModelResult> = {
+  encode(message: ExportIgesFilePartialModelResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportIgesFilePartialModelResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportIgesFilePartialModelResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportIgesFilePartialModelResult>): ExportIgesFilePartialModelResult {
+    return ExportIgesFilePartialModelResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportIgesFilePartialModelResult>): ExportIgesFilePartialModelResult {
+    const message = createBaseExportIgesFilePartialModelResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportPtxPointCloudsRequest(): ExportPtxPointCloudsRequest {
+  return {
+    ptxFilePath: undefined,
+    pointCloudList: [],
+    overwriteExistingFile: undefined,
+    showProgressDialog: undefined,
+  };
+}
+
+export const ExportPtxPointCloudsRequest: MessageFns<ExportPtxPointCloudsRequest> = {
+  encode(message: ExportPtxPointCloudsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.ptxFilePath !== undefined) {
+      FileReference.encode(message.ptxFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.pointCloudList !== undefined && message.pointCloudList.length !== 0) {
+      for (const v of message.pointCloudList) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.overwriteExistingFile !== undefined) {
+      writer.uint32(24).bool(message.overwriteExistingFile);
+    }
+    if (message.showProgressDialog !== undefined) {
+      writer.uint32(32).bool(message.showProgressDialog);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportPtxPointCloudsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportPtxPointCloudsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ptxFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointCloudList!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.overwriteExistingFile = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.showProgressDialog = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportPtxPointCloudsRequest>): ExportPtxPointCloudsRequest {
+    return ExportPtxPointCloudsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportPtxPointCloudsRequest>): ExportPtxPointCloudsRequest {
+    const message = createBaseExportPtxPointCloudsRequest();
+    message.ptxFilePath = (object.ptxFilePath !== undefined && object.ptxFilePath !== null)
+      ? FileReference.fromPartial(object.ptxFilePath)
+      : undefined;
+    message.pointCloudList = object.pointCloudList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.overwriteExistingFile = object.overwriteExistingFile ?? undefined;
+    message.showProgressDialog = object.showProgressDialog ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExportPtxPointCloudsResult(): ExportPtxPointCloudsResult {
+  return { execution: undefined };
+}
+
+export const ExportPtxPointCloudsResult: MessageFns<ExportPtxPointCloudsResult> = {
+  encode(message: ExportPtxPointCloudsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportPtxPointCloudsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportPtxPointCloudsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportPtxPointCloudsResult>): ExportPtxPointCloudsResult {
+    return ExportPtxPointCloudsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportPtxPointCloudsResult>): ExportPtxPointCloudsResult {
+    const message = createBaseExportPtxPointCloudsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportQdasCharacteristicsRequest(): ExportQdasCharacteristicsRequest {
+  return {
+    qdasExportFilePath: undefined,
+    k1001PartNumber: undefined,
+    k1002PartDescription: undefined,
+    k1071SupplierNumber: undefined,
+    k1072SupplierDescription: undefined,
+    k1203ReasonForTest: undefined,
+    k1303Plant: undefined,
+    k1900PartRemark: undefined,
+    k0006BatchNumber: undefined,
+    k0014PartId: undefined,
+    k0053OrderNumber: undefined,
+    k0004DateTimeStamp: undefined,
+    k0008OperatorIdentifier: undefined,
+    k0010MachineIdentifier: undefined,
+    k0012GageIdentifier: undefined,
+    relationshipList: [],
+    featureCheckList: [],
+    vectorGroupList: [],
+  };
+}
+
+export const ExportQdasCharacteristicsRequest: MessageFns<ExportQdasCharacteristicsRequest> = {
+  encode(message: ExportQdasCharacteristicsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.qdasExportFilePath !== undefined) {
+      FileReference.encode(message.qdasExportFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.k1001PartNumber !== undefined) {
+      writer.uint32(18).string(message.k1001PartNumber);
+    }
+    if (message.k1002PartDescription !== undefined) {
+      writer.uint32(26).string(message.k1002PartDescription);
+    }
+    if (message.k1071SupplierNumber !== undefined) {
+      writer.uint32(34).string(message.k1071SupplierNumber);
+    }
+    if (message.k1072SupplierDescription !== undefined) {
+      writer.uint32(42).string(message.k1072SupplierDescription);
+    }
+    if (message.k1203ReasonForTest !== undefined) {
+      writer.uint32(50).string(message.k1203ReasonForTest);
+    }
+    if (message.k1303Plant !== undefined) {
+      writer.uint32(58).string(message.k1303Plant);
+    }
+    if (message.k1900PartRemark !== undefined) {
+      writer.uint32(66).string(message.k1900PartRemark);
+    }
+    if (message.k0006BatchNumber !== undefined) {
+      writer.uint32(74).string(message.k0006BatchNumber);
+    }
+    if (message.k0014PartId !== undefined) {
+      writer.uint32(82).string(message.k0014PartId);
+    }
+    if (message.k0053OrderNumber !== undefined) {
+      writer.uint32(90).string(message.k0053OrderNumber);
+    }
+    if (message.k0004DateTimeStamp !== undefined) {
+      writer.uint32(98).string(message.k0004DateTimeStamp);
+    }
+    if (message.k0008OperatorIdentifier !== undefined) {
+      writer.uint32(104).int32(message.k0008OperatorIdentifier);
+    }
+    if (message.k0010MachineIdentifier !== undefined) {
+      writer.uint32(112).int32(message.k0010MachineIdentifier);
+    }
+    if (message.k0012GageIdentifier !== undefined) {
+      writer.uint32(120).int32(message.k0012GageIdentifier);
+    }
+    if (message.relationshipList !== undefined && message.relationshipList.length !== 0) {
+      for (const v of message.relationshipList) {
+        CollectionItemName.encode(v!, writer.uint32(130).fork()).join();
+      }
+    }
+    if (message.featureCheckList !== undefined && message.featureCheckList.length !== 0) {
+      for (const v of message.featureCheckList) {
+        CollectionItemName.encode(v!, writer.uint32(138).fork()).join();
+      }
+    }
+    if (message.vectorGroupList !== undefined && message.vectorGroupList.length !== 0) {
+      for (const v of message.vectorGroupList) {
+        CollectionObjectName.encode(v!, writer.uint32(146).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportQdasCharacteristicsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportQdasCharacteristicsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.qdasExportFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.k1001PartNumber = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.k1002PartDescription = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.k1071SupplierNumber = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.k1072SupplierDescription = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.k1203ReasonForTest = reader.string();
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.k1303Plant = reader.string();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.k1900PartRemark = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.k0006BatchNumber = reader.string();
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
+          message.k0014PartId = reader.string();
+          continue;
+        }
+        case 11: {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.k0053OrderNumber = reader.string();
+          continue;
+        }
+        case 12: {
+          if (tag !== 98) {
+            break;
+          }
+
+          message.k0004DateTimeStamp = reader.string();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.k0008OperatorIdentifier = reader.int32();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.k0010MachineIdentifier = reader.int32();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.k0012GageIdentifier = reader.int32();
+          continue;
+        }
+        case 16: {
+          if (tag !== 130) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.relationshipList!.push(el);
+          }
+          continue;
+        }
+        case 17: {
+          if (tag !== 138) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.featureCheckList!.push(el);
+          }
+          continue;
+        }
+        case 18: {
+          if (tag !== 146) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.vectorGroupList!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportQdasCharacteristicsRequest>): ExportQdasCharacteristicsRequest {
+    return ExportQdasCharacteristicsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportQdasCharacteristicsRequest>): ExportQdasCharacteristicsRequest {
+    const message = createBaseExportQdasCharacteristicsRequest();
+    message.qdasExportFilePath = (object.qdasExportFilePath !== undefined && object.qdasExportFilePath !== null)
+      ? FileReference.fromPartial(object.qdasExportFilePath)
+      : undefined;
+    message.k1001PartNumber = object.k1001PartNumber ?? undefined;
+    message.k1002PartDescription = object.k1002PartDescription ?? undefined;
+    message.k1071SupplierNumber = object.k1071SupplierNumber ?? undefined;
+    message.k1072SupplierDescription = object.k1072SupplierDescription ?? undefined;
+    message.k1203ReasonForTest = object.k1203ReasonForTest ?? undefined;
+    message.k1303Plant = object.k1303Plant ?? undefined;
+    message.k1900PartRemark = object.k1900PartRemark ?? undefined;
+    message.k0006BatchNumber = object.k0006BatchNumber ?? undefined;
+    message.k0014PartId = object.k0014PartId ?? undefined;
+    message.k0053OrderNumber = object.k0053OrderNumber ?? undefined;
+    message.k0004DateTimeStamp = object.k0004DateTimeStamp ?? undefined;
+    message.k0008OperatorIdentifier = object.k0008OperatorIdentifier ?? undefined;
+    message.k0010MachineIdentifier = object.k0010MachineIdentifier ?? undefined;
+    message.k0012GageIdentifier = object.k0012GageIdentifier ?? undefined;
+    message.relationshipList = object.relationshipList?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.featureCheckList = object.featureCheckList?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.vectorGroupList = object.vectorGroupList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseExportQdasCharacteristicsResult(): ExportQdasCharacteristicsResult {
+  return { execution: undefined };
+}
+
+export const ExportQdasCharacteristicsResult: MessageFns<ExportQdasCharacteristicsResult> = {
+  encode(message: ExportQdasCharacteristicsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportQdasCharacteristicsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportQdasCharacteristicsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportQdasCharacteristicsResult>): ExportQdasCharacteristicsResult {
+    return ExportQdasCharacteristicsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportQdasCharacteristicsResult>): ExportQdasCharacteristicsResult {
+    const message = createBaseExportQdasCharacteristicsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportQdasDataListRequest(): ExportQdasDataListRequest {
+  return { qdasExportFilePath: undefined };
+}
+
+export const ExportQdasDataListRequest: MessageFns<ExportQdasDataListRequest> = {
+  encode(message: ExportQdasDataListRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.qdasExportFilePath !== undefined) {
+      FileReference.encode(message.qdasExportFilePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportQdasDataListRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportQdasDataListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.qdasExportFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportQdasDataListRequest>): ExportQdasDataListRequest {
+    return ExportQdasDataListRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportQdasDataListRequest>): ExportQdasDataListRequest {
+    const message = createBaseExportQdasDataListRequest();
+    message.qdasExportFilePath = (object.qdasExportFilePath !== undefined && object.qdasExportFilePath !== null)
+      ? FileReference.fromPartial(object.qdasExportFilePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportQdasDataListResult(): ExportQdasDataListResult {
+  return { execution: undefined };
+}
+
+export const ExportQdasDataListResult: MessageFns<ExportQdasDataListResult> = {
+  encode(message: ExportQdasDataListResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportQdasDataListResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportQdasDataListResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportQdasDataListResult>): ExportQdasDataListResult {
+    return ExportQdasDataListResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportQdasDataListResult>): ExportQdasDataListResult {
+    const message = createBaseExportQdasDataListResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportScanStripeMeshToStlFileRequest(): ExportScanStripeMeshToStlFileRequest {
+  return { stlFilePath: undefined, mesh: undefined };
+}
+
+export const ExportScanStripeMeshToStlFileRequest: MessageFns<ExportScanStripeMeshToStlFileRequest> = {
+  encode(message: ExportScanStripeMeshToStlFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.stlFilePath !== undefined) {
+      FileReference.encode(message.stlFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.mesh !== undefined) {
+      CollectionObjectName.encode(message.mesh, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportScanStripeMeshToStlFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportScanStripeMeshToStlFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.stlFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.mesh = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportScanStripeMeshToStlFileRequest>): ExportScanStripeMeshToStlFileRequest {
+    return ExportScanStripeMeshToStlFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportScanStripeMeshToStlFileRequest>): ExportScanStripeMeshToStlFileRequest {
+    const message = createBaseExportScanStripeMeshToStlFileRequest();
+    message.stlFilePath = (object.stlFilePath !== undefined && object.stlFilePath !== null)
+      ? FileReference.fromPartial(object.stlFilePath)
+      : undefined;
+    message.mesh = (object.mesh !== undefined && object.mesh !== null)
+      ? CollectionObjectName.fromPartial(object.mesh)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportScanStripeMeshToStlFileResult(): ExportScanStripeMeshToStlFileResult {
+  return { execution: undefined };
+}
+
+export const ExportScanStripeMeshToStlFileResult: MessageFns<ExportScanStripeMeshToStlFileResult> = {
+  encode(message: ExportScanStripeMeshToStlFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportScanStripeMeshToStlFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportScanStripeMeshToStlFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportScanStripeMeshToStlFileResult>): ExportScanStripeMeshToStlFileResult {
+    return ExportScanStripeMeshToStlFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportScanStripeMeshToStlFileResult>): ExportScanStripeMeshToStlFileResult {
+    const message = createBaseExportScanStripeMeshToStlFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportStepFileEntireModelRequest(): ExportStepFileEntireModelRequest {
+  return { stepFilePath: undefined };
+}
+
+export const ExportStepFileEntireModelRequest: MessageFns<ExportStepFileEntireModelRequest> = {
+  encode(message: ExportStepFileEntireModelRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.stepFilePath !== undefined) {
+      FileReference.encode(message.stepFilePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportStepFileEntireModelRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportStepFileEntireModelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.stepFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportStepFileEntireModelRequest>): ExportStepFileEntireModelRequest {
+    return ExportStepFileEntireModelRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportStepFileEntireModelRequest>): ExportStepFileEntireModelRequest {
+    const message = createBaseExportStepFileEntireModelRequest();
+    message.stepFilePath = (object.stepFilePath !== undefined && object.stepFilePath !== null)
+      ? FileReference.fromPartial(object.stepFilePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportStepFileEntireModelResult(): ExportStepFileEntireModelResult {
+  return { execution: undefined };
+}
+
+export const ExportStepFileEntireModelResult: MessageFns<ExportStepFileEntireModelResult> = {
+  encode(message: ExportStepFileEntireModelResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportStepFileEntireModelResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportStepFileEntireModelResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportStepFileEntireModelResult>): ExportStepFileEntireModelResult {
+    return ExportStepFileEntireModelResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportStepFileEntireModelResult>): ExportStepFileEntireModelResult {
+    const message = createBaseExportStepFileEntireModelResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportStepFilePartialModelRequest(): ExportStepFilePartialModelRequest {
+  return { stepFilePath: undefined, objectNameList: [] };
+}
+
+export const ExportStepFilePartialModelRequest: MessageFns<ExportStepFilePartialModelRequest> = {
+  encode(message: ExportStepFilePartialModelRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.stepFilePath !== undefined) {
+      FileReference.encode(message.stepFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.objectNameList !== undefined && message.objectNameList.length !== 0) {
+      for (const v of message.objectNameList) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportStepFilePartialModelRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportStepFilePartialModelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.stepFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectNameList!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportStepFilePartialModelRequest>): ExportStepFilePartialModelRequest {
+    return ExportStepFilePartialModelRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportStepFilePartialModelRequest>): ExportStepFilePartialModelRequest {
+    const message = createBaseExportStepFilePartialModelRequest();
+    message.stepFilePath = (object.stepFilePath !== undefined && object.stepFilePath !== null)
+      ? FileReference.fromPartial(object.stepFilePath)
+      : undefined;
+    message.objectNameList = object.objectNameList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseExportStepFilePartialModelResult(): ExportStepFilePartialModelResult {
+  return { execution: undefined };
+}
+
+export const ExportStepFilePartialModelResult: MessageFns<ExportStepFilePartialModelResult> = {
+  encode(message: ExportStepFilePartialModelResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportStepFilePartialModelResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportStepFilePartialModelResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportStepFilePartialModelResult>): ExportStepFilePartialModelResult {
+    return ExportStepFilePartialModelResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportStepFilePartialModelResult>): ExportStepFilePartialModelResult {
+    const message = createBaseExportStepFilePartialModelResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportVdaFsFileEntireModelRequest(): ExportVdaFsFileEntireModelRequest {
+  return { vdaFsFilePath: undefined };
+}
+
+export const ExportVdaFsFileEntireModelRequest: MessageFns<ExportVdaFsFileEntireModelRequest> = {
+  encode(message: ExportVdaFsFileEntireModelRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.vdaFsFilePath !== undefined) {
+      FileReference.encode(message.vdaFsFilePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportVdaFsFileEntireModelRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportVdaFsFileEntireModelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vdaFsFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportVdaFsFileEntireModelRequest>): ExportVdaFsFileEntireModelRequest {
+    return ExportVdaFsFileEntireModelRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportVdaFsFileEntireModelRequest>): ExportVdaFsFileEntireModelRequest {
+    const message = createBaseExportVdaFsFileEntireModelRequest();
+    message.vdaFsFilePath = (object.vdaFsFilePath !== undefined && object.vdaFsFilePath !== null)
+      ? FileReference.fromPartial(object.vdaFsFilePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportVdaFsFileEntireModelResult(): ExportVdaFsFileEntireModelResult {
+  return { execution: undefined };
+}
+
+export const ExportVdaFsFileEntireModelResult: MessageFns<ExportVdaFsFileEntireModelResult> = {
+  encode(message: ExportVdaFsFileEntireModelResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportVdaFsFileEntireModelResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportVdaFsFileEntireModelResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportVdaFsFileEntireModelResult>): ExportVdaFsFileEntireModelResult {
+    return ExportVdaFsFileEntireModelResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportVdaFsFileEntireModelResult>): ExportVdaFsFileEntireModelResult {
+    const message = createBaseExportVdaFsFileEntireModelResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportVdaFsFilePartialModelRequest(): ExportVdaFsFilePartialModelRequest {
+  return { vdaFsFilePath: undefined, objectNameList: [] };
+}
+
+export const ExportVdaFsFilePartialModelRequest: MessageFns<ExportVdaFsFilePartialModelRequest> = {
+  encode(message: ExportVdaFsFilePartialModelRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.vdaFsFilePath !== undefined) {
+      FileReference.encode(message.vdaFsFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.objectNameList !== undefined && message.objectNameList.length !== 0) {
+      for (const v of message.objectNameList) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportVdaFsFilePartialModelRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportVdaFsFilePartialModelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vdaFsFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectNameList!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportVdaFsFilePartialModelRequest>): ExportVdaFsFilePartialModelRequest {
+    return ExportVdaFsFilePartialModelRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportVdaFsFilePartialModelRequest>): ExportVdaFsFilePartialModelRequest {
+    const message = createBaseExportVdaFsFilePartialModelRequest();
+    message.vdaFsFilePath = (object.vdaFsFilePath !== undefined && object.vdaFsFilePath !== null)
+      ? FileReference.fromPartial(object.vdaFsFilePath)
+      : undefined;
+    message.objectNameList = object.objectNameList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseExportVdaFsFilePartialModelResult(): ExportVdaFsFilePartialModelResult {
+  return { execution: undefined };
+}
+
+export const ExportVdaFsFilePartialModelResult: MessageFns<ExportVdaFsFilePartialModelResult> = {
+  encode(message: ExportVdaFsFilePartialModelResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportVdaFsFilePartialModelResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportVdaFsFilePartialModelResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportVdaFsFilePartialModelResult>): ExportVdaFsFilePartialModelResult {
+    return ExportVdaFsFilePartialModelResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportVdaFsFilePartialModelResult>): ExportVdaFsFilePartialModelResult {
+    const message = createBaseExportVdaFsFilePartialModelResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExportVectorContainerToAsciiFileRequest(): ExportVectorContainerToAsciiFileRequest {
+  return {
+    asciiFilePath: undefined,
+    vectorGroupsToExport: [],
+    overwriteExistingFileFalseAppend: undefined,
+    useFullPrecisionScientificNotation: undefined,
+    vectorNameFormat: undefined,
+    includeVectorLength: undefined,
+  };
+}
+
+export const ExportVectorContainerToAsciiFileRequest: MessageFns<ExportVectorContainerToAsciiFileRequest> = {
+  encode(message: ExportVectorContainerToAsciiFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.asciiFilePath !== undefined) {
+      FileReference.encode(message.asciiFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.vectorGroupsToExport !== undefined && message.vectorGroupsToExport.length !== 0) {
+      for (const v of message.vectorGroupsToExport) {
+        CollectionVectorGroupName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.overwriteExistingFileFalseAppend !== undefined) {
+      writer.uint32(24).bool(message.overwriteExistingFileFalseAppend);
+    }
+    if (message.useFullPrecisionScientificNotation !== undefined) {
+      writer.uint32(32).bool(message.useFullPrecisionScientificNotation);
+    }
+    if (message.vectorNameFormat !== undefined) {
+      writer.uint32(40).int32(message.vectorNameFormat);
+    }
+    if (message.includeVectorLength !== undefined) {
+      writer.uint32(48).bool(message.includeVectorLength);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportVectorContainerToAsciiFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportVectorContainerToAsciiFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.asciiFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionVectorGroupName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.vectorGroupsToExport!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.overwriteExistingFileFalseAppend = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.useFullPrecisionScientificNotation = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.vectorNameFormat = reader.int32() as any;
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.includeVectorLength = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportVectorContainerToAsciiFileRequest>): ExportVectorContainerToAsciiFileRequest {
+    return ExportVectorContainerToAsciiFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportVectorContainerToAsciiFileRequest>): ExportVectorContainerToAsciiFileRequest {
+    const message = createBaseExportVectorContainerToAsciiFileRequest();
+    message.asciiFilePath = (object.asciiFilePath !== undefined && object.asciiFilePath !== null)
+      ? FileReference.fromPartial(object.asciiFilePath)
+      : undefined;
+    message.vectorGroupsToExport = object.vectorGroupsToExport?.map((e) => CollectionVectorGroupName.fromPartial(e)) ||
+      [];
+    message.overwriteExistingFileFalseAppend = object.overwriteExistingFileFalseAppend ?? undefined;
+    message.useFullPrecisionScientificNotation = object.useFullPrecisionScientificNotation ?? undefined;
+    message.vectorNameFormat = object.vectorNameFormat ?? undefined;
+    message.includeVectorLength = object.includeVectorLength ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExportVectorContainerToAsciiFileResult(): ExportVectorContainerToAsciiFileResult {
+  return { execution: undefined };
+}
+
+export const ExportVectorContainerToAsciiFileResult: MessageFns<ExportVectorContainerToAsciiFileResult> = {
+  encode(message: ExportVectorContainerToAsciiFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExportVectorContainerToAsciiFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExportVectorContainerToAsciiFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExportVectorContainerToAsciiFileResult>): ExportVectorContainerToAsciiFileResult {
+    return ExportVectorContainerToAsciiFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExportVectorContainerToAsciiFileResult>): ExportVectorContainerToAsciiFileResult {
+    const message = createBaseExportVectorContainerToAsciiFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseFindFilesInDirectoryRequest(): FindFilesInDirectoryRequest {
+  return { directory: undefined, fileNamePattern: undefined, recursive: undefined };
+}
+
+export const FindFilesInDirectoryRequest: MessageFns<FindFilesInDirectoryRequest> = {
+  encode(message: FindFilesInDirectoryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.directory !== undefined) {
+      writer.uint32(10).string(message.directory);
+    }
+    if (message.fileNamePattern !== undefined) {
+      writer.uint32(18).string(message.fileNamePattern);
+    }
+    if (message.recursive !== undefined) {
+      writer.uint32(24).bool(message.recursive);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FindFilesInDirectoryRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFindFilesInDirectoryRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.directory = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.fileNamePattern = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.recursive = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FindFilesInDirectoryRequest>): FindFilesInDirectoryRequest {
+    return FindFilesInDirectoryRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FindFilesInDirectoryRequest>): FindFilesInDirectoryRequest {
+    const message = createBaseFindFilesInDirectoryRequest();
+    message.directory = object.directory ?? undefined;
+    message.fileNamePattern = object.fileNamePattern ?? undefined;
+    message.recursive = object.recursive ?? undefined;
+    return message;
+  },
+};
+
+function createBaseFindFilesInDirectoryResult(): FindFilesInDirectoryResult {
+  return { files: [], execution: undefined };
+}
+
+export const FindFilesInDirectoryResult: MessageFns<FindFilesInDirectoryResult> = {
+  encode(message: FindFilesInDirectoryResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.files !== undefined && message.files.length !== 0) {
+      for (const v of message.files) {
+        writer.uint32(10).string(v!);
+      }
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FindFilesInDirectoryResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFindFilesInDirectoryResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = reader.string();
+          if (el !== undefined) {
+            message.files!.push(el);
+          }
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FindFilesInDirectoryResult>): FindFilesInDirectoryResult {
+    return FindFilesInDirectoryResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FindFilesInDirectoryResult>): FindFilesInDirectoryResult {
+    const message = createBaseFindFilesInDirectoryResult();
+    message.files = object.files?.map((e) => e) || [];
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseFindSubDirectoriesInDirectoryRequest(): FindSubDirectoriesInDirectoryRequest {
+  return { directory: undefined, recursive: undefined };
+}
+
+export const FindSubDirectoriesInDirectoryRequest: MessageFns<FindSubDirectoriesInDirectoryRequest> = {
+  encode(message: FindSubDirectoriesInDirectoryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.directory !== undefined) {
+      writer.uint32(10).string(message.directory);
+    }
+    if (message.recursive !== undefined) {
+      writer.uint32(16).bool(message.recursive);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FindSubDirectoriesInDirectoryRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFindSubDirectoriesInDirectoryRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.directory = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.recursive = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FindSubDirectoriesInDirectoryRequest>): FindSubDirectoriesInDirectoryRequest {
+    return FindSubDirectoriesInDirectoryRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FindSubDirectoriesInDirectoryRequest>): FindSubDirectoriesInDirectoryRequest {
+    const message = createBaseFindSubDirectoriesInDirectoryRequest();
+    message.directory = object.directory ?? undefined;
+    message.recursive = object.recursive ?? undefined;
+    return message;
+  },
+};
+
+function createBaseFindSubDirectoriesInDirectoryResult(): FindSubDirectoriesInDirectoryResult {
+  return { subDirectories: [], execution: undefined };
+}
+
+export const FindSubDirectoriesInDirectoryResult: MessageFns<FindSubDirectoriesInDirectoryResult> = {
+  encode(message: FindSubDirectoriesInDirectoryResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.subDirectories !== undefined && message.subDirectories.length !== 0) {
+      for (const v of message.subDirectories) {
+        writer.uint32(10).string(v!);
+      }
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FindSubDirectoriesInDirectoryResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFindSubDirectoriesInDirectoryResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = reader.string();
+          if (el !== undefined) {
+            message.subDirectories!.push(el);
+          }
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FindSubDirectoriesInDirectoryResult>): FindSubDirectoriesInDirectoryResult {
+    return FindSubDirectoriesInDirectoryResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FindSubDirectoriesInDirectoryResult>): FindSubDirectoriesInDirectoryResult {
+    const message = createBaseFindSubDirectoriesInDirectoryResult();
+    message.subDirectories = object.subDirectories?.map((e) => e) || [];
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetBooleanFromDataShareFileRequest(): GetBooleanFromDataShareFileRequest {
+  return { dataShareFilePath: undefined, booleanName: undefined };
+}
+
+export const GetBooleanFromDataShareFileRequest: MessageFns<GetBooleanFromDataShareFileRequest> = {
+  encode(message: GetBooleanFromDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.booleanName !== undefined) {
+      writer.uint32(18).string(message.booleanName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetBooleanFromDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetBooleanFromDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.booleanName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetBooleanFromDataShareFileRequest>): GetBooleanFromDataShareFileRequest {
+    return GetBooleanFromDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetBooleanFromDataShareFileRequest>): GetBooleanFromDataShareFileRequest {
+    const message = createBaseGetBooleanFromDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.booleanName = object.booleanName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetBooleanFromDataShareFileResult(): GetBooleanFromDataShareFileResult {
+  return { booleanValue: undefined, execution: undefined };
+}
+
+export const GetBooleanFromDataShareFileResult: MessageFns<GetBooleanFromDataShareFileResult> = {
+  encode(message: GetBooleanFromDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.booleanValue !== undefined) {
+      writer.uint32(8).bool(message.booleanValue);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetBooleanFromDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetBooleanFromDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.booleanValue = reader.bool();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetBooleanFromDataShareFileResult>): GetBooleanFromDataShareFileResult {
+    return GetBooleanFromDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetBooleanFromDataShareFileResult>): GetBooleanFromDataShareFileResult {
+    const message = createBaseGetBooleanFromDataShareFileResult();
+    message.booleanValue = object.booleanValue ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetDoubleFromDataShareFileRequest(): GetDoubleFromDataShareFileRequest {
+  return { dataShareFilePath: undefined, doubleName: undefined };
+}
+
+export const GetDoubleFromDataShareFileRequest: MessageFns<GetDoubleFromDataShareFileRequest> = {
+  encode(message: GetDoubleFromDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.doubleName !== undefined) {
+      writer.uint32(18).string(message.doubleName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetDoubleFromDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetDoubleFromDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.doubleName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetDoubleFromDataShareFileRequest>): GetDoubleFromDataShareFileRequest {
+    return GetDoubleFromDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetDoubleFromDataShareFileRequest>): GetDoubleFromDataShareFileRequest {
+    const message = createBaseGetDoubleFromDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.doubleName = object.doubleName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetDoubleFromDataShareFileResult(): GetDoubleFromDataShareFileResult {
+  return { doubleValue: undefined, execution: undefined };
+}
+
+export const GetDoubleFromDataShareFileResult: MessageFns<GetDoubleFromDataShareFileResult> = {
+  encode(message: GetDoubleFromDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.doubleValue !== undefined) {
+      writer.uint32(9).double(message.doubleValue);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetDoubleFromDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetDoubleFromDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.doubleValue = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetDoubleFromDataShareFileResult>): GetDoubleFromDataShareFileResult {
+    return GetDoubleFromDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetDoubleFromDataShareFileResult>): GetDoubleFromDataShareFileResult {
+    const message = createBaseGetDoubleFromDataShareFileResult();
+    message.doubleValue = object.doubleValue ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetIntegerFromDataShareFileRequest(): GetIntegerFromDataShareFileRequest {
+  return { dataShareFilePath: undefined, integerName: undefined };
+}
+
+export const GetIntegerFromDataShareFileRequest: MessageFns<GetIntegerFromDataShareFileRequest> = {
+  encode(message: GetIntegerFromDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.integerName !== undefined) {
+      writer.uint32(18).string(message.integerName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetIntegerFromDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetIntegerFromDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.integerName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetIntegerFromDataShareFileRequest>): GetIntegerFromDataShareFileRequest {
+    return GetIntegerFromDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetIntegerFromDataShareFileRequest>): GetIntegerFromDataShareFileRequest {
+    const message = createBaseGetIntegerFromDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.integerName = object.integerName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetIntegerFromDataShareFileResult(): GetIntegerFromDataShareFileResult {
+  return { integerValue: undefined, execution: undefined };
+}
+
+export const GetIntegerFromDataShareFileResult: MessageFns<GetIntegerFromDataShareFileResult> = {
+  encode(message: GetIntegerFromDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.integerValue !== undefined) {
+      writer.uint32(8).int32(message.integerValue);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetIntegerFromDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetIntegerFromDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.integerValue = reader.int32();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetIntegerFromDataShareFileResult>): GetIntegerFromDataShareFileResult {
+    return GetIntegerFromDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetIntegerFromDataShareFileResult>): GetIntegerFromDataShareFileResult {
+    const message = createBaseGetIntegerFromDataShareFileResult();
+    message.integerValue = object.integerValue ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetQdasCatalogEntriesRequest(): GetQdasCatalogEntriesRequest {
+  return { kFieldTarget: undefined };
+}
+
+export const GetQdasCatalogEntriesRequest: MessageFns<GetQdasCatalogEntriesRequest> = {
+  encode(message: GetQdasCatalogEntriesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.kFieldTarget !== undefined) {
+      writer.uint32(10).string(message.kFieldTarget);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetQdasCatalogEntriesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetQdasCatalogEntriesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.kFieldTarget = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetQdasCatalogEntriesRequest>): GetQdasCatalogEntriesRequest {
+    return GetQdasCatalogEntriesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetQdasCatalogEntriesRequest>): GetQdasCatalogEntriesRequest {
+    const message = createBaseGetQdasCatalogEntriesRequest();
+    message.kFieldTarget = object.kFieldTarget ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetQdasCatalogEntriesResult(): GetQdasCatalogEntriesResult {
+  return { catalogEntries: [], execution: undefined };
+}
+
+export const GetQdasCatalogEntriesResult: MessageFns<GetQdasCatalogEntriesResult> = {
+  encode(message: GetQdasCatalogEntriesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.catalogEntries !== undefined && message.catalogEntries.length !== 0) {
+      for (const v of message.catalogEntries) {
+        writer.uint32(10).string(v!);
+      }
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetQdasCatalogEntriesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetQdasCatalogEntriesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = reader.string();
+          if (el !== undefined) {
+            message.catalogEntries!.push(el);
+          }
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetQdasCatalogEntriesResult>): GetQdasCatalogEntriesResult {
+    return GetQdasCatalogEntriesResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetQdasCatalogEntriesResult>): GetQdasCatalogEntriesResult {
+    const message = createBaseGetQdasCatalogEntriesResult();
+    message.catalogEntries = object.catalogEntries?.map((e) => e) || [];
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetStringFromDataShareFileRequest(): GetStringFromDataShareFileRequest {
+  return { dataShareFilePath: undefined, stringName: undefined };
+}
+
+export const GetStringFromDataShareFileRequest: MessageFns<GetStringFromDataShareFileRequest> = {
+  encode(message: GetStringFromDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.stringName !== undefined) {
+      writer.uint32(18).string(message.stringName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetStringFromDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetStringFromDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.stringName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetStringFromDataShareFileRequest>): GetStringFromDataShareFileRequest {
+    return GetStringFromDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetStringFromDataShareFileRequest>): GetStringFromDataShareFileRequest {
+    const message = createBaseGetStringFromDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.stringName = object.stringName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetStringFromDataShareFileResult(): GetStringFromDataShareFileResult {
+  return { stringValue: undefined, execution: undefined };
+}
+
+export const GetStringFromDataShareFileResult: MessageFns<GetStringFromDataShareFileResult> = {
+  encode(message: GetStringFromDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.stringValue !== undefined) {
+      writer.uint32(10).string(message.stringValue);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetStringFromDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetStringFromDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.stringValue = reader.string();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetStringFromDataShareFileResult>): GetStringFromDataShareFileResult {
+    return GetStringFromDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetStringFromDataShareFileResult>): GetStringFromDataShareFileResult {
+    const message = createBaseGetStringFromDataShareFileResult();
+    message.stringValue = object.stringValue ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetTransformFromDataShareFileRequest(): GetTransformFromDataShareFileRequest {
+  return { dataShareFilePath: undefined, transformName: undefined };
+}
+
+export const GetTransformFromDataShareFileRequest: MessageFns<GetTransformFromDataShareFileRequest> = {
+  encode(message: GetTransformFromDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.transformName !== undefined) {
+      writer.uint32(18).string(message.transformName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTransformFromDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTransformFromDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.transformName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTransformFromDataShareFileRequest>): GetTransformFromDataShareFileRequest {
+    return GetTransformFromDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTransformFromDataShareFileRequest>): GetTransformFromDataShareFileRequest {
+    const message = createBaseGetTransformFromDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.transformName = object.transformName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetTransformFromDataShareFileResult(): GetTransformFromDataShareFileResult {
+  return { transformValue: undefined, execution: undefined };
+}
+
+export const GetTransformFromDataShareFileResult: MessageFns<GetTransformFromDataShareFileResult> = {
+  encode(message: GetTransformFromDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.transformValue !== undefined) {
+      Transform.encode(message.transformValue, writer.uint32(10).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetTransformFromDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetTransformFromDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.transformValue = Transform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetTransformFromDataShareFileResult>): GetTransformFromDataShareFileResult {
+    return GetTransformFromDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetTransformFromDataShareFileResult>): GetTransformFromDataShareFileResult {
+    const message = createBaseGetTransformFromDataShareFileResult();
+    message.transformValue = (object.transformValue !== undefined && object.transformValue !== null)
+      ? Transform.fromPartial(object.transformValue)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetVectorFromDataShareFileRequest(): GetVectorFromDataShareFileRequest {
+  return { dataShareFilePath: undefined, vectorName: undefined };
+}
+
+export const GetVectorFromDataShareFileRequest: MessageFns<GetVectorFromDataShareFileRequest> = {
+  encode(message: GetVectorFromDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.vectorName !== undefined) {
+      writer.uint32(18).string(message.vectorName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetVectorFromDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetVectorFromDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.vectorName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetVectorFromDataShareFileRequest>): GetVectorFromDataShareFileRequest {
+    return GetVectorFromDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetVectorFromDataShareFileRequest>): GetVectorFromDataShareFileRequest {
+    const message = createBaseGetVectorFromDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.vectorName = object.vectorName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetVectorFromDataShareFileResult(): GetVectorFromDataShareFileResult {
+  return { vectorValue: undefined, execution: undefined };
+}
+
+export const GetVectorFromDataShareFileResult: MessageFns<GetVectorFromDataShareFileResult> = {
+  encode(message: GetVectorFromDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.vectorValue !== undefined) {
+      Vector.encode(message.vectorValue, writer.uint32(10).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetVectorFromDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetVectorFromDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vectorValue = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetVectorFromDataShareFileResult>): GetVectorFromDataShareFileResult {
+    return GetVectorFromDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetVectorFromDataShareFileResult>): GetVectorFromDataShareFileResult {
+    const message = createBaseGetVectorFromDataShareFileResult();
+    message.vectorValue = (object.vectorValue !== undefined && object.vectorValue !== null)
+      ? Vector.fromPartial(object.vectorValue)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
 
 function createBaseGetWorkingDirectoryRequest(): GetWorkingDirectoryRequest {
   return {};
@@ -126,9 +5824,5686 @@ export const GetWorkingDirectoryResult: MessageFns<GetWorkingDirectoryResult> = 
   },
 };
 
+function createBaseImportAsciiPredefinedFormatsRequest(): ImportAsciiPredefinedFormatsRequest {
+  return {
+    asciiFilePath: undefined,
+    fileFormat: undefined,
+    units: undefined,
+    angularUnits: undefined,
+    groupName: undefined,
+    importAsCloud: undefined,
+    ensureNewPointGroup: undefined,
+    ensureUniqueNames: undefined,
+  };
+}
+
+export const ImportAsciiPredefinedFormatsRequest: MessageFns<ImportAsciiPredefinedFormatsRequest> = {
+  encode(message: ImportAsciiPredefinedFormatsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.asciiFilePath !== undefined) {
+      FileReference.encode(message.asciiFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.fileFormat !== undefined) {
+      writer.uint32(16).int32(message.fileFormat);
+    }
+    if (message.units !== undefined) {
+      writer.uint32(24).int32(message.units);
+    }
+    if (message.angularUnits !== undefined) {
+      writer.uint32(32).int32(message.angularUnits);
+    }
+    if (message.groupName !== undefined) {
+      CollectionObjectName.encode(message.groupName, writer.uint32(42).fork()).join();
+    }
+    if (message.importAsCloud !== undefined) {
+      writer.uint32(48).bool(message.importAsCloud);
+    }
+    if (message.ensureNewPointGroup !== undefined) {
+      writer.uint32(56).bool(message.ensureNewPointGroup);
+    }
+    if (message.ensureUniqueNames !== undefined) {
+      writer.uint32(64).bool(message.ensureUniqueNames);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportAsciiPredefinedFormatsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportAsciiPredefinedFormatsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.asciiFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.fileFormat = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.units = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.angularUnits = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.groupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.importAsCloud = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.ensureNewPointGroup = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.ensureUniqueNames = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportAsciiPredefinedFormatsRequest>): ImportAsciiPredefinedFormatsRequest {
+    return ImportAsciiPredefinedFormatsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportAsciiPredefinedFormatsRequest>): ImportAsciiPredefinedFormatsRequest {
+    const message = createBaseImportAsciiPredefinedFormatsRequest();
+    message.asciiFilePath = (object.asciiFilePath !== undefined && object.asciiFilePath !== null)
+      ? FileReference.fromPartial(object.asciiFilePath)
+      : undefined;
+    message.fileFormat = object.fileFormat ?? undefined;
+    message.units = object.units ?? undefined;
+    message.angularUnits = object.angularUnits ?? undefined;
+    message.groupName = (object.groupName !== undefined && object.groupName !== null)
+      ? CollectionObjectName.fromPartial(object.groupName)
+      : undefined;
+    message.importAsCloud = object.importAsCloud ?? undefined;
+    message.ensureNewPointGroup = object.ensureNewPointGroup ?? undefined;
+    message.ensureUniqueNames = object.ensureUniqueNames ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportAsciiPredefinedFormatsResult(): ImportAsciiPredefinedFormatsResult {
+  return { execution: undefined };
+}
+
+export const ImportAsciiPredefinedFormatsResult: MessageFns<ImportAsciiPredefinedFormatsResult> = {
+  encode(message: ImportAsciiPredefinedFormatsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportAsciiPredefinedFormatsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportAsciiPredefinedFormatsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportAsciiPredefinedFormatsResult>): ImportAsciiPredefinedFormatsResult {
+    return ImportAsciiPredefinedFormatsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportAsciiPredefinedFormatsResult>): ImportAsciiPredefinedFormatsResult {
+    const message = createBaseImportAsciiPredefinedFormatsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportAsciiPredefinedFrameSetFormatsRequest(): ImportAsciiPredefinedFrameSetFormatsRequest {
+  return {
+    asciiFilePath: undefined,
+    fileFormat: undefined,
+    units: undefined,
+    angularUnits: undefined,
+    frameSetContainerName: undefined,
+    ensureUniqueName: undefined,
+  };
+}
+
+export const ImportAsciiPredefinedFrameSetFormatsRequest: MessageFns<ImportAsciiPredefinedFrameSetFormatsRequest> = {
+  encode(
+    message: ImportAsciiPredefinedFrameSetFormatsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.asciiFilePath !== undefined) {
+      FileReference.encode(message.asciiFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.fileFormat !== undefined) {
+      writer.uint32(16).int32(message.fileFormat);
+    }
+    if (message.units !== undefined) {
+      writer.uint32(24).int32(message.units);
+    }
+    if (message.angularUnits !== undefined) {
+      writer.uint32(32).int32(message.angularUnits);
+    }
+    if (message.frameSetContainerName !== undefined) {
+      CollectionObjectName.encode(message.frameSetContainerName, writer.uint32(42).fork()).join();
+    }
+    if (message.ensureUniqueName !== undefined) {
+      writer.uint32(48).bool(message.ensureUniqueName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportAsciiPredefinedFrameSetFormatsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportAsciiPredefinedFrameSetFormatsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.asciiFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.fileFormat = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.units = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.angularUnits = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.frameSetContainerName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.ensureUniqueName = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportAsciiPredefinedFrameSetFormatsRequest>): ImportAsciiPredefinedFrameSetFormatsRequest {
+    return ImportAsciiPredefinedFrameSetFormatsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<ImportAsciiPredefinedFrameSetFormatsRequest>,
+  ): ImportAsciiPredefinedFrameSetFormatsRequest {
+    const message = createBaseImportAsciiPredefinedFrameSetFormatsRequest();
+    message.asciiFilePath = (object.asciiFilePath !== undefined && object.asciiFilePath !== null)
+      ? FileReference.fromPartial(object.asciiFilePath)
+      : undefined;
+    message.fileFormat = object.fileFormat ?? undefined;
+    message.units = object.units ?? undefined;
+    message.angularUnits = object.angularUnits ?? undefined;
+    message.frameSetContainerName =
+      (object.frameSetContainerName !== undefined && object.frameSetContainerName !== null)
+        ? CollectionObjectName.fromPartial(object.frameSetContainerName)
+        : undefined;
+    message.ensureUniqueName = object.ensureUniqueName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportAsciiPredefinedFrameSetFormatsResult(): ImportAsciiPredefinedFrameSetFormatsResult {
+  return { execution: undefined };
+}
+
+export const ImportAsciiPredefinedFrameSetFormatsResult: MessageFns<ImportAsciiPredefinedFrameSetFormatsResult> = {
+  encode(message: ImportAsciiPredefinedFrameSetFormatsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportAsciiPredefinedFrameSetFormatsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportAsciiPredefinedFrameSetFormatsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportAsciiPredefinedFrameSetFormatsResult>): ImportAsciiPredefinedFrameSetFormatsResult {
+    return ImportAsciiPredefinedFrameSetFormatsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<ImportAsciiPredefinedFrameSetFormatsResult>,
+  ): ImportAsciiPredefinedFrameSetFormatsResult {
+    const message = createBaseImportAsciiPredefinedFrameSetFormatsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportE57FileRequest(): ImportE57FileRequest {
+  return {
+    e57FilePath: undefined,
+    saveConvertedFile: undefined,
+    useSquareRootOfIntensity: undefined,
+    automaticallyCloseConverter: undefined,
+    prioritizeColorOverIntensity: undefined,
+    importScanBlocksAsSeparateClouds: undefined,
+    units: undefined,
+  };
+}
+
+export const ImportE57FileRequest: MessageFns<ImportE57FileRequest> = {
+  encode(message: ImportE57FileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.e57FilePath !== undefined) {
+      FileReference.encode(message.e57FilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.saveConvertedFile !== undefined) {
+      writer.uint32(16).bool(message.saveConvertedFile);
+    }
+    if (message.useSquareRootOfIntensity !== undefined) {
+      writer.uint32(24).bool(message.useSquareRootOfIntensity);
+    }
+    if (message.automaticallyCloseConverter !== undefined) {
+      writer.uint32(32).bool(message.automaticallyCloseConverter);
+    }
+    if (message.prioritizeColorOverIntensity !== undefined) {
+      writer.uint32(40).bool(message.prioritizeColorOverIntensity);
+    }
+    if (message.importScanBlocksAsSeparateClouds !== undefined) {
+      writer.uint32(48).bool(message.importScanBlocksAsSeparateClouds);
+    }
+    if (message.units !== undefined) {
+      writer.uint32(56).int32(message.units);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportE57FileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportE57FileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.e57FilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.saveConvertedFile = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.useSquareRootOfIntensity = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.automaticallyCloseConverter = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.prioritizeColorOverIntensity = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.importScanBlocksAsSeparateClouds = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.units = reader.int32() as any;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportE57FileRequest>): ImportE57FileRequest {
+    return ImportE57FileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportE57FileRequest>): ImportE57FileRequest {
+    const message = createBaseImportE57FileRequest();
+    message.e57FilePath = (object.e57FilePath !== undefined && object.e57FilePath !== null)
+      ? FileReference.fromPartial(object.e57FilePath)
+      : undefined;
+    message.saveConvertedFile = object.saveConvertedFile ?? undefined;
+    message.useSquareRootOfIntensity = object.useSquareRootOfIntensity ?? undefined;
+    message.automaticallyCloseConverter = object.automaticallyCloseConverter ?? undefined;
+    message.prioritizeColorOverIntensity = object.prioritizeColorOverIntensity ?? undefined;
+    message.importScanBlocksAsSeparateClouds = object.importScanBlocksAsSeparateClouds ?? undefined;
+    message.units = object.units ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportE57FileResult(): ImportE57FileResult {
+  return { execution: undefined };
+}
+
+export const ImportE57FileResult: MessageFns<ImportE57FileResult> = {
+  encode(message: ImportE57FileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportE57FileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportE57FileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportE57FileResult>): ImportE57FileResult {
+    return ImportE57FileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportE57FileResult>): ImportE57FileResult {
+    const message = createBaseImportE57FileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportFileAsEmbeddedFileRequest(): ImportFileAsEmbeddedFileRequest {
+  return { externalFileName: undefined, replaceExisting: undefined };
+}
+
+export const ImportFileAsEmbeddedFileRequest: MessageFns<ImportFileAsEmbeddedFileRequest> = {
+  encode(message: ImportFileAsEmbeddedFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.externalFileName !== undefined) {
+      FileReference.encode(message.externalFileName, writer.uint32(10).fork()).join();
+    }
+    if (message.replaceExisting !== undefined) {
+      writer.uint32(16).bool(message.replaceExisting);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportFileAsEmbeddedFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportFileAsEmbeddedFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.externalFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.replaceExisting = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportFileAsEmbeddedFileRequest>): ImportFileAsEmbeddedFileRequest {
+    return ImportFileAsEmbeddedFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportFileAsEmbeddedFileRequest>): ImportFileAsEmbeddedFileRequest {
+    const message = createBaseImportFileAsEmbeddedFileRequest();
+    message.externalFileName = (object.externalFileName !== undefined && object.externalFileName !== null)
+      ? FileReference.fromPartial(object.externalFileName)
+      : undefined;
+    message.replaceExisting = object.replaceExisting ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportFileAsEmbeddedFileResult(): ImportFileAsEmbeddedFileResult {
+  return { execution: undefined };
+}
+
+export const ImportFileAsEmbeddedFileResult: MessageFns<ImportFileAsEmbeddedFileResult> = {
+  encode(message: ImportFileAsEmbeddedFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportFileAsEmbeddedFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportFileAsEmbeddedFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportFileAsEmbeddedFileResult>): ImportFileAsEmbeddedFileResult {
+    return ImportFileAsEmbeddedFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportFileAsEmbeddedFileResult>): ImportFileAsEmbeddedFileResult {
+    const message = createBaseImportFileAsEmbeddedFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportFileAsPictureRequest(): ImportFileAsPictureRequest {
+  return { externalFileName: undefined, replaceExisting: undefined };
+}
+
+export const ImportFileAsPictureRequest: MessageFns<ImportFileAsPictureRequest> = {
+  encode(message: ImportFileAsPictureRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.externalFileName !== undefined) {
+      FileReference.encode(message.externalFileName, writer.uint32(10).fork()).join();
+    }
+    if (message.replaceExisting !== undefined) {
+      writer.uint32(16).bool(message.replaceExisting);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportFileAsPictureRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportFileAsPictureRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.externalFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.replaceExisting = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportFileAsPictureRequest>): ImportFileAsPictureRequest {
+    return ImportFileAsPictureRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportFileAsPictureRequest>): ImportFileAsPictureRequest {
+    const message = createBaseImportFileAsPictureRequest();
+    message.externalFileName = (object.externalFileName !== undefined && object.externalFileName !== null)
+      ? FileReference.fromPartial(object.externalFileName)
+      : undefined;
+    message.replaceExisting = object.replaceExisting ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportFileAsPictureResult(): ImportFileAsPictureResult {
+  return { execution: undefined };
+}
+
+export const ImportFileAsPictureResult: MessageFns<ImportFileAsPictureResult> = {
+  encode(message: ImportFileAsPictureResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportFileAsPictureResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportFileAsPictureResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportFileAsPictureResult>): ImportFileAsPictureResult {
+    return ImportFileAsPictureResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportFileAsPictureResult>): ImportFileAsPictureResult {
+    const message = createBaseImportFileAsPictureResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportHiddenPointBarXmlFileRequest(): ImportHiddenPointBarXmlFileRequest {
+  return { xmlFilePath: undefined, replaceExistingEntries: undefined };
+}
+
+export const ImportHiddenPointBarXmlFileRequest: MessageFns<ImportHiddenPointBarXmlFileRequest> = {
+  encode(message: ImportHiddenPointBarXmlFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.xmlFilePath !== undefined) {
+      FileReference.encode(message.xmlFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.replaceExistingEntries !== undefined) {
+      writer.uint32(16).bool(message.replaceExistingEntries);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportHiddenPointBarXmlFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportHiddenPointBarXmlFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.xmlFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.replaceExistingEntries = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportHiddenPointBarXmlFileRequest>): ImportHiddenPointBarXmlFileRequest {
+    return ImportHiddenPointBarXmlFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportHiddenPointBarXmlFileRequest>): ImportHiddenPointBarXmlFileRequest {
+    const message = createBaseImportHiddenPointBarXmlFileRequest();
+    message.xmlFilePath = (object.xmlFilePath !== undefined && object.xmlFilePath !== null)
+      ? FileReference.fromPartial(object.xmlFilePath)
+      : undefined;
+    message.replaceExistingEntries = object.replaceExistingEntries ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportHiddenPointBarXmlFileResult(): ImportHiddenPointBarXmlFileResult {
+  return { execution: undefined };
+}
+
+export const ImportHiddenPointBarXmlFileResult: MessageFns<ImportHiddenPointBarXmlFileResult> = {
+  encode(message: ImportHiddenPointBarXmlFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportHiddenPointBarXmlFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportHiddenPointBarXmlFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportHiddenPointBarXmlFileResult>): ImportHiddenPointBarXmlFileResult {
+    return ImportHiddenPointBarXmlFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportHiddenPointBarXmlFileResult>): ImportHiddenPointBarXmlFileResult {
+    const message = createBaseImportHiddenPointBarXmlFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportIgesFileRequest(): ImportIgesFileRequest {
+  return { igesFilePath: undefined };
+}
+
+export const ImportIgesFileRequest: MessageFns<ImportIgesFileRequest> = {
+  encode(message: ImportIgesFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.igesFilePath !== undefined) {
+      FileReference.encode(message.igesFilePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportIgesFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportIgesFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.igesFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportIgesFileRequest>): ImportIgesFileRequest {
+    return ImportIgesFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportIgesFileRequest>): ImportIgesFileRequest {
+    const message = createBaseImportIgesFileRequest();
+    message.igesFilePath = (object.igesFilePath !== undefined && object.igesFilePath !== null)
+      ? FileReference.fromPartial(object.igesFilePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportIgesFileResult(): ImportIgesFileResult {
+  return { execution: undefined };
+}
+
+export const ImportIgesFileResult: MessageFns<ImportIgesFileResult> = {
+  encode(message: ImportIgesFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportIgesFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportIgesFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportIgesFileResult>): ImportIgesFileResult {
+    return ImportIgesFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportIgesFileResult>): ImportIgesFileResult {
+    const message = createBaseImportIgesFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportLeicaGsiFileRequest(): ImportLeicaGsiFileRequest {
+  return { instrumentId: undefined, groupName: undefined, filePath: undefined };
+}
+
+export const ImportLeicaGsiFileRequest: MessageFns<ImportLeicaGsiFileRequest> = {
+  encode(message: ImportLeicaGsiFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.instrumentId !== undefined) {
+      CollectionInstrumentId.encode(message.instrumentId, writer.uint32(10).fork()).join();
+    }
+    if (message.groupName !== undefined) {
+      CollectionObjectName.encode(message.groupName, writer.uint32(18).fork()).join();
+    }
+    if (message.filePath !== undefined) {
+      FileReference.encode(message.filePath, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportLeicaGsiFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportLeicaGsiFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.instrumentId = CollectionInstrumentId.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.filePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportLeicaGsiFileRequest>): ImportLeicaGsiFileRequest {
+    return ImportLeicaGsiFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportLeicaGsiFileRequest>): ImportLeicaGsiFileRequest {
+    const message = createBaseImportLeicaGsiFileRequest();
+    message.instrumentId = (object.instrumentId !== undefined && object.instrumentId !== null)
+      ? CollectionInstrumentId.fromPartial(object.instrumentId)
+      : undefined;
+    message.groupName = (object.groupName !== undefined && object.groupName !== null)
+      ? CollectionObjectName.fromPartial(object.groupName)
+      : undefined;
+    message.filePath = (object.filePath !== undefined && object.filePath !== null)
+      ? FileReference.fromPartial(object.filePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportLeicaGsiFileResult(): ImportLeicaGsiFileResult {
+  return { execution: undefined };
+}
+
+export const ImportLeicaGsiFileResult: MessageFns<ImportLeicaGsiFileResult> = {
+  encode(message: ImportLeicaGsiFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportLeicaGsiFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportLeicaGsiFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportLeicaGsiFileResult>): ImportLeicaGsiFileResult {
+    return ImportLeicaGsiFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportLeicaGsiFileResult>): ImportLeicaGsiFileResult {
+    const message = createBaseImportLeicaGsiFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportLeicaSdbFileRequest(): ImportLeicaSdbFileRequest {
+  return { instrumentId: undefined, scanCloudName: undefined, filePath: undefined };
+}
+
+export const ImportLeicaSdbFileRequest: MessageFns<ImportLeicaSdbFileRequest> = {
+  encode(message: ImportLeicaSdbFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.instrumentId !== undefined) {
+      CollectionInstrumentId.encode(message.instrumentId, writer.uint32(10).fork()).join();
+    }
+    if (message.scanCloudName !== undefined) {
+      CollectionObjectName.encode(message.scanCloudName, writer.uint32(18).fork()).join();
+    }
+    if (message.filePath !== undefined) {
+      FileReference.encode(message.filePath, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportLeicaSdbFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportLeicaSdbFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.instrumentId = CollectionInstrumentId.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.scanCloudName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.filePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportLeicaSdbFileRequest>): ImportLeicaSdbFileRequest {
+    return ImportLeicaSdbFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportLeicaSdbFileRequest>): ImportLeicaSdbFileRequest {
+    const message = createBaseImportLeicaSdbFileRequest();
+    message.instrumentId = (object.instrumentId !== undefined && object.instrumentId !== null)
+      ? CollectionInstrumentId.fromPartial(object.instrumentId)
+      : undefined;
+    message.scanCloudName = (object.scanCloudName !== undefined && object.scanCloudName !== null)
+      ? CollectionObjectName.fromPartial(object.scanCloudName)
+      : undefined;
+    message.filePath = (object.filePath !== undefined && object.filePath !== null)
+      ? FileReference.fromPartial(object.filePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportLeicaSdbFileResult(): ImportLeicaSdbFileResult {
+  return { execution: undefined };
+}
+
+export const ImportLeicaSdbFileResult: MessageFns<ImportLeicaSdbFileResult> = {
+  encode(message: ImportLeicaSdbFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportLeicaSdbFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportLeicaSdbFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportLeicaSdbFileResult>): ImportLeicaSdbFileResult {
+    return ImportLeicaSdbFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportLeicaSdbFileResult>): ImportLeicaSdbFileResult {
+    const message = createBaseImportLeicaSdbFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportMpFileAsEmbeddedMpRequest(): ImportMpFileAsEmbeddedMpRequest {
+  return { externalMpFileName: undefined, replaceExisting: undefined };
+}
+
+export const ImportMpFileAsEmbeddedMpRequest: MessageFns<ImportMpFileAsEmbeddedMpRequest> = {
+  encode(message: ImportMpFileAsEmbeddedMpRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.externalMpFileName !== undefined) {
+      FileReference.encode(message.externalMpFileName, writer.uint32(10).fork()).join();
+    }
+    if (message.replaceExisting !== undefined) {
+      writer.uint32(16).bool(message.replaceExisting);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportMpFileAsEmbeddedMpRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportMpFileAsEmbeddedMpRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.externalMpFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.replaceExisting = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportMpFileAsEmbeddedMpRequest>): ImportMpFileAsEmbeddedMpRequest {
+    return ImportMpFileAsEmbeddedMpRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportMpFileAsEmbeddedMpRequest>): ImportMpFileAsEmbeddedMpRequest {
+    const message = createBaseImportMpFileAsEmbeddedMpRequest();
+    message.externalMpFileName = (object.externalMpFileName !== undefined && object.externalMpFileName !== null)
+      ? FileReference.fromPartial(object.externalMpFileName)
+      : undefined;
+    message.replaceExisting = object.replaceExisting ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportMpFileAsEmbeddedMpResult(): ImportMpFileAsEmbeddedMpResult {
+  return { execution: undefined };
+}
+
+export const ImportMpFileAsEmbeddedMpResult: MessageFns<ImportMpFileAsEmbeddedMpResult> = {
+  encode(message: ImportMpFileAsEmbeddedMpResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportMpFileAsEmbeddedMpResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportMpFileAsEmbeddedMpResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportMpFileAsEmbeddedMpResult>): ImportMpFileAsEmbeddedMpResult {
+    return ImportMpFileAsEmbeddedMpResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportMpFileAsEmbeddedMpResult>): ImportMpFileAsEmbeddedMpResult {
+    const message = createBaseImportMpFileAsEmbeddedMpResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportNominalsFromXmlFileRequest(): ImportNominalsFromXmlFileRequest {
+  return { filePath: undefined };
+}
+
+export const ImportNominalsFromXmlFileRequest: MessageFns<ImportNominalsFromXmlFileRequest> = {
+  encode(message: ImportNominalsFromXmlFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.filePath !== undefined) {
+      FileReference.encode(message.filePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportNominalsFromXmlFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportNominalsFromXmlFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.filePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportNominalsFromXmlFileRequest>): ImportNominalsFromXmlFileRequest {
+    return ImportNominalsFromXmlFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportNominalsFromXmlFileRequest>): ImportNominalsFromXmlFileRequest {
+    const message = createBaseImportNominalsFromXmlFileRequest();
+    message.filePath = (object.filePath !== undefined && object.filePath !== null)
+      ? FileReference.fromPartial(object.filePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportNominalsFromXmlFileResult(): ImportNominalsFromXmlFileResult {
+  return { execution: undefined };
+}
+
+export const ImportNominalsFromXmlFileResult: MessageFns<ImportNominalsFromXmlFileResult> = {
+  encode(message: ImportNominalsFromXmlFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportNominalsFromXmlFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportNominalsFromXmlFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportNominalsFromXmlFileResult>): ImportNominalsFromXmlFileResult {
+    return ImportNominalsFromXmlFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportNominalsFromXmlFileResult>): ImportNominalsFromXmlFileResult {
+    const message = createBaseImportNominalsFromXmlFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportPolyworksFileRequest(): ImportPolyworksFileRequest {
+  return { cloudName: undefined, filePath: undefined };
+}
+
+export const ImportPolyworksFileRequest: MessageFns<ImportPolyworksFileRequest> = {
+  encode(message: ImportPolyworksFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.cloudName !== undefined) {
+      CollectionObjectName.encode(message.cloudName, writer.uint32(10).fork()).join();
+    }
+    if (message.filePath !== undefined) {
+      FileReference.encode(message.filePath, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportPolyworksFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportPolyworksFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.cloudName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.filePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportPolyworksFileRequest>): ImportPolyworksFileRequest {
+    return ImportPolyworksFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportPolyworksFileRequest>): ImportPolyworksFileRequest {
+    const message = createBaseImportPolyworksFileRequest();
+    message.cloudName = (object.cloudName !== undefined && object.cloudName !== null)
+      ? CollectionObjectName.fromPartial(object.cloudName)
+      : undefined;
+    message.filePath = (object.filePath !== undefined && object.filePath !== null)
+      ? FileReference.fromPartial(object.filePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportPolyworksFileResult(): ImportPolyworksFileResult {
+  return { execution: undefined };
+}
+
+export const ImportPolyworksFileResult: MessageFns<ImportPolyworksFileResult> = {
+  encode(message: ImportPolyworksFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportPolyworksFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportPolyworksFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportPolyworksFileResult>): ImportPolyworksFileResult {
+    return ImportPolyworksFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportPolyworksFileResult>): ImportPolyworksFileResult {
+    const message = createBaseImportPolyworksFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportQdasCatalogFileRequest(): ImportQdasCatalogFileRequest {
+  return { qdasDfdFilePath: undefined };
+}
+
+export const ImportQdasCatalogFileRequest: MessageFns<ImportQdasCatalogFileRequest> = {
+  encode(message: ImportQdasCatalogFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.qdasDfdFilePath !== undefined) {
+      FileReference.encode(message.qdasDfdFilePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportQdasCatalogFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportQdasCatalogFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.qdasDfdFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportQdasCatalogFileRequest>): ImportQdasCatalogFileRequest {
+    return ImportQdasCatalogFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportQdasCatalogFileRequest>): ImportQdasCatalogFileRequest {
+    const message = createBaseImportQdasCatalogFileRequest();
+    message.qdasDfdFilePath = (object.qdasDfdFilePath !== undefined && object.qdasDfdFilePath !== null)
+      ? FileReference.fromPartial(object.qdasDfdFilePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportQdasCatalogFileResult(): ImportQdasCatalogFileResult {
+  return { execution: undefined };
+}
+
+export const ImportQdasCatalogFileResult: MessageFns<ImportQdasCatalogFileResult> = {
+  encode(message: ImportQdasCatalogFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportQdasCatalogFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportQdasCatalogFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportQdasCatalogFileResult>): ImportQdasCatalogFileResult {
+    return ImportQdasCatalogFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportQdasCatalogFileResult>): ImportQdasCatalogFileResult {
+    const message = createBaseImportQdasCatalogFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportSaFileRequest(): ImportSaFileRequest {
+  return { saFileName: undefined, allowOperatorSelections: undefined, selectedCollectionsOptional: [] };
+}
+
+export const ImportSaFileRequest: MessageFns<ImportSaFileRequest> = {
+  encode(message: ImportSaFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.saFileName !== undefined) {
+      FileReference.encode(message.saFileName, writer.uint32(10).fork()).join();
+    }
+    if (message.allowOperatorSelections !== undefined) {
+      writer.uint32(16).bool(message.allowOperatorSelections);
+    }
+    if (message.selectedCollectionsOptional !== undefined && message.selectedCollectionsOptional.length !== 0) {
+      for (const v of message.selectedCollectionsOptional) {
+        writer.uint32(26).string(v!);
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportSaFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportSaFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.saFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.allowOperatorSelections = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = reader.string();
+          if (el !== undefined) {
+            message.selectedCollectionsOptional!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportSaFileRequest>): ImportSaFileRequest {
+    return ImportSaFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportSaFileRequest>): ImportSaFileRequest {
+    const message = createBaseImportSaFileRequest();
+    message.saFileName = (object.saFileName !== undefined && object.saFileName !== null)
+      ? FileReference.fromPartial(object.saFileName)
+      : undefined;
+    message.allowOperatorSelections = object.allowOperatorSelections ?? undefined;
+    message.selectedCollectionsOptional = object.selectedCollectionsOptional?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseImportSaFileResult(): ImportSaFileResult {
+  return { execution: undefined };
+}
+
+export const ImportSaFileResult: MessageFns<ImportSaFileResult> = {
+  encode(message: ImportSaFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportSaFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportSaFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportSaFileResult>): ImportSaFileResult {
+    return ImportSaFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportSaFileResult>): ImportSaFileResult {
+    const message = createBaseImportSaFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportSaWindowsPlacementRequest(): ImportSaWindowsPlacementRequest {
+  return { filePath: undefined };
+}
+
+export const ImportSaWindowsPlacementRequest: MessageFns<ImportSaWindowsPlacementRequest> = {
+  encode(message: ImportSaWindowsPlacementRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.filePath !== undefined) {
+      FileReference.encode(message.filePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportSaWindowsPlacementRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportSaWindowsPlacementRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.filePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportSaWindowsPlacementRequest>): ImportSaWindowsPlacementRequest {
+    return ImportSaWindowsPlacementRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportSaWindowsPlacementRequest>): ImportSaWindowsPlacementRequest {
+    const message = createBaseImportSaWindowsPlacementRequest();
+    message.filePath = (object.filePath !== undefined && object.filePath !== null)
+      ? FileReference.fromPartial(object.filePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportSaWindowsPlacementResult(): ImportSaWindowsPlacementResult {
+  return { execution: undefined };
+}
+
+export const ImportSaWindowsPlacementResult: MessageFns<ImportSaWindowsPlacementResult> = {
+  encode(message: ImportSaWindowsPlacementResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportSaWindowsPlacementResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportSaWindowsPlacementResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportSaWindowsPlacementResult>): ImportSaWindowsPlacementResult {
+    return ImportSaWindowsPlacementResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportSaWindowsPlacementResult>): ImportSaWindowsPlacementResult {
+    const message = createBaseImportSaWindowsPlacementResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportSatFileRequest(): ImportSatFileRequest {
+  return { satFilePath: undefined };
+}
+
+export const ImportSatFileRequest: MessageFns<ImportSatFileRequest> = {
+  encode(message: ImportSatFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.satFilePath !== undefined) {
+      FileReference.encode(message.satFilePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportSatFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportSatFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.satFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportSatFileRequest>): ImportSatFileRequest {
+    return ImportSatFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportSatFileRequest>): ImportSatFileRequest {
+    const message = createBaseImportSatFileRequest();
+    message.satFilePath = (object.satFilePath !== undefined && object.satFilePath !== null)
+      ? FileReference.fromPartial(object.satFilePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportSatFileResult(): ImportSatFileResult {
+  return { execution: undefined };
+}
+
+export const ImportSatFileResult: MessageFns<ImportSatFileResult> = {
+  encode(message: ImportSatFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportSatFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportSatFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportSatFileResult>): ImportSatFileResult {
+    return ImportSatFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportSatFileResult>): ImportSatFileResult {
+    const message = createBaseImportSatFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportStepFileRequest(): ImportStepFileRequest {
+  return { stepFilePath: undefined, displayEntityFilters: undefined, displayResiduals: undefined };
+}
+
+export const ImportStepFileRequest: MessageFns<ImportStepFileRequest> = {
+  encode(message: ImportStepFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.stepFilePath !== undefined) {
+      FileReference.encode(message.stepFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.displayEntityFilters !== undefined) {
+      writer.uint32(16).bool(message.displayEntityFilters);
+    }
+    if (message.displayResiduals !== undefined) {
+      writer.uint32(24).bool(message.displayResiduals);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportStepFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportStepFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.stepFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.displayEntityFilters = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.displayResiduals = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportStepFileRequest>): ImportStepFileRequest {
+    return ImportStepFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportStepFileRequest>): ImportStepFileRequest {
+    const message = createBaseImportStepFileRequest();
+    message.stepFilePath = (object.stepFilePath !== undefined && object.stepFilePath !== null)
+      ? FileReference.fromPartial(object.stepFilePath)
+      : undefined;
+    message.displayEntityFilters = object.displayEntityFilters ?? undefined;
+    message.displayResiduals = object.displayResiduals ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportStepFileResult(): ImportStepFileResult {
+  return { execution: undefined };
+}
+
+export const ImportStepFileResult: MessageFns<ImportStepFileResult> = {
+  encode(message: ImportStepFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportStepFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportStepFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportStepFileResult>): ImportStepFileResult {
+    return ImportStepFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportStepFileResult>): ImportStepFileResult {
+    const message = createBaseImportStepFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportStlFileRequest(): ImportStlFileRequest {
+  return { stlFilePath: undefined, units: undefined, importMesh: undefined, importPointCloud: undefined };
+}
+
+export const ImportStlFileRequest: MessageFns<ImportStlFileRequest> = {
+  encode(message: ImportStlFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.stlFilePath !== undefined) {
+      FileReference.encode(message.stlFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.units !== undefined) {
+      writer.uint32(16).int32(message.units);
+    }
+    if (message.importMesh !== undefined) {
+      writer.uint32(24).bool(message.importMesh);
+    }
+    if (message.importPointCloud !== undefined) {
+      writer.uint32(32).bool(message.importPointCloud);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportStlFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportStlFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.stlFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.units = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.importMesh = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.importPointCloud = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportStlFileRequest>): ImportStlFileRequest {
+    return ImportStlFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportStlFileRequest>): ImportStlFileRequest {
+    const message = createBaseImportStlFileRequest();
+    message.stlFilePath = (object.stlFilePath !== undefined && object.stlFilePath !== null)
+      ? FileReference.fromPartial(object.stlFilePath)
+      : undefined;
+    message.units = object.units ?? undefined;
+    message.importMesh = object.importMesh ?? undefined;
+    message.importPointCloud = object.importPointCloud ?? undefined;
+    return message;
+  },
+};
+
+function createBaseImportStlFileResult(): ImportStlFileResult {
+  return { execution: undefined };
+}
+
+export const ImportStlFileResult: MessageFns<ImportStlFileResult> = {
+  encode(message: ImportStlFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportStlFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportStlFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportStlFileResult>): ImportStlFileResult {
+    return ImportStlFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportStlFileResult>): ImportStlFileResult {
+    const message = createBaseImportStlFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportVdaFsFileRequest(): ImportVdaFsFileRequest {
+  return { vdaFsFilePath: undefined };
+}
+
+export const ImportVdaFsFileRequest: MessageFns<ImportVdaFsFileRequest> = {
+  encode(message: ImportVdaFsFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.vdaFsFilePath !== undefined) {
+      FileReference.encode(message.vdaFsFilePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportVdaFsFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportVdaFsFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vdaFsFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportVdaFsFileRequest>): ImportVdaFsFileRequest {
+    return ImportVdaFsFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportVdaFsFileRequest>): ImportVdaFsFileRequest {
+    const message = createBaseImportVdaFsFileRequest();
+    message.vdaFsFilePath = (object.vdaFsFilePath !== undefined && object.vdaFsFilePath !== null)
+      ? FileReference.fromPartial(object.vdaFsFilePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportVdaFsFileResult(): ImportVdaFsFileResult {
+  return { execution: undefined };
+}
+
+export const ImportVdaFsFileResult: MessageFns<ImportVdaFsFileResult> = {
+  encode(message: ImportVdaFsFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportVdaFsFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportVdaFsFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportVdaFsFileResult>): ImportVdaFsFileResult {
+    return ImportVdaFsFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportVdaFsFileResult>): ImportVdaFsFileResult {
+    const message = createBaseImportVdaFsFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportVstarsXyzFileRequest(): ImportVstarsXyzFileRequest {
+  return { filePath: undefined };
+}
+
+export const ImportVstarsXyzFileRequest: MessageFns<ImportVstarsXyzFileRequest> = {
+  encode(message: ImportVstarsXyzFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.filePath !== undefined) {
+      FileReference.encode(message.filePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportVstarsXyzFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportVstarsXyzFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.filePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportVstarsXyzFileRequest>): ImportVstarsXyzFileRequest {
+    return ImportVstarsXyzFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportVstarsXyzFileRequest>): ImportVstarsXyzFileRequest {
+    const message = createBaseImportVstarsXyzFileRequest();
+    message.filePath = (object.filePath !== undefined && object.filePath !== null)
+      ? FileReference.fromPartial(object.filePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportVstarsXyzFileResult(): ImportVstarsXyzFileResult {
+  return { execution: undefined };
+}
+
+export const ImportVstarsXyzFileResult: MessageFns<ImportVstarsXyzFileResult> = {
+  encode(message: ImportVstarsXyzFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportVstarsXyzFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportVstarsXyzFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportVstarsXyzFileResult>): ImportVstarsXyzFileResult {
+    return ImportVstarsXyzFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportVstarsXyzFileResult>): ImportVstarsXyzFileResult {
+    const message = createBaseImportVstarsXyzFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportVstarsCamerasRequest(): ImportVstarsCamerasRequest {
+  return { filePath: undefined };
+}
+
+export const ImportVstarsCamerasRequest: MessageFns<ImportVstarsCamerasRequest> = {
+  encode(message: ImportVstarsCamerasRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.filePath !== undefined) {
+      FileReference.encode(message.filePath, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportVstarsCamerasRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportVstarsCamerasRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.filePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportVstarsCamerasRequest>): ImportVstarsCamerasRequest {
+    return ImportVstarsCamerasRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportVstarsCamerasRequest>): ImportVstarsCamerasRequest {
+    const message = createBaseImportVstarsCamerasRequest();
+    message.filePath = (object.filePath !== undefined && object.filePath !== null)
+      ? FileReference.fromPartial(object.filePath)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseImportVstarsCamerasResult(): ImportVstarsCamerasResult {
+  return { execution: undefined };
+}
+
+export const ImportVstarsCamerasResult: MessageFns<ImportVstarsCamerasResult> = {
+  encode(message: ImportVstarsCamerasResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportVstarsCamerasResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImportVstarsCamerasResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ImportVstarsCamerasResult>): ImportVstarsCamerasResult {
+    return ImportVstarsCamerasResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ImportVstarsCamerasResult>): ImportVstarsCamerasResult {
+    const message = createBaseImportVstarsCamerasResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseLoadHtmlFormRequest(): LoadHtmlFormRequest {
+  return {
+    inputHtmlFormPath: undefined,
+    windowWidth: undefined,
+    windowHeight: undefined,
+    inputDataShareFilePath: undefined,
+    outputDataShareFilePath: undefined,
+    saveInBinaryFormat: undefined,
+    saveButtonText: undefined,
+    cancelButtonText: undefined,
+    hideSaveAndCancelButtons: undefined,
+  };
+}
+
+export const LoadHtmlFormRequest: MessageFns<LoadHtmlFormRequest> = {
+  encode(message: LoadHtmlFormRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.inputHtmlFormPath !== undefined) {
+      FileReference.encode(message.inputHtmlFormPath, writer.uint32(10).fork()).join();
+    }
+    if (message.windowWidth !== undefined) {
+      writer.uint32(16).int32(message.windowWidth);
+    }
+    if (message.windowHeight !== undefined) {
+      writer.uint32(24).int32(message.windowHeight);
+    }
+    if (message.inputDataShareFilePath !== undefined) {
+      FileReference.encode(message.inputDataShareFilePath, writer.uint32(34).fork()).join();
+    }
+    if (message.outputDataShareFilePath !== undefined) {
+      FileReference.encode(message.outputDataShareFilePath, writer.uint32(42).fork()).join();
+    }
+    if (message.saveInBinaryFormat !== undefined) {
+      writer.uint32(48).bool(message.saveInBinaryFormat);
+    }
+    if (message.saveButtonText !== undefined) {
+      writer.uint32(58).string(message.saveButtonText);
+    }
+    if (message.cancelButtonText !== undefined) {
+      writer.uint32(66).string(message.cancelButtonText);
+    }
+    if (message.hideSaveAndCancelButtons !== undefined) {
+      writer.uint32(72).bool(message.hideSaveAndCancelButtons);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): LoadHtmlFormRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLoadHtmlFormRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.inputHtmlFormPath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.windowWidth = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.windowHeight = reader.int32();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.inputDataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.outputDataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.saveInBinaryFormat = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.saveButtonText = reader.string();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.cancelButtonText = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.hideSaveAndCancelButtons = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<LoadHtmlFormRequest>): LoadHtmlFormRequest {
+    return LoadHtmlFormRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<LoadHtmlFormRequest>): LoadHtmlFormRequest {
+    const message = createBaseLoadHtmlFormRequest();
+    message.inputHtmlFormPath = (object.inputHtmlFormPath !== undefined && object.inputHtmlFormPath !== null)
+      ? FileReference.fromPartial(object.inputHtmlFormPath)
+      : undefined;
+    message.windowWidth = object.windowWidth ?? undefined;
+    message.windowHeight = object.windowHeight ?? undefined;
+    message.inputDataShareFilePath =
+      (object.inputDataShareFilePath !== undefined && object.inputDataShareFilePath !== null)
+        ? FileReference.fromPartial(object.inputDataShareFilePath)
+        : undefined;
+    message.outputDataShareFilePath =
+      (object.outputDataShareFilePath !== undefined && object.outputDataShareFilePath !== null)
+        ? FileReference.fromPartial(object.outputDataShareFilePath)
+        : undefined;
+    message.saveInBinaryFormat = object.saveInBinaryFormat ?? undefined;
+    message.saveButtonText = object.saveButtonText ?? undefined;
+    message.cancelButtonText = object.cancelButtonText ?? undefined;
+    message.hideSaveAndCancelButtons = object.hideSaveAndCancelButtons ?? undefined;
+    return message;
+  },
+};
+
+function createBaseLoadHtmlFormResult(): LoadHtmlFormResult {
+  return { execution: undefined };
+}
+
+export const LoadHtmlFormResult: MessageFns<LoadHtmlFormResult> = {
+  encode(message: LoadHtmlFormResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): LoadHtmlFormResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLoadHtmlFormResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<LoadHtmlFormResult>): LoadHtmlFormResult {
+    return LoadHtmlFormResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<LoadHtmlFormResult>): LoadHtmlFormResult {
+    const message = createBaseLoadHtmlFormResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseLoadHtmlFormInEdgeBrowserRequest(): LoadHtmlFormInEdgeBrowserRequest {
+  return {
+    inputHtmlFormPath: undefined,
+    windowWidth: undefined,
+    windowHeight: undefined,
+    inputDataShareFilePath: undefined,
+    outputDataShareFilePath: undefined,
+    saveInBinaryFormat: undefined,
+  };
+}
+
+export const LoadHtmlFormInEdgeBrowserRequest: MessageFns<LoadHtmlFormInEdgeBrowserRequest> = {
+  encode(message: LoadHtmlFormInEdgeBrowserRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.inputHtmlFormPath !== undefined) {
+      FileReference.encode(message.inputHtmlFormPath, writer.uint32(10).fork()).join();
+    }
+    if (message.windowWidth !== undefined) {
+      writer.uint32(16).int32(message.windowWidth);
+    }
+    if (message.windowHeight !== undefined) {
+      writer.uint32(24).int32(message.windowHeight);
+    }
+    if (message.inputDataShareFilePath !== undefined) {
+      FileReference.encode(message.inputDataShareFilePath, writer.uint32(34).fork()).join();
+    }
+    if (message.outputDataShareFilePath !== undefined) {
+      FileReference.encode(message.outputDataShareFilePath, writer.uint32(42).fork()).join();
+    }
+    if (message.saveInBinaryFormat !== undefined) {
+      writer.uint32(48).bool(message.saveInBinaryFormat);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): LoadHtmlFormInEdgeBrowserRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLoadHtmlFormInEdgeBrowserRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.inputHtmlFormPath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.windowWidth = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.windowHeight = reader.int32();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.inputDataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.outputDataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.saveInBinaryFormat = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<LoadHtmlFormInEdgeBrowserRequest>): LoadHtmlFormInEdgeBrowserRequest {
+    return LoadHtmlFormInEdgeBrowserRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<LoadHtmlFormInEdgeBrowserRequest>): LoadHtmlFormInEdgeBrowserRequest {
+    const message = createBaseLoadHtmlFormInEdgeBrowserRequest();
+    message.inputHtmlFormPath = (object.inputHtmlFormPath !== undefined && object.inputHtmlFormPath !== null)
+      ? FileReference.fromPartial(object.inputHtmlFormPath)
+      : undefined;
+    message.windowWidth = object.windowWidth ?? undefined;
+    message.windowHeight = object.windowHeight ?? undefined;
+    message.inputDataShareFilePath =
+      (object.inputDataShareFilePath !== undefined && object.inputDataShareFilePath !== null)
+        ? FileReference.fromPartial(object.inputDataShareFilePath)
+        : undefined;
+    message.outputDataShareFilePath =
+      (object.outputDataShareFilePath !== undefined && object.outputDataShareFilePath !== null)
+        ? FileReference.fromPartial(object.outputDataShareFilePath)
+        : undefined;
+    message.saveInBinaryFormat = object.saveInBinaryFormat ?? undefined;
+    return message;
+  },
+};
+
+function createBaseLoadHtmlFormInEdgeBrowserResult(): LoadHtmlFormInEdgeBrowserResult {
+  return { execution: undefined };
+}
+
+export const LoadHtmlFormInEdgeBrowserResult: MessageFns<LoadHtmlFormInEdgeBrowserResult> = {
+  encode(message: LoadHtmlFormInEdgeBrowserResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): LoadHtmlFormInEdgeBrowserResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLoadHtmlFormInEdgeBrowserResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<LoadHtmlFormInEdgeBrowserResult>): LoadHtmlFormInEdgeBrowserResult {
+    return LoadHtmlFormInEdgeBrowserResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<LoadHtmlFormInEdgeBrowserResult>): LoadHtmlFormInEdgeBrowserResult {
+    const message = createBaseLoadHtmlFormInEdgeBrowserResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeEmbeddedFileNameListRequest(): MakeEmbeddedFileNameListRequest {
+  return { collectionWildcardCriteria: undefined, fileNamePattern: undefined };
+}
+
+export const MakeEmbeddedFileNameListRequest: MessageFns<MakeEmbeddedFileNameListRequest> = {
+  encode(message: MakeEmbeddedFileNameListRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionWildcardCriteria !== undefined) {
+      writer.uint32(10).string(message.collectionWildcardCriteria);
+    }
+    if (message.fileNamePattern !== undefined) {
+      writer.uint32(18).string(message.fileNamePattern);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeEmbeddedFileNameListRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeEmbeddedFileNameListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionWildcardCriteria = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.fileNamePattern = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeEmbeddedFileNameListRequest>): MakeEmbeddedFileNameListRequest {
+    return MakeEmbeddedFileNameListRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeEmbeddedFileNameListRequest>): MakeEmbeddedFileNameListRequest {
+    const message = createBaseMakeEmbeddedFileNameListRequest();
+    message.collectionWildcardCriteria = object.collectionWildcardCriteria ?? undefined;
+    message.fileNamePattern = object.fileNamePattern ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeEmbeddedFileNameListResult(): MakeEmbeddedFileNameListResult {
+  return { embeddedFiles: [], execution: undefined };
+}
+
+export const MakeEmbeddedFileNameListResult: MessageFns<MakeEmbeddedFileNameListResult> = {
+  encode(message: MakeEmbeddedFileNameListResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.embeddedFiles !== undefined && message.embeddedFiles.length !== 0) {
+      for (const v of message.embeddedFiles) {
+        writer.uint32(10).string(v!);
+      }
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeEmbeddedFileNameListResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeEmbeddedFileNameListResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = reader.string();
+          if (el !== undefined) {
+            message.embeddedFiles!.push(el);
+          }
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeEmbeddedFileNameListResult>): MakeEmbeddedFileNameListResult {
+    return MakeEmbeddedFileNameListResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeEmbeddedFileNameListResult>): MakeEmbeddedFileNameListResult {
+    const message = createBaseMakeEmbeddedFileNameListResult();
+    message.embeddedFiles = object.embeddedFiles?.map((e) => e) || [];
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMergeMeasurementsIntoXmlFileRequest(): MergeMeasurementsIntoXmlFileRequest {
+  return { filePath: undefined, groupName: undefined };
+}
+
+export const MergeMeasurementsIntoXmlFileRequest: MessageFns<MergeMeasurementsIntoXmlFileRequest> = {
+  encode(message: MergeMeasurementsIntoXmlFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.filePath !== undefined) {
+      FileReference.encode(message.filePath, writer.uint32(10).fork()).join();
+    }
+    if (message.groupName !== undefined) {
+      CollectionObjectName.encode(message.groupName, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MergeMeasurementsIntoXmlFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMergeMeasurementsIntoXmlFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.filePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MergeMeasurementsIntoXmlFileRequest>): MergeMeasurementsIntoXmlFileRequest {
+    return MergeMeasurementsIntoXmlFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MergeMeasurementsIntoXmlFileRequest>): MergeMeasurementsIntoXmlFileRequest {
+    const message = createBaseMergeMeasurementsIntoXmlFileRequest();
+    message.filePath = (object.filePath !== undefined && object.filePath !== null)
+      ? FileReference.fromPartial(object.filePath)
+      : undefined;
+    message.groupName = (object.groupName !== undefined && object.groupName !== null)
+      ? CollectionObjectName.fromPartial(object.groupName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMergeMeasurementsIntoXmlFileResult(): MergeMeasurementsIntoXmlFileResult {
+  return { execution: undefined };
+}
+
+export const MergeMeasurementsIntoXmlFileResult: MessageFns<MergeMeasurementsIntoXmlFileResult> = {
+  encode(message: MergeMeasurementsIntoXmlFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MergeMeasurementsIntoXmlFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMergeMeasurementsIntoXmlFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MergeMeasurementsIntoXmlFileResult>): MergeMeasurementsIntoXmlFileResult {
+    return MergeMeasurementsIntoXmlFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MergeMeasurementsIntoXmlFileResult>): MergeMeasurementsIntoXmlFileResult {
+    const message = createBaseMergeMeasurementsIntoXmlFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseNewSaFileRequest(): NewSaFileRequest {
+  return {};
+}
+
+export const NewSaFileRequest: MessageFns<NewSaFileRequest> = {
+  encode(_: NewSaFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): NewSaFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNewSaFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NewSaFileRequest>): NewSaFileRequest {
+    return NewSaFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(_: DeepPartial<NewSaFileRequest>): NewSaFileRequest {
+    const message = createBaseNewSaFileRequest();
+    return message;
+  },
+};
+
+function createBaseNewSaFileResult(): NewSaFileResult {
+  return { execution: undefined };
+}
+
+export const NewSaFileResult: MessageFns<NewSaFileResult> = {
+  encode(message: NewSaFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): NewSaFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNewSaFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NewSaFileResult>): NewSaFileResult {
+    return NewSaFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<NewSaFileResult>): NewSaFileResult {
+    const message = createBaseNewSaFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseOpenSaFileRequest(): OpenSaFileRequest {
+  return { saFileName: undefined };
+}
+
+export const OpenSaFileRequest: MessageFns<OpenSaFileRequest> = {
+  encode(message: OpenSaFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.saFileName !== undefined) {
+      FileReference.encode(message.saFileName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): OpenSaFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOpenSaFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.saFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OpenSaFileRequest>): OpenSaFileRequest {
+    return OpenSaFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<OpenSaFileRequest>): OpenSaFileRequest {
+    const message = createBaseOpenSaFileRequest();
+    message.saFileName = (object.saFileName !== undefined && object.saFileName !== null)
+      ? FileReference.fromPartial(object.saFileName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseOpenSaFileResult(): OpenSaFileResult {
+  return { execution: undefined };
+}
+
+export const OpenSaFileResult: MessageFns<OpenSaFileResult> = {
+  encode(message: OpenSaFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): OpenSaFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOpenSaFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OpenSaFileResult>): OpenSaFileResult {
+    return OpenSaFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<OpenSaFileResult>): OpenSaFileResult {
+    const message = createBaseOpenSaFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseOpenTemplateFileRequest(): OpenTemplateFileRequest {
+  return { templateFileName: undefined };
+}
+
+export const OpenTemplateFileRequest: MessageFns<OpenTemplateFileRequest> = {
+  encode(message: OpenTemplateFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.templateFileName !== undefined) {
+      FileReference.encode(message.templateFileName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): OpenTemplateFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOpenTemplateFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.templateFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OpenTemplateFileRequest>): OpenTemplateFileRequest {
+    return OpenTemplateFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<OpenTemplateFileRequest>): OpenTemplateFileRequest {
+    const message = createBaseOpenTemplateFileRequest();
+    message.templateFileName = (object.templateFileName !== undefined && object.templateFileName !== null)
+      ? FileReference.fromPartial(object.templateFileName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseOpenTemplateFileResult(): OpenTemplateFileResult {
+  return { execution: undefined };
+}
+
+export const OpenTemplateFileResult: MessageFns<OpenTemplateFileResult> = {
+  encode(message: OpenTemplateFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): OpenTemplateFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOpenTemplateFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OpenTemplateFileResult>): OpenTemplateFileResult {
+    return OpenTemplateFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<OpenTemplateFileResult>): OpenTemplateFileResult {
+    const message = createBaseOpenTemplateFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBasePopPolyBayAnalysisWindowRequest(): PopPolyBayAnalysisWindowRequest {
+  return { materialsFilePath: undefined, bayFilePath: undefined };
+}
+
+export const PopPolyBayAnalysisWindowRequest: MessageFns<PopPolyBayAnalysisWindowRequest> = {
+  encode(message: PopPolyBayAnalysisWindowRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.materialsFilePath !== undefined) {
+      writer.uint32(10).string(message.materialsFilePath);
+    }
+    if (message.bayFilePath !== undefined) {
+      writer.uint32(18).string(message.bayFilePath);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PopPolyBayAnalysisWindowRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePopPolyBayAnalysisWindowRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.materialsFilePath = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.bayFilePath = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PopPolyBayAnalysisWindowRequest>): PopPolyBayAnalysisWindowRequest {
+    return PopPolyBayAnalysisWindowRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PopPolyBayAnalysisWindowRequest>): PopPolyBayAnalysisWindowRequest {
+    const message = createBasePopPolyBayAnalysisWindowRequest();
+    message.materialsFilePath = object.materialsFilePath ?? undefined;
+    message.bayFilePath = object.bayFilePath ?? undefined;
+    return message;
+  },
+};
+
+function createBasePopPolyBayAnalysisWindowResult(): PopPolyBayAnalysisWindowResult {
+  return { execution: undefined };
+}
+
+export const PopPolyBayAnalysisWindowResult: MessageFns<PopPolyBayAnalysisWindowResult> = {
+  encode(message: PopPolyBayAnalysisWindowResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PopPolyBayAnalysisWindowResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePopPolyBayAnalysisWindowResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PopPolyBayAnalysisWindowResult>): PopPolyBayAnalysisWindowResult {
+    return PopPolyBayAnalysisWindowResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PopPolyBayAnalysisWindowResult>): PopPolyBayAnalysisWindowResult {
+    const message = createBasePopPolyBayAnalysisWindowResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBasePrepareQdasDataListRequest(): PrepareQdasDataListRequest {
+  return {
+    k1001PartNumber: undefined,
+    k1002PartDescription: undefined,
+    k1071SupplierNumber: undefined,
+    k1072SupplierDescription: undefined,
+    k1203ReasonForTest: undefined,
+    k1303Plant: undefined,
+    k1900PartRemark: undefined,
+    k0006BatchNumber: undefined,
+    k0014PartId: undefined,
+    k0053OrderNumber: undefined,
+    k0004DateTimeStamp: undefined,
+    k0008OperatorIdentifier: undefined,
+    k0010MachineIdentifier: undefined,
+    k0012GageIdentifier: undefined,
+    relationshipList: [],
+    featureCheckList: [],
+    vectorGroupList: [],
+  };
+}
+
+export const PrepareQdasDataListRequest: MessageFns<PrepareQdasDataListRequest> = {
+  encode(message: PrepareQdasDataListRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.k1001PartNumber !== undefined) {
+      writer.uint32(10).string(message.k1001PartNumber);
+    }
+    if (message.k1002PartDescription !== undefined) {
+      writer.uint32(18).string(message.k1002PartDescription);
+    }
+    if (message.k1071SupplierNumber !== undefined) {
+      writer.uint32(26).string(message.k1071SupplierNumber);
+    }
+    if (message.k1072SupplierDescription !== undefined) {
+      writer.uint32(34).string(message.k1072SupplierDescription);
+    }
+    if (message.k1203ReasonForTest !== undefined) {
+      writer.uint32(42).string(message.k1203ReasonForTest);
+    }
+    if (message.k1303Plant !== undefined) {
+      writer.uint32(50).string(message.k1303Plant);
+    }
+    if (message.k1900PartRemark !== undefined) {
+      writer.uint32(58).string(message.k1900PartRemark);
+    }
+    if (message.k0006BatchNumber !== undefined) {
+      writer.uint32(66).string(message.k0006BatchNumber);
+    }
+    if (message.k0014PartId !== undefined) {
+      writer.uint32(74).string(message.k0014PartId);
+    }
+    if (message.k0053OrderNumber !== undefined) {
+      writer.uint32(82).string(message.k0053OrderNumber);
+    }
+    if (message.k0004DateTimeStamp !== undefined) {
+      writer.uint32(90).string(message.k0004DateTimeStamp);
+    }
+    if (message.k0008OperatorIdentifier !== undefined) {
+      writer.uint32(96).int32(message.k0008OperatorIdentifier);
+    }
+    if (message.k0010MachineIdentifier !== undefined) {
+      writer.uint32(104).int32(message.k0010MachineIdentifier);
+    }
+    if (message.k0012GageIdentifier !== undefined) {
+      writer.uint32(112).int32(message.k0012GageIdentifier);
+    }
+    if (message.relationshipList !== undefined && message.relationshipList.length !== 0) {
+      for (const v of message.relationshipList) {
+        CollectionItemName.encode(v!, writer.uint32(122).fork()).join();
+      }
+    }
+    if (message.featureCheckList !== undefined && message.featureCheckList.length !== 0) {
+      for (const v of message.featureCheckList) {
+        CollectionItemName.encode(v!, writer.uint32(130).fork()).join();
+      }
+    }
+    if (message.vectorGroupList !== undefined && message.vectorGroupList.length !== 0) {
+      for (const v of message.vectorGroupList) {
+        CollectionObjectName.encode(v!, writer.uint32(138).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PrepareQdasDataListRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePrepareQdasDataListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.k1001PartNumber = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.k1002PartDescription = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.k1071SupplierNumber = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.k1072SupplierDescription = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.k1203ReasonForTest = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.k1303Plant = reader.string();
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.k1900PartRemark = reader.string();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.k0006BatchNumber = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.k0014PartId = reader.string();
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
+          message.k0053OrderNumber = reader.string();
+          continue;
+        }
+        case 11: {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.k0004DateTimeStamp = reader.string();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.k0008OperatorIdentifier = reader.int32();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.k0010MachineIdentifier = reader.int32();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.k0012GageIdentifier = reader.int32();
+          continue;
+        }
+        case 15: {
+          if (tag !== 122) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.relationshipList!.push(el);
+          }
+          continue;
+        }
+        case 16: {
+          if (tag !== 130) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.featureCheckList!.push(el);
+          }
+          continue;
+        }
+        case 17: {
+          if (tag !== 138) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.vectorGroupList!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PrepareQdasDataListRequest>): PrepareQdasDataListRequest {
+    return PrepareQdasDataListRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PrepareQdasDataListRequest>): PrepareQdasDataListRequest {
+    const message = createBasePrepareQdasDataListRequest();
+    message.k1001PartNumber = object.k1001PartNumber ?? undefined;
+    message.k1002PartDescription = object.k1002PartDescription ?? undefined;
+    message.k1071SupplierNumber = object.k1071SupplierNumber ?? undefined;
+    message.k1072SupplierDescription = object.k1072SupplierDescription ?? undefined;
+    message.k1203ReasonForTest = object.k1203ReasonForTest ?? undefined;
+    message.k1303Plant = object.k1303Plant ?? undefined;
+    message.k1900PartRemark = object.k1900PartRemark ?? undefined;
+    message.k0006BatchNumber = object.k0006BatchNumber ?? undefined;
+    message.k0014PartId = object.k0014PartId ?? undefined;
+    message.k0053OrderNumber = object.k0053OrderNumber ?? undefined;
+    message.k0004DateTimeStamp = object.k0004DateTimeStamp ?? undefined;
+    message.k0008OperatorIdentifier = object.k0008OperatorIdentifier ?? undefined;
+    message.k0010MachineIdentifier = object.k0010MachineIdentifier ?? undefined;
+    message.k0012GageIdentifier = object.k0012GageIdentifier ?? undefined;
+    message.relationshipList = object.relationshipList?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.featureCheckList = object.featureCheckList?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.vectorGroupList = object.vectorGroupList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasePrepareQdasDataListResult(): PrepareQdasDataListResult {
+  return { execution: undefined };
+}
+
+export const PrepareQdasDataListResult: MessageFns<PrepareQdasDataListResult> = {
+  encode(message: PrepareQdasDataListResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PrepareQdasDataListResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePrepareQdasDataListResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PrepareQdasDataListResult>): PrepareQdasDataListResult {
+    return PrepareQdasDataListResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PrepareQdasDataListResult>): PrepareQdasDataListResult {
+    const message = createBasePrepareQdasDataListResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseRenameGeneralFileRequest(): RenameGeneralFileRequest {
+  return { sourceFileName: undefined, destinationFileName: undefined, overwrite: undefined };
+}
+
+export const RenameGeneralFileRequest: MessageFns<RenameGeneralFileRequest> = {
+  encode(message: RenameGeneralFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.sourceFileName !== undefined) {
+      FileReference.encode(message.sourceFileName, writer.uint32(10).fork()).join();
+    }
+    if (message.destinationFileName !== undefined) {
+      FileReference.encode(message.destinationFileName, writer.uint32(18).fork()).join();
+    }
+    if (message.overwrite !== undefined) {
+      writer.uint32(24).bool(message.overwrite);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RenameGeneralFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRenameGeneralFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.sourceFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.destinationFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.overwrite = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RenameGeneralFileRequest>): RenameGeneralFileRequest {
+    return RenameGeneralFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<RenameGeneralFileRequest>): RenameGeneralFileRequest {
+    const message = createBaseRenameGeneralFileRequest();
+    message.sourceFileName = (object.sourceFileName !== undefined && object.sourceFileName !== null)
+      ? FileReference.fromPartial(object.sourceFileName)
+      : undefined;
+    message.destinationFileName = (object.destinationFileName !== undefined && object.destinationFileName !== null)
+      ? FileReference.fromPartial(object.destinationFileName)
+      : undefined;
+    message.overwrite = object.overwrite ?? undefined;
+    return message;
+  },
+};
+
+function createBaseRenameGeneralFileResult(): RenameGeneralFileResult {
+  return { execution: undefined };
+}
+
+export const RenameGeneralFileResult: MessageFns<RenameGeneralFileResult> = {
+  encode(message: RenameGeneralFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RenameGeneralFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRenameGeneralFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RenameGeneralFileResult>): RenameGeneralFileResult {
+    return RenameGeneralFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<RenameGeneralFileResult>): RenameGeneralFileResult {
+    const message = createBaseRenameGeneralFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSaveRequest(): SaveRequest {
+  return {};
+}
+
+export const SaveRequest: MessageFns<SaveRequest> = {
+  encode(_: SaveRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SaveRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSaveRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SaveRequest>): SaveRequest {
+    return SaveRequest.fromPartial(base ?? {});
+  },
+  fromPartial(_: DeepPartial<SaveRequest>): SaveRequest {
+    const message = createBaseSaveRequest();
+    return message;
+  },
+};
+
+function createBaseSaveResult(): SaveResult {
+  return { execution: undefined };
+}
+
+export const SaveResult: MessageFns<SaveResult> = {
+  encode(message: SaveResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SaveResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSaveResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SaveResult>): SaveResult {
+    return SaveResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SaveResult>): SaveResult {
+    const message = createBaseSaveResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSaveAsReadOnlyTemplateRequest(): SaveAsReadOnlyTemplateRequest {
+  return { templateFileName: undefined };
+}
+
+export const SaveAsReadOnlyTemplateRequest: MessageFns<SaveAsReadOnlyTemplateRequest> = {
+  encode(message: SaveAsReadOnlyTemplateRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.templateFileName !== undefined) {
+      FileReference.encode(message.templateFileName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SaveAsReadOnlyTemplateRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSaveAsReadOnlyTemplateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.templateFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SaveAsReadOnlyTemplateRequest>): SaveAsReadOnlyTemplateRequest {
+    return SaveAsReadOnlyTemplateRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SaveAsReadOnlyTemplateRequest>): SaveAsReadOnlyTemplateRequest {
+    const message = createBaseSaveAsReadOnlyTemplateRequest();
+    message.templateFileName = (object.templateFileName !== undefined && object.templateFileName !== null)
+      ? FileReference.fromPartial(object.templateFileName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSaveAsReadOnlyTemplateResult(): SaveAsReadOnlyTemplateResult {
+  return { execution: undefined };
+}
+
+export const SaveAsReadOnlyTemplateResult: MessageFns<SaveAsReadOnlyTemplateResult> = {
+  encode(message: SaveAsReadOnlyTemplateResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SaveAsReadOnlyTemplateResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSaveAsReadOnlyTemplateResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SaveAsReadOnlyTemplateResult>): SaveAsReadOnlyTemplateResult {
+    return SaveAsReadOnlyTemplateResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SaveAsReadOnlyTemplateResult>): SaveAsReadOnlyTemplateResult {
+    const message = createBaseSaveAsReadOnlyTemplateResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSaveAsRequest(): SaveAsRequest {
+  return { fileName: undefined, addSerialNumber: undefined, optionalNumber: undefined };
+}
+
+export const SaveAsRequest: MessageFns<SaveAsRequest> = {
+  encode(message: SaveAsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fileName !== undefined) {
+      FileReference.encode(message.fileName, writer.uint32(10).fork()).join();
+    }
+    if (message.addSerialNumber !== undefined) {
+      writer.uint32(16).bool(message.addSerialNumber);
+    }
+    if (message.optionalNumber !== undefined) {
+      writer.uint32(24).int32(message.optionalNumber);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SaveAsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSaveAsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.addSerialNumber = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.optionalNumber = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SaveAsRequest>): SaveAsRequest {
+    return SaveAsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SaveAsRequest>): SaveAsRequest {
+    const message = createBaseSaveAsRequest();
+    message.fileName = (object.fileName !== undefined && object.fileName !== null)
+      ? FileReference.fromPartial(object.fileName)
+      : undefined;
+    message.addSerialNumber = object.addSerialNumber ?? undefined;
+    message.optionalNumber = object.optionalNumber ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSaveAsResult(): SaveAsResult {
+  return { execution: undefined };
+}
+
+export const SaveAsResult: MessageFns<SaveAsResult> = {
+  encode(message: SaveAsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SaveAsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSaveAsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SaveAsResult>): SaveAsResult {
+    return SaveAsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SaveAsResult>): SaveAsResult {
+    const message = createBaseSaveAsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetBooleanInDataShareFileRequest(): SetBooleanInDataShareFileRequest {
+  return { dataShareFilePath: undefined, booleanName: undefined, booleanValue: undefined };
+}
+
+export const SetBooleanInDataShareFileRequest: MessageFns<SetBooleanInDataShareFileRequest> = {
+  encode(message: SetBooleanInDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.booleanName !== undefined) {
+      writer.uint32(18).string(message.booleanName);
+    }
+    if (message.booleanValue !== undefined) {
+      writer.uint32(24).bool(message.booleanValue);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetBooleanInDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetBooleanInDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.booleanName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.booleanValue = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetBooleanInDataShareFileRequest>): SetBooleanInDataShareFileRequest {
+    return SetBooleanInDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetBooleanInDataShareFileRequest>): SetBooleanInDataShareFileRequest {
+    const message = createBaseSetBooleanInDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.booleanName = object.booleanName ?? undefined;
+    message.booleanValue = object.booleanValue ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetBooleanInDataShareFileResult(): SetBooleanInDataShareFileResult {
+  return { execution: undefined };
+}
+
+export const SetBooleanInDataShareFileResult: MessageFns<SetBooleanInDataShareFileResult> = {
+  encode(message: SetBooleanInDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetBooleanInDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetBooleanInDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetBooleanInDataShareFileResult>): SetBooleanInDataShareFileResult {
+    return SetBooleanInDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetBooleanInDataShareFileResult>): SetBooleanInDataShareFileResult {
+    const message = createBaseSetBooleanInDataShareFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetDoubleInDataShareFileRequest(): SetDoubleInDataShareFileRequest {
+  return { dataShareFilePath: undefined, doubleName: undefined, doubleValue: undefined };
+}
+
+export const SetDoubleInDataShareFileRequest: MessageFns<SetDoubleInDataShareFileRequest> = {
+  encode(message: SetDoubleInDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.doubleName !== undefined) {
+      writer.uint32(18).string(message.doubleName);
+    }
+    if (message.doubleValue !== undefined) {
+      writer.uint32(25).double(message.doubleValue);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetDoubleInDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetDoubleInDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.doubleName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.doubleValue = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetDoubleInDataShareFileRequest>): SetDoubleInDataShareFileRequest {
+    return SetDoubleInDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetDoubleInDataShareFileRequest>): SetDoubleInDataShareFileRequest {
+    const message = createBaseSetDoubleInDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.doubleName = object.doubleName ?? undefined;
+    message.doubleValue = object.doubleValue ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetDoubleInDataShareFileResult(): SetDoubleInDataShareFileResult {
+  return { execution: undefined };
+}
+
+export const SetDoubleInDataShareFileResult: MessageFns<SetDoubleInDataShareFileResult> = {
+  encode(message: SetDoubleInDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetDoubleInDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetDoubleInDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetDoubleInDataShareFileResult>): SetDoubleInDataShareFileResult {
+    return SetDoubleInDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetDoubleInDataShareFileResult>): SetDoubleInDataShareFileResult {
+    const message = createBaseSetDoubleInDataShareFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetIntegerInDataShareFileRequest(): SetIntegerInDataShareFileRequest {
+  return { dataShareFilePath: undefined, integerName: undefined, integerValue: undefined };
+}
+
+export const SetIntegerInDataShareFileRequest: MessageFns<SetIntegerInDataShareFileRequest> = {
+  encode(message: SetIntegerInDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.integerName !== undefined) {
+      writer.uint32(18).string(message.integerName);
+    }
+    if (message.integerValue !== undefined) {
+      writer.uint32(24).int32(message.integerValue);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetIntegerInDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetIntegerInDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.integerName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.integerValue = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetIntegerInDataShareFileRequest>): SetIntegerInDataShareFileRequest {
+    return SetIntegerInDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetIntegerInDataShareFileRequest>): SetIntegerInDataShareFileRequest {
+    const message = createBaseSetIntegerInDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.integerName = object.integerName ?? undefined;
+    message.integerValue = object.integerValue ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetIntegerInDataShareFileResult(): SetIntegerInDataShareFileResult {
+  return { execution: undefined };
+}
+
+export const SetIntegerInDataShareFileResult: MessageFns<SetIntegerInDataShareFileResult> = {
+  encode(message: SetIntegerInDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetIntegerInDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetIntegerInDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetIntegerInDataShareFileResult>): SetIntegerInDataShareFileResult {
+    return SetIntegerInDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetIntegerInDataShareFileResult>): SetIntegerInDataShareFileResult {
+    const message = createBaseSetIntegerInDataShareFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetStringInDataShareFileRequest(): SetStringInDataShareFileRequest {
+  return { dataShareFilePath: undefined, stringName: undefined, stringValue: undefined };
+}
+
+export const SetStringInDataShareFileRequest: MessageFns<SetStringInDataShareFileRequest> = {
+  encode(message: SetStringInDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.stringName !== undefined) {
+      writer.uint32(18).string(message.stringName);
+    }
+    if (message.stringValue !== undefined) {
+      writer.uint32(26).string(message.stringValue);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetStringInDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetStringInDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.stringName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.stringValue = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetStringInDataShareFileRequest>): SetStringInDataShareFileRequest {
+    return SetStringInDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetStringInDataShareFileRequest>): SetStringInDataShareFileRequest {
+    const message = createBaseSetStringInDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.stringName = object.stringName ?? undefined;
+    message.stringValue = object.stringValue ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetStringInDataShareFileResult(): SetStringInDataShareFileResult {
+  return { execution: undefined };
+}
+
+export const SetStringInDataShareFileResult: MessageFns<SetStringInDataShareFileResult> = {
+  encode(message: SetStringInDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetStringInDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetStringInDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetStringInDataShareFileResult>): SetStringInDataShareFileResult {
+    return SetStringInDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetStringInDataShareFileResult>): SetStringInDataShareFileResult {
+    const message = createBaseSetStringInDataShareFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetTransformInDataShareFileRequest(): SetTransformInDataShareFileRequest {
+  return { dataShareFilePath: undefined, transformName: undefined, transformValue: undefined };
+}
+
+export const SetTransformInDataShareFileRequest: MessageFns<SetTransformInDataShareFileRequest> = {
+  encode(message: SetTransformInDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.transformName !== undefined) {
+      writer.uint32(18).string(message.transformName);
+    }
+    if (message.transformValue !== undefined) {
+      Transform.encode(message.transformValue, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetTransformInDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetTransformInDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.transformName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.transformValue = Transform.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetTransformInDataShareFileRequest>): SetTransformInDataShareFileRequest {
+    return SetTransformInDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetTransformInDataShareFileRequest>): SetTransformInDataShareFileRequest {
+    const message = createBaseSetTransformInDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.transformName = object.transformName ?? undefined;
+    message.transformValue = (object.transformValue !== undefined && object.transformValue !== null)
+      ? Transform.fromPartial(object.transformValue)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetTransformInDataShareFileResult(): SetTransformInDataShareFileResult {
+  return { execution: undefined };
+}
+
+export const SetTransformInDataShareFileResult: MessageFns<SetTransformInDataShareFileResult> = {
+  encode(message: SetTransformInDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetTransformInDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetTransformInDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetTransformInDataShareFileResult>): SetTransformInDataShareFileResult {
+    return SetTransformInDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetTransformInDataShareFileResult>): SetTransformInDataShareFileResult {
+    const message = createBaseSetTransformInDataShareFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorInDataShareFileRequest(): SetVectorInDataShareFileRequest {
+  return { dataShareFilePath: undefined, vectorName: undefined, vectorValue: undefined };
+}
+
+export const SetVectorInDataShareFileRequest: MessageFns<SetVectorInDataShareFileRequest> = {
+  encode(message: SetVectorInDataShareFileRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dataShareFilePath !== undefined) {
+      FileReference.encode(message.dataShareFilePath, writer.uint32(10).fork()).join();
+    }
+    if (message.vectorName !== undefined) {
+      writer.uint32(18).string(message.vectorName);
+    }
+    if (message.vectorValue !== undefined) {
+      Vector.encode(message.vectorValue, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorInDataShareFileRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorInDataShareFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.dataShareFilePath = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.vectorName = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.vectorValue = Vector.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetVectorInDataShareFileRequest>): SetVectorInDataShareFileRequest {
+    return SetVectorInDataShareFileRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetVectorInDataShareFileRequest>): SetVectorInDataShareFileRequest {
+    const message = createBaseSetVectorInDataShareFileRequest();
+    message.dataShareFilePath = (object.dataShareFilePath !== undefined && object.dataShareFilePath !== null)
+      ? FileReference.fromPartial(object.dataShareFilePath)
+      : undefined;
+    message.vectorName = object.vectorName ?? undefined;
+    message.vectorValue = (object.vectorValue !== undefined && object.vectorValue !== null)
+      ? Vector.fromPartial(object.vectorValue)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorInDataShareFileResult(): SetVectorInDataShareFileResult {
+  return { execution: undefined };
+}
+
+export const SetVectorInDataShareFileResult: MessageFns<SetVectorInDataShareFileResult> = {
+  encode(message: SetVectorInDataShareFileResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorInDataShareFileResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorInDataShareFileResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetVectorInDataShareFileResult>): SetVectorInDataShareFileResult {
+    return SetVectorInDataShareFileResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetVectorInDataShareFileResult>): SetVectorInDataShareFileResult {
+    const message = createBaseSetVectorInDataShareFileResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseTerminateAllRunningMPsRequest(): TerminateAllRunningMPsRequest {
+  return {};
+}
+
+export const TerminateAllRunningMPsRequest: MessageFns<TerminateAllRunningMPsRequest> = {
+  encode(_: TerminateAllRunningMPsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TerminateAllRunningMPsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTerminateAllRunningMPsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<TerminateAllRunningMPsRequest>): TerminateAllRunningMPsRequest {
+    return TerminateAllRunningMPsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(_: DeepPartial<TerminateAllRunningMPsRequest>): TerminateAllRunningMPsRequest {
+    const message = createBaseTerminateAllRunningMPsRequest();
+    return message;
+  },
+};
+
+function createBaseTerminateAllRunningMPsResult(): TerminateAllRunningMPsResult {
+  return { execution: undefined };
+}
+
+export const TerminateAllRunningMPsResult: MessageFns<TerminateAllRunningMPsResult> = {
+  encode(message: TerminateAllRunningMPsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TerminateAllRunningMPsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTerminateAllRunningMPsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<TerminateAllRunningMPsResult>): TerminateAllRunningMPsResult {
+    return TerminateAllRunningMPsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<TerminateAllRunningMPsResult>): TerminateAllRunningMPsResult {
+    const message = createBaseTerminateAllRunningMPsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseUseNrkxmlLibraryRequest(): UseNrkxmlLibraryRequest {
+  return { useLibrary: undefined };
+}
+
+export const UseNrkxmlLibraryRequest: MessageFns<UseNrkxmlLibraryRequest> = {
+  encode(message: UseNrkxmlLibraryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.useLibrary !== undefined) {
+      writer.uint32(8).bool(message.useLibrary);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UseNrkxmlLibraryRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUseNrkxmlLibraryRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.useLibrary = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UseNrkxmlLibraryRequest>): UseNrkxmlLibraryRequest {
+    return UseNrkxmlLibraryRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<UseNrkxmlLibraryRequest>): UseNrkxmlLibraryRequest {
+    const message = createBaseUseNrkxmlLibraryRequest();
+    message.useLibrary = object.useLibrary ?? undefined;
+    return message;
+  },
+};
+
+function createBaseUseNrkxmlLibraryResult(): UseNrkxmlLibraryResult {
+  return { execution: undefined };
+}
+
+export const UseNrkxmlLibraryResult: MessageFns<UseNrkxmlLibraryResult> = {
+  encode(message: UseNrkxmlLibraryResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UseNrkxmlLibraryResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUseNrkxmlLibraryResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UseNrkxmlLibraryResult>): UseNrkxmlLibraryResult {
+    return UseNrkxmlLibraryResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<UseNrkxmlLibraryResult>): UseNrkxmlLibraryResult {
+    const message = createBaseUseNrkxmlLibraryResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseVerifyGeneralFileExistsRequest(): VerifyGeneralFileExistsRequest {
+  return { fileName: undefined };
+}
+
+export const VerifyGeneralFileExistsRequest: MessageFns<VerifyGeneralFileExistsRequest> = {
+  encode(message: VerifyGeneralFileExistsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fileName !== undefined) {
+      FileReference.encode(message.fileName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VerifyGeneralFileExistsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVerifyGeneralFileExistsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<VerifyGeneralFileExistsRequest>): VerifyGeneralFileExistsRequest {
+    return VerifyGeneralFileExistsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<VerifyGeneralFileExistsRequest>): VerifyGeneralFileExistsRequest {
+    const message = createBaseVerifyGeneralFileExistsRequest();
+    message.fileName = (object.fileName !== undefined && object.fileName !== null)
+      ? FileReference.fromPartial(object.fileName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseVerifyGeneralFileExistsResult(): VerifyGeneralFileExistsResult {
+  return { execution: undefined };
+}
+
+export const VerifyGeneralFileExistsResult: MessageFns<VerifyGeneralFileExistsResult> = {
+  encode(message: VerifyGeneralFileExistsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VerifyGeneralFileExistsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVerifyGeneralFileExistsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<VerifyGeneralFileExistsResult>): VerifyGeneralFileExistsResult {
+    return VerifyGeneralFileExistsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<VerifyGeneralFileExistsResult>): VerifyGeneralFileExistsResult {
+    const message = createBaseVerifyGeneralFileExistsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseVerifyMpFileExistsRequest(): VerifyMpFileExistsRequest {
+  return { mpFileName: undefined };
+}
+
+export const VerifyMpFileExistsRequest: MessageFns<VerifyMpFileExistsRequest> = {
+  encode(message: VerifyMpFileExistsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.mpFileName !== undefined) {
+      FileReference.encode(message.mpFileName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VerifyMpFileExistsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVerifyMpFileExistsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.mpFileName = FileReference.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<VerifyMpFileExistsRequest>): VerifyMpFileExistsRequest {
+    return VerifyMpFileExistsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<VerifyMpFileExistsRequest>): VerifyMpFileExistsRequest {
+    const message = createBaseVerifyMpFileExistsRequest();
+    message.mpFileName = (object.mpFileName !== undefined && object.mpFileName !== null)
+      ? FileReference.fromPartial(object.mpFileName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseVerifyMpFileExistsResult(): VerifyMpFileExistsResult {
+  return { execution: undefined };
+}
+
+export const VerifyMpFileExistsResult: MessageFns<VerifyMpFileExistsResult> = {
+  encode(message: VerifyMpFileExistsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VerifyMpFileExistsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVerifyMpFileExistsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<VerifyMpFileExistsResult>): VerifyMpFileExistsResult {
+    return VerifyMpFileExistsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<VerifyMpFileExistsResult>): VerifyMpFileExistsResult {
+    const message = createBaseVerifyMpFileExistsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
 export type FileOperationsService = typeof FileOperationsService;
 export const FileOperationsService = {
-  /** Executes the "Get Working Directory" MP command. */
+  backupNow: {
+    path: "/briosa.FileOperations/BackupNow" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: BackupNowRequest): Buffer => Buffer.from(BackupNowRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): BackupNowRequest => BackupNowRequest.decode(value),
+    responseSerialize: (value: BackupNowResult): Buffer => Buffer.from(BackupNowResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): BackupNowResult => BackupNowResult.decode(value),
+  },
+  copyGeneralFile: {
+    path: "/briosa.FileOperations/CopyGeneralFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: CopyGeneralFileRequest): Buffer =>
+      Buffer.from(CopyGeneralFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): CopyGeneralFileRequest => CopyGeneralFileRequest.decode(value),
+    responseSerialize: (value: CopyGeneralFileResult): Buffer =>
+      Buffer.from(CopyGeneralFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): CopyGeneralFileResult => CopyGeneralFileResult.decode(value),
+  },
+  deleteGeneralFile: {
+    path: "/briosa.FileOperations/DeleteGeneralFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: DeleteGeneralFileRequest): Buffer =>
+      Buffer.from(DeleteGeneralFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): DeleteGeneralFileRequest => DeleteGeneralFileRequest.decode(value),
+    responseSerialize: (value: DeleteGeneralFileResult): Buffer =>
+      Buffer.from(DeleteGeneralFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): DeleteGeneralFileResult => DeleteGeneralFileResult.decode(value),
+  },
+  directCadAccess: {
+    path: "/briosa.FileOperations/DirectCadAccess" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: DirectCadAccessRequest): Buffer =>
+      Buffer.from(DirectCadAccessRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): DirectCadAccessRequest => DirectCadAccessRequest.decode(value),
+    responseSerialize: (value: DirectCadAccessResult): Buffer =>
+      Buffer.from(DirectCadAccessResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): DirectCadAccessResult => DirectCadAccessResult.decode(value),
+  },
+  exportAsciiFrameSet: {
+    path: "/briosa.FileOperations/ExportAsciiFrameSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportAsciiFrameSetRequest): Buffer =>
+      Buffer.from(ExportAsciiFrameSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportAsciiFrameSetRequest => ExportAsciiFrameSetRequest.decode(value),
+    responseSerialize: (value: ExportAsciiFrameSetResult): Buffer =>
+      Buffer.from(ExportAsciiFrameSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportAsciiFrameSetResult => ExportAsciiFrameSetResult.decode(value),
+  },
+  exportAsciiFrames: {
+    path: "/briosa.FileOperations/ExportAsciiFrames" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportAsciiFramesRequest): Buffer =>
+      Buffer.from(ExportAsciiFramesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportAsciiFramesRequest => ExportAsciiFramesRequest.decode(value),
+    responseSerialize: (value: ExportAsciiFramesResult): Buffer =>
+      Buffer.from(ExportAsciiFramesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportAsciiFramesResult => ExportAsciiFramesResult.decode(value),
+  },
+  exportAsciiPointClouds: {
+    path: "/briosa.FileOperations/ExportAsciiPointClouds" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportAsciiPointCloudsRequest): Buffer =>
+      Buffer.from(ExportAsciiPointCloudsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportAsciiPointCloudsRequest => ExportAsciiPointCloudsRequest.decode(value),
+    responseSerialize: (value: ExportAsciiPointCloudsResult): Buffer =>
+      Buffer.from(ExportAsciiPointCloudsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportAsciiPointCloudsResult => ExportAsciiPointCloudsResult.decode(value),
+  },
+  exportAsciiPointSet: {
+    path: "/briosa.FileOperations/ExportAsciiPointSet" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportAsciiPointSetRequest): Buffer =>
+      Buffer.from(ExportAsciiPointSetRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportAsciiPointSetRequest => ExportAsciiPointSetRequest.decode(value),
+    responseSerialize: (value: ExportAsciiPointSetResult): Buffer =>
+      Buffer.from(ExportAsciiPointSetResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportAsciiPointSetResult => ExportAsciiPointSetResult.decode(value),
+  },
+  exportAsciiPoints: {
+    path: "/briosa.FileOperations/ExportAsciiPoints" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportAsciiPointsRequest): Buffer =>
+      Buffer.from(ExportAsciiPointsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportAsciiPointsRequest => ExportAsciiPointsRequest.decode(value),
+    responseSerialize: (value: ExportAsciiPointsResult): Buffer =>
+      Buffer.from(ExportAsciiPointsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportAsciiPointsResult => ExportAsciiPointsResult.decode(value),
+  },
+  exportDxf: {
+    path: "/briosa.FileOperations/ExportDxf" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportDxfRequest): Buffer => Buffer.from(ExportDxfRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportDxfRequest => ExportDxfRequest.decode(value),
+    responseSerialize: (value: ExportDxfResult): Buffer => Buffer.from(ExportDxfResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportDxfResult => ExportDxfResult.decode(value),
+  },
+  exportEmbeddedFile: {
+    path: "/briosa.FileOperations/ExportEmbeddedFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportEmbeddedFileRequest): Buffer =>
+      Buffer.from(ExportEmbeddedFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportEmbeddedFileRequest => ExportEmbeddedFileRequest.decode(value),
+    responseSerialize: (value: ExportEmbeddedFileResult): Buffer =>
+      Buffer.from(ExportEmbeddedFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportEmbeddedFileResult => ExportEmbeddedFileResult.decode(value),
+  },
+  exportHiddenPointBarXmlFile: {
+    path: "/briosa.FileOperations/ExportHiddenPointBarXmlFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportHiddenPointBarXmlFileRequest): Buffer =>
+      Buffer.from(ExportHiddenPointBarXmlFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportHiddenPointBarXmlFileRequest =>
+      ExportHiddenPointBarXmlFileRequest.decode(value),
+    responseSerialize: (value: ExportHiddenPointBarXmlFileResult): Buffer =>
+      Buffer.from(ExportHiddenPointBarXmlFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportHiddenPointBarXmlFileResult =>
+      ExportHiddenPointBarXmlFileResult.decode(value),
+  },
+  exportIgesFileEntireModel: {
+    path: "/briosa.FileOperations/ExportIgesFileEntireModel" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportIgesFileEntireModelRequest): Buffer =>
+      Buffer.from(ExportIgesFileEntireModelRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportIgesFileEntireModelRequest =>
+      ExportIgesFileEntireModelRequest.decode(value),
+    responseSerialize: (value: ExportIgesFileEntireModelResult): Buffer =>
+      Buffer.from(ExportIgesFileEntireModelResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportIgesFileEntireModelResult =>
+      ExportIgesFileEntireModelResult.decode(value),
+  },
+  exportIgesFilePartialModel: {
+    path: "/briosa.FileOperations/ExportIgesFilePartialModel" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportIgesFilePartialModelRequest): Buffer =>
+      Buffer.from(ExportIgesFilePartialModelRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportIgesFilePartialModelRequest =>
+      ExportIgesFilePartialModelRequest.decode(value),
+    responseSerialize: (value: ExportIgesFilePartialModelResult): Buffer =>
+      Buffer.from(ExportIgesFilePartialModelResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportIgesFilePartialModelResult =>
+      ExportIgesFilePartialModelResult.decode(value),
+  },
+  exportPtxPointClouds: {
+    path: "/briosa.FileOperations/ExportPtxPointClouds" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportPtxPointCloudsRequest): Buffer =>
+      Buffer.from(ExportPtxPointCloudsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportPtxPointCloudsRequest => ExportPtxPointCloudsRequest.decode(value),
+    responseSerialize: (value: ExportPtxPointCloudsResult): Buffer =>
+      Buffer.from(ExportPtxPointCloudsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportPtxPointCloudsResult => ExportPtxPointCloudsResult.decode(value),
+  },
+  exportQdasCharacteristics: {
+    path: "/briosa.FileOperations/ExportQdasCharacteristics" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportQdasCharacteristicsRequest): Buffer =>
+      Buffer.from(ExportQdasCharacteristicsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportQdasCharacteristicsRequest =>
+      ExportQdasCharacteristicsRequest.decode(value),
+    responseSerialize: (value: ExportQdasCharacteristicsResult): Buffer =>
+      Buffer.from(ExportQdasCharacteristicsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportQdasCharacteristicsResult =>
+      ExportQdasCharacteristicsResult.decode(value),
+  },
+  exportQdasDataList: {
+    path: "/briosa.FileOperations/ExportQdasDataList" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportQdasDataListRequest): Buffer =>
+      Buffer.from(ExportQdasDataListRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportQdasDataListRequest => ExportQdasDataListRequest.decode(value),
+    responseSerialize: (value: ExportQdasDataListResult): Buffer =>
+      Buffer.from(ExportQdasDataListResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportQdasDataListResult => ExportQdasDataListResult.decode(value),
+  },
+  exportScanStripeMeshToStlFile: {
+    path: "/briosa.FileOperations/ExportScanStripeMeshToStlFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportScanStripeMeshToStlFileRequest): Buffer =>
+      Buffer.from(ExportScanStripeMeshToStlFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportScanStripeMeshToStlFileRequest =>
+      ExportScanStripeMeshToStlFileRequest.decode(value),
+    responseSerialize: (value: ExportScanStripeMeshToStlFileResult): Buffer =>
+      Buffer.from(ExportScanStripeMeshToStlFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportScanStripeMeshToStlFileResult =>
+      ExportScanStripeMeshToStlFileResult.decode(value),
+  },
+  exportStepFileEntireModel: {
+    path: "/briosa.FileOperations/ExportStepFileEntireModel" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportStepFileEntireModelRequest): Buffer =>
+      Buffer.from(ExportStepFileEntireModelRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportStepFileEntireModelRequest =>
+      ExportStepFileEntireModelRequest.decode(value),
+    responseSerialize: (value: ExportStepFileEntireModelResult): Buffer =>
+      Buffer.from(ExportStepFileEntireModelResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportStepFileEntireModelResult =>
+      ExportStepFileEntireModelResult.decode(value),
+  },
+  exportStepFilePartialModel: {
+    path: "/briosa.FileOperations/ExportStepFilePartialModel" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportStepFilePartialModelRequest): Buffer =>
+      Buffer.from(ExportStepFilePartialModelRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportStepFilePartialModelRequest =>
+      ExportStepFilePartialModelRequest.decode(value),
+    responseSerialize: (value: ExportStepFilePartialModelResult): Buffer =>
+      Buffer.from(ExportStepFilePartialModelResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportStepFilePartialModelResult =>
+      ExportStepFilePartialModelResult.decode(value),
+  },
+  exportVdaFsFileEntireModel: {
+    path: "/briosa.FileOperations/ExportVdaFsFileEntireModel" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportVdaFsFileEntireModelRequest): Buffer =>
+      Buffer.from(ExportVdaFsFileEntireModelRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportVdaFsFileEntireModelRequest =>
+      ExportVdaFsFileEntireModelRequest.decode(value),
+    responseSerialize: (value: ExportVdaFsFileEntireModelResult): Buffer =>
+      Buffer.from(ExportVdaFsFileEntireModelResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportVdaFsFileEntireModelResult =>
+      ExportVdaFsFileEntireModelResult.decode(value),
+  },
+  exportVdaFsFilePartialModel: {
+    path: "/briosa.FileOperations/ExportVdaFsFilePartialModel" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportVdaFsFilePartialModelRequest): Buffer =>
+      Buffer.from(ExportVdaFsFilePartialModelRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportVdaFsFilePartialModelRequest =>
+      ExportVdaFsFilePartialModelRequest.decode(value),
+    responseSerialize: (value: ExportVdaFsFilePartialModelResult): Buffer =>
+      Buffer.from(ExportVdaFsFilePartialModelResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportVdaFsFilePartialModelResult =>
+      ExportVdaFsFilePartialModelResult.decode(value),
+  },
+  exportVectorContainerToAsciiFile: {
+    path: "/briosa.FileOperations/ExportVectorContainerToAsciiFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExportVectorContainerToAsciiFileRequest): Buffer =>
+      Buffer.from(ExportVectorContainerToAsciiFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExportVectorContainerToAsciiFileRequest =>
+      ExportVectorContainerToAsciiFileRequest.decode(value),
+    responseSerialize: (value: ExportVectorContainerToAsciiFileResult): Buffer =>
+      Buffer.from(ExportVectorContainerToAsciiFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExportVectorContainerToAsciiFileResult =>
+      ExportVectorContainerToAsciiFileResult.decode(value),
+  },
+  findFilesInDirectory: {
+    path: "/briosa.FileOperations/FindFilesInDirectory" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: FindFilesInDirectoryRequest): Buffer =>
+      Buffer.from(FindFilesInDirectoryRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): FindFilesInDirectoryRequest => FindFilesInDirectoryRequest.decode(value),
+    responseSerialize: (value: FindFilesInDirectoryResult): Buffer =>
+      Buffer.from(FindFilesInDirectoryResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): FindFilesInDirectoryResult => FindFilesInDirectoryResult.decode(value),
+  },
+  findSubDirectoriesInDirectory: {
+    path: "/briosa.FileOperations/FindSubDirectoriesInDirectory" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: FindSubDirectoriesInDirectoryRequest): Buffer =>
+      Buffer.from(FindSubDirectoriesInDirectoryRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): FindSubDirectoriesInDirectoryRequest =>
+      FindSubDirectoriesInDirectoryRequest.decode(value),
+    responseSerialize: (value: FindSubDirectoriesInDirectoryResult): Buffer =>
+      Buffer.from(FindSubDirectoriesInDirectoryResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): FindSubDirectoriesInDirectoryResult =>
+      FindSubDirectoriesInDirectoryResult.decode(value),
+  },
+  getBooleanFromDataShareFile: {
+    path: "/briosa.FileOperations/GetBooleanFromDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetBooleanFromDataShareFileRequest): Buffer =>
+      Buffer.from(GetBooleanFromDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetBooleanFromDataShareFileRequest =>
+      GetBooleanFromDataShareFileRequest.decode(value),
+    responseSerialize: (value: GetBooleanFromDataShareFileResult): Buffer =>
+      Buffer.from(GetBooleanFromDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetBooleanFromDataShareFileResult =>
+      GetBooleanFromDataShareFileResult.decode(value),
+  },
+  getDoubleFromDataShareFile: {
+    path: "/briosa.FileOperations/GetDoubleFromDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetDoubleFromDataShareFileRequest): Buffer =>
+      Buffer.from(GetDoubleFromDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetDoubleFromDataShareFileRequest =>
+      GetDoubleFromDataShareFileRequest.decode(value),
+    responseSerialize: (value: GetDoubleFromDataShareFileResult): Buffer =>
+      Buffer.from(GetDoubleFromDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetDoubleFromDataShareFileResult =>
+      GetDoubleFromDataShareFileResult.decode(value),
+  },
+  getIntegerFromDataShareFile: {
+    path: "/briosa.FileOperations/GetIntegerFromDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetIntegerFromDataShareFileRequest): Buffer =>
+      Buffer.from(GetIntegerFromDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetIntegerFromDataShareFileRequest =>
+      GetIntegerFromDataShareFileRequest.decode(value),
+    responseSerialize: (value: GetIntegerFromDataShareFileResult): Buffer =>
+      Buffer.from(GetIntegerFromDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetIntegerFromDataShareFileResult =>
+      GetIntegerFromDataShareFileResult.decode(value),
+  },
+  getQdasCatalogEntries: {
+    path: "/briosa.FileOperations/GetQdasCatalogEntries" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetQdasCatalogEntriesRequest): Buffer =>
+      Buffer.from(GetQdasCatalogEntriesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetQdasCatalogEntriesRequest => GetQdasCatalogEntriesRequest.decode(value),
+    responseSerialize: (value: GetQdasCatalogEntriesResult): Buffer =>
+      Buffer.from(GetQdasCatalogEntriesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetQdasCatalogEntriesResult => GetQdasCatalogEntriesResult.decode(value),
+  },
+  getStringFromDataShareFile: {
+    path: "/briosa.FileOperations/GetStringFromDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetStringFromDataShareFileRequest): Buffer =>
+      Buffer.from(GetStringFromDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetStringFromDataShareFileRequest =>
+      GetStringFromDataShareFileRequest.decode(value),
+    responseSerialize: (value: GetStringFromDataShareFileResult): Buffer =>
+      Buffer.from(GetStringFromDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetStringFromDataShareFileResult =>
+      GetStringFromDataShareFileResult.decode(value),
+  },
+  getTransformFromDataShareFile: {
+    path: "/briosa.FileOperations/GetTransformFromDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetTransformFromDataShareFileRequest): Buffer =>
+      Buffer.from(GetTransformFromDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetTransformFromDataShareFileRequest =>
+      GetTransformFromDataShareFileRequest.decode(value),
+    responseSerialize: (value: GetTransformFromDataShareFileResult): Buffer =>
+      Buffer.from(GetTransformFromDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetTransformFromDataShareFileResult =>
+      GetTransformFromDataShareFileResult.decode(value),
+  },
+  getVectorFromDataShareFile: {
+    path: "/briosa.FileOperations/GetVectorFromDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetVectorFromDataShareFileRequest): Buffer =>
+      Buffer.from(GetVectorFromDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetVectorFromDataShareFileRequest =>
+      GetVectorFromDataShareFileRequest.decode(value),
+    responseSerialize: (value: GetVectorFromDataShareFileResult): Buffer =>
+      Buffer.from(GetVectorFromDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetVectorFromDataShareFileResult =>
+      GetVectorFromDataShareFileResult.decode(value),
+  },
   getWorkingDirectory: {
     path: "/briosa.FileOperations/GetWorkingDirectory" as const,
     requestStream: false as const,
@@ -140,15 +11515,1090 @@ export const FileOperationsService = {
       Buffer.from(GetWorkingDirectoryResult.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetWorkingDirectoryResult => GetWorkingDirectoryResult.decode(value),
   },
+  importAsciiPredefinedFormats: {
+    path: "/briosa.FileOperations/ImportAsciiPredefinedFormats" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportAsciiPredefinedFormatsRequest): Buffer =>
+      Buffer.from(ImportAsciiPredefinedFormatsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportAsciiPredefinedFormatsRequest =>
+      ImportAsciiPredefinedFormatsRequest.decode(value),
+    responseSerialize: (value: ImportAsciiPredefinedFormatsResult): Buffer =>
+      Buffer.from(ImportAsciiPredefinedFormatsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportAsciiPredefinedFormatsResult =>
+      ImportAsciiPredefinedFormatsResult.decode(value),
+  },
+  importAsciiPredefinedFrameSetFormats: {
+    path: "/briosa.FileOperations/ImportAsciiPredefinedFrameSetFormats" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportAsciiPredefinedFrameSetFormatsRequest): Buffer =>
+      Buffer.from(ImportAsciiPredefinedFrameSetFormatsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportAsciiPredefinedFrameSetFormatsRequest =>
+      ImportAsciiPredefinedFrameSetFormatsRequest.decode(value),
+    responseSerialize: (value: ImportAsciiPredefinedFrameSetFormatsResult): Buffer =>
+      Buffer.from(ImportAsciiPredefinedFrameSetFormatsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportAsciiPredefinedFrameSetFormatsResult =>
+      ImportAsciiPredefinedFrameSetFormatsResult.decode(value),
+  },
+  importE57File: {
+    path: "/briosa.FileOperations/ImportE57File" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportE57FileRequest): Buffer => Buffer.from(ImportE57FileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportE57FileRequest => ImportE57FileRequest.decode(value),
+    responseSerialize: (value: ImportE57FileResult): Buffer => Buffer.from(ImportE57FileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportE57FileResult => ImportE57FileResult.decode(value),
+  },
+  importFileAsEmbeddedFile: {
+    path: "/briosa.FileOperations/ImportFileAsEmbeddedFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportFileAsEmbeddedFileRequest): Buffer =>
+      Buffer.from(ImportFileAsEmbeddedFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportFileAsEmbeddedFileRequest =>
+      ImportFileAsEmbeddedFileRequest.decode(value),
+    responseSerialize: (value: ImportFileAsEmbeddedFileResult): Buffer =>
+      Buffer.from(ImportFileAsEmbeddedFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportFileAsEmbeddedFileResult =>
+      ImportFileAsEmbeddedFileResult.decode(value),
+  },
+  importFileAsPicture: {
+    path: "/briosa.FileOperations/ImportFileAsPicture" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportFileAsPictureRequest): Buffer =>
+      Buffer.from(ImportFileAsPictureRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportFileAsPictureRequest => ImportFileAsPictureRequest.decode(value),
+    responseSerialize: (value: ImportFileAsPictureResult): Buffer =>
+      Buffer.from(ImportFileAsPictureResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportFileAsPictureResult => ImportFileAsPictureResult.decode(value),
+  },
+  importHiddenPointBarXmlFile: {
+    path: "/briosa.FileOperations/ImportHiddenPointBarXmlFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportHiddenPointBarXmlFileRequest): Buffer =>
+      Buffer.from(ImportHiddenPointBarXmlFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportHiddenPointBarXmlFileRequest =>
+      ImportHiddenPointBarXmlFileRequest.decode(value),
+    responseSerialize: (value: ImportHiddenPointBarXmlFileResult): Buffer =>
+      Buffer.from(ImportHiddenPointBarXmlFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportHiddenPointBarXmlFileResult =>
+      ImportHiddenPointBarXmlFileResult.decode(value),
+  },
+  importIgesFile: {
+    path: "/briosa.FileOperations/ImportIgesFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportIgesFileRequest): Buffer =>
+      Buffer.from(ImportIgesFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportIgesFileRequest => ImportIgesFileRequest.decode(value),
+    responseSerialize: (value: ImportIgesFileResult): Buffer =>
+      Buffer.from(ImportIgesFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportIgesFileResult => ImportIgesFileResult.decode(value),
+  },
+  importLeicaGsiFile: {
+    path: "/briosa.FileOperations/ImportLeicaGsiFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportLeicaGsiFileRequest): Buffer =>
+      Buffer.from(ImportLeicaGsiFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportLeicaGsiFileRequest => ImportLeicaGsiFileRequest.decode(value),
+    responseSerialize: (value: ImportLeicaGsiFileResult): Buffer =>
+      Buffer.from(ImportLeicaGsiFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportLeicaGsiFileResult => ImportLeicaGsiFileResult.decode(value),
+  },
+  importLeicaSdbFile: {
+    path: "/briosa.FileOperations/ImportLeicaSdbFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportLeicaSdbFileRequest): Buffer =>
+      Buffer.from(ImportLeicaSdbFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportLeicaSdbFileRequest => ImportLeicaSdbFileRequest.decode(value),
+    responseSerialize: (value: ImportLeicaSdbFileResult): Buffer =>
+      Buffer.from(ImportLeicaSdbFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportLeicaSdbFileResult => ImportLeicaSdbFileResult.decode(value),
+  },
+  importMpFileAsEmbeddedMp: {
+    path: "/briosa.FileOperations/ImportMpFileAsEmbeddedMp" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportMpFileAsEmbeddedMpRequest): Buffer =>
+      Buffer.from(ImportMpFileAsEmbeddedMpRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportMpFileAsEmbeddedMpRequest =>
+      ImportMpFileAsEmbeddedMpRequest.decode(value),
+    responseSerialize: (value: ImportMpFileAsEmbeddedMpResult): Buffer =>
+      Buffer.from(ImportMpFileAsEmbeddedMpResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportMpFileAsEmbeddedMpResult =>
+      ImportMpFileAsEmbeddedMpResult.decode(value),
+  },
+  importNominalsFromXmlFile: {
+    path: "/briosa.FileOperations/ImportNominalsFromXmlFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportNominalsFromXmlFileRequest): Buffer =>
+      Buffer.from(ImportNominalsFromXmlFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportNominalsFromXmlFileRequest =>
+      ImportNominalsFromXmlFileRequest.decode(value),
+    responseSerialize: (value: ImportNominalsFromXmlFileResult): Buffer =>
+      Buffer.from(ImportNominalsFromXmlFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportNominalsFromXmlFileResult =>
+      ImportNominalsFromXmlFileResult.decode(value),
+  },
+  importPolyworksFile: {
+    path: "/briosa.FileOperations/ImportPolyworksFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportPolyworksFileRequest): Buffer =>
+      Buffer.from(ImportPolyworksFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportPolyworksFileRequest => ImportPolyworksFileRequest.decode(value),
+    responseSerialize: (value: ImportPolyworksFileResult): Buffer =>
+      Buffer.from(ImportPolyworksFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportPolyworksFileResult => ImportPolyworksFileResult.decode(value),
+  },
+  importQdasCatalogFile: {
+    path: "/briosa.FileOperations/ImportQdasCatalogFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportQdasCatalogFileRequest): Buffer =>
+      Buffer.from(ImportQdasCatalogFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportQdasCatalogFileRequest => ImportQdasCatalogFileRequest.decode(value),
+    responseSerialize: (value: ImportQdasCatalogFileResult): Buffer =>
+      Buffer.from(ImportQdasCatalogFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportQdasCatalogFileResult => ImportQdasCatalogFileResult.decode(value),
+  },
+  importSaFile: {
+    path: "/briosa.FileOperations/ImportSaFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportSaFileRequest): Buffer => Buffer.from(ImportSaFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportSaFileRequest => ImportSaFileRequest.decode(value),
+    responseSerialize: (value: ImportSaFileResult): Buffer => Buffer.from(ImportSaFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportSaFileResult => ImportSaFileResult.decode(value),
+  },
+  importSaWindowsPlacement: {
+    path: "/briosa.FileOperations/ImportSaWindowsPlacement" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportSaWindowsPlacementRequest): Buffer =>
+      Buffer.from(ImportSaWindowsPlacementRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportSaWindowsPlacementRequest =>
+      ImportSaWindowsPlacementRequest.decode(value),
+    responseSerialize: (value: ImportSaWindowsPlacementResult): Buffer =>
+      Buffer.from(ImportSaWindowsPlacementResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportSaWindowsPlacementResult =>
+      ImportSaWindowsPlacementResult.decode(value),
+  },
+  importSatFile: {
+    path: "/briosa.FileOperations/ImportSatFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportSatFileRequest): Buffer => Buffer.from(ImportSatFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportSatFileRequest => ImportSatFileRequest.decode(value),
+    responseSerialize: (value: ImportSatFileResult): Buffer => Buffer.from(ImportSatFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportSatFileResult => ImportSatFileResult.decode(value),
+  },
+  importStepFile: {
+    path: "/briosa.FileOperations/ImportStepFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportStepFileRequest): Buffer =>
+      Buffer.from(ImportStepFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportStepFileRequest => ImportStepFileRequest.decode(value),
+    responseSerialize: (value: ImportStepFileResult): Buffer =>
+      Buffer.from(ImportStepFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportStepFileResult => ImportStepFileResult.decode(value),
+  },
+  importStlFile: {
+    path: "/briosa.FileOperations/ImportStlFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportStlFileRequest): Buffer => Buffer.from(ImportStlFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportStlFileRequest => ImportStlFileRequest.decode(value),
+    responseSerialize: (value: ImportStlFileResult): Buffer => Buffer.from(ImportStlFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportStlFileResult => ImportStlFileResult.decode(value),
+  },
+  importVdaFsFile: {
+    path: "/briosa.FileOperations/ImportVdaFsFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportVdaFsFileRequest): Buffer =>
+      Buffer.from(ImportVdaFsFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportVdaFsFileRequest => ImportVdaFsFileRequest.decode(value),
+    responseSerialize: (value: ImportVdaFsFileResult): Buffer =>
+      Buffer.from(ImportVdaFsFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportVdaFsFileResult => ImportVdaFsFileResult.decode(value),
+  },
+  importVstarsXyzFile: {
+    path: "/briosa.FileOperations/ImportVstarsXyzFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportVstarsXyzFileRequest): Buffer =>
+      Buffer.from(ImportVstarsXyzFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportVstarsXyzFileRequest => ImportVstarsXyzFileRequest.decode(value),
+    responseSerialize: (value: ImportVstarsXyzFileResult): Buffer =>
+      Buffer.from(ImportVstarsXyzFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportVstarsXyzFileResult => ImportVstarsXyzFileResult.decode(value),
+  },
+  importVstarsCameras: {
+    path: "/briosa.FileOperations/ImportVstarsCameras" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ImportVstarsCamerasRequest): Buffer =>
+      Buffer.from(ImportVstarsCamerasRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ImportVstarsCamerasRequest => ImportVstarsCamerasRequest.decode(value),
+    responseSerialize: (value: ImportVstarsCamerasResult): Buffer =>
+      Buffer.from(ImportVstarsCamerasResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ImportVstarsCamerasResult => ImportVstarsCamerasResult.decode(value),
+  },
+  loadHtmlForm: {
+    path: "/briosa.FileOperations/LoadHtmlForm" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: LoadHtmlFormRequest): Buffer => Buffer.from(LoadHtmlFormRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): LoadHtmlFormRequest => LoadHtmlFormRequest.decode(value),
+    responseSerialize: (value: LoadHtmlFormResult): Buffer => Buffer.from(LoadHtmlFormResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): LoadHtmlFormResult => LoadHtmlFormResult.decode(value),
+  },
+  loadHtmlFormInEdgeBrowser: {
+    path: "/briosa.FileOperations/LoadHtmlFormInEdgeBrowser" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: LoadHtmlFormInEdgeBrowserRequest): Buffer =>
+      Buffer.from(LoadHtmlFormInEdgeBrowserRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): LoadHtmlFormInEdgeBrowserRequest =>
+      LoadHtmlFormInEdgeBrowserRequest.decode(value),
+    responseSerialize: (value: LoadHtmlFormInEdgeBrowserResult): Buffer =>
+      Buffer.from(LoadHtmlFormInEdgeBrowserResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): LoadHtmlFormInEdgeBrowserResult =>
+      LoadHtmlFormInEdgeBrowserResult.decode(value),
+  },
+  makeEmbeddedFileNameList: {
+    path: "/briosa.FileOperations/MakeEmbeddedFileNameList" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeEmbeddedFileNameListRequest): Buffer =>
+      Buffer.from(MakeEmbeddedFileNameListRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeEmbeddedFileNameListRequest =>
+      MakeEmbeddedFileNameListRequest.decode(value),
+    responseSerialize: (value: MakeEmbeddedFileNameListResult): Buffer =>
+      Buffer.from(MakeEmbeddedFileNameListResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeEmbeddedFileNameListResult =>
+      MakeEmbeddedFileNameListResult.decode(value),
+  },
+  mergeMeasurementsIntoXmlFile: {
+    path: "/briosa.FileOperations/MergeMeasurementsIntoXmlFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MergeMeasurementsIntoXmlFileRequest): Buffer =>
+      Buffer.from(MergeMeasurementsIntoXmlFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MergeMeasurementsIntoXmlFileRequest =>
+      MergeMeasurementsIntoXmlFileRequest.decode(value),
+    responseSerialize: (value: MergeMeasurementsIntoXmlFileResult): Buffer =>
+      Buffer.from(MergeMeasurementsIntoXmlFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MergeMeasurementsIntoXmlFileResult =>
+      MergeMeasurementsIntoXmlFileResult.decode(value),
+  },
+  newSaFile: {
+    path: "/briosa.FileOperations/NewSaFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: NewSaFileRequest): Buffer => Buffer.from(NewSaFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): NewSaFileRequest => NewSaFileRequest.decode(value),
+    responseSerialize: (value: NewSaFileResult): Buffer => Buffer.from(NewSaFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): NewSaFileResult => NewSaFileResult.decode(value),
+  },
+  openSaFile: {
+    path: "/briosa.FileOperations/OpenSaFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: OpenSaFileRequest): Buffer => Buffer.from(OpenSaFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): OpenSaFileRequest => OpenSaFileRequest.decode(value),
+    responseSerialize: (value: OpenSaFileResult): Buffer => Buffer.from(OpenSaFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): OpenSaFileResult => OpenSaFileResult.decode(value),
+  },
+  openTemplateFile: {
+    path: "/briosa.FileOperations/OpenTemplateFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: OpenTemplateFileRequest): Buffer =>
+      Buffer.from(OpenTemplateFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): OpenTemplateFileRequest => OpenTemplateFileRequest.decode(value),
+    responseSerialize: (value: OpenTemplateFileResult): Buffer =>
+      Buffer.from(OpenTemplateFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): OpenTemplateFileResult => OpenTemplateFileResult.decode(value),
+  },
+  popPolyBayAnalysisWindow: {
+    path: "/briosa.FileOperations/PopPolyBayAnalysisWindow" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: PopPolyBayAnalysisWindowRequest): Buffer =>
+      Buffer.from(PopPolyBayAnalysisWindowRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): PopPolyBayAnalysisWindowRequest =>
+      PopPolyBayAnalysisWindowRequest.decode(value),
+    responseSerialize: (value: PopPolyBayAnalysisWindowResult): Buffer =>
+      Buffer.from(PopPolyBayAnalysisWindowResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): PopPolyBayAnalysisWindowResult =>
+      PopPolyBayAnalysisWindowResult.decode(value),
+  },
+  prepareQdasDataList: {
+    path: "/briosa.FileOperations/PrepareQdasDataList" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: PrepareQdasDataListRequest): Buffer =>
+      Buffer.from(PrepareQdasDataListRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): PrepareQdasDataListRequest => PrepareQdasDataListRequest.decode(value),
+    responseSerialize: (value: PrepareQdasDataListResult): Buffer =>
+      Buffer.from(PrepareQdasDataListResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): PrepareQdasDataListResult => PrepareQdasDataListResult.decode(value),
+  },
+  renameGeneralFile: {
+    path: "/briosa.FileOperations/RenameGeneralFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: RenameGeneralFileRequest): Buffer =>
+      Buffer.from(RenameGeneralFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): RenameGeneralFileRequest => RenameGeneralFileRequest.decode(value),
+    responseSerialize: (value: RenameGeneralFileResult): Buffer =>
+      Buffer.from(RenameGeneralFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): RenameGeneralFileResult => RenameGeneralFileResult.decode(value),
+  },
+  save: {
+    path: "/briosa.FileOperations/Save" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SaveRequest): Buffer => Buffer.from(SaveRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SaveRequest => SaveRequest.decode(value),
+    responseSerialize: (value: SaveResult): Buffer => Buffer.from(SaveResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SaveResult => SaveResult.decode(value),
+  },
+  saveAsReadOnlyTemplate: {
+    path: "/briosa.FileOperations/SaveAsReadOnlyTemplate" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SaveAsReadOnlyTemplateRequest): Buffer =>
+      Buffer.from(SaveAsReadOnlyTemplateRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SaveAsReadOnlyTemplateRequest => SaveAsReadOnlyTemplateRequest.decode(value),
+    responseSerialize: (value: SaveAsReadOnlyTemplateResult): Buffer =>
+      Buffer.from(SaveAsReadOnlyTemplateResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SaveAsReadOnlyTemplateResult => SaveAsReadOnlyTemplateResult.decode(value),
+  },
+  saveAs: {
+    path: "/briosa.FileOperations/SaveAs" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SaveAsRequest): Buffer => Buffer.from(SaveAsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SaveAsRequest => SaveAsRequest.decode(value),
+    responseSerialize: (value: SaveAsResult): Buffer => Buffer.from(SaveAsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SaveAsResult => SaveAsResult.decode(value),
+  },
+  setBooleanInDataShareFile: {
+    path: "/briosa.FileOperations/SetBooleanInDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetBooleanInDataShareFileRequest): Buffer =>
+      Buffer.from(SetBooleanInDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetBooleanInDataShareFileRequest =>
+      SetBooleanInDataShareFileRequest.decode(value),
+    responseSerialize: (value: SetBooleanInDataShareFileResult): Buffer =>
+      Buffer.from(SetBooleanInDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetBooleanInDataShareFileResult =>
+      SetBooleanInDataShareFileResult.decode(value),
+  },
+  setDoubleInDataShareFile: {
+    path: "/briosa.FileOperations/SetDoubleInDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetDoubleInDataShareFileRequest): Buffer =>
+      Buffer.from(SetDoubleInDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetDoubleInDataShareFileRequest =>
+      SetDoubleInDataShareFileRequest.decode(value),
+    responseSerialize: (value: SetDoubleInDataShareFileResult): Buffer =>
+      Buffer.from(SetDoubleInDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetDoubleInDataShareFileResult =>
+      SetDoubleInDataShareFileResult.decode(value),
+  },
+  setIntegerInDataShareFile: {
+    path: "/briosa.FileOperations/SetIntegerInDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetIntegerInDataShareFileRequest): Buffer =>
+      Buffer.from(SetIntegerInDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetIntegerInDataShareFileRequest =>
+      SetIntegerInDataShareFileRequest.decode(value),
+    responseSerialize: (value: SetIntegerInDataShareFileResult): Buffer =>
+      Buffer.from(SetIntegerInDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetIntegerInDataShareFileResult =>
+      SetIntegerInDataShareFileResult.decode(value),
+  },
+  setStringInDataShareFile: {
+    path: "/briosa.FileOperations/SetStringInDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetStringInDataShareFileRequest): Buffer =>
+      Buffer.from(SetStringInDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetStringInDataShareFileRequest =>
+      SetStringInDataShareFileRequest.decode(value),
+    responseSerialize: (value: SetStringInDataShareFileResult): Buffer =>
+      Buffer.from(SetStringInDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetStringInDataShareFileResult =>
+      SetStringInDataShareFileResult.decode(value),
+  },
+  setTransformInDataShareFile: {
+    path: "/briosa.FileOperations/SetTransformInDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetTransformInDataShareFileRequest): Buffer =>
+      Buffer.from(SetTransformInDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetTransformInDataShareFileRequest =>
+      SetTransformInDataShareFileRequest.decode(value),
+    responseSerialize: (value: SetTransformInDataShareFileResult): Buffer =>
+      Buffer.from(SetTransformInDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetTransformInDataShareFileResult =>
+      SetTransformInDataShareFileResult.decode(value),
+  },
+  setVectorInDataShareFile: {
+    path: "/briosa.FileOperations/SetVectorInDataShareFile" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetVectorInDataShareFileRequest): Buffer =>
+      Buffer.from(SetVectorInDataShareFileRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetVectorInDataShareFileRequest =>
+      SetVectorInDataShareFileRequest.decode(value),
+    responseSerialize: (value: SetVectorInDataShareFileResult): Buffer =>
+      Buffer.from(SetVectorInDataShareFileResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetVectorInDataShareFileResult =>
+      SetVectorInDataShareFileResult.decode(value),
+  },
+  terminateAllRunningMPs: {
+    path: "/briosa.FileOperations/TerminateAllRunningMPs" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: TerminateAllRunningMPsRequest): Buffer =>
+      Buffer.from(TerminateAllRunningMPsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TerminateAllRunningMPsRequest => TerminateAllRunningMPsRequest.decode(value),
+    responseSerialize: (value: TerminateAllRunningMPsResult): Buffer =>
+      Buffer.from(TerminateAllRunningMPsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TerminateAllRunningMPsResult => TerminateAllRunningMPsResult.decode(value),
+  },
+  useNrkxmlLibrary: {
+    path: "/briosa.FileOperations/UseNrkxmlLibrary" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: UseNrkxmlLibraryRequest): Buffer =>
+      Buffer.from(UseNrkxmlLibraryRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): UseNrkxmlLibraryRequest => UseNrkxmlLibraryRequest.decode(value),
+    responseSerialize: (value: UseNrkxmlLibraryResult): Buffer =>
+      Buffer.from(UseNrkxmlLibraryResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): UseNrkxmlLibraryResult => UseNrkxmlLibraryResult.decode(value),
+  },
+  verifyGeneralFileExists: {
+    path: "/briosa.FileOperations/VerifyGeneralFileExists" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: VerifyGeneralFileExistsRequest): Buffer =>
+      Buffer.from(VerifyGeneralFileExistsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): VerifyGeneralFileExistsRequest => VerifyGeneralFileExistsRequest.decode(value),
+    responseSerialize: (value: VerifyGeneralFileExistsResult): Buffer =>
+      Buffer.from(VerifyGeneralFileExistsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): VerifyGeneralFileExistsResult => VerifyGeneralFileExistsResult.decode(value),
+  },
+  verifyMpFileExists: {
+    path: "/briosa.FileOperations/VerifyMpFileExists" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: VerifyMpFileExistsRequest): Buffer =>
+      Buffer.from(VerifyMpFileExistsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): VerifyMpFileExistsRequest => VerifyMpFileExistsRequest.decode(value),
+    responseSerialize: (value: VerifyMpFileExistsResult): Buffer =>
+      Buffer.from(VerifyMpFileExistsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): VerifyMpFileExistsResult => VerifyMpFileExistsResult.decode(value),
+  },
 } as const;
 
 export interface FileOperationsServer extends UntypedServiceImplementation {
-  /** Executes the "Get Working Directory" MP command. */
+  backupNow: handleUnaryCall<BackupNowRequest, BackupNowResult>;
+  copyGeneralFile: handleUnaryCall<CopyGeneralFileRequest, CopyGeneralFileResult>;
+  deleteGeneralFile: handleUnaryCall<DeleteGeneralFileRequest, DeleteGeneralFileResult>;
+  directCadAccess: handleUnaryCall<DirectCadAccessRequest, DirectCadAccessResult>;
+  exportAsciiFrameSet: handleUnaryCall<ExportAsciiFrameSetRequest, ExportAsciiFrameSetResult>;
+  exportAsciiFrames: handleUnaryCall<ExportAsciiFramesRequest, ExportAsciiFramesResult>;
+  exportAsciiPointClouds: handleUnaryCall<ExportAsciiPointCloudsRequest, ExportAsciiPointCloudsResult>;
+  exportAsciiPointSet: handleUnaryCall<ExportAsciiPointSetRequest, ExportAsciiPointSetResult>;
+  exportAsciiPoints: handleUnaryCall<ExportAsciiPointsRequest, ExportAsciiPointsResult>;
+  exportDxf: handleUnaryCall<ExportDxfRequest, ExportDxfResult>;
+  exportEmbeddedFile: handleUnaryCall<ExportEmbeddedFileRequest, ExportEmbeddedFileResult>;
+  exportHiddenPointBarXmlFile: handleUnaryCall<ExportHiddenPointBarXmlFileRequest, ExportHiddenPointBarXmlFileResult>;
+  exportIgesFileEntireModel: handleUnaryCall<ExportIgesFileEntireModelRequest, ExportIgesFileEntireModelResult>;
+  exportIgesFilePartialModel: handleUnaryCall<ExportIgesFilePartialModelRequest, ExportIgesFilePartialModelResult>;
+  exportPtxPointClouds: handleUnaryCall<ExportPtxPointCloudsRequest, ExportPtxPointCloudsResult>;
+  exportQdasCharacteristics: handleUnaryCall<ExportQdasCharacteristicsRequest, ExportQdasCharacteristicsResult>;
+  exportQdasDataList: handleUnaryCall<ExportQdasDataListRequest, ExportQdasDataListResult>;
+  exportScanStripeMeshToStlFile: handleUnaryCall<
+    ExportScanStripeMeshToStlFileRequest,
+    ExportScanStripeMeshToStlFileResult
+  >;
+  exportStepFileEntireModel: handleUnaryCall<ExportStepFileEntireModelRequest, ExportStepFileEntireModelResult>;
+  exportStepFilePartialModel: handleUnaryCall<ExportStepFilePartialModelRequest, ExportStepFilePartialModelResult>;
+  exportVdaFsFileEntireModel: handleUnaryCall<ExportVdaFsFileEntireModelRequest, ExportVdaFsFileEntireModelResult>;
+  exportVdaFsFilePartialModel: handleUnaryCall<ExportVdaFsFilePartialModelRequest, ExportVdaFsFilePartialModelResult>;
+  exportVectorContainerToAsciiFile: handleUnaryCall<
+    ExportVectorContainerToAsciiFileRequest,
+    ExportVectorContainerToAsciiFileResult
+  >;
+  findFilesInDirectory: handleUnaryCall<FindFilesInDirectoryRequest, FindFilesInDirectoryResult>;
+  findSubDirectoriesInDirectory: handleUnaryCall<
+    FindSubDirectoriesInDirectoryRequest,
+    FindSubDirectoriesInDirectoryResult
+  >;
+  getBooleanFromDataShareFile: handleUnaryCall<GetBooleanFromDataShareFileRequest, GetBooleanFromDataShareFileResult>;
+  getDoubleFromDataShareFile: handleUnaryCall<GetDoubleFromDataShareFileRequest, GetDoubleFromDataShareFileResult>;
+  getIntegerFromDataShareFile: handleUnaryCall<GetIntegerFromDataShareFileRequest, GetIntegerFromDataShareFileResult>;
+  getQdasCatalogEntries: handleUnaryCall<GetQdasCatalogEntriesRequest, GetQdasCatalogEntriesResult>;
+  getStringFromDataShareFile: handleUnaryCall<GetStringFromDataShareFileRequest, GetStringFromDataShareFileResult>;
+  getTransformFromDataShareFile: handleUnaryCall<
+    GetTransformFromDataShareFileRequest,
+    GetTransformFromDataShareFileResult
+  >;
+  getVectorFromDataShareFile: handleUnaryCall<GetVectorFromDataShareFileRequest, GetVectorFromDataShareFileResult>;
   getWorkingDirectory: handleUnaryCall<GetWorkingDirectoryRequest, GetWorkingDirectoryResult>;
+  importAsciiPredefinedFormats: handleUnaryCall<
+    ImportAsciiPredefinedFormatsRequest,
+    ImportAsciiPredefinedFormatsResult
+  >;
+  importAsciiPredefinedFrameSetFormats: handleUnaryCall<
+    ImportAsciiPredefinedFrameSetFormatsRequest,
+    ImportAsciiPredefinedFrameSetFormatsResult
+  >;
+  importE57File: handleUnaryCall<ImportE57FileRequest, ImportE57FileResult>;
+  importFileAsEmbeddedFile: handleUnaryCall<ImportFileAsEmbeddedFileRequest, ImportFileAsEmbeddedFileResult>;
+  importFileAsPicture: handleUnaryCall<ImportFileAsPictureRequest, ImportFileAsPictureResult>;
+  importHiddenPointBarXmlFile: handleUnaryCall<ImportHiddenPointBarXmlFileRequest, ImportHiddenPointBarXmlFileResult>;
+  importIgesFile: handleUnaryCall<ImportIgesFileRequest, ImportIgesFileResult>;
+  importLeicaGsiFile: handleUnaryCall<ImportLeicaGsiFileRequest, ImportLeicaGsiFileResult>;
+  importLeicaSdbFile: handleUnaryCall<ImportLeicaSdbFileRequest, ImportLeicaSdbFileResult>;
+  importMpFileAsEmbeddedMp: handleUnaryCall<ImportMpFileAsEmbeddedMpRequest, ImportMpFileAsEmbeddedMpResult>;
+  importNominalsFromXmlFile: handleUnaryCall<ImportNominalsFromXmlFileRequest, ImportNominalsFromXmlFileResult>;
+  importPolyworksFile: handleUnaryCall<ImportPolyworksFileRequest, ImportPolyworksFileResult>;
+  importQdasCatalogFile: handleUnaryCall<ImportQdasCatalogFileRequest, ImportQdasCatalogFileResult>;
+  importSaFile: handleUnaryCall<ImportSaFileRequest, ImportSaFileResult>;
+  importSaWindowsPlacement: handleUnaryCall<ImportSaWindowsPlacementRequest, ImportSaWindowsPlacementResult>;
+  importSatFile: handleUnaryCall<ImportSatFileRequest, ImportSatFileResult>;
+  importStepFile: handleUnaryCall<ImportStepFileRequest, ImportStepFileResult>;
+  importStlFile: handleUnaryCall<ImportStlFileRequest, ImportStlFileResult>;
+  importVdaFsFile: handleUnaryCall<ImportVdaFsFileRequest, ImportVdaFsFileResult>;
+  importVstarsXyzFile: handleUnaryCall<ImportVstarsXyzFileRequest, ImportVstarsXyzFileResult>;
+  importVstarsCameras: handleUnaryCall<ImportVstarsCamerasRequest, ImportVstarsCamerasResult>;
+  loadHtmlForm: handleUnaryCall<LoadHtmlFormRequest, LoadHtmlFormResult>;
+  loadHtmlFormInEdgeBrowser: handleUnaryCall<LoadHtmlFormInEdgeBrowserRequest, LoadHtmlFormInEdgeBrowserResult>;
+  makeEmbeddedFileNameList: handleUnaryCall<MakeEmbeddedFileNameListRequest, MakeEmbeddedFileNameListResult>;
+  mergeMeasurementsIntoXmlFile: handleUnaryCall<
+    MergeMeasurementsIntoXmlFileRequest,
+    MergeMeasurementsIntoXmlFileResult
+  >;
+  newSaFile: handleUnaryCall<NewSaFileRequest, NewSaFileResult>;
+  openSaFile: handleUnaryCall<OpenSaFileRequest, OpenSaFileResult>;
+  openTemplateFile: handleUnaryCall<OpenTemplateFileRequest, OpenTemplateFileResult>;
+  popPolyBayAnalysisWindow: handleUnaryCall<PopPolyBayAnalysisWindowRequest, PopPolyBayAnalysisWindowResult>;
+  prepareQdasDataList: handleUnaryCall<PrepareQdasDataListRequest, PrepareQdasDataListResult>;
+  renameGeneralFile: handleUnaryCall<RenameGeneralFileRequest, RenameGeneralFileResult>;
+  save: handleUnaryCall<SaveRequest, SaveResult>;
+  saveAsReadOnlyTemplate: handleUnaryCall<SaveAsReadOnlyTemplateRequest, SaveAsReadOnlyTemplateResult>;
+  saveAs: handleUnaryCall<SaveAsRequest, SaveAsResult>;
+  setBooleanInDataShareFile: handleUnaryCall<SetBooleanInDataShareFileRequest, SetBooleanInDataShareFileResult>;
+  setDoubleInDataShareFile: handleUnaryCall<SetDoubleInDataShareFileRequest, SetDoubleInDataShareFileResult>;
+  setIntegerInDataShareFile: handleUnaryCall<SetIntegerInDataShareFileRequest, SetIntegerInDataShareFileResult>;
+  setStringInDataShareFile: handleUnaryCall<SetStringInDataShareFileRequest, SetStringInDataShareFileResult>;
+  setTransformInDataShareFile: handleUnaryCall<SetTransformInDataShareFileRequest, SetTransformInDataShareFileResult>;
+  setVectorInDataShareFile: handleUnaryCall<SetVectorInDataShareFileRequest, SetVectorInDataShareFileResult>;
+  terminateAllRunningMPs: handleUnaryCall<TerminateAllRunningMPsRequest, TerminateAllRunningMPsResult>;
+  useNrkxmlLibrary: handleUnaryCall<UseNrkxmlLibraryRequest, UseNrkxmlLibraryResult>;
+  verifyGeneralFileExists: handleUnaryCall<VerifyGeneralFileExistsRequest, VerifyGeneralFileExistsResult>;
+  verifyMpFileExists: handleUnaryCall<VerifyMpFileExistsRequest, VerifyMpFileExistsResult>;
 }
 
 export interface FileOperationsClient extends Client {
-  /** Executes the "Get Working Directory" MP command. */
+  backupNow(
+    request: BackupNowRequest,
+    callback: (error: ServiceError | null, response: BackupNowResult) => void,
+  ): ClientUnaryCall;
+  backupNow(
+    request: BackupNowRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: BackupNowResult) => void,
+  ): ClientUnaryCall;
+  backupNow(
+    request: BackupNowRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: BackupNowResult) => void,
+  ): ClientUnaryCall;
+  copyGeneralFile(
+    request: CopyGeneralFileRequest,
+    callback: (error: ServiceError | null, response: CopyGeneralFileResult) => void,
+  ): ClientUnaryCall;
+  copyGeneralFile(
+    request: CopyGeneralFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: CopyGeneralFileResult) => void,
+  ): ClientUnaryCall;
+  copyGeneralFile(
+    request: CopyGeneralFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: CopyGeneralFileResult) => void,
+  ): ClientUnaryCall;
+  deleteGeneralFile(
+    request: DeleteGeneralFileRequest,
+    callback: (error: ServiceError | null, response: DeleteGeneralFileResult) => void,
+  ): ClientUnaryCall;
+  deleteGeneralFile(
+    request: DeleteGeneralFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: DeleteGeneralFileResult) => void,
+  ): ClientUnaryCall;
+  deleteGeneralFile(
+    request: DeleteGeneralFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: DeleteGeneralFileResult) => void,
+  ): ClientUnaryCall;
+  directCadAccess(
+    request: DirectCadAccessRequest,
+    callback: (error: ServiceError | null, response: DirectCadAccessResult) => void,
+  ): ClientUnaryCall;
+  directCadAccess(
+    request: DirectCadAccessRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: DirectCadAccessResult) => void,
+  ): ClientUnaryCall;
+  directCadAccess(
+    request: DirectCadAccessRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: DirectCadAccessResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiFrameSet(
+    request: ExportAsciiFrameSetRequest,
+    callback: (error: ServiceError | null, response: ExportAsciiFrameSetResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiFrameSet(
+    request: ExportAsciiFrameSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportAsciiFrameSetResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiFrameSet(
+    request: ExportAsciiFrameSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportAsciiFrameSetResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiFrames(
+    request: ExportAsciiFramesRequest,
+    callback: (error: ServiceError | null, response: ExportAsciiFramesResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiFrames(
+    request: ExportAsciiFramesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportAsciiFramesResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiFrames(
+    request: ExportAsciiFramesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportAsciiFramesResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiPointClouds(
+    request: ExportAsciiPointCloudsRequest,
+    callback: (error: ServiceError | null, response: ExportAsciiPointCloudsResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiPointClouds(
+    request: ExportAsciiPointCloudsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportAsciiPointCloudsResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiPointClouds(
+    request: ExportAsciiPointCloudsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportAsciiPointCloudsResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiPointSet(
+    request: ExportAsciiPointSetRequest,
+    callback: (error: ServiceError | null, response: ExportAsciiPointSetResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiPointSet(
+    request: ExportAsciiPointSetRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportAsciiPointSetResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiPointSet(
+    request: ExportAsciiPointSetRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportAsciiPointSetResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiPoints(
+    request: ExportAsciiPointsRequest,
+    callback: (error: ServiceError | null, response: ExportAsciiPointsResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiPoints(
+    request: ExportAsciiPointsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportAsciiPointsResult) => void,
+  ): ClientUnaryCall;
+  exportAsciiPoints(
+    request: ExportAsciiPointsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportAsciiPointsResult) => void,
+  ): ClientUnaryCall;
+  exportDxf(
+    request: ExportDxfRequest,
+    callback: (error: ServiceError | null, response: ExportDxfResult) => void,
+  ): ClientUnaryCall;
+  exportDxf(
+    request: ExportDxfRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportDxfResult) => void,
+  ): ClientUnaryCall;
+  exportDxf(
+    request: ExportDxfRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportDxfResult) => void,
+  ): ClientUnaryCall;
+  exportEmbeddedFile(
+    request: ExportEmbeddedFileRequest,
+    callback: (error: ServiceError | null, response: ExportEmbeddedFileResult) => void,
+  ): ClientUnaryCall;
+  exportEmbeddedFile(
+    request: ExportEmbeddedFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportEmbeddedFileResult) => void,
+  ): ClientUnaryCall;
+  exportEmbeddedFile(
+    request: ExportEmbeddedFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportEmbeddedFileResult) => void,
+  ): ClientUnaryCall;
+  exportHiddenPointBarXmlFile(
+    request: ExportHiddenPointBarXmlFileRequest,
+    callback: (error: ServiceError | null, response: ExportHiddenPointBarXmlFileResult) => void,
+  ): ClientUnaryCall;
+  exportHiddenPointBarXmlFile(
+    request: ExportHiddenPointBarXmlFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportHiddenPointBarXmlFileResult) => void,
+  ): ClientUnaryCall;
+  exportHiddenPointBarXmlFile(
+    request: ExportHiddenPointBarXmlFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportHiddenPointBarXmlFileResult) => void,
+  ): ClientUnaryCall;
+  exportIgesFileEntireModel(
+    request: ExportIgesFileEntireModelRequest,
+    callback: (error: ServiceError | null, response: ExportIgesFileEntireModelResult) => void,
+  ): ClientUnaryCall;
+  exportIgesFileEntireModel(
+    request: ExportIgesFileEntireModelRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportIgesFileEntireModelResult) => void,
+  ): ClientUnaryCall;
+  exportIgesFileEntireModel(
+    request: ExportIgesFileEntireModelRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportIgesFileEntireModelResult) => void,
+  ): ClientUnaryCall;
+  exportIgesFilePartialModel(
+    request: ExportIgesFilePartialModelRequest,
+    callback: (error: ServiceError | null, response: ExportIgesFilePartialModelResult) => void,
+  ): ClientUnaryCall;
+  exportIgesFilePartialModel(
+    request: ExportIgesFilePartialModelRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportIgesFilePartialModelResult) => void,
+  ): ClientUnaryCall;
+  exportIgesFilePartialModel(
+    request: ExportIgesFilePartialModelRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportIgesFilePartialModelResult) => void,
+  ): ClientUnaryCall;
+  exportPtxPointClouds(
+    request: ExportPtxPointCloudsRequest,
+    callback: (error: ServiceError | null, response: ExportPtxPointCloudsResult) => void,
+  ): ClientUnaryCall;
+  exportPtxPointClouds(
+    request: ExportPtxPointCloudsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportPtxPointCloudsResult) => void,
+  ): ClientUnaryCall;
+  exportPtxPointClouds(
+    request: ExportPtxPointCloudsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportPtxPointCloudsResult) => void,
+  ): ClientUnaryCall;
+  exportQdasCharacteristics(
+    request: ExportQdasCharacteristicsRequest,
+    callback: (error: ServiceError | null, response: ExportQdasCharacteristicsResult) => void,
+  ): ClientUnaryCall;
+  exportQdasCharacteristics(
+    request: ExportQdasCharacteristicsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportQdasCharacteristicsResult) => void,
+  ): ClientUnaryCall;
+  exportQdasCharacteristics(
+    request: ExportQdasCharacteristicsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportQdasCharacteristicsResult) => void,
+  ): ClientUnaryCall;
+  exportQdasDataList(
+    request: ExportQdasDataListRequest,
+    callback: (error: ServiceError | null, response: ExportQdasDataListResult) => void,
+  ): ClientUnaryCall;
+  exportQdasDataList(
+    request: ExportQdasDataListRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportQdasDataListResult) => void,
+  ): ClientUnaryCall;
+  exportQdasDataList(
+    request: ExportQdasDataListRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportQdasDataListResult) => void,
+  ): ClientUnaryCall;
+  exportScanStripeMeshToStlFile(
+    request: ExportScanStripeMeshToStlFileRequest,
+    callback: (error: ServiceError | null, response: ExportScanStripeMeshToStlFileResult) => void,
+  ): ClientUnaryCall;
+  exportScanStripeMeshToStlFile(
+    request: ExportScanStripeMeshToStlFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportScanStripeMeshToStlFileResult) => void,
+  ): ClientUnaryCall;
+  exportScanStripeMeshToStlFile(
+    request: ExportScanStripeMeshToStlFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportScanStripeMeshToStlFileResult) => void,
+  ): ClientUnaryCall;
+  exportStepFileEntireModel(
+    request: ExportStepFileEntireModelRequest,
+    callback: (error: ServiceError | null, response: ExportStepFileEntireModelResult) => void,
+  ): ClientUnaryCall;
+  exportStepFileEntireModel(
+    request: ExportStepFileEntireModelRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportStepFileEntireModelResult) => void,
+  ): ClientUnaryCall;
+  exportStepFileEntireModel(
+    request: ExportStepFileEntireModelRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportStepFileEntireModelResult) => void,
+  ): ClientUnaryCall;
+  exportStepFilePartialModel(
+    request: ExportStepFilePartialModelRequest,
+    callback: (error: ServiceError | null, response: ExportStepFilePartialModelResult) => void,
+  ): ClientUnaryCall;
+  exportStepFilePartialModel(
+    request: ExportStepFilePartialModelRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportStepFilePartialModelResult) => void,
+  ): ClientUnaryCall;
+  exportStepFilePartialModel(
+    request: ExportStepFilePartialModelRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportStepFilePartialModelResult) => void,
+  ): ClientUnaryCall;
+  exportVdaFsFileEntireModel(
+    request: ExportVdaFsFileEntireModelRequest,
+    callback: (error: ServiceError | null, response: ExportVdaFsFileEntireModelResult) => void,
+  ): ClientUnaryCall;
+  exportVdaFsFileEntireModel(
+    request: ExportVdaFsFileEntireModelRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportVdaFsFileEntireModelResult) => void,
+  ): ClientUnaryCall;
+  exportVdaFsFileEntireModel(
+    request: ExportVdaFsFileEntireModelRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportVdaFsFileEntireModelResult) => void,
+  ): ClientUnaryCall;
+  exportVdaFsFilePartialModel(
+    request: ExportVdaFsFilePartialModelRequest,
+    callback: (error: ServiceError | null, response: ExportVdaFsFilePartialModelResult) => void,
+  ): ClientUnaryCall;
+  exportVdaFsFilePartialModel(
+    request: ExportVdaFsFilePartialModelRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportVdaFsFilePartialModelResult) => void,
+  ): ClientUnaryCall;
+  exportVdaFsFilePartialModel(
+    request: ExportVdaFsFilePartialModelRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportVdaFsFilePartialModelResult) => void,
+  ): ClientUnaryCall;
+  exportVectorContainerToAsciiFile(
+    request: ExportVectorContainerToAsciiFileRequest,
+    callback: (error: ServiceError | null, response: ExportVectorContainerToAsciiFileResult) => void,
+  ): ClientUnaryCall;
+  exportVectorContainerToAsciiFile(
+    request: ExportVectorContainerToAsciiFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExportVectorContainerToAsciiFileResult) => void,
+  ): ClientUnaryCall;
+  exportVectorContainerToAsciiFile(
+    request: ExportVectorContainerToAsciiFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExportVectorContainerToAsciiFileResult) => void,
+  ): ClientUnaryCall;
+  findFilesInDirectory(
+    request: FindFilesInDirectoryRequest,
+    callback: (error: ServiceError | null, response: FindFilesInDirectoryResult) => void,
+  ): ClientUnaryCall;
+  findFilesInDirectory(
+    request: FindFilesInDirectoryRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: FindFilesInDirectoryResult) => void,
+  ): ClientUnaryCall;
+  findFilesInDirectory(
+    request: FindFilesInDirectoryRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: FindFilesInDirectoryResult) => void,
+  ): ClientUnaryCall;
+  findSubDirectoriesInDirectory(
+    request: FindSubDirectoriesInDirectoryRequest,
+    callback: (error: ServiceError | null, response: FindSubDirectoriesInDirectoryResult) => void,
+  ): ClientUnaryCall;
+  findSubDirectoriesInDirectory(
+    request: FindSubDirectoriesInDirectoryRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: FindSubDirectoriesInDirectoryResult) => void,
+  ): ClientUnaryCall;
+  findSubDirectoriesInDirectory(
+    request: FindSubDirectoriesInDirectoryRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: FindSubDirectoriesInDirectoryResult) => void,
+  ): ClientUnaryCall;
+  getBooleanFromDataShareFile(
+    request: GetBooleanFromDataShareFileRequest,
+    callback: (error: ServiceError | null, response: GetBooleanFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getBooleanFromDataShareFile(
+    request: GetBooleanFromDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetBooleanFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getBooleanFromDataShareFile(
+    request: GetBooleanFromDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetBooleanFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getDoubleFromDataShareFile(
+    request: GetDoubleFromDataShareFileRequest,
+    callback: (error: ServiceError | null, response: GetDoubleFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getDoubleFromDataShareFile(
+    request: GetDoubleFromDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetDoubleFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getDoubleFromDataShareFile(
+    request: GetDoubleFromDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetDoubleFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getIntegerFromDataShareFile(
+    request: GetIntegerFromDataShareFileRequest,
+    callback: (error: ServiceError | null, response: GetIntegerFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getIntegerFromDataShareFile(
+    request: GetIntegerFromDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetIntegerFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getIntegerFromDataShareFile(
+    request: GetIntegerFromDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetIntegerFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getQdasCatalogEntries(
+    request: GetQdasCatalogEntriesRequest,
+    callback: (error: ServiceError | null, response: GetQdasCatalogEntriesResult) => void,
+  ): ClientUnaryCall;
+  getQdasCatalogEntries(
+    request: GetQdasCatalogEntriesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetQdasCatalogEntriesResult) => void,
+  ): ClientUnaryCall;
+  getQdasCatalogEntries(
+    request: GetQdasCatalogEntriesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetQdasCatalogEntriesResult) => void,
+  ): ClientUnaryCall;
+  getStringFromDataShareFile(
+    request: GetStringFromDataShareFileRequest,
+    callback: (error: ServiceError | null, response: GetStringFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getStringFromDataShareFile(
+    request: GetStringFromDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetStringFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getStringFromDataShareFile(
+    request: GetStringFromDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetStringFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getTransformFromDataShareFile(
+    request: GetTransformFromDataShareFileRequest,
+    callback: (error: ServiceError | null, response: GetTransformFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getTransformFromDataShareFile(
+    request: GetTransformFromDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetTransformFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getTransformFromDataShareFile(
+    request: GetTransformFromDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetTransformFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getVectorFromDataShareFile(
+    request: GetVectorFromDataShareFileRequest,
+    callback: (error: ServiceError | null, response: GetVectorFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getVectorFromDataShareFile(
+    request: GetVectorFromDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetVectorFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  getVectorFromDataShareFile(
+    request: GetVectorFromDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetVectorFromDataShareFileResult) => void,
+  ): ClientUnaryCall;
   getWorkingDirectory(
     request: GetWorkingDirectoryRequest,
     callback: (error: ServiceError | null, response: GetWorkingDirectoryResult) => void,
@@ -163,6 +12613,663 @@ export interface FileOperationsClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetWorkingDirectoryResult) => void,
+  ): ClientUnaryCall;
+  importAsciiPredefinedFormats(
+    request: ImportAsciiPredefinedFormatsRequest,
+    callback: (error: ServiceError | null, response: ImportAsciiPredefinedFormatsResult) => void,
+  ): ClientUnaryCall;
+  importAsciiPredefinedFormats(
+    request: ImportAsciiPredefinedFormatsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportAsciiPredefinedFormatsResult) => void,
+  ): ClientUnaryCall;
+  importAsciiPredefinedFormats(
+    request: ImportAsciiPredefinedFormatsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportAsciiPredefinedFormatsResult) => void,
+  ): ClientUnaryCall;
+  importAsciiPredefinedFrameSetFormats(
+    request: ImportAsciiPredefinedFrameSetFormatsRequest,
+    callback: (error: ServiceError | null, response: ImportAsciiPredefinedFrameSetFormatsResult) => void,
+  ): ClientUnaryCall;
+  importAsciiPredefinedFrameSetFormats(
+    request: ImportAsciiPredefinedFrameSetFormatsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportAsciiPredefinedFrameSetFormatsResult) => void,
+  ): ClientUnaryCall;
+  importAsciiPredefinedFrameSetFormats(
+    request: ImportAsciiPredefinedFrameSetFormatsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportAsciiPredefinedFrameSetFormatsResult) => void,
+  ): ClientUnaryCall;
+  importE57File(
+    request: ImportE57FileRequest,
+    callback: (error: ServiceError | null, response: ImportE57FileResult) => void,
+  ): ClientUnaryCall;
+  importE57File(
+    request: ImportE57FileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportE57FileResult) => void,
+  ): ClientUnaryCall;
+  importE57File(
+    request: ImportE57FileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportE57FileResult) => void,
+  ): ClientUnaryCall;
+  importFileAsEmbeddedFile(
+    request: ImportFileAsEmbeddedFileRequest,
+    callback: (error: ServiceError | null, response: ImportFileAsEmbeddedFileResult) => void,
+  ): ClientUnaryCall;
+  importFileAsEmbeddedFile(
+    request: ImportFileAsEmbeddedFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportFileAsEmbeddedFileResult) => void,
+  ): ClientUnaryCall;
+  importFileAsEmbeddedFile(
+    request: ImportFileAsEmbeddedFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportFileAsEmbeddedFileResult) => void,
+  ): ClientUnaryCall;
+  importFileAsPicture(
+    request: ImportFileAsPictureRequest,
+    callback: (error: ServiceError | null, response: ImportFileAsPictureResult) => void,
+  ): ClientUnaryCall;
+  importFileAsPicture(
+    request: ImportFileAsPictureRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportFileAsPictureResult) => void,
+  ): ClientUnaryCall;
+  importFileAsPicture(
+    request: ImportFileAsPictureRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportFileAsPictureResult) => void,
+  ): ClientUnaryCall;
+  importHiddenPointBarXmlFile(
+    request: ImportHiddenPointBarXmlFileRequest,
+    callback: (error: ServiceError | null, response: ImportHiddenPointBarXmlFileResult) => void,
+  ): ClientUnaryCall;
+  importHiddenPointBarXmlFile(
+    request: ImportHiddenPointBarXmlFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportHiddenPointBarXmlFileResult) => void,
+  ): ClientUnaryCall;
+  importHiddenPointBarXmlFile(
+    request: ImportHiddenPointBarXmlFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportHiddenPointBarXmlFileResult) => void,
+  ): ClientUnaryCall;
+  importIgesFile(
+    request: ImportIgesFileRequest,
+    callback: (error: ServiceError | null, response: ImportIgesFileResult) => void,
+  ): ClientUnaryCall;
+  importIgesFile(
+    request: ImportIgesFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportIgesFileResult) => void,
+  ): ClientUnaryCall;
+  importIgesFile(
+    request: ImportIgesFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportIgesFileResult) => void,
+  ): ClientUnaryCall;
+  importLeicaGsiFile(
+    request: ImportLeicaGsiFileRequest,
+    callback: (error: ServiceError | null, response: ImportLeicaGsiFileResult) => void,
+  ): ClientUnaryCall;
+  importLeicaGsiFile(
+    request: ImportLeicaGsiFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportLeicaGsiFileResult) => void,
+  ): ClientUnaryCall;
+  importLeicaGsiFile(
+    request: ImportLeicaGsiFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportLeicaGsiFileResult) => void,
+  ): ClientUnaryCall;
+  importLeicaSdbFile(
+    request: ImportLeicaSdbFileRequest,
+    callback: (error: ServiceError | null, response: ImportLeicaSdbFileResult) => void,
+  ): ClientUnaryCall;
+  importLeicaSdbFile(
+    request: ImportLeicaSdbFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportLeicaSdbFileResult) => void,
+  ): ClientUnaryCall;
+  importLeicaSdbFile(
+    request: ImportLeicaSdbFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportLeicaSdbFileResult) => void,
+  ): ClientUnaryCall;
+  importMpFileAsEmbeddedMp(
+    request: ImportMpFileAsEmbeddedMpRequest,
+    callback: (error: ServiceError | null, response: ImportMpFileAsEmbeddedMpResult) => void,
+  ): ClientUnaryCall;
+  importMpFileAsEmbeddedMp(
+    request: ImportMpFileAsEmbeddedMpRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportMpFileAsEmbeddedMpResult) => void,
+  ): ClientUnaryCall;
+  importMpFileAsEmbeddedMp(
+    request: ImportMpFileAsEmbeddedMpRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportMpFileAsEmbeddedMpResult) => void,
+  ): ClientUnaryCall;
+  importNominalsFromXmlFile(
+    request: ImportNominalsFromXmlFileRequest,
+    callback: (error: ServiceError | null, response: ImportNominalsFromXmlFileResult) => void,
+  ): ClientUnaryCall;
+  importNominalsFromXmlFile(
+    request: ImportNominalsFromXmlFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportNominalsFromXmlFileResult) => void,
+  ): ClientUnaryCall;
+  importNominalsFromXmlFile(
+    request: ImportNominalsFromXmlFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportNominalsFromXmlFileResult) => void,
+  ): ClientUnaryCall;
+  importPolyworksFile(
+    request: ImportPolyworksFileRequest,
+    callback: (error: ServiceError | null, response: ImportPolyworksFileResult) => void,
+  ): ClientUnaryCall;
+  importPolyworksFile(
+    request: ImportPolyworksFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportPolyworksFileResult) => void,
+  ): ClientUnaryCall;
+  importPolyworksFile(
+    request: ImportPolyworksFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportPolyworksFileResult) => void,
+  ): ClientUnaryCall;
+  importQdasCatalogFile(
+    request: ImportQdasCatalogFileRequest,
+    callback: (error: ServiceError | null, response: ImportQdasCatalogFileResult) => void,
+  ): ClientUnaryCall;
+  importQdasCatalogFile(
+    request: ImportQdasCatalogFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportQdasCatalogFileResult) => void,
+  ): ClientUnaryCall;
+  importQdasCatalogFile(
+    request: ImportQdasCatalogFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportQdasCatalogFileResult) => void,
+  ): ClientUnaryCall;
+  importSaFile(
+    request: ImportSaFileRequest,
+    callback: (error: ServiceError | null, response: ImportSaFileResult) => void,
+  ): ClientUnaryCall;
+  importSaFile(
+    request: ImportSaFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportSaFileResult) => void,
+  ): ClientUnaryCall;
+  importSaFile(
+    request: ImportSaFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportSaFileResult) => void,
+  ): ClientUnaryCall;
+  importSaWindowsPlacement(
+    request: ImportSaWindowsPlacementRequest,
+    callback: (error: ServiceError | null, response: ImportSaWindowsPlacementResult) => void,
+  ): ClientUnaryCall;
+  importSaWindowsPlacement(
+    request: ImportSaWindowsPlacementRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportSaWindowsPlacementResult) => void,
+  ): ClientUnaryCall;
+  importSaWindowsPlacement(
+    request: ImportSaWindowsPlacementRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportSaWindowsPlacementResult) => void,
+  ): ClientUnaryCall;
+  importSatFile(
+    request: ImportSatFileRequest,
+    callback: (error: ServiceError | null, response: ImportSatFileResult) => void,
+  ): ClientUnaryCall;
+  importSatFile(
+    request: ImportSatFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportSatFileResult) => void,
+  ): ClientUnaryCall;
+  importSatFile(
+    request: ImportSatFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportSatFileResult) => void,
+  ): ClientUnaryCall;
+  importStepFile(
+    request: ImportStepFileRequest,
+    callback: (error: ServiceError | null, response: ImportStepFileResult) => void,
+  ): ClientUnaryCall;
+  importStepFile(
+    request: ImportStepFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportStepFileResult) => void,
+  ): ClientUnaryCall;
+  importStepFile(
+    request: ImportStepFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportStepFileResult) => void,
+  ): ClientUnaryCall;
+  importStlFile(
+    request: ImportStlFileRequest,
+    callback: (error: ServiceError | null, response: ImportStlFileResult) => void,
+  ): ClientUnaryCall;
+  importStlFile(
+    request: ImportStlFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportStlFileResult) => void,
+  ): ClientUnaryCall;
+  importStlFile(
+    request: ImportStlFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportStlFileResult) => void,
+  ): ClientUnaryCall;
+  importVdaFsFile(
+    request: ImportVdaFsFileRequest,
+    callback: (error: ServiceError | null, response: ImportVdaFsFileResult) => void,
+  ): ClientUnaryCall;
+  importVdaFsFile(
+    request: ImportVdaFsFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportVdaFsFileResult) => void,
+  ): ClientUnaryCall;
+  importVdaFsFile(
+    request: ImportVdaFsFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportVdaFsFileResult) => void,
+  ): ClientUnaryCall;
+  importVstarsXyzFile(
+    request: ImportVstarsXyzFileRequest,
+    callback: (error: ServiceError | null, response: ImportVstarsXyzFileResult) => void,
+  ): ClientUnaryCall;
+  importVstarsXyzFile(
+    request: ImportVstarsXyzFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportVstarsXyzFileResult) => void,
+  ): ClientUnaryCall;
+  importVstarsXyzFile(
+    request: ImportVstarsXyzFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportVstarsXyzFileResult) => void,
+  ): ClientUnaryCall;
+  importVstarsCameras(
+    request: ImportVstarsCamerasRequest,
+    callback: (error: ServiceError | null, response: ImportVstarsCamerasResult) => void,
+  ): ClientUnaryCall;
+  importVstarsCameras(
+    request: ImportVstarsCamerasRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ImportVstarsCamerasResult) => void,
+  ): ClientUnaryCall;
+  importVstarsCameras(
+    request: ImportVstarsCamerasRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ImportVstarsCamerasResult) => void,
+  ): ClientUnaryCall;
+  loadHtmlForm(
+    request: LoadHtmlFormRequest,
+    callback: (error: ServiceError | null, response: LoadHtmlFormResult) => void,
+  ): ClientUnaryCall;
+  loadHtmlForm(
+    request: LoadHtmlFormRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: LoadHtmlFormResult) => void,
+  ): ClientUnaryCall;
+  loadHtmlForm(
+    request: LoadHtmlFormRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: LoadHtmlFormResult) => void,
+  ): ClientUnaryCall;
+  loadHtmlFormInEdgeBrowser(
+    request: LoadHtmlFormInEdgeBrowserRequest,
+    callback: (error: ServiceError | null, response: LoadHtmlFormInEdgeBrowserResult) => void,
+  ): ClientUnaryCall;
+  loadHtmlFormInEdgeBrowser(
+    request: LoadHtmlFormInEdgeBrowserRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: LoadHtmlFormInEdgeBrowserResult) => void,
+  ): ClientUnaryCall;
+  loadHtmlFormInEdgeBrowser(
+    request: LoadHtmlFormInEdgeBrowserRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: LoadHtmlFormInEdgeBrowserResult) => void,
+  ): ClientUnaryCall;
+  makeEmbeddedFileNameList(
+    request: MakeEmbeddedFileNameListRequest,
+    callback: (error: ServiceError | null, response: MakeEmbeddedFileNameListResult) => void,
+  ): ClientUnaryCall;
+  makeEmbeddedFileNameList(
+    request: MakeEmbeddedFileNameListRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeEmbeddedFileNameListResult) => void,
+  ): ClientUnaryCall;
+  makeEmbeddedFileNameList(
+    request: MakeEmbeddedFileNameListRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeEmbeddedFileNameListResult) => void,
+  ): ClientUnaryCall;
+  mergeMeasurementsIntoXmlFile(
+    request: MergeMeasurementsIntoXmlFileRequest,
+    callback: (error: ServiceError | null, response: MergeMeasurementsIntoXmlFileResult) => void,
+  ): ClientUnaryCall;
+  mergeMeasurementsIntoXmlFile(
+    request: MergeMeasurementsIntoXmlFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MergeMeasurementsIntoXmlFileResult) => void,
+  ): ClientUnaryCall;
+  mergeMeasurementsIntoXmlFile(
+    request: MergeMeasurementsIntoXmlFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MergeMeasurementsIntoXmlFileResult) => void,
+  ): ClientUnaryCall;
+  newSaFile(
+    request: NewSaFileRequest,
+    callback: (error: ServiceError | null, response: NewSaFileResult) => void,
+  ): ClientUnaryCall;
+  newSaFile(
+    request: NewSaFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: NewSaFileResult) => void,
+  ): ClientUnaryCall;
+  newSaFile(
+    request: NewSaFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: NewSaFileResult) => void,
+  ): ClientUnaryCall;
+  openSaFile(
+    request: OpenSaFileRequest,
+    callback: (error: ServiceError | null, response: OpenSaFileResult) => void,
+  ): ClientUnaryCall;
+  openSaFile(
+    request: OpenSaFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: OpenSaFileResult) => void,
+  ): ClientUnaryCall;
+  openSaFile(
+    request: OpenSaFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: OpenSaFileResult) => void,
+  ): ClientUnaryCall;
+  openTemplateFile(
+    request: OpenTemplateFileRequest,
+    callback: (error: ServiceError | null, response: OpenTemplateFileResult) => void,
+  ): ClientUnaryCall;
+  openTemplateFile(
+    request: OpenTemplateFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: OpenTemplateFileResult) => void,
+  ): ClientUnaryCall;
+  openTemplateFile(
+    request: OpenTemplateFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: OpenTemplateFileResult) => void,
+  ): ClientUnaryCall;
+  popPolyBayAnalysisWindow(
+    request: PopPolyBayAnalysisWindowRequest,
+    callback: (error: ServiceError | null, response: PopPolyBayAnalysisWindowResult) => void,
+  ): ClientUnaryCall;
+  popPolyBayAnalysisWindow(
+    request: PopPolyBayAnalysisWindowRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: PopPolyBayAnalysisWindowResult) => void,
+  ): ClientUnaryCall;
+  popPolyBayAnalysisWindow(
+    request: PopPolyBayAnalysisWindowRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: PopPolyBayAnalysisWindowResult) => void,
+  ): ClientUnaryCall;
+  prepareQdasDataList(
+    request: PrepareQdasDataListRequest,
+    callback: (error: ServiceError | null, response: PrepareQdasDataListResult) => void,
+  ): ClientUnaryCall;
+  prepareQdasDataList(
+    request: PrepareQdasDataListRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: PrepareQdasDataListResult) => void,
+  ): ClientUnaryCall;
+  prepareQdasDataList(
+    request: PrepareQdasDataListRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: PrepareQdasDataListResult) => void,
+  ): ClientUnaryCall;
+  renameGeneralFile(
+    request: RenameGeneralFileRequest,
+    callback: (error: ServiceError | null, response: RenameGeneralFileResult) => void,
+  ): ClientUnaryCall;
+  renameGeneralFile(
+    request: RenameGeneralFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: RenameGeneralFileResult) => void,
+  ): ClientUnaryCall;
+  renameGeneralFile(
+    request: RenameGeneralFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: RenameGeneralFileResult) => void,
+  ): ClientUnaryCall;
+  save(request: SaveRequest, callback: (error: ServiceError | null, response: SaveResult) => void): ClientUnaryCall;
+  save(
+    request: SaveRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SaveResult) => void,
+  ): ClientUnaryCall;
+  save(
+    request: SaveRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SaveResult) => void,
+  ): ClientUnaryCall;
+  saveAsReadOnlyTemplate(
+    request: SaveAsReadOnlyTemplateRequest,
+    callback: (error: ServiceError | null, response: SaveAsReadOnlyTemplateResult) => void,
+  ): ClientUnaryCall;
+  saveAsReadOnlyTemplate(
+    request: SaveAsReadOnlyTemplateRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SaveAsReadOnlyTemplateResult) => void,
+  ): ClientUnaryCall;
+  saveAsReadOnlyTemplate(
+    request: SaveAsReadOnlyTemplateRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SaveAsReadOnlyTemplateResult) => void,
+  ): ClientUnaryCall;
+  saveAs(
+    request: SaveAsRequest,
+    callback: (error: ServiceError | null, response: SaveAsResult) => void,
+  ): ClientUnaryCall;
+  saveAs(
+    request: SaveAsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SaveAsResult) => void,
+  ): ClientUnaryCall;
+  saveAs(
+    request: SaveAsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SaveAsResult) => void,
+  ): ClientUnaryCall;
+  setBooleanInDataShareFile(
+    request: SetBooleanInDataShareFileRequest,
+    callback: (error: ServiceError | null, response: SetBooleanInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setBooleanInDataShareFile(
+    request: SetBooleanInDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetBooleanInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setBooleanInDataShareFile(
+    request: SetBooleanInDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetBooleanInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setDoubleInDataShareFile(
+    request: SetDoubleInDataShareFileRequest,
+    callback: (error: ServiceError | null, response: SetDoubleInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setDoubleInDataShareFile(
+    request: SetDoubleInDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetDoubleInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setDoubleInDataShareFile(
+    request: SetDoubleInDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetDoubleInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setIntegerInDataShareFile(
+    request: SetIntegerInDataShareFileRequest,
+    callback: (error: ServiceError | null, response: SetIntegerInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setIntegerInDataShareFile(
+    request: SetIntegerInDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetIntegerInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setIntegerInDataShareFile(
+    request: SetIntegerInDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetIntegerInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setStringInDataShareFile(
+    request: SetStringInDataShareFileRequest,
+    callback: (error: ServiceError | null, response: SetStringInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setStringInDataShareFile(
+    request: SetStringInDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetStringInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setStringInDataShareFile(
+    request: SetStringInDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetStringInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setTransformInDataShareFile(
+    request: SetTransformInDataShareFileRequest,
+    callback: (error: ServiceError | null, response: SetTransformInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setTransformInDataShareFile(
+    request: SetTransformInDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetTransformInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setTransformInDataShareFile(
+    request: SetTransformInDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetTransformInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setVectorInDataShareFile(
+    request: SetVectorInDataShareFileRequest,
+    callback: (error: ServiceError | null, response: SetVectorInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setVectorInDataShareFile(
+    request: SetVectorInDataShareFileRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetVectorInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  setVectorInDataShareFile(
+    request: SetVectorInDataShareFileRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetVectorInDataShareFileResult) => void,
+  ): ClientUnaryCall;
+  terminateAllRunningMPs(
+    request: TerminateAllRunningMPsRequest,
+    callback: (error: ServiceError | null, response: TerminateAllRunningMPsResult) => void,
+  ): ClientUnaryCall;
+  terminateAllRunningMPs(
+    request: TerminateAllRunningMPsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: TerminateAllRunningMPsResult) => void,
+  ): ClientUnaryCall;
+  terminateAllRunningMPs(
+    request: TerminateAllRunningMPsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: TerminateAllRunningMPsResult) => void,
+  ): ClientUnaryCall;
+  useNrkxmlLibrary(
+    request: UseNrkxmlLibraryRequest,
+    callback: (error: ServiceError | null, response: UseNrkxmlLibraryResult) => void,
+  ): ClientUnaryCall;
+  useNrkxmlLibrary(
+    request: UseNrkxmlLibraryRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: UseNrkxmlLibraryResult) => void,
+  ): ClientUnaryCall;
+  useNrkxmlLibrary(
+    request: UseNrkxmlLibraryRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: UseNrkxmlLibraryResult) => void,
+  ): ClientUnaryCall;
+  verifyGeneralFileExists(
+    request: VerifyGeneralFileExistsRequest,
+    callback: (error: ServiceError | null, response: VerifyGeneralFileExistsResult) => void,
+  ): ClientUnaryCall;
+  verifyGeneralFileExists(
+    request: VerifyGeneralFileExistsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: VerifyGeneralFileExistsResult) => void,
+  ): ClientUnaryCall;
+  verifyGeneralFileExists(
+    request: VerifyGeneralFileExistsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: VerifyGeneralFileExistsResult) => void,
+  ): ClientUnaryCall;
+  verifyMpFileExists(
+    request: VerifyMpFileExistsRequest,
+    callback: (error: ServiceError | null, response: VerifyMpFileExistsResult) => void,
+  ): ClientUnaryCall;
+  verifyMpFileExists(
+    request: VerifyMpFileExistsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: VerifyMpFileExistsResult) => void,
+  ): ClientUnaryCall;
+  verifyMpFileExists(
+    request: VerifyMpFileExistsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: VerifyMpFileExistsResult) => void,
   ): ClientUnaryCall;
 }
 
