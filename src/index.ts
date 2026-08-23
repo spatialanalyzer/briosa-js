@@ -1,4 +1,5 @@
 export { createBriosaClient, getWorkingDirectory } from './client.js';
+export { getActiveCollectionName } from './activeContextOperations.js';
 export type { BriosaClient } from './client.js';
 export { BriosaCompatibilityError } from './compatibility.js';
 export {
@@ -42,3 +43,5 @@ export type {
 } from './models.js';
 export * from './operationValues.js';
 export * from './waveAOperations.js';
+export * from './waveBOperations.js';
+export * from './waveBOperationValues.js';

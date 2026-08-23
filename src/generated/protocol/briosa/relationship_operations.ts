@@ -20,12 +20,17 @@ import {
 } from "@grpc/grpc-js";
 import { MpExecutionDetails } from "./operation_outcomes.js";
 import {
+  CloudThinningOptions,
   CollectionInstrumentId,
   CollectionItemName,
   CollectionName,
   CollectionObjectName,
+  Color,
   ColorizationOptions,
   FitConstraintScalarOptions,
+  Font,
+  GeometryType,
+  OffsetDirectionType,
   PointFilterInputType,
   PointName,
   ProjectionOptions,
@@ -33,7 +38,78 @@ import {
   SurfaceAnalysisMode,
   ToleranceScalarOptions,
   ToleranceVectorOptions,
+  Transform,
+  WorldTransform,
 } from "./spatial_analyzer_values.js";
+
+export enum DynamicCircleMode {
+  DYNAMIC_CIRCLE_MODE_UNSPECIFIED = 0,
+  DYNAMIC_CIRCLE_MODE_CYLINDER_AND_PLANE_HOLD_PLANE_NORMAL = 1,
+  DYNAMIC_CIRCLE_MODE_CYLINDER_AND_PLANE_HOLD_CYLINDER_AXIS = 2,
+  DYNAMIC_CIRCLE_MODE_CONE_AND_PLANE_HOLD_PLANE_NORMAL = 3,
+  DYNAMIC_CIRCLE_MODE_CONE_AND_PLANE_HOLD_CONE_AXIS = 4,
+  DYNAMIC_CIRCLE_MODE_SPHERE_AND_PLANE_INTERSECTION = 5,
+  DYNAMIC_CIRCLE_MODE_TWO_CONES_INTERSECTION = 6,
+  DYNAMIC_CIRCLE_MODE_CONE_AND_CYLINDER_INTERSECTION = 7,
+  UNRECOGNIZED = -1,
+}
+
+export enum DynamicEllipseMode {
+  DYNAMIC_ELLIPSE_MODE_UNSPECIFIED = 0,
+  DYNAMIC_ELLIPSE_MODE_CYLINDER_AND_PLANE_INTERSECTION = 1,
+  DYNAMIC_ELLIPSE_MODE_CONE_AND_PLANE_INTERSECTION = 2,
+  UNRECOGNIZED = -1,
+}
+
+export enum DynamicLineMode {
+  DYNAMIC_LINE_MODE_UNSPECIFIED = 0,
+  DYNAMIC_LINE_MODE_CONE_AXIS = 1,
+  DYNAMIC_LINE_MODE_CYLINDER_AXIS = 2,
+  DYNAMIC_LINE_MODE_INTERSECTION_OF_TWO_PLANES = 3,
+  DYNAMIC_LINE_MODE_BISECT_TWO_LINES = 4,
+  DYNAMIC_LINE_MODE_SLOT_CENTERLINE_ALONG_LENGTH = 5,
+  UNRECOGNIZED = -1,
+}
+
+export enum DynamicPlaneMode {
+  DYNAMIC_PLANE_MODE_UNSPECIFIED = 0,
+  DYNAMIC_PLANE_MODE_BISECT_TWO_PLANES = 1,
+  DYNAMIC_PLANE_MODE_TWO_CONES_HOLD_NORMAL_TO_BEST_FIT_PLANE = 2,
+  DYNAMIC_PLANE_MODE_TWO_CONES_HOLD_NORMAL_TO_FIRST_CONE_AXIS = 3,
+  DYNAMIC_PLANE_MODE_TWO_CONES_HOLD_NORMAL_TO_SECOND_CONE_AXIS = 4,
+  DYNAMIC_PLANE_MODE_CONE_AND_CYLINDER_HOLD_NORMAL_TO_BEST_FIT_PLANE = 5,
+  DYNAMIC_PLANE_MODE_CONE_AND_CYLINDER_HOLD_NORMAL_TO_CONE_AXIS = 6,
+  DYNAMIC_PLANE_MODE_CONE_AND_CYLINDER_HOLD_NORMAL_TO_CYLINDER_AXIS = 7,
+  DYNAMIC_PLANE_MODE_OFFSET_PLANE_FROM_PLANE = 8,
+  UNRECOGNIZED = -1,
+}
+
+export enum DynamicPointMode {
+  DYNAMIC_POINT_MODE_UNSPECIFIED = 0,
+  DYNAMIC_POINT_MODE_INTERSECTION_LINE_AND_PLANE = 1,
+  DYNAMIC_POINT_MODE_INTERSECTION_CYLINDER_AND_PLANE = 2,
+  DYNAMIC_POINT_MODE_INTERSECTION_CONE_AND_PLANE = 3,
+  DYNAMIC_POINT_MODE_INTERSECTION_THREE_PLANES = 4,
+  DYNAMIC_POINT_MODE_MID_POINT_PERPENDICULAR_TO_TWO_LINES = 5,
+  UNRECOGNIZED = -1,
+}
+
+export enum GeometryRelationshipPointEditMode {
+  GEOMETRY_RELATIONSHIP_POINT_EDIT_MODE_UNSPECIFIED = 0,
+  GEOMETRY_RELATIONSHIP_POINT_EDIT_MODE_POINT_LIST = 1,
+  GEOMETRY_RELATIONSHIP_POINT_EDIT_MODE_POINT_GRAPH = 2,
+  GEOMETRY_RELATIONSHIP_POINT_EDIT_MODE_SUB_SAMPLER_SETTINGS = 3,
+  UNRECOGNIZED = -1,
+}
+
+export enum SolverMode {
+  SOLVER_MODE_UNSPECIFIED = 0,
+  SOLVER_MODE_GAUSS_NEWTON = 1,
+  SOLVER_MODE_LEVENBERG_MARQUARDT = 2,
+  SOLVER_MODE_GAUSS_NEWTON_WITH_GRADIENT_SEARCH = 3,
+  SOLVER_MODE_DIRECT_SEARCH = 4,
+  UNRECOGNIZED = -1,
+}
 
 export interface EnableDisableRelationshipsForOptimizationRequest {
   relationships?: CollectionItemName[] | undefined;
@@ -643,6 +719,731 @@ export interface SetRelationshipWeightsNormalizedRequest {
 }
 
 export interface SetRelationshipWeightsNormalizedResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface AutoFilterCloudsToNominalGeometry2DRequest {
+  autoFilterTargetRelationships?: CollectionItemName[] | undefined;
+  clouds?: CollectionObjectName[] | undefined;
+  cloudThinningSettings?: CloudThinningOptions | undefined;
+  filterProximitySettings2d?: FilterProximitySettings | undefined;
+  geometryExtractionTolerance?: number | undefined;
+  useFeatureSpecificFilterSettings?: boolean | undefined;
+}
+
+export interface AutoFilterCloudsToNominalGeometry2DResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface AutoFilterCloudsToNominalGeometry3DRequest {
+  autoFilterTargetRelationships?: CollectionItemName[] | undefined;
+  clouds?: CollectionObjectName[] | undefined;
+  cloudThinningSettings?: CloudThinningOptions | undefined;
+  filterProximitySettings3d?: FilterProximitySettings | undefined;
+  useFeatureSpecificFilterSettings?: boolean | undefined;
+}
+
+export interface AutoFilterCloudsToNominalGeometry3DResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface AutoFilterPointsGroupsCloudsToSurfaceFacesRequest {
+  points?: PointNameList | undefined;
+  groups?: CollectionObjectNameList | undefined;
+  clouds?: CollectionObjectNameList | undefined;
+  surfaceOffset?: number | undefined;
+  edgeOffset?: number | undefined;
+  offsetDirection?: OffsetDirectionType | undefined;
+  enforceMaxPointsPerFaceInOutput?: boolean | undefined;
+  maxPointsPerFace?: number | undefined;
+  surfaces?: CollectionObjectName[] | undefined;
+  cloudThinningSettings?: CloudThinningOptions | undefined;
+  outputCloudBaseName?: string | undefined;
+  useFaceIdsForSuffix?: boolean | undefined;
+}
+
+export interface AutoFilterPointsGroupsCloudsToSurfaceFacesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface AutoFilterPointsToNominalGeometry3DRequest {
+  autoFilterTargetRelationships?: CollectionItemName[] | undefined;
+  points?: PointName[] | undefined;
+  filterProximitySettings3d?: FilterProximitySettings | undefined;
+}
+
+export interface AutoFilterPointsToNominalGeometry3DResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface CollectionObjectNameList {
+  values?: CollectionObjectName[] | undefined;
+}
+
+export interface ComputeGeometryRelationshipUncertaintiesRequest {
+  relationshipName?: CollectionItemName | undefined;
+  displayResults?: boolean | undefined;
+}
+
+export interface ComputeGeometryRelationshipUncertaintiesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface CreatePointsToObjectsMapRequest {
+  points?: PointNameList | undefined;
+  groups?: CollectionObjectNameList | undefined;
+  objects?: CollectionObjectName[] | undefined;
+  proximityTolerance?: number | undefined;
+  pointsToObjectsMapName?: string | undefined;
+}
+
+export interface CreatePointsToObjectsMapResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface DeleteRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+}
+
+export interface DeleteRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface DoRelationshipFitRequest {
+  collectionContainingRelationships?: string | undefined;
+  objectsToMove?: CollectionObjectName[] | undefined;
+  instrumentsToMove?: CollectionInstrumentId[] | undefined;
+  solverMode?: SolverMode | undefined;
+  motionToAllow?: FitDofOptions | undefined;
+  enableRandomizedStart?: boolean | undefined;
+  useFitDialog?: boolean | undefined;
+}
+
+export interface DoRelationshipFitResult {
+  transformInReference?: Transform | undefined;
+  transformInWorking?: WorldTransform | undefined;
+  transformInWorld?: WorldTransform | undefined;
+  fitObjectiveValue?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface EditGeometryRelationshipPointListRequest {
+  relationshipName?: CollectionItemName | undefined;
+  pointEditMode?: GeometryRelationshipPointEditMode | undefined;
+}
+
+export interface EditGeometryRelationshipPointListResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface ExtractGeometryFromPointCloudsRequest {
+  relationshipName?: CollectionItemName | undefined;
+  geometryType?: GeometryType | undefined;
+  cloudName?: CollectionObjectName | undefined;
+  boundingPoints?: PointNameList | undefined;
+  seedPoints?: PointName[] | undefined;
+  tolerance?: number | undefined;
+  reverseNormal?: boolean | undefined;
+  planarPointCount?: number | undefined;
+}
+
+export interface ExtractGeometryFromPointCloudsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface FilterGeometryRelationshipOutlierCloudPointsRequest {
+  relationshipName?: CollectionItemName | undefined;
+  sigmaThreshold?: number | undefined;
+  modifyExistingInputClouds?: boolean | undefined;
+}
+
+export interface FilterGeometryRelationshipOutlierCloudPointsResult {
+  metrics?: GeometryRelationshipOutlierFilterMetrics | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface FilterProximitySettings {
+  surfaceInclusionProximity?: number | undefined;
+  edgeExclusionProximity?: number | undefined;
+  planarInclusionProximity?: number | undefined;
+  planarExclusionProximity?: number | undefined;
+  radialInclusionProximity?: number | undefined;
+  geometryExtractionTolerance?: number | undefined;
+  surfaceProximityMode?: OffsetDirectionType | undefined;
+  planarProximityMode?: OffsetDirectionType | undefined;
+  radialProximityMode?: OffsetDirectionType | undefined;
+  projectToPlane?: boolean | undefined;
+  assertPlaneBoundaries?: boolean | undefined;
+}
+
+export interface FitDofOptions {
+  allowX?: boolean | undefined;
+  allowY?: boolean | undefined;
+  allowZ?: boolean | undefined;
+  allowRx?: boolean | undefined;
+  allowRy?: boolean | undefined;
+  allowRz?: boolean | undefined;
+  rotateAboutCentroid?: boolean | undefined;
+}
+
+export interface GenerateGeometryRelationshipSummaryRequest {
+  relationshipRefList?: CollectionItemName[] | undefined;
+  summaryTableName?: string | undefined;
+}
+
+export interface GenerateGeometryRelationshipSummaryResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GeometryRelationshipOutlierFilterMetrics {
+  firstPassRmsError?: number | undefined;
+  firstPassMaximumError?: number | undefined;
+  firstPassMinimumError?: number | undefined;
+  firstPassAverageError?: number | undefined;
+  finalPassRmsError?: number | undefined;
+  finalPassMaximumError?: number | undefined;
+  finalPassMinimumError?: number | undefined;
+  finalPassAverageError?: number | undefined;
+  totalInputPointCount?: number | undefined;
+  excludePointCount?: number | undefined;
+}
+
+export interface GetGeneralRelationshipStatisticsRequest {
+  relationshipName?: CollectionItemName | undefined;
+}
+
+export interface GetGeneralRelationshipStatisticsResult {
+  absoluteMaxDeviation?: number | undefined;
+  rms?: number | undefined;
+  hasSignedDeviation?: boolean | undefined;
+  signedMaxDeviation?: number | undefined;
+  signedMinDeviation?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetGeomRelationshipCriteriaNameListRequest {
+  relationshipName?: CollectionItemName | undefined;
+  includeAllCriteria?: boolean | undefined;
+}
+
+export interface GetGeomRelationshipCriteriaNameListResult {
+  criteriaNameList?: string[] | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetObjectsFromPointsToObjectsMapPointListRequest {
+  pointsToObjectsMapName?: string | undefined;
+  points?: PointName[] | undefined;
+}
+
+export interface GetObjectsFromPointsToObjectsMapPointListResult {
+  objects?: CollectionObjectName[] | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointsToObjectsRelationshipStatisticsRequest {
+  relationshipName?: CollectionItemName | undefined;
+}
+
+export interface GetPointsToObjectsRelationshipStatisticsResult {
+  absoluteMaxDeviation?: number | undefined;
+  maxDeviation?: number | undefined;
+  minDeviation?: number | undefined;
+  avgDeviation?: number | undefined;
+  rms?: number | undefined;
+  candidatePointCount?: number | undefined;
+  sampledPointCount?: number | undefined;
+  rejectedPointCount?: number | undefined;
+  usedPointCount?: number | undefined;
+  outOfTolerancePointCount?: number | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointsToPointsRelationshipAssociatedDataRequest {
+  relationshipName?: CollectionItemName | undefined;
+}
+
+export interface GetPointsToPointsRelationshipAssociatedDataResult {
+  associatedData?: PointsToPointsRelationshipAssociatedData | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetPointToPointRelationshipStatisticsRequest {
+  relationshipName?: CollectionItemName | undefined;
+}
+
+export interface GetPointToPointRelationshipStatisticsResult {
+  deltaX?: number | undefined;
+  deltaY?: number | undefined;
+  deltaZ?: number | undefined;
+  deltaMagnitude?: number | undefined;
+  referenceFrame?: CollectionObjectName | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetRelationshipAssociatedDataRequest {
+  relationshipName?: CollectionItemName | undefined;
+}
+
+export interface GetRelationshipAssociatedDataResult {
+  associatedData?: RelationshipAssociatedData | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetRelationshipSigmoidalGapFitConstraintsRequest {
+  relationshipName?: CollectionItemName | undefined;
+}
+
+export interface GetRelationshipSigmoidalGapFitConstraintsResult {
+  constraints?: SigmoidalGapFitConstraints | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface GetRelationshipStatusRequest {
+  relationshipName?: CollectionItemName | undefined;
+}
+
+export interface GetRelationshipStatusResult {
+  status?: RelationshipStatusFlags | undefined;
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeAveragePointRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  pointsInRelationship?: PointName[] | undefined;
+  averagePointName?: PointName | undefined;
+  nominalPointName?: PointName | undefined;
+}
+
+export interface MakeAveragePointRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeCloudToSwatchRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  inputCloudName?: CollectionObjectName | undefined;
+  surfaceFaceList?: string | undefined;
+  referencePoint?: PointName | undefined;
+  maximumRadialOffset?: number | undefined;
+  minimumAxialOffset?: number | undefined;
+  maximumAxialOffset?: number | undefined;
+  cardinalPointGroupName?: CollectionObjectName | undefined;
+}
+
+export interface MakeCloudToSwatchRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeDynamicCircleRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  constructionMode?: DynamicCircleMode | undefined;
+  firstReferenceGeometry?: CollectionObjectName | undefined;
+  secondReferenceGeometry?: CollectionObjectName | undefined;
+}
+
+export interface MakeDynamicCircleRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeDynamicEllipseRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  constructionMode?: DynamicEllipseMode | undefined;
+  firstReferenceGeometry?: CollectionObjectName | undefined;
+  secondReferenceGeometry?: CollectionObjectName | undefined;
+}
+
+export interface MakeDynamicEllipseRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeDynamicLineRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  constructionMode?: DynamicLineMode | undefined;
+  firstReferenceGeometry?: CollectionObjectName | undefined;
+  secondReferenceGeometry?: CollectionObjectName | undefined;
+}
+
+export interface MakeDynamicLineRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeDynamicPlaneRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  constructionMode?: DynamicPlaneMode | undefined;
+  firstReferenceGeometry?: CollectionObjectName | undefined;
+  secondReferenceGeometry?: CollectionObjectName | undefined;
+  offsetPlaneOffset?: number | undefined;
+}
+
+export interface MakeDynamicPlaneRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeDynamicPointRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  constructionMode?: DynamicPointMode | undefined;
+  firstReferenceGeometry?: CollectionObjectName | undefined;
+  secondReferenceGeometry?: CollectionObjectName | undefined;
+  thirdReferenceGeometry?: CollectionObjectName | undefined;
+}
+
+export interface MakeDynamicPointRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeFrameToFrameRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  firstFrameName?: CollectionObjectName | undefined;
+  secondFrameName?: CollectionObjectName | undefined;
+  orientationTolerance?: ToleranceScalarOptions | undefined;
+  positionTolerance?: ToleranceVectorOptions | undefined;
+}
+
+export interface MakeFrameToFrameRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeGeometryCompareOnlyRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  nominalGeometry?: CollectionObjectName | undefined;
+  measuredGeometry?: CollectionObjectName | undefined;
+}
+
+export interface MakeGeometryCompareOnlyRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeGeometryFitAndCompareToNominalRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  nominalGeometry?: CollectionObjectName | undefined;
+  pointGroupsToFit?: CollectionObjectName[] | undefined;
+  resultingObjectName?: CollectionObjectName | undefined;
+  fitProfileName?: string | undefined;
+}
+
+export interface MakeGeometryFitAndCompareToNominalRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeGeometryFitOnlyRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  pointGroupsToFit?: CollectionObjectName[] | undefined;
+  geometryType?: GeometryType | undefined;
+  resultingObjectName?: CollectionObjectName | undefined;
+  fitProfileName?: string | undefined;
+}
+
+export interface MakeGeometryFitOnlyRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeGroupsToObjectsRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  pointGroupsInRelationship?: CollectionObjectName[] | undefined;
+  objectsInRelationship?: CollectionObjectName[] | undefined;
+  projectionOptions?: ProjectionOptions | undefined;
+  autoUpdateAVectorGroup?: boolean | undefined;
+}
+
+export interface MakeGroupsToObjectsRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeGroupToGroupRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  firstGroupName?: CollectionObjectName | undefined;
+  secondGroupName?: CollectionObjectName | undefined;
+  autoUpdateAVectorGroup?: boolean | undefined;
+  tolerance?: ToleranceVectorOptions | undefined;
+  constraint?: ToleranceVectorOptions | undefined;
+}
+
+export interface MakeGroupToGroupRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeGroupToNominalGroupRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  nominalGroupName?: CollectionObjectName | undefined;
+  measuredGroupName?: CollectionObjectName | undefined;
+  autoUpdateAVectorGroup?: boolean | undefined;
+  useClosestPoint?: boolean | undefined;
+  displayClosestPointWatchWindow?: boolean | undefined;
+  useViewZoomingWithProximity?: boolean | undefined;
+  ignorePointsBeyondThreshold?: boolean | undefined;
+  proximityThreshold?: number | undefined;
+  tolerance?: ToleranceVectorOptions | undefined;
+  constraint?: ToleranceVectorOptions | undefined;
+  fitWeight?: number | undefined;
+}
+
+export interface MakeGroupToNominalGroupRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeObjectToObjectDirectionRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  firstObjectInRelationship?: CollectionObjectName | undefined;
+  secondObjectInRelationship?: CollectionObjectName | undefined;
+  nominalAngle?: number | undefined;
+}
+
+export interface MakeObjectToObjectDirectionRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakePointCloudsToObjectsRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  pointCloudsInRelationship?: CollectionObjectName[] | undefined;
+  objectsInRelationship?: CollectionObjectName[] | undefined;
+  projectionOptions?: ProjectionOptions | undefined;
+  autoUpdateAVectorGroup?: boolean | undefined;
+}
+
+export interface MakePointCloudsToObjectsRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakePointsToObjectsRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  pointsInRelationship?: PointName[] | undefined;
+  objectsInRelationship?: CollectionObjectName[] | undefined;
+  projectionOptions?: ProjectionOptions | undefined;
+  autoUpdateAVectorGroup?: boolean | undefined;
+}
+
+export interface MakePointsToObjectsRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakePointsToPointsRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  nominalPoints?: PointName[] | undefined;
+  measuredPoints?: PointName[] | undefined;
+  autoUpdateAVectorGroup?: boolean | undefined;
+  tolerance?: ToleranceVectorOptions | undefined;
+  constraint?: ToleranceVectorOptions | undefined;
+}
+
+export interface MakePointsToPointsRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakePointToPointRelationshipRequest {
+  relationshipName?: CollectionItemName | undefined;
+  firstPointName?: PointName | undefined;
+  secondPointName?: PointName | undefined;
+  tolerance?: ToleranceVectorOptions | undefined;
+  constraint?: ToleranceVectorOptions | undefined;
+}
+
+export interface MakePointToPointRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MakeVectorGroupToVectorGroupRelationshipRequest {
+  newVgToVgRelationship?: CollectionItemName | undefined;
+  referenceVectorGroup?: CollectionObjectName | undefined;
+  correspondingVectorGroup?: CollectionObjectName | undefined;
+  setOpposingVectorGroupPolarity?: boolean | undefined;
+}
+
+export interface MakeVectorGroupToVectorGroupRelationshipResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface MoveCollectionsByMinimizingRelationshipsRequest {
+  collectionsToMove?: string[] | undefined;
+  relationshipsToMinimize?: CollectionItemName[] | undefined;
+  solverMode?: SolverMode | undefined;
+  motionToAllow?: FitDofOptions | undefined;
+  useFitDialog?: boolean | undefined;
+  convergenceThreshold?: number | undefined;
+}
+
+export interface MoveCollectionsByMinimizingRelationshipsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface PointNameList {
+  values?: PointName[] | undefined;
+}
+
+export interface PointsToPointsRelationshipAssociatedData {
+  nominalPoints?: PointName[] | undefined;
+  actualPoints?: PointName[] | undefined;
+}
+
+export interface RelationshipAssociatedData {
+  relationshipType?: string | undefined;
+  individualPoints?: PointName[] | undefined;
+  pointGroups?: CollectionObjectName[] | undefined;
+  pointClouds?: CollectionObjectName[] | undefined;
+  objects?: CollectionObjectName[] | undefined;
+}
+
+export interface RelationshipStatusFlags {
+  dormant?: boolean | undefined;
+  success?: boolean | undefined;
+  measured?: boolean | undefined;
+  failed?: boolean | undefined;
+  unmeasured?: boolean | undefined;
+}
+
+export interface RelationshipWatchWindowTemplateRequest {
+  watchWindowTemplateName?: CollectionObjectName | undefined;
+  linearPrecision?: number | undefined;
+  angularPrecision?: number | undefined;
+  font?: Font | undefined;
+  textColor?: Color | undefined;
+  backgroundColor?: Color | undefined;
+  highlightColor?: Color | undefined;
+  showDeviationXRx?: boolean | undefined;
+  showDeviationYRy?: boolean | undefined;
+  showDeviationZRz?: boolean | undefined;
+  showDeviationMagnitude?: boolean | undefined;
+  udpNetworkTransmitSettings?: RelationshipWatchWindowUdpSettings | undefined;
+  transparentBackground?: boolean | undefined;
+  hideUnits?: boolean | undefined;
+}
+
+export interface RelationshipWatchWindowTemplateResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface RelationshipWatchWindowUdpSettings {
+  enabled?: boolean | undefined;
+  broadcast?: boolean | undefined;
+  ipAddress?: string | undefined;
+  port?: number | undefined;
+}
+
+export interface SetGroupToNominalGroupViewZoomingRequest {
+  relationshipName?: CollectionItemName | undefined;
+  useClosestPoint?: boolean | undefined;
+  showClosestPointWatchWindow?: boolean | undefined;
+  useViewZooming?: boolean | undefined;
+  ignorePointsBeyondThreshold?: boolean | undefined;
+  proximityThreshold?: number | undefined;
+}
+
+export interface SetGroupToNominalGroupViewZoomingResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetObjectToObjectDirectionRelationshipTolerancesRequest {
+  relationshipName?: CollectionItemName | undefined;
+  angleBetweenVectorsTolerances?: ToleranceScalarOptions | undefined;
+  mutualPerpendicularLengthTolerances?: ToleranceScalarOptions | undefined;
+}
+
+export interface SetObjectToObjectDirectionRelationshipTolerancesResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetOptimizationPerturbationParametersRequest {
+  lengthPerturbation?: number | undefined;
+  angularPerturbation?: number | undefined;
+  damping?: number | undefined;
+}
+
+export interface SetOptimizationPerturbationParametersResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetOptimizationSearchOptionsRequest {
+  maxNumberOfStepSizeReduction?: number | undefined;
+}
+
+export interface SetOptimizationSearchOptionsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetPointsToPointsRelationshipAssociatedDataRequest {
+  relationshipName?: CollectionItemName | undefined;
+  nominalPoints?: PointNameList | undefined;
+  actualPoints?: PointNameList | undefined;
+  ignoreEmptyArguments?: boolean | undefined;
+}
+
+export interface SetPointsToPointsRelationshipAssociatedDataResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetRelationshipAssociatedDataRequest {
+  relationshipName?: CollectionItemName | undefined;
+  individualPoints?: PointNameList | undefined;
+  pointGroups?: CollectionObjectNameList | undefined;
+  pointClouds?: CollectionObjectNameList | undefined;
+  objects?: CollectionObjectNameList | undefined;
+  ignoreEmptyArguments?: boolean | undefined;
+}
+
+export interface SetRelationshipAssociatedDataResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetVectorGroupToVectorGroupCylindricalZoneRequest {
+  vgToVgRelationship?: CollectionItemName | undefined;
+  radialOffset?: number | undefined;
+  minimumAxialOffset?: number | undefined;
+  maximumAxialOffset?: number | undefined;
+}
+
+export interface SetVectorGroupToVectorGroupCylindricalZoneResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetVectorGroupToVectorGroupFitGradientFactorRequest {
+  vgToVgRelationship?: CollectionItemName | undefined;
+  fitGradientFactor?: number | undefined;
+}
+
+export interface SetVectorGroupToVectorGroupFitGradientFactorResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetVectorGroupToVectorGroupFitWeightsRequest {
+  vgToVgRelationship?: CollectionItemName | undefined;
+  minimumGap?: number | undefined;
+  minimumGapFitWeight?: number | undefined;
+  maximumGap?: number | undefined;
+  maximumGapFitWeight?: number | undefined;
+  nominalGap?: number | undefined;
+  nominalGapFitWeight?: number | undefined;
+}
+
+export interface SetVectorGroupToVectorGroupFitWeightsResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SetVectorGroupToVectorGroupRelativePolarityRequest {
+  vgToVgRelationship?: CollectionItemName | undefined;
+  setOpposingVectorGroupPolarity?: boolean | undefined;
+}
+
+export interface SetVectorGroupToVectorGroupRelativePolarityResult {
+  execution?: MpExecutionDetails | undefined;
+}
+
+export interface SigmoidalGapFitConstraints {
+  useSigmoidalGapConstraints?: boolean | undefined;
+  minimumGapBoundary?: number | undefined;
+  minimumGapWeight?: number | undefined;
+  maximumGapBoundary?: number | undefined;
+  maximumGapWeight?: number | undefined;
+  nominalGap?: number | undefined;
+  nominalGapWeight?: number | undefined;
+  gradientSteepnessFactor?: number | undefined;
+}
+
+export interface StartStopRelationshipTrappingRequest {
+  relationshipName?: CollectionItemName | undefined;
+  instrumentId?: CollectionInstrumentId | undefined;
+  startTrapping?: boolean | undefined;
+}
+
+export interface StartStopRelationshipTrappingResult {
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -8540,6 +9341,9699 @@ export const SetRelationshipWeightsNormalizedResult: MessageFns<SetRelationshipW
   },
 };
 
+function createBaseAutoFilterCloudsToNominalGeometry2DRequest(): AutoFilterCloudsToNominalGeometry2DRequest {
+  return {
+    autoFilterTargetRelationships: [],
+    clouds: [],
+    cloudThinningSettings: undefined,
+    filterProximitySettings2d: undefined,
+    geometryExtractionTolerance: undefined,
+    useFeatureSpecificFilterSettings: undefined,
+  };
+}
+
+export const AutoFilterCloudsToNominalGeometry2DRequest: MessageFns<AutoFilterCloudsToNominalGeometry2DRequest> = {
+  encode(message: AutoFilterCloudsToNominalGeometry2DRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.autoFilterTargetRelationships !== undefined && message.autoFilterTargetRelationships.length !== 0) {
+      for (const v of message.autoFilterTargetRelationships) {
+        CollectionItemName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.clouds !== undefined && message.clouds.length !== 0) {
+      for (const v of message.clouds) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.cloudThinningSettings !== undefined) {
+      CloudThinningOptions.encode(message.cloudThinningSettings, writer.uint32(26).fork()).join();
+    }
+    if (message.filterProximitySettings2d !== undefined) {
+      FilterProximitySettings.encode(message.filterProximitySettings2d, writer.uint32(34).fork()).join();
+    }
+    if (message.geometryExtractionTolerance !== undefined) {
+      writer.uint32(41).double(message.geometryExtractionTolerance);
+    }
+    if (message.useFeatureSpecificFilterSettings !== undefined) {
+      writer.uint32(48).bool(message.useFeatureSpecificFilterSettings);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AutoFilterCloudsToNominalGeometry2DRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAutoFilterCloudsToNominalGeometry2DRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.autoFilterTargetRelationships!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.clouds!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.cloudThinningSettings = CloudThinningOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.filterProximitySettings2d = FilterProximitySettings.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.geometryExtractionTolerance = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.useFeatureSpecificFilterSettings = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AutoFilterCloudsToNominalGeometry2DRequest>): AutoFilterCloudsToNominalGeometry2DRequest {
+    return AutoFilterCloudsToNominalGeometry2DRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<AutoFilterCloudsToNominalGeometry2DRequest>,
+  ): AutoFilterCloudsToNominalGeometry2DRequest {
+    const message = createBaseAutoFilterCloudsToNominalGeometry2DRequest();
+    message.autoFilterTargetRelationships =
+      object.autoFilterTargetRelationships?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.clouds = object.clouds?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.cloudThinningSettings =
+      (object.cloudThinningSettings !== undefined && object.cloudThinningSettings !== null)
+        ? CloudThinningOptions.fromPartial(object.cloudThinningSettings)
+        : undefined;
+    message.filterProximitySettings2d =
+      (object.filterProximitySettings2d !== undefined && object.filterProximitySettings2d !== null)
+        ? FilterProximitySettings.fromPartial(object.filterProximitySettings2d)
+        : undefined;
+    message.geometryExtractionTolerance = object.geometryExtractionTolerance ?? undefined;
+    message.useFeatureSpecificFilterSettings = object.useFeatureSpecificFilterSettings ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAutoFilterCloudsToNominalGeometry2DResult(): AutoFilterCloudsToNominalGeometry2DResult {
+  return { execution: undefined };
+}
+
+export const AutoFilterCloudsToNominalGeometry2DResult: MessageFns<AutoFilterCloudsToNominalGeometry2DResult> = {
+  encode(message: AutoFilterCloudsToNominalGeometry2DResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AutoFilterCloudsToNominalGeometry2DResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAutoFilterCloudsToNominalGeometry2DResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AutoFilterCloudsToNominalGeometry2DResult>): AutoFilterCloudsToNominalGeometry2DResult {
+    return AutoFilterCloudsToNominalGeometry2DResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<AutoFilterCloudsToNominalGeometry2DResult>,
+  ): AutoFilterCloudsToNominalGeometry2DResult {
+    const message = createBaseAutoFilterCloudsToNominalGeometry2DResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseAutoFilterCloudsToNominalGeometry3DRequest(): AutoFilterCloudsToNominalGeometry3DRequest {
+  return {
+    autoFilterTargetRelationships: [],
+    clouds: [],
+    cloudThinningSettings: undefined,
+    filterProximitySettings3d: undefined,
+    useFeatureSpecificFilterSettings: undefined,
+  };
+}
+
+export const AutoFilterCloudsToNominalGeometry3DRequest: MessageFns<AutoFilterCloudsToNominalGeometry3DRequest> = {
+  encode(message: AutoFilterCloudsToNominalGeometry3DRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.autoFilterTargetRelationships !== undefined && message.autoFilterTargetRelationships.length !== 0) {
+      for (const v of message.autoFilterTargetRelationships) {
+        CollectionItemName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.clouds !== undefined && message.clouds.length !== 0) {
+      for (const v of message.clouds) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.cloudThinningSettings !== undefined) {
+      CloudThinningOptions.encode(message.cloudThinningSettings, writer.uint32(26).fork()).join();
+    }
+    if (message.filterProximitySettings3d !== undefined) {
+      FilterProximitySettings.encode(message.filterProximitySettings3d, writer.uint32(34).fork()).join();
+    }
+    if (message.useFeatureSpecificFilterSettings !== undefined) {
+      writer.uint32(40).bool(message.useFeatureSpecificFilterSettings);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AutoFilterCloudsToNominalGeometry3DRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAutoFilterCloudsToNominalGeometry3DRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.autoFilterTargetRelationships!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.clouds!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.cloudThinningSettings = CloudThinningOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.filterProximitySettings3d = FilterProximitySettings.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.useFeatureSpecificFilterSettings = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AutoFilterCloudsToNominalGeometry3DRequest>): AutoFilterCloudsToNominalGeometry3DRequest {
+    return AutoFilterCloudsToNominalGeometry3DRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<AutoFilterCloudsToNominalGeometry3DRequest>,
+  ): AutoFilterCloudsToNominalGeometry3DRequest {
+    const message = createBaseAutoFilterCloudsToNominalGeometry3DRequest();
+    message.autoFilterTargetRelationships =
+      object.autoFilterTargetRelationships?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.clouds = object.clouds?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.cloudThinningSettings =
+      (object.cloudThinningSettings !== undefined && object.cloudThinningSettings !== null)
+        ? CloudThinningOptions.fromPartial(object.cloudThinningSettings)
+        : undefined;
+    message.filterProximitySettings3d =
+      (object.filterProximitySettings3d !== undefined && object.filterProximitySettings3d !== null)
+        ? FilterProximitySettings.fromPartial(object.filterProximitySettings3d)
+        : undefined;
+    message.useFeatureSpecificFilterSettings = object.useFeatureSpecificFilterSettings ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAutoFilterCloudsToNominalGeometry3DResult(): AutoFilterCloudsToNominalGeometry3DResult {
+  return { execution: undefined };
+}
+
+export const AutoFilterCloudsToNominalGeometry3DResult: MessageFns<AutoFilterCloudsToNominalGeometry3DResult> = {
+  encode(message: AutoFilterCloudsToNominalGeometry3DResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AutoFilterCloudsToNominalGeometry3DResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAutoFilterCloudsToNominalGeometry3DResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AutoFilterCloudsToNominalGeometry3DResult>): AutoFilterCloudsToNominalGeometry3DResult {
+    return AutoFilterCloudsToNominalGeometry3DResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<AutoFilterCloudsToNominalGeometry3DResult>,
+  ): AutoFilterCloudsToNominalGeometry3DResult {
+    const message = createBaseAutoFilterCloudsToNominalGeometry3DResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseAutoFilterPointsGroupsCloudsToSurfaceFacesRequest(): AutoFilterPointsGroupsCloudsToSurfaceFacesRequest {
+  return {
+    points: undefined,
+    groups: undefined,
+    clouds: undefined,
+    surfaceOffset: undefined,
+    edgeOffset: undefined,
+    offsetDirection: undefined,
+    enforceMaxPointsPerFaceInOutput: undefined,
+    maxPointsPerFace: undefined,
+    surfaces: [],
+    cloudThinningSettings: undefined,
+    outputCloudBaseName: undefined,
+    useFaceIdsForSuffix: undefined,
+  };
+}
+
+export const AutoFilterPointsGroupsCloudsToSurfaceFacesRequest: MessageFns<
+  AutoFilterPointsGroupsCloudsToSurfaceFacesRequest
+> = {
+  encode(
+    message: AutoFilterPointsGroupsCloudsToSurfaceFacesRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.points !== undefined) {
+      PointNameList.encode(message.points, writer.uint32(10).fork()).join();
+    }
+    if (message.groups !== undefined) {
+      CollectionObjectNameList.encode(message.groups, writer.uint32(18).fork()).join();
+    }
+    if (message.clouds !== undefined) {
+      CollectionObjectNameList.encode(message.clouds, writer.uint32(26).fork()).join();
+    }
+    if (message.surfaceOffset !== undefined) {
+      writer.uint32(33).double(message.surfaceOffset);
+    }
+    if (message.edgeOffset !== undefined) {
+      writer.uint32(41).double(message.edgeOffset);
+    }
+    if (message.offsetDirection !== undefined) {
+      writer.uint32(48).int32(message.offsetDirection);
+    }
+    if (message.enforceMaxPointsPerFaceInOutput !== undefined) {
+      writer.uint32(56).bool(message.enforceMaxPointsPerFaceInOutput);
+    }
+    if (message.maxPointsPerFace !== undefined) {
+      writer.uint32(64).int32(message.maxPointsPerFace);
+    }
+    if (message.surfaces !== undefined && message.surfaces.length !== 0) {
+      for (const v of message.surfaces) {
+        CollectionObjectName.encode(v!, writer.uint32(74).fork()).join();
+      }
+    }
+    if (message.cloudThinningSettings !== undefined) {
+      CloudThinningOptions.encode(message.cloudThinningSettings, writer.uint32(82).fork()).join();
+    }
+    if (message.outputCloudBaseName !== undefined) {
+      writer.uint32(90).string(message.outputCloudBaseName);
+    }
+    if (message.useFaceIdsForSuffix !== undefined) {
+      writer.uint32(96).bool(message.useFaceIdsForSuffix);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AutoFilterPointsGroupsCloudsToSurfaceFacesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAutoFilterPointsGroupsCloudsToSurfaceFacesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.points = PointNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groups = CollectionObjectNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clouds = CollectionObjectNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.surfaceOffset = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.edgeOffset = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.offsetDirection = reader.int32() as any;
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.enforceMaxPointsPerFaceInOutput = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.maxPointsPerFace = reader.int32();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.surfaces!.push(el);
+          }
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
+          message.cloudThinningSettings = CloudThinningOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 11: {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.outputCloudBaseName = reader.string();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.useFaceIdsForSuffix = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<AutoFilterPointsGroupsCloudsToSurfaceFacesRequest>,
+  ): AutoFilterPointsGroupsCloudsToSurfaceFacesRequest {
+    return AutoFilterPointsGroupsCloudsToSurfaceFacesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<AutoFilterPointsGroupsCloudsToSurfaceFacesRequest>,
+  ): AutoFilterPointsGroupsCloudsToSurfaceFacesRequest {
+    const message = createBaseAutoFilterPointsGroupsCloudsToSurfaceFacesRequest();
+    message.points = (object.points !== undefined && object.points !== null)
+      ? PointNameList.fromPartial(object.points)
+      : undefined;
+    message.groups = (object.groups !== undefined && object.groups !== null)
+      ? CollectionObjectNameList.fromPartial(object.groups)
+      : undefined;
+    message.clouds = (object.clouds !== undefined && object.clouds !== null)
+      ? CollectionObjectNameList.fromPartial(object.clouds)
+      : undefined;
+    message.surfaceOffset = object.surfaceOffset ?? undefined;
+    message.edgeOffset = object.edgeOffset ?? undefined;
+    message.offsetDirection = object.offsetDirection ?? undefined;
+    message.enforceMaxPointsPerFaceInOutput = object.enforceMaxPointsPerFaceInOutput ?? undefined;
+    message.maxPointsPerFace = object.maxPointsPerFace ?? undefined;
+    message.surfaces = object.surfaces?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.cloudThinningSettings =
+      (object.cloudThinningSettings !== undefined && object.cloudThinningSettings !== null)
+        ? CloudThinningOptions.fromPartial(object.cloudThinningSettings)
+        : undefined;
+    message.outputCloudBaseName = object.outputCloudBaseName ?? undefined;
+    message.useFaceIdsForSuffix = object.useFaceIdsForSuffix ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAutoFilterPointsGroupsCloudsToSurfaceFacesResult(): AutoFilterPointsGroupsCloudsToSurfaceFacesResult {
+  return { execution: undefined };
+}
+
+export const AutoFilterPointsGroupsCloudsToSurfaceFacesResult: MessageFns<
+  AutoFilterPointsGroupsCloudsToSurfaceFacesResult
+> = {
+  encode(
+    message: AutoFilterPointsGroupsCloudsToSurfaceFacesResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AutoFilterPointsGroupsCloudsToSurfaceFacesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAutoFilterPointsGroupsCloudsToSurfaceFacesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<AutoFilterPointsGroupsCloudsToSurfaceFacesResult>,
+  ): AutoFilterPointsGroupsCloudsToSurfaceFacesResult {
+    return AutoFilterPointsGroupsCloudsToSurfaceFacesResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<AutoFilterPointsGroupsCloudsToSurfaceFacesResult>,
+  ): AutoFilterPointsGroupsCloudsToSurfaceFacesResult {
+    const message = createBaseAutoFilterPointsGroupsCloudsToSurfaceFacesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseAutoFilterPointsToNominalGeometry3DRequest(): AutoFilterPointsToNominalGeometry3DRequest {
+  return { autoFilterTargetRelationships: [], points: [], filterProximitySettings3d: undefined };
+}
+
+export const AutoFilterPointsToNominalGeometry3DRequest: MessageFns<AutoFilterPointsToNominalGeometry3DRequest> = {
+  encode(message: AutoFilterPointsToNominalGeometry3DRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.autoFilterTargetRelationships !== undefined && message.autoFilterTargetRelationships.length !== 0) {
+      for (const v of message.autoFilterTargetRelationships) {
+        CollectionItemName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.points !== undefined && message.points.length !== 0) {
+      for (const v of message.points) {
+        PointName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.filterProximitySettings3d !== undefined) {
+      FilterProximitySettings.encode(message.filterProximitySettings3d, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AutoFilterPointsToNominalGeometry3DRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAutoFilterPointsToNominalGeometry3DRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.autoFilterTargetRelationships!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.points!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.filterProximitySettings3d = FilterProximitySettings.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AutoFilterPointsToNominalGeometry3DRequest>): AutoFilterPointsToNominalGeometry3DRequest {
+    return AutoFilterPointsToNominalGeometry3DRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<AutoFilterPointsToNominalGeometry3DRequest>,
+  ): AutoFilterPointsToNominalGeometry3DRequest {
+    const message = createBaseAutoFilterPointsToNominalGeometry3DRequest();
+    message.autoFilterTargetRelationships =
+      object.autoFilterTargetRelationships?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.points = object.points?.map((e) => PointName.fromPartial(e)) || [];
+    message.filterProximitySettings3d =
+      (object.filterProximitySettings3d !== undefined && object.filterProximitySettings3d !== null)
+        ? FilterProximitySettings.fromPartial(object.filterProximitySettings3d)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseAutoFilterPointsToNominalGeometry3DResult(): AutoFilterPointsToNominalGeometry3DResult {
+  return { execution: undefined };
+}
+
+export const AutoFilterPointsToNominalGeometry3DResult: MessageFns<AutoFilterPointsToNominalGeometry3DResult> = {
+  encode(message: AutoFilterPointsToNominalGeometry3DResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AutoFilterPointsToNominalGeometry3DResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAutoFilterPointsToNominalGeometry3DResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AutoFilterPointsToNominalGeometry3DResult>): AutoFilterPointsToNominalGeometry3DResult {
+    return AutoFilterPointsToNominalGeometry3DResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<AutoFilterPointsToNominalGeometry3DResult>,
+  ): AutoFilterPointsToNominalGeometry3DResult {
+    const message = createBaseAutoFilterPointsToNominalGeometry3DResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseCollectionObjectNameList(): CollectionObjectNameList {
+  return { values: [] };
+}
+
+export const CollectionObjectNameList: MessageFns<CollectionObjectNameList> = {
+  encode(message: CollectionObjectNameList, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.values !== undefined && message.values.length !== 0) {
+      for (const v of message.values) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CollectionObjectNameList {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCollectionObjectNameList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.values!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CollectionObjectNameList>): CollectionObjectNameList {
+    return CollectionObjectNameList.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CollectionObjectNameList>): CollectionObjectNameList {
+    const message = createBaseCollectionObjectNameList();
+    message.values = object.values?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseComputeGeometryRelationshipUncertaintiesRequest(): ComputeGeometryRelationshipUncertaintiesRequest {
+  return { relationshipName: undefined, displayResults: undefined };
+}
+
+export const ComputeGeometryRelationshipUncertaintiesRequest: MessageFns<
+  ComputeGeometryRelationshipUncertaintiesRequest
+> = {
+  encode(
+    message: ComputeGeometryRelationshipUncertaintiesRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.displayResults !== undefined) {
+      writer.uint32(16).bool(message.displayResults);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ComputeGeometryRelationshipUncertaintiesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseComputeGeometryRelationshipUncertaintiesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.displayResults = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<ComputeGeometryRelationshipUncertaintiesRequest>,
+  ): ComputeGeometryRelationshipUncertaintiesRequest {
+    return ComputeGeometryRelationshipUncertaintiesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<ComputeGeometryRelationshipUncertaintiesRequest>,
+  ): ComputeGeometryRelationshipUncertaintiesRequest {
+    const message = createBaseComputeGeometryRelationshipUncertaintiesRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.displayResults = object.displayResults ?? undefined;
+    return message;
+  },
+};
+
+function createBaseComputeGeometryRelationshipUncertaintiesResult(): ComputeGeometryRelationshipUncertaintiesResult {
+  return { execution: undefined };
+}
+
+export const ComputeGeometryRelationshipUncertaintiesResult: MessageFns<
+  ComputeGeometryRelationshipUncertaintiesResult
+> = {
+  encode(
+    message: ComputeGeometryRelationshipUncertaintiesResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ComputeGeometryRelationshipUncertaintiesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseComputeGeometryRelationshipUncertaintiesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<ComputeGeometryRelationshipUncertaintiesResult>,
+  ): ComputeGeometryRelationshipUncertaintiesResult {
+    return ComputeGeometryRelationshipUncertaintiesResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<ComputeGeometryRelationshipUncertaintiesResult>,
+  ): ComputeGeometryRelationshipUncertaintiesResult {
+    const message = createBaseComputeGeometryRelationshipUncertaintiesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseCreatePointsToObjectsMapRequest(): CreatePointsToObjectsMapRequest {
+  return {
+    points: undefined,
+    groups: undefined,
+    objects: [],
+    proximityTolerance: undefined,
+    pointsToObjectsMapName: undefined,
+  };
+}
+
+export const CreatePointsToObjectsMapRequest: MessageFns<CreatePointsToObjectsMapRequest> = {
+  encode(message: CreatePointsToObjectsMapRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.points !== undefined) {
+      PointNameList.encode(message.points, writer.uint32(10).fork()).join();
+    }
+    if (message.groups !== undefined) {
+      CollectionObjectNameList.encode(message.groups, writer.uint32(18).fork()).join();
+    }
+    if (message.objects !== undefined && message.objects.length !== 0) {
+      for (const v of message.objects) {
+        CollectionObjectName.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.proximityTolerance !== undefined) {
+      writer.uint32(33).double(message.proximityTolerance);
+    }
+    if (message.pointsToObjectsMapName !== undefined) {
+      writer.uint32(42).string(message.pointsToObjectsMapName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CreatePointsToObjectsMapRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePointsToObjectsMapRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.points = PointNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groups = CollectionObjectNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objects!.push(el);
+          }
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.proximityTolerance = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.pointsToObjectsMapName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CreatePointsToObjectsMapRequest>): CreatePointsToObjectsMapRequest {
+    return CreatePointsToObjectsMapRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CreatePointsToObjectsMapRequest>): CreatePointsToObjectsMapRequest {
+    const message = createBaseCreatePointsToObjectsMapRequest();
+    message.points = (object.points !== undefined && object.points !== null)
+      ? PointNameList.fromPartial(object.points)
+      : undefined;
+    message.groups = (object.groups !== undefined && object.groups !== null)
+      ? CollectionObjectNameList.fromPartial(object.groups)
+      : undefined;
+    message.objects = object.objects?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.proximityTolerance = object.proximityTolerance ?? undefined;
+    message.pointsToObjectsMapName = object.pointsToObjectsMapName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCreatePointsToObjectsMapResult(): CreatePointsToObjectsMapResult {
+  return { execution: undefined };
+}
+
+export const CreatePointsToObjectsMapResult: MessageFns<CreatePointsToObjectsMapResult> = {
+  encode(message: CreatePointsToObjectsMapResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CreatePointsToObjectsMapResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePointsToObjectsMapResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CreatePointsToObjectsMapResult>): CreatePointsToObjectsMapResult {
+    return CreatePointsToObjectsMapResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CreatePointsToObjectsMapResult>): CreatePointsToObjectsMapResult {
+    const message = createBaseCreatePointsToObjectsMapResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseDeleteRelationshipRequest(): DeleteRelationshipRequest {
+  return { relationshipName: undefined };
+}
+
+export const DeleteRelationshipRequest: MessageFns<DeleteRelationshipRequest> = {
+  encode(message: DeleteRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DeleteRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DeleteRelationshipRequest>): DeleteRelationshipRequest {
+    return DeleteRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<DeleteRelationshipRequest>): DeleteRelationshipRequest {
+    const message = createBaseDeleteRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseDeleteRelationshipResult(): DeleteRelationshipResult {
+  return { execution: undefined };
+}
+
+export const DeleteRelationshipResult: MessageFns<DeleteRelationshipResult> = {
+  encode(message: DeleteRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DeleteRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DeleteRelationshipResult>): DeleteRelationshipResult {
+    return DeleteRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<DeleteRelationshipResult>): DeleteRelationshipResult {
+    const message = createBaseDeleteRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseDoRelationshipFitRequest(): DoRelationshipFitRequest {
+  return {
+    collectionContainingRelationships: undefined,
+    objectsToMove: [],
+    instrumentsToMove: [],
+    solverMode: undefined,
+    motionToAllow: undefined,
+    enableRandomizedStart: undefined,
+    useFitDialog: undefined,
+  };
+}
+
+export const DoRelationshipFitRequest: MessageFns<DoRelationshipFitRequest> = {
+  encode(message: DoRelationshipFitRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionContainingRelationships !== undefined) {
+      writer.uint32(10).string(message.collectionContainingRelationships);
+    }
+    if (message.objectsToMove !== undefined && message.objectsToMove.length !== 0) {
+      for (const v of message.objectsToMove) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.instrumentsToMove !== undefined && message.instrumentsToMove.length !== 0) {
+      for (const v of message.instrumentsToMove) {
+        CollectionInstrumentId.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.solverMode !== undefined) {
+      writer.uint32(32).int32(message.solverMode);
+    }
+    if (message.motionToAllow !== undefined) {
+      FitDofOptions.encode(message.motionToAllow, writer.uint32(42).fork()).join();
+    }
+    if (message.enableRandomizedStart !== undefined) {
+      writer.uint32(48).bool(message.enableRandomizedStart);
+    }
+    if (message.useFitDialog !== undefined) {
+      writer.uint32(56).bool(message.useFitDialog);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DoRelationshipFitRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDoRelationshipFitRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionContainingRelationships = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectsToMove!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = CollectionInstrumentId.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.instrumentsToMove!.push(el);
+          }
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.solverMode = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.motionToAllow = FitDofOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.enableRandomizedStart = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.useFitDialog = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DoRelationshipFitRequest>): DoRelationshipFitRequest {
+    return DoRelationshipFitRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<DoRelationshipFitRequest>): DoRelationshipFitRequest {
+    const message = createBaseDoRelationshipFitRequest();
+    message.collectionContainingRelationships = object.collectionContainingRelationships ?? undefined;
+    message.objectsToMove = object.objectsToMove?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.instrumentsToMove = object.instrumentsToMove?.map((e) => CollectionInstrumentId.fromPartial(e)) || [];
+    message.solverMode = object.solverMode ?? undefined;
+    message.motionToAllow = (object.motionToAllow !== undefined && object.motionToAllow !== null)
+      ? FitDofOptions.fromPartial(object.motionToAllow)
+      : undefined;
+    message.enableRandomizedStart = object.enableRandomizedStart ?? undefined;
+    message.useFitDialog = object.useFitDialog ?? undefined;
+    return message;
+  },
+};
+
+function createBaseDoRelationshipFitResult(): DoRelationshipFitResult {
+  return {
+    transformInReference: undefined,
+    transformInWorking: undefined,
+    transformInWorld: undefined,
+    fitObjectiveValue: undefined,
+    execution: undefined,
+  };
+}
+
+export const DoRelationshipFitResult: MessageFns<DoRelationshipFitResult> = {
+  encode(message: DoRelationshipFitResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.transformInReference !== undefined) {
+      Transform.encode(message.transformInReference, writer.uint32(10).fork()).join();
+    }
+    if (message.transformInWorking !== undefined) {
+      WorldTransform.encode(message.transformInWorking, writer.uint32(18).fork()).join();
+    }
+    if (message.transformInWorld !== undefined) {
+      WorldTransform.encode(message.transformInWorld, writer.uint32(26).fork()).join();
+    }
+    if (message.fitObjectiveValue !== undefined) {
+      writer.uint32(33).double(message.fitObjectiveValue);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DoRelationshipFitResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDoRelationshipFitResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.transformInReference = Transform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.transformInWorking = WorldTransform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.transformInWorld = WorldTransform.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.fitObjectiveValue = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DoRelationshipFitResult>): DoRelationshipFitResult {
+    return DoRelationshipFitResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<DoRelationshipFitResult>): DoRelationshipFitResult {
+    const message = createBaseDoRelationshipFitResult();
+    message.transformInReference = (object.transformInReference !== undefined && object.transformInReference !== null)
+      ? Transform.fromPartial(object.transformInReference)
+      : undefined;
+    message.transformInWorking = (object.transformInWorking !== undefined && object.transformInWorking !== null)
+      ? WorldTransform.fromPartial(object.transformInWorking)
+      : undefined;
+    message.transformInWorld = (object.transformInWorld !== undefined && object.transformInWorld !== null)
+      ? WorldTransform.fromPartial(object.transformInWorld)
+      : undefined;
+    message.fitObjectiveValue = object.fitObjectiveValue ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseEditGeometryRelationshipPointListRequest(): EditGeometryRelationshipPointListRequest {
+  return { relationshipName: undefined, pointEditMode: undefined };
+}
+
+export const EditGeometryRelationshipPointListRequest: MessageFns<EditGeometryRelationshipPointListRequest> = {
+  encode(message: EditGeometryRelationshipPointListRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointEditMode !== undefined) {
+      writer.uint32(16).int32(message.pointEditMode);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): EditGeometryRelationshipPointListRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEditGeometryRelationshipPointListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.pointEditMode = reader.int32() as any;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<EditGeometryRelationshipPointListRequest>): EditGeometryRelationshipPointListRequest {
+    return EditGeometryRelationshipPointListRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<EditGeometryRelationshipPointListRequest>): EditGeometryRelationshipPointListRequest {
+    const message = createBaseEditGeometryRelationshipPointListRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.pointEditMode = object.pointEditMode ?? undefined;
+    return message;
+  },
+};
+
+function createBaseEditGeometryRelationshipPointListResult(): EditGeometryRelationshipPointListResult {
+  return { execution: undefined };
+}
+
+export const EditGeometryRelationshipPointListResult: MessageFns<EditGeometryRelationshipPointListResult> = {
+  encode(message: EditGeometryRelationshipPointListResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): EditGeometryRelationshipPointListResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEditGeometryRelationshipPointListResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<EditGeometryRelationshipPointListResult>): EditGeometryRelationshipPointListResult {
+    return EditGeometryRelationshipPointListResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<EditGeometryRelationshipPointListResult>): EditGeometryRelationshipPointListResult {
+    const message = createBaseEditGeometryRelationshipPointListResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseExtractGeometryFromPointCloudsRequest(): ExtractGeometryFromPointCloudsRequest {
+  return {
+    relationshipName: undefined,
+    geometryType: undefined,
+    cloudName: undefined,
+    boundingPoints: undefined,
+    seedPoints: [],
+    tolerance: undefined,
+    reverseNormal: undefined,
+    planarPointCount: undefined,
+  };
+}
+
+export const ExtractGeometryFromPointCloudsRequest: MessageFns<ExtractGeometryFromPointCloudsRequest> = {
+  encode(message: ExtractGeometryFromPointCloudsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.geometryType !== undefined) {
+      writer.uint32(16).int32(message.geometryType);
+    }
+    if (message.cloudName !== undefined) {
+      CollectionObjectName.encode(message.cloudName, writer.uint32(26).fork()).join();
+    }
+    if (message.boundingPoints !== undefined) {
+      PointNameList.encode(message.boundingPoints, writer.uint32(34).fork()).join();
+    }
+    if (message.seedPoints !== undefined && message.seedPoints.length !== 0) {
+      for (const v of message.seedPoints) {
+        PointName.encode(v!, writer.uint32(42).fork()).join();
+      }
+    }
+    if (message.tolerance !== undefined) {
+      writer.uint32(49).double(message.tolerance);
+    }
+    if (message.reverseNormal !== undefined) {
+      writer.uint32(56).bool(message.reverseNormal);
+    }
+    if (message.planarPointCount !== undefined) {
+      writer.uint32(64).int32(message.planarPointCount);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExtractGeometryFromPointCloudsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExtractGeometryFromPointCloudsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.geometryType = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.cloudName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.boundingPoints = PointNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.seedPoints!.push(el);
+          }
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.tolerance = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.reverseNormal = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.planarPointCount = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExtractGeometryFromPointCloudsRequest>): ExtractGeometryFromPointCloudsRequest {
+    return ExtractGeometryFromPointCloudsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExtractGeometryFromPointCloudsRequest>): ExtractGeometryFromPointCloudsRequest {
+    const message = createBaseExtractGeometryFromPointCloudsRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.geometryType = object.geometryType ?? undefined;
+    message.cloudName = (object.cloudName !== undefined && object.cloudName !== null)
+      ? CollectionObjectName.fromPartial(object.cloudName)
+      : undefined;
+    message.boundingPoints = (object.boundingPoints !== undefined && object.boundingPoints !== null)
+      ? PointNameList.fromPartial(object.boundingPoints)
+      : undefined;
+    message.seedPoints = object.seedPoints?.map((e) => PointName.fromPartial(e)) || [];
+    message.tolerance = object.tolerance ?? undefined;
+    message.reverseNormal = object.reverseNormal ?? undefined;
+    message.planarPointCount = object.planarPointCount ?? undefined;
+    return message;
+  },
+};
+
+function createBaseExtractGeometryFromPointCloudsResult(): ExtractGeometryFromPointCloudsResult {
+  return { execution: undefined };
+}
+
+export const ExtractGeometryFromPointCloudsResult: MessageFns<ExtractGeometryFromPointCloudsResult> = {
+  encode(message: ExtractGeometryFromPointCloudsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ExtractGeometryFromPointCloudsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseExtractGeometryFromPointCloudsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ExtractGeometryFromPointCloudsResult>): ExtractGeometryFromPointCloudsResult {
+    return ExtractGeometryFromPointCloudsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<ExtractGeometryFromPointCloudsResult>): ExtractGeometryFromPointCloudsResult {
+    const message = createBaseExtractGeometryFromPointCloudsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseFilterGeometryRelationshipOutlierCloudPointsRequest(): FilterGeometryRelationshipOutlierCloudPointsRequest {
+  return { relationshipName: undefined, sigmaThreshold: undefined, modifyExistingInputClouds: undefined };
+}
+
+export const FilterGeometryRelationshipOutlierCloudPointsRequest: MessageFns<
+  FilterGeometryRelationshipOutlierCloudPointsRequest
+> = {
+  encode(
+    message: FilterGeometryRelationshipOutlierCloudPointsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.sigmaThreshold !== undefined) {
+      writer.uint32(17).double(message.sigmaThreshold);
+    }
+    if (message.modifyExistingInputClouds !== undefined) {
+      writer.uint32(24).bool(message.modifyExistingInputClouds);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FilterGeometryRelationshipOutlierCloudPointsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFilterGeometryRelationshipOutlierCloudPointsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.sigmaThreshold = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.modifyExistingInputClouds = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<FilterGeometryRelationshipOutlierCloudPointsRequest>,
+  ): FilterGeometryRelationshipOutlierCloudPointsRequest {
+    return FilterGeometryRelationshipOutlierCloudPointsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<FilterGeometryRelationshipOutlierCloudPointsRequest>,
+  ): FilterGeometryRelationshipOutlierCloudPointsRequest {
+    const message = createBaseFilterGeometryRelationshipOutlierCloudPointsRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.sigmaThreshold = object.sigmaThreshold ?? undefined;
+    message.modifyExistingInputClouds = object.modifyExistingInputClouds ?? undefined;
+    return message;
+  },
+};
+
+function createBaseFilterGeometryRelationshipOutlierCloudPointsResult(): FilterGeometryRelationshipOutlierCloudPointsResult {
+  return { metrics: undefined, execution: undefined };
+}
+
+export const FilterGeometryRelationshipOutlierCloudPointsResult: MessageFns<
+  FilterGeometryRelationshipOutlierCloudPointsResult
+> = {
+  encode(
+    message: FilterGeometryRelationshipOutlierCloudPointsResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.metrics !== undefined) {
+      GeometryRelationshipOutlierFilterMetrics.encode(message.metrics, writer.uint32(10).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FilterGeometryRelationshipOutlierCloudPointsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFilterGeometryRelationshipOutlierCloudPointsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.metrics = GeometryRelationshipOutlierFilterMetrics.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<FilterGeometryRelationshipOutlierCloudPointsResult>,
+  ): FilterGeometryRelationshipOutlierCloudPointsResult {
+    return FilterGeometryRelationshipOutlierCloudPointsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<FilterGeometryRelationshipOutlierCloudPointsResult>,
+  ): FilterGeometryRelationshipOutlierCloudPointsResult {
+    const message = createBaseFilterGeometryRelationshipOutlierCloudPointsResult();
+    message.metrics = (object.metrics !== undefined && object.metrics !== null)
+      ? GeometryRelationshipOutlierFilterMetrics.fromPartial(object.metrics)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseFilterProximitySettings(): FilterProximitySettings {
+  return {
+    surfaceInclusionProximity: undefined,
+    edgeExclusionProximity: undefined,
+    planarInclusionProximity: undefined,
+    planarExclusionProximity: undefined,
+    radialInclusionProximity: undefined,
+    geometryExtractionTolerance: undefined,
+    surfaceProximityMode: undefined,
+    planarProximityMode: undefined,
+    radialProximityMode: undefined,
+    projectToPlane: undefined,
+    assertPlaneBoundaries: undefined,
+  };
+}
+
+export const FilterProximitySettings: MessageFns<FilterProximitySettings> = {
+  encode(message: FilterProximitySettings, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.surfaceInclusionProximity !== undefined) {
+      writer.uint32(9).double(message.surfaceInclusionProximity);
+    }
+    if (message.edgeExclusionProximity !== undefined) {
+      writer.uint32(17).double(message.edgeExclusionProximity);
+    }
+    if (message.planarInclusionProximity !== undefined) {
+      writer.uint32(25).double(message.planarInclusionProximity);
+    }
+    if (message.planarExclusionProximity !== undefined) {
+      writer.uint32(33).double(message.planarExclusionProximity);
+    }
+    if (message.radialInclusionProximity !== undefined) {
+      writer.uint32(41).double(message.radialInclusionProximity);
+    }
+    if (message.geometryExtractionTolerance !== undefined) {
+      writer.uint32(49).double(message.geometryExtractionTolerance);
+    }
+    if (message.surfaceProximityMode !== undefined) {
+      writer.uint32(56).int32(message.surfaceProximityMode);
+    }
+    if (message.planarProximityMode !== undefined) {
+      writer.uint32(64).int32(message.planarProximityMode);
+    }
+    if (message.radialProximityMode !== undefined) {
+      writer.uint32(72).int32(message.radialProximityMode);
+    }
+    if (message.projectToPlane !== undefined) {
+      writer.uint32(80).bool(message.projectToPlane);
+    }
+    if (message.assertPlaneBoundaries !== undefined) {
+      writer.uint32(88).bool(message.assertPlaneBoundaries);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FilterProximitySettings {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFilterProximitySettings();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.surfaceInclusionProximity = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.edgeExclusionProximity = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.planarInclusionProximity = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.planarExclusionProximity = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.radialInclusionProximity = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.geometryExtractionTolerance = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.surfaceProximityMode = reader.int32() as any;
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.planarProximityMode = reader.int32() as any;
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.radialProximityMode = reader.int32() as any;
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.projectToPlane = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.assertPlaneBoundaries = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FilterProximitySettings>): FilterProximitySettings {
+    return FilterProximitySettings.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FilterProximitySettings>): FilterProximitySettings {
+    const message = createBaseFilterProximitySettings();
+    message.surfaceInclusionProximity = object.surfaceInclusionProximity ?? undefined;
+    message.edgeExclusionProximity = object.edgeExclusionProximity ?? undefined;
+    message.planarInclusionProximity = object.planarInclusionProximity ?? undefined;
+    message.planarExclusionProximity = object.planarExclusionProximity ?? undefined;
+    message.radialInclusionProximity = object.radialInclusionProximity ?? undefined;
+    message.geometryExtractionTolerance = object.geometryExtractionTolerance ?? undefined;
+    message.surfaceProximityMode = object.surfaceProximityMode ?? undefined;
+    message.planarProximityMode = object.planarProximityMode ?? undefined;
+    message.radialProximityMode = object.radialProximityMode ?? undefined;
+    message.projectToPlane = object.projectToPlane ?? undefined;
+    message.assertPlaneBoundaries = object.assertPlaneBoundaries ?? undefined;
+    return message;
+  },
+};
+
+function createBaseFitDofOptions(): FitDofOptions {
+  return {
+    allowX: undefined,
+    allowY: undefined,
+    allowZ: undefined,
+    allowRx: undefined,
+    allowRy: undefined,
+    allowRz: undefined,
+    rotateAboutCentroid: undefined,
+  };
+}
+
+export const FitDofOptions: MessageFns<FitDofOptions> = {
+  encode(message: FitDofOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.allowX !== undefined) {
+      writer.uint32(8).bool(message.allowX);
+    }
+    if (message.allowY !== undefined) {
+      writer.uint32(16).bool(message.allowY);
+    }
+    if (message.allowZ !== undefined) {
+      writer.uint32(24).bool(message.allowZ);
+    }
+    if (message.allowRx !== undefined) {
+      writer.uint32(32).bool(message.allowRx);
+    }
+    if (message.allowRy !== undefined) {
+      writer.uint32(40).bool(message.allowRy);
+    }
+    if (message.allowRz !== undefined) {
+      writer.uint32(48).bool(message.allowRz);
+    }
+    if (message.rotateAboutCentroid !== undefined) {
+      writer.uint32(56).bool(message.rotateAboutCentroid);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FitDofOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFitDofOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.allowX = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.allowY = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.allowZ = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.allowRx = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.allowRy = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.allowRz = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.rotateAboutCentroid = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FitDofOptions>): FitDofOptions {
+    return FitDofOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<FitDofOptions>): FitDofOptions {
+    const message = createBaseFitDofOptions();
+    message.allowX = object.allowX ?? undefined;
+    message.allowY = object.allowY ?? undefined;
+    message.allowZ = object.allowZ ?? undefined;
+    message.allowRx = object.allowRx ?? undefined;
+    message.allowRy = object.allowRy ?? undefined;
+    message.allowRz = object.allowRz ?? undefined;
+    message.rotateAboutCentroid = object.rotateAboutCentroid ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGenerateGeometryRelationshipSummaryRequest(): GenerateGeometryRelationshipSummaryRequest {
+  return { relationshipRefList: [], summaryTableName: undefined };
+}
+
+export const GenerateGeometryRelationshipSummaryRequest: MessageFns<GenerateGeometryRelationshipSummaryRequest> = {
+  encode(message: GenerateGeometryRelationshipSummaryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipRefList !== undefined && message.relationshipRefList.length !== 0) {
+      for (const v of message.relationshipRefList) {
+        CollectionItemName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.summaryTableName !== undefined) {
+      writer.uint32(18).string(message.summaryTableName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GenerateGeometryRelationshipSummaryRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGenerateGeometryRelationshipSummaryRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.relationshipRefList!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.summaryTableName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GenerateGeometryRelationshipSummaryRequest>): GenerateGeometryRelationshipSummaryRequest {
+    return GenerateGeometryRelationshipSummaryRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GenerateGeometryRelationshipSummaryRequest>,
+  ): GenerateGeometryRelationshipSummaryRequest {
+    const message = createBaseGenerateGeometryRelationshipSummaryRequest();
+    message.relationshipRefList = object.relationshipRefList?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.summaryTableName = object.summaryTableName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGenerateGeometryRelationshipSummaryResult(): GenerateGeometryRelationshipSummaryResult {
+  return { execution: undefined };
+}
+
+export const GenerateGeometryRelationshipSummaryResult: MessageFns<GenerateGeometryRelationshipSummaryResult> = {
+  encode(message: GenerateGeometryRelationshipSummaryResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GenerateGeometryRelationshipSummaryResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGenerateGeometryRelationshipSummaryResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GenerateGeometryRelationshipSummaryResult>): GenerateGeometryRelationshipSummaryResult {
+    return GenerateGeometryRelationshipSummaryResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GenerateGeometryRelationshipSummaryResult>,
+  ): GenerateGeometryRelationshipSummaryResult {
+    const message = createBaseGenerateGeometryRelationshipSummaryResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGeometryRelationshipOutlierFilterMetrics(): GeometryRelationshipOutlierFilterMetrics {
+  return {
+    firstPassRmsError: 0,
+    firstPassMaximumError: 0,
+    firstPassMinimumError: 0,
+    firstPassAverageError: 0,
+    finalPassRmsError: 0,
+    finalPassMaximumError: 0,
+    finalPassMinimumError: 0,
+    finalPassAverageError: 0,
+    totalInputPointCount: 0,
+    excludePointCount: 0,
+  };
+}
+
+export const GeometryRelationshipOutlierFilterMetrics: MessageFns<GeometryRelationshipOutlierFilterMetrics> = {
+  encode(message: GeometryRelationshipOutlierFilterMetrics, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.firstPassRmsError !== undefined && message.firstPassRmsError !== 0) {
+      writer.uint32(9).double(message.firstPassRmsError);
+    }
+    if (message.firstPassMaximumError !== undefined && message.firstPassMaximumError !== 0) {
+      writer.uint32(17).double(message.firstPassMaximumError);
+    }
+    if (message.firstPassMinimumError !== undefined && message.firstPassMinimumError !== 0) {
+      writer.uint32(25).double(message.firstPassMinimumError);
+    }
+    if (message.firstPassAverageError !== undefined && message.firstPassAverageError !== 0) {
+      writer.uint32(33).double(message.firstPassAverageError);
+    }
+    if (message.finalPassRmsError !== undefined && message.finalPassRmsError !== 0) {
+      writer.uint32(41).double(message.finalPassRmsError);
+    }
+    if (message.finalPassMaximumError !== undefined && message.finalPassMaximumError !== 0) {
+      writer.uint32(49).double(message.finalPassMaximumError);
+    }
+    if (message.finalPassMinimumError !== undefined && message.finalPassMinimumError !== 0) {
+      writer.uint32(57).double(message.finalPassMinimumError);
+    }
+    if (message.finalPassAverageError !== undefined && message.finalPassAverageError !== 0) {
+      writer.uint32(65).double(message.finalPassAverageError);
+    }
+    if (message.totalInputPointCount !== undefined && message.totalInputPointCount !== 0) {
+      writer.uint32(72).int32(message.totalInputPointCount);
+    }
+    if (message.excludePointCount !== undefined && message.excludePointCount !== 0) {
+      writer.uint32(80).int32(message.excludePointCount);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GeometryRelationshipOutlierFilterMetrics {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGeometryRelationshipOutlierFilterMetrics();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.firstPassRmsError = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.firstPassMaximumError = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.firstPassMinimumError = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.firstPassAverageError = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.finalPassRmsError = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.finalPassMaximumError = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.finalPassMinimumError = reader.double();
+          continue;
+        }
+        case 8: {
+          if (tag !== 65) {
+            break;
+          }
+
+          message.finalPassAverageError = reader.double();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.totalInputPointCount = reader.int32();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.excludePointCount = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GeometryRelationshipOutlierFilterMetrics>): GeometryRelationshipOutlierFilterMetrics {
+    return GeometryRelationshipOutlierFilterMetrics.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GeometryRelationshipOutlierFilterMetrics>): GeometryRelationshipOutlierFilterMetrics {
+    const message = createBaseGeometryRelationshipOutlierFilterMetrics();
+    message.firstPassRmsError = object.firstPassRmsError ?? 0;
+    message.firstPassMaximumError = object.firstPassMaximumError ?? 0;
+    message.firstPassMinimumError = object.firstPassMinimumError ?? 0;
+    message.firstPassAverageError = object.firstPassAverageError ?? 0;
+    message.finalPassRmsError = object.finalPassRmsError ?? 0;
+    message.finalPassMaximumError = object.finalPassMaximumError ?? 0;
+    message.finalPassMinimumError = object.finalPassMinimumError ?? 0;
+    message.finalPassAverageError = object.finalPassAverageError ?? 0;
+    message.totalInputPointCount = object.totalInputPointCount ?? 0;
+    message.excludePointCount = object.excludePointCount ?? 0;
+    return message;
+  },
+};
+
+function createBaseGetGeneralRelationshipStatisticsRequest(): GetGeneralRelationshipStatisticsRequest {
+  return { relationshipName: undefined };
+}
+
+export const GetGeneralRelationshipStatisticsRequest: MessageFns<GetGeneralRelationshipStatisticsRequest> = {
+  encode(message: GetGeneralRelationshipStatisticsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetGeneralRelationshipStatisticsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetGeneralRelationshipStatisticsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetGeneralRelationshipStatisticsRequest>): GetGeneralRelationshipStatisticsRequest {
+    return GetGeneralRelationshipStatisticsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetGeneralRelationshipStatisticsRequest>): GetGeneralRelationshipStatisticsRequest {
+    const message = createBaseGetGeneralRelationshipStatisticsRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetGeneralRelationshipStatisticsResult(): GetGeneralRelationshipStatisticsResult {
+  return {
+    absoluteMaxDeviation: undefined,
+    rms: undefined,
+    hasSignedDeviation: undefined,
+    signedMaxDeviation: undefined,
+    signedMinDeviation: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetGeneralRelationshipStatisticsResult: MessageFns<GetGeneralRelationshipStatisticsResult> = {
+  encode(message: GetGeneralRelationshipStatisticsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.absoluteMaxDeviation !== undefined) {
+      writer.uint32(9).double(message.absoluteMaxDeviation);
+    }
+    if (message.rms !== undefined) {
+      writer.uint32(17).double(message.rms);
+    }
+    if (message.hasSignedDeviation !== undefined) {
+      writer.uint32(24).bool(message.hasSignedDeviation);
+    }
+    if (message.signedMaxDeviation !== undefined) {
+      writer.uint32(33).double(message.signedMaxDeviation);
+    }
+    if (message.signedMinDeviation !== undefined) {
+      writer.uint32(41).double(message.signedMinDeviation);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetGeneralRelationshipStatisticsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetGeneralRelationshipStatisticsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.absoluteMaxDeviation = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.rms = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.hasSignedDeviation = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.signedMaxDeviation = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.signedMinDeviation = reader.double();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetGeneralRelationshipStatisticsResult>): GetGeneralRelationshipStatisticsResult {
+    return GetGeneralRelationshipStatisticsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetGeneralRelationshipStatisticsResult>): GetGeneralRelationshipStatisticsResult {
+    const message = createBaseGetGeneralRelationshipStatisticsResult();
+    message.absoluteMaxDeviation = object.absoluteMaxDeviation ?? undefined;
+    message.rms = object.rms ?? undefined;
+    message.hasSignedDeviation = object.hasSignedDeviation ?? undefined;
+    message.signedMaxDeviation = object.signedMaxDeviation ?? undefined;
+    message.signedMinDeviation = object.signedMinDeviation ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetGeomRelationshipCriteriaNameListRequest(): GetGeomRelationshipCriteriaNameListRequest {
+  return { relationshipName: undefined, includeAllCriteria: undefined };
+}
+
+export const GetGeomRelationshipCriteriaNameListRequest: MessageFns<GetGeomRelationshipCriteriaNameListRequest> = {
+  encode(message: GetGeomRelationshipCriteriaNameListRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.includeAllCriteria !== undefined) {
+      writer.uint32(16).bool(message.includeAllCriteria);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetGeomRelationshipCriteriaNameListRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetGeomRelationshipCriteriaNameListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.includeAllCriteria = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetGeomRelationshipCriteriaNameListRequest>): GetGeomRelationshipCriteriaNameListRequest {
+    return GetGeomRelationshipCriteriaNameListRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetGeomRelationshipCriteriaNameListRequest>,
+  ): GetGeomRelationshipCriteriaNameListRequest {
+    const message = createBaseGetGeomRelationshipCriteriaNameListRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.includeAllCriteria = object.includeAllCriteria ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetGeomRelationshipCriteriaNameListResult(): GetGeomRelationshipCriteriaNameListResult {
+  return { criteriaNameList: [], execution: undefined };
+}
+
+export const GetGeomRelationshipCriteriaNameListResult: MessageFns<GetGeomRelationshipCriteriaNameListResult> = {
+  encode(message: GetGeomRelationshipCriteriaNameListResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.criteriaNameList !== undefined && message.criteriaNameList.length !== 0) {
+      for (const v of message.criteriaNameList) {
+        writer.uint32(10).string(v!);
+      }
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetGeomRelationshipCriteriaNameListResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetGeomRelationshipCriteriaNameListResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = reader.string();
+          if (el !== undefined) {
+            message.criteriaNameList!.push(el);
+          }
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetGeomRelationshipCriteriaNameListResult>): GetGeomRelationshipCriteriaNameListResult {
+    return GetGeomRelationshipCriteriaNameListResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetGeomRelationshipCriteriaNameListResult>,
+  ): GetGeomRelationshipCriteriaNameListResult {
+    const message = createBaseGetGeomRelationshipCriteriaNameListResult();
+    message.criteriaNameList = object.criteriaNameList?.map((e) => e) || [];
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetObjectsFromPointsToObjectsMapPointListRequest(): GetObjectsFromPointsToObjectsMapPointListRequest {
+  return { pointsToObjectsMapName: undefined, points: [] };
+}
+
+export const GetObjectsFromPointsToObjectsMapPointListRequest: MessageFns<
+  GetObjectsFromPointsToObjectsMapPointListRequest
+> = {
+  encode(
+    message: GetObjectsFromPointsToObjectsMapPointListRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.pointsToObjectsMapName !== undefined) {
+      writer.uint32(10).string(message.pointsToObjectsMapName);
+    }
+    if (message.points !== undefined && message.points.length !== 0) {
+      for (const v of message.points) {
+        PointName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetObjectsFromPointsToObjectsMapPointListRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetObjectsFromPointsToObjectsMapPointListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pointsToObjectsMapName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.points!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetObjectsFromPointsToObjectsMapPointListRequest>,
+  ): GetObjectsFromPointsToObjectsMapPointListRequest {
+    return GetObjectsFromPointsToObjectsMapPointListRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetObjectsFromPointsToObjectsMapPointListRequest>,
+  ): GetObjectsFromPointsToObjectsMapPointListRequest {
+    const message = createBaseGetObjectsFromPointsToObjectsMapPointListRequest();
+    message.pointsToObjectsMapName = object.pointsToObjectsMapName ?? undefined;
+    message.points = object.points?.map((e) => PointName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseGetObjectsFromPointsToObjectsMapPointListResult(): GetObjectsFromPointsToObjectsMapPointListResult {
+  return { objects: [], execution: undefined };
+}
+
+export const GetObjectsFromPointsToObjectsMapPointListResult: MessageFns<
+  GetObjectsFromPointsToObjectsMapPointListResult
+> = {
+  encode(
+    message: GetObjectsFromPointsToObjectsMapPointListResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.objects !== undefined && message.objects.length !== 0) {
+      for (const v of message.objects) {
+        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetObjectsFromPointsToObjectsMapPointListResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetObjectsFromPointsToObjectsMapPointListResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objects!.push(el);
+          }
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetObjectsFromPointsToObjectsMapPointListResult>,
+  ): GetObjectsFromPointsToObjectsMapPointListResult {
+    return GetObjectsFromPointsToObjectsMapPointListResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetObjectsFromPointsToObjectsMapPointListResult>,
+  ): GetObjectsFromPointsToObjectsMapPointListResult {
+    const message = createBaseGetObjectsFromPointsToObjectsMapPointListResult();
+    message.objects = object.objects?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointsToObjectsRelationshipStatisticsRequest(): GetPointsToObjectsRelationshipStatisticsRequest {
+  return { relationshipName: undefined };
+}
+
+export const GetPointsToObjectsRelationshipStatisticsRequest: MessageFns<
+  GetPointsToObjectsRelationshipStatisticsRequest
+> = {
+  encode(
+    message: GetPointsToObjectsRelationshipStatisticsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointsToObjectsRelationshipStatisticsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointsToObjectsRelationshipStatisticsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetPointsToObjectsRelationshipStatisticsRequest>,
+  ): GetPointsToObjectsRelationshipStatisticsRequest {
+    return GetPointsToObjectsRelationshipStatisticsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetPointsToObjectsRelationshipStatisticsRequest>,
+  ): GetPointsToObjectsRelationshipStatisticsRequest {
+    const message = createBaseGetPointsToObjectsRelationshipStatisticsRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointsToObjectsRelationshipStatisticsResult(): GetPointsToObjectsRelationshipStatisticsResult {
+  return {
+    absoluteMaxDeviation: undefined,
+    maxDeviation: undefined,
+    minDeviation: undefined,
+    avgDeviation: undefined,
+    rms: undefined,
+    candidatePointCount: undefined,
+    sampledPointCount: undefined,
+    rejectedPointCount: undefined,
+    usedPointCount: undefined,
+    outOfTolerancePointCount: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetPointsToObjectsRelationshipStatisticsResult: MessageFns<
+  GetPointsToObjectsRelationshipStatisticsResult
+> = {
+  encode(
+    message: GetPointsToObjectsRelationshipStatisticsResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.absoluteMaxDeviation !== undefined) {
+      writer.uint32(9).double(message.absoluteMaxDeviation);
+    }
+    if (message.maxDeviation !== undefined) {
+      writer.uint32(17).double(message.maxDeviation);
+    }
+    if (message.minDeviation !== undefined) {
+      writer.uint32(25).double(message.minDeviation);
+    }
+    if (message.avgDeviation !== undefined) {
+      writer.uint32(33).double(message.avgDeviation);
+    }
+    if (message.rms !== undefined) {
+      writer.uint32(41).double(message.rms);
+    }
+    if (message.candidatePointCount !== undefined) {
+      writer.uint32(48).int32(message.candidatePointCount);
+    }
+    if (message.sampledPointCount !== undefined) {
+      writer.uint32(56).int32(message.sampledPointCount);
+    }
+    if (message.rejectedPointCount !== undefined) {
+      writer.uint32(64).int32(message.rejectedPointCount);
+    }
+    if (message.usedPointCount !== undefined) {
+      writer.uint32(72).int32(message.usedPointCount);
+    }
+    if (message.outOfTolerancePointCount !== undefined) {
+      writer.uint32(80).int32(message.outOfTolerancePointCount);
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointsToObjectsRelationshipStatisticsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointsToObjectsRelationshipStatisticsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.absoluteMaxDeviation = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.maxDeviation = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.minDeviation = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.avgDeviation = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.rms = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.candidatePointCount = reader.int32();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.sampledPointCount = reader.int32();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.rejectedPointCount = reader.int32();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.usedPointCount = reader.int32();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.outOfTolerancePointCount = reader.int32();
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetPointsToObjectsRelationshipStatisticsResult>,
+  ): GetPointsToObjectsRelationshipStatisticsResult {
+    return GetPointsToObjectsRelationshipStatisticsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetPointsToObjectsRelationshipStatisticsResult>,
+  ): GetPointsToObjectsRelationshipStatisticsResult {
+    const message = createBaseGetPointsToObjectsRelationshipStatisticsResult();
+    message.absoluteMaxDeviation = object.absoluteMaxDeviation ?? undefined;
+    message.maxDeviation = object.maxDeviation ?? undefined;
+    message.minDeviation = object.minDeviation ?? undefined;
+    message.avgDeviation = object.avgDeviation ?? undefined;
+    message.rms = object.rms ?? undefined;
+    message.candidatePointCount = object.candidatePointCount ?? undefined;
+    message.sampledPointCount = object.sampledPointCount ?? undefined;
+    message.rejectedPointCount = object.rejectedPointCount ?? undefined;
+    message.usedPointCount = object.usedPointCount ?? undefined;
+    message.outOfTolerancePointCount = object.outOfTolerancePointCount ?? undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointsToPointsRelationshipAssociatedDataRequest(): GetPointsToPointsRelationshipAssociatedDataRequest {
+  return { relationshipName: undefined };
+}
+
+export const GetPointsToPointsRelationshipAssociatedDataRequest: MessageFns<
+  GetPointsToPointsRelationshipAssociatedDataRequest
+> = {
+  encode(
+    message: GetPointsToPointsRelationshipAssociatedDataRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointsToPointsRelationshipAssociatedDataRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointsToPointsRelationshipAssociatedDataRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetPointsToPointsRelationshipAssociatedDataRequest>,
+  ): GetPointsToPointsRelationshipAssociatedDataRequest {
+    return GetPointsToPointsRelationshipAssociatedDataRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetPointsToPointsRelationshipAssociatedDataRequest>,
+  ): GetPointsToPointsRelationshipAssociatedDataRequest {
+    const message = createBaseGetPointsToPointsRelationshipAssociatedDataRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointsToPointsRelationshipAssociatedDataResult(): GetPointsToPointsRelationshipAssociatedDataResult {
+  return { associatedData: undefined, execution: undefined };
+}
+
+export const GetPointsToPointsRelationshipAssociatedDataResult: MessageFns<
+  GetPointsToPointsRelationshipAssociatedDataResult
+> = {
+  encode(
+    message: GetPointsToPointsRelationshipAssociatedDataResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.associatedData !== undefined) {
+      PointsToPointsRelationshipAssociatedData.encode(message.associatedData, writer.uint32(10).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointsToPointsRelationshipAssociatedDataResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointsToPointsRelationshipAssociatedDataResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.associatedData = PointsToPointsRelationshipAssociatedData.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetPointsToPointsRelationshipAssociatedDataResult>,
+  ): GetPointsToPointsRelationshipAssociatedDataResult {
+    return GetPointsToPointsRelationshipAssociatedDataResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetPointsToPointsRelationshipAssociatedDataResult>,
+  ): GetPointsToPointsRelationshipAssociatedDataResult {
+    const message = createBaseGetPointsToPointsRelationshipAssociatedDataResult();
+    message.associatedData = (object.associatedData !== undefined && object.associatedData !== null)
+      ? PointsToPointsRelationshipAssociatedData.fromPartial(object.associatedData)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointToPointRelationshipStatisticsRequest(): GetPointToPointRelationshipStatisticsRequest {
+  return { relationshipName: undefined };
+}
+
+export const GetPointToPointRelationshipStatisticsRequest: MessageFns<GetPointToPointRelationshipStatisticsRequest> = {
+  encode(
+    message: GetPointToPointRelationshipStatisticsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointToPointRelationshipStatisticsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointToPointRelationshipStatisticsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetPointToPointRelationshipStatisticsRequest>,
+  ): GetPointToPointRelationshipStatisticsRequest {
+    return GetPointToPointRelationshipStatisticsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetPointToPointRelationshipStatisticsRequest>,
+  ): GetPointToPointRelationshipStatisticsRequest {
+    const message = createBaseGetPointToPointRelationshipStatisticsRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPointToPointRelationshipStatisticsResult(): GetPointToPointRelationshipStatisticsResult {
+  return {
+    deltaX: undefined,
+    deltaY: undefined,
+    deltaZ: undefined,
+    deltaMagnitude: undefined,
+    referenceFrame: undefined,
+    execution: undefined,
+  };
+}
+
+export const GetPointToPointRelationshipStatisticsResult: MessageFns<GetPointToPointRelationshipStatisticsResult> = {
+  encode(
+    message: GetPointToPointRelationshipStatisticsResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.deltaX !== undefined) {
+      writer.uint32(9).double(message.deltaX);
+    }
+    if (message.deltaY !== undefined) {
+      writer.uint32(17).double(message.deltaY);
+    }
+    if (message.deltaZ !== undefined) {
+      writer.uint32(25).double(message.deltaZ);
+    }
+    if (message.deltaMagnitude !== undefined) {
+      writer.uint32(33).double(message.deltaMagnitude);
+    }
+    if (message.referenceFrame !== undefined) {
+      CollectionObjectName.encode(message.referenceFrame, writer.uint32(42).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetPointToPointRelationshipStatisticsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPointToPointRelationshipStatisticsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.deltaX = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.deltaY = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.deltaZ = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.deltaMagnitude = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.referenceFrame = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetPointToPointRelationshipStatisticsResult>): GetPointToPointRelationshipStatisticsResult {
+    return GetPointToPointRelationshipStatisticsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetPointToPointRelationshipStatisticsResult>,
+  ): GetPointToPointRelationshipStatisticsResult {
+    const message = createBaseGetPointToPointRelationshipStatisticsResult();
+    message.deltaX = object.deltaX ?? undefined;
+    message.deltaY = object.deltaY ?? undefined;
+    message.deltaZ = object.deltaZ ?? undefined;
+    message.deltaMagnitude = object.deltaMagnitude ?? undefined;
+    message.referenceFrame = (object.referenceFrame !== undefined && object.referenceFrame !== null)
+      ? CollectionObjectName.fromPartial(object.referenceFrame)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetRelationshipAssociatedDataRequest(): GetRelationshipAssociatedDataRequest {
+  return { relationshipName: undefined };
+}
+
+export const GetRelationshipAssociatedDataRequest: MessageFns<GetRelationshipAssociatedDataRequest> = {
+  encode(message: GetRelationshipAssociatedDataRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetRelationshipAssociatedDataRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetRelationshipAssociatedDataRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetRelationshipAssociatedDataRequest>): GetRelationshipAssociatedDataRequest {
+    return GetRelationshipAssociatedDataRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetRelationshipAssociatedDataRequest>): GetRelationshipAssociatedDataRequest {
+    const message = createBaseGetRelationshipAssociatedDataRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetRelationshipAssociatedDataResult(): GetRelationshipAssociatedDataResult {
+  return { associatedData: undefined, execution: undefined };
+}
+
+export const GetRelationshipAssociatedDataResult: MessageFns<GetRelationshipAssociatedDataResult> = {
+  encode(message: GetRelationshipAssociatedDataResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.associatedData !== undefined) {
+      RelationshipAssociatedData.encode(message.associatedData, writer.uint32(10).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetRelationshipAssociatedDataResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetRelationshipAssociatedDataResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.associatedData = RelationshipAssociatedData.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetRelationshipAssociatedDataResult>): GetRelationshipAssociatedDataResult {
+    return GetRelationshipAssociatedDataResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetRelationshipAssociatedDataResult>): GetRelationshipAssociatedDataResult {
+    const message = createBaseGetRelationshipAssociatedDataResult();
+    message.associatedData = (object.associatedData !== undefined && object.associatedData !== null)
+      ? RelationshipAssociatedData.fromPartial(object.associatedData)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetRelationshipSigmoidalGapFitConstraintsRequest(): GetRelationshipSigmoidalGapFitConstraintsRequest {
+  return { relationshipName: undefined };
+}
+
+export const GetRelationshipSigmoidalGapFitConstraintsRequest: MessageFns<
+  GetRelationshipSigmoidalGapFitConstraintsRequest
+> = {
+  encode(
+    message: GetRelationshipSigmoidalGapFitConstraintsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetRelationshipSigmoidalGapFitConstraintsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetRelationshipSigmoidalGapFitConstraintsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetRelationshipSigmoidalGapFitConstraintsRequest>,
+  ): GetRelationshipSigmoidalGapFitConstraintsRequest {
+    return GetRelationshipSigmoidalGapFitConstraintsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetRelationshipSigmoidalGapFitConstraintsRequest>,
+  ): GetRelationshipSigmoidalGapFitConstraintsRequest {
+    const message = createBaseGetRelationshipSigmoidalGapFitConstraintsRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetRelationshipSigmoidalGapFitConstraintsResult(): GetRelationshipSigmoidalGapFitConstraintsResult {
+  return { constraints: undefined, execution: undefined };
+}
+
+export const GetRelationshipSigmoidalGapFitConstraintsResult: MessageFns<
+  GetRelationshipSigmoidalGapFitConstraintsResult
+> = {
+  encode(
+    message: GetRelationshipSigmoidalGapFitConstraintsResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.constraints !== undefined) {
+      SigmoidalGapFitConstraints.encode(message.constraints, writer.uint32(10).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetRelationshipSigmoidalGapFitConstraintsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetRelationshipSigmoidalGapFitConstraintsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.constraints = SigmoidalGapFitConstraints.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<GetRelationshipSigmoidalGapFitConstraintsResult>,
+  ): GetRelationshipSigmoidalGapFitConstraintsResult {
+    return GetRelationshipSigmoidalGapFitConstraintsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<GetRelationshipSigmoidalGapFitConstraintsResult>,
+  ): GetRelationshipSigmoidalGapFitConstraintsResult {
+    const message = createBaseGetRelationshipSigmoidalGapFitConstraintsResult();
+    message.constraints = (object.constraints !== undefined && object.constraints !== null)
+      ? SigmoidalGapFitConstraints.fromPartial(object.constraints)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetRelationshipStatusRequest(): GetRelationshipStatusRequest {
+  return { relationshipName: undefined };
+}
+
+export const GetRelationshipStatusRequest: MessageFns<GetRelationshipStatusRequest> = {
+  encode(message: GetRelationshipStatusRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetRelationshipStatusRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetRelationshipStatusRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetRelationshipStatusRequest>): GetRelationshipStatusRequest {
+    return GetRelationshipStatusRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetRelationshipStatusRequest>): GetRelationshipStatusRequest {
+    const message = createBaseGetRelationshipStatusRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetRelationshipStatusResult(): GetRelationshipStatusResult {
+  return { status: undefined, execution: undefined };
+}
+
+export const GetRelationshipStatusResult: MessageFns<GetRelationshipStatusResult> = {
+  encode(message: GetRelationshipStatusResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.status !== undefined) {
+      RelationshipStatusFlags.encode(message.status, writer.uint32(10).fork()).join();
+    }
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetRelationshipStatusResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetRelationshipStatusResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.status = RelationshipStatusFlags.decode(reader, reader.uint32());
+          continue;
+        }
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GetRelationshipStatusResult>): GetRelationshipStatusResult {
+    return GetRelationshipStatusResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetRelationshipStatusResult>): GetRelationshipStatusResult {
+    const message = createBaseGetRelationshipStatusResult();
+    message.status = (object.status !== undefined && object.status !== null)
+      ? RelationshipStatusFlags.fromPartial(object.status)
+      : undefined;
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeAveragePointRelationshipRequest(): MakeAveragePointRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    pointsInRelationship: [],
+    averagePointName: undefined,
+    nominalPointName: undefined,
+  };
+}
+
+export const MakeAveragePointRelationshipRequest: MessageFns<MakeAveragePointRelationshipRequest> = {
+  encode(message: MakeAveragePointRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointsInRelationship !== undefined && message.pointsInRelationship.length !== 0) {
+      for (const v of message.pointsInRelationship) {
+        PointName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.averagePointName !== undefined) {
+      PointName.encode(message.averagePointName, writer.uint32(26).fork()).join();
+    }
+    if (message.nominalPointName !== undefined) {
+      PointName.encode(message.nominalPointName, writer.uint32(34).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeAveragePointRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeAveragePointRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointsInRelationship!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.averagePointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.nominalPointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeAveragePointRelationshipRequest>): MakeAveragePointRelationshipRequest {
+    return MakeAveragePointRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeAveragePointRelationshipRequest>): MakeAveragePointRelationshipRequest {
+    const message = createBaseMakeAveragePointRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.pointsInRelationship = object.pointsInRelationship?.map((e) => PointName.fromPartial(e)) || [];
+    message.averagePointName = (object.averagePointName !== undefined && object.averagePointName !== null)
+      ? PointName.fromPartial(object.averagePointName)
+      : undefined;
+    message.nominalPointName = (object.nominalPointName !== undefined && object.nominalPointName !== null)
+      ? PointName.fromPartial(object.nominalPointName)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeAveragePointRelationshipResult(): MakeAveragePointRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeAveragePointRelationshipResult: MessageFns<MakeAveragePointRelationshipResult> = {
+  encode(message: MakeAveragePointRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeAveragePointRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeAveragePointRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeAveragePointRelationshipResult>): MakeAveragePointRelationshipResult {
+    return MakeAveragePointRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeAveragePointRelationshipResult>): MakeAveragePointRelationshipResult {
+    const message = createBaseMakeAveragePointRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeCloudToSwatchRelationshipRequest(): MakeCloudToSwatchRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    inputCloudName: undefined,
+    surfaceFaceList: undefined,
+    referencePoint: undefined,
+    maximumRadialOffset: undefined,
+    minimumAxialOffset: undefined,
+    maximumAxialOffset: undefined,
+    cardinalPointGroupName: undefined,
+  };
+}
+
+export const MakeCloudToSwatchRelationshipRequest: MessageFns<MakeCloudToSwatchRelationshipRequest> = {
+  encode(message: MakeCloudToSwatchRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.inputCloudName !== undefined) {
+      CollectionObjectName.encode(message.inputCloudName, writer.uint32(18).fork()).join();
+    }
+    if (message.surfaceFaceList !== undefined) {
+      writer.uint32(26).string(message.surfaceFaceList);
+    }
+    if (message.referencePoint !== undefined) {
+      PointName.encode(message.referencePoint, writer.uint32(34).fork()).join();
+    }
+    if (message.maximumRadialOffset !== undefined) {
+      writer.uint32(41).double(message.maximumRadialOffset);
+    }
+    if (message.minimumAxialOffset !== undefined) {
+      writer.uint32(49).double(message.minimumAxialOffset);
+    }
+    if (message.maximumAxialOffset !== undefined) {
+      writer.uint32(57).double(message.maximumAxialOffset);
+    }
+    if (message.cardinalPointGroupName !== undefined) {
+      CollectionObjectName.encode(message.cardinalPointGroupName, writer.uint32(66).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeCloudToSwatchRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeCloudToSwatchRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.inputCloudName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.surfaceFaceList = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.referencePoint = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.maximumRadialOffset = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.minimumAxialOffset = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.maximumAxialOffset = reader.double();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.cardinalPointGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeCloudToSwatchRelationshipRequest>): MakeCloudToSwatchRelationshipRequest {
+    return MakeCloudToSwatchRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeCloudToSwatchRelationshipRequest>): MakeCloudToSwatchRelationshipRequest {
+    const message = createBaseMakeCloudToSwatchRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.inputCloudName = (object.inputCloudName !== undefined && object.inputCloudName !== null)
+      ? CollectionObjectName.fromPartial(object.inputCloudName)
+      : undefined;
+    message.surfaceFaceList = object.surfaceFaceList ?? undefined;
+    message.referencePoint = (object.referencePoint !== undefined && object.referencePoint !== null)
+      ? PointName.fromPartial(object.referencePoint)
+      : undefined;
+    message.maximumRadialOffset = object.maximumRadialOffset ?? undefined;
+    message.minimumAxialOffset = object.minimumAxialOffset ?? undefined;
+    message.maximumAxialOffset = object.maximumAxialOffset ?? undefined;
+    message.cardinalPointGroupName =
+      (object.cardinalPointGroupName !== undefined && object.cardinalPointGroupName !== null)
+        ? CollectionObjectName.fromPartial(object.cardinalPointGroupName)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeCloudToSwatchRelationshipResult(): MakeCloudToSwatchRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeCloudToSwatchRelationshipResult: MessageFns<MakeCloudToSwatchRelationshipResult> = {
+  encode(message: MakeCloudToSwatchRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeCloudToSwatchRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeCloudToSwatchRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeCloudToSwatchRelationshipResult>): MakeCloudToSwatchRelationshipResult {
+    return MakeCloudToSwatchRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeCloudToSwatchRelationshipResult>): MakeCloudToSwatchRelationshipResult {
+    const message = createBaseMakeCloudToSwatchRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicCircleRelationshipRequest(): MakeDynamicCircleRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    constructionMode: undefined,
+    firstReferenceGeometry: undefined,
+    secondReferenceGeometry: undefined,
+  };
+}
+
+export const MakeDynamicCircleRelationshipRequest: MessageFns<MakeDynamicCircleRelationshipRequest> = {
+  encode(message: MakeDynamicCircleRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.constructionMode !== undefined) {
+      writer.uint32(16).int32(message.constructionMode);
+    }
+    if (message.firstReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.firstReferenceGeometry, writer.uint32(26).fork()).join();
+    }
+    if (message.secondReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.secondReferenceGeometry, writer.uint32(34).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicCircleRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicCircleRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.constructionMode = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.firstReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.secondReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicCircleRelationshipRequest>): MakeDynamicCircleRelationshipRequest {
+    return MakeDynamicCircleRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicCircleRelationshipRequest>): MakeDynamicCircleRelationshipRequest {
+    const message = createBaseMakeDynamicCircleRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.constructionMode = object.constructionMode ?? undefined;
+    message.firstReferenceGeometry =
+      (object.firstReferenceGeometry !== undefined && object.firstReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.firstReferenceGeometry)
+        : undefined;
+    message.secondReferenceGeometry =
+      (object.secondReferenceGeometry !== undefined && object.secondReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.secondReferenceGeometry)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicCircleRelationshipResult(): MakeDynamicCircleRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeDynamicCircleRelationshipResult: MessageFns<MakeDynamicCircleRelationshipResult> = {
+  encode(message: MakeDynamicCircleRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicCircleRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicCircleRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicCircleRelationshipResult>): MakeDynamicCircleRelationshipResult {
+    return MakeDynamicCircleRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicCircleRelationshipResult>): MakeDynamicCircleRelationshipResult {
+    const message = createBaseMakeDynamicCircleRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicEllipseRelationshipRequest(): MakeDynamicEllipseRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    constructionMode: undefined,
+    firstReferenceGeometry: undefined,
+    secondReferenceGeometry: undefined,
+  };
+}
+
+export const MakeDynamicEllipseRelationshipRequest: MessageFns<MakeDynamicEllipseRelationshipRequest> = {
+  encode(message: MakeDynamicEllipseRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.constructionMode !== undefined) {
+      writer.uint32(16).int32(message.constructionMode);
+    }
+    if (message.firstReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.firstReferenceGeometry, writer.uint32(26).fork()).join();
+    }
+    if (message.secondReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.secondReferenceGeometry, writer.uint32(34).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicEllipseRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicEllipseRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.constructionMode = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.firstReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.secondReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicEllipseRelationshipRequest>): MakeDynamicEllipseRelationshipRequest {
+    return MakeDynamicEllipseRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicEllipseRelationshipRequest>): MakeDynamicEllipseRelationshipRequest {
+    const message = createBaseMakeDynamicEllipseRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.constructionMode = object.constructionMode ?? undefined;
+    message.firstReferenceGeometry =
+      (object.firstReferenceGeometry !== undefined && object.firstReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.firstReferenceGeometry)
+        : undefined;
+    message.secondReferenceGeometry =
+      (object.secondReferenceGeometry !== undefined && object.secondReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.secondReferenceGeometry)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicEllipseRelationshipResult(): MakeDynamicEllipseRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeDynamicEllipseRelationshipResult: MessageFns<MakeDynamicEllipseRelationshipResult> = {
+  encode(message: MakeDynamicEllipseRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicEllipseRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicEllipseRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicEllipseRelationshipResult>): MakeDynamicEllipseRelationshipResult {
+    return MakeDynamicEllipseRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicEllipseRelationshipResult>): MakeDynamicEllipseRelationshipResult {
+    const message = createBaseMakeDynamicEllipseRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicLineRelationshipRequest(): MakeDynamicLineRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    constructionMode: undefined,
+    firstReferenceGeometry: undefined,
+    secondReferenceGeometry: undefined,
+  };
+}
+
+export const MakeDynamicLineRelationshipRequest: MessageFns<MakeDynamicLineRelationshipRequest> = {
+  encode(message: MakeDynamicLineRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.constructionMode !== undefined) {
+      writer.uint32(16).int32(message.constructionMode);
+    }
+    if (message.firstReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.firstReferenceGeometry, writer.uint32(26).fork()).join();
+    }
+    if (message.secondReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.secondReferenceGeometry, writer.uint32(34).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicLineRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicLineRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.constructionMode = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.firstReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.secondReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicLineRelationshipRequest>): MakeDynamicLineRelationshipRequest {
+    return MakeDynamicLineRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicLineRelationshipRequest>): MakeDynamicLineRelationshipRequest {
+    const message = createBaseMakeDynamicLineRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.constructionMode = object.constructionMode ?? undefined;
+    message.firstReferenceGeometry =
+      (object.firstReferenceGeometry !== undefined && object.firstReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.firstReferenceGeometry)
+        : undefined;
+    message.secondReferenceGeometry =
+      (object.secondReferenceGeometry !== undefined && object.secondReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.secondReferenceGeometry)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicLineRelationshipResult(): MakeDynamicLineRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeDynamicLineRelationshipResult: MessageFns<MakeDynamicLineRelationshipResult> = {
+  encode(message: MakeDynamicLineRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicLineRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicLineRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicLineRelationshipResult>): MakeDynamicLineRelationshipResult {
+    return MakeDynamicLineRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicLineRelationshipResult>): MakeDynamicLineRelationshipResult {
+    const message = createBaseMakeDynamicLineRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicPlaneRelationshipRequest(): MakeDynamicPlaneRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    constructionMode: undefined,
+    firstReferenceGeometry: undefined,
+    secondReferenceGeometry: undefined,
+    offsetPlaneOffset: undefined,
+  };
+}
+
+export const MakeDynamicPlaneRelationshipRequest: MessageFns<MakeDynamicPlaneRelationshipRequest> = {
+  encode(message: MakeDynamicPlaneRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.constructionMode !== undefined) {
+      writer.uint32(16).int32(message.constructionMode);
+    }
+    if (message.firstReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.firstReferenceGeometry, writer.uint32(26).fork()).join();
+    }
+    if (message.secondReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.secondReferenceGeometry, writer.uint32(34).fork()).join();
+    }
+    if (message.offsetPlaneOffset !== undefined) {
+      writer.uint32(41).double(message.offsetPlaneOffset);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicPlaneRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicPlaneRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.constructionMode = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.firstReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.secondReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.offsetPlaneOffset = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicPlaneRelationshipRequest>): MakeDynamicPlaneRelationshipRequest {
+    return MakeDynamicPlaneRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicPlaneRelationshipRequest>): MakeDynamicPlaneRelationshipRequest {
+    const message = createBaseMakeDynamicPlaneRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.constructionMode = object.constructionMode ?? undefined;
+    message.firstReferenceGeometry =
+      (object.firstReferenceGeometry !== undefined && object.firstReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.firstReferenceGeometry)
+        : undefined;
+    message.secondReferenceGeometry =
+      (object.secondReferenceGeometry !== undefined && object.secondReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.secondReferenceGeometry)
+        : undefined;
+    message.offsetPlaneOffset = object.offsetPlaneOffset ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicPlaneRelationshipResult(): MakeDynamicPlaneRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeDynamicPlaneRelationshipResult: MessageFns<MakeDynamicPlaneRelationshipResult> = {
+  encode(message: MakeDynamicPlaneRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicPlaneRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicPlaneRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicPlaneRelationshipResult>): MakeDynamicPlaneRelationshipResult {
+    return MakeDynamicPlaneRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicPlaneRelationshipResult>): MakeDynamicPlaneRelationshipResult {
+    const message = createBaseMakeDynamicPlaneRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicPointRelationshipRequest(): MakeDynamicPointRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    constructionMode: undefined,
+    firstReferenceGeometry: undefined,
+    secondReferenceGeometry: undefined,
+    thirdReferenceGeometry: undefined,
+  };
+}
+
+export const MakeDynamicPointRelationshipRequest: MessageFns<MakeDynamicPointRelationshipRequest> = {
+  encode(message: MakeDynamicPointRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.constructionMode !== undefined) {
+      writer.uint32(16).int32(message.constructionMode);
+    }
+    if (message.firstReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.firstReferenceGeometry, writer.uint32(26).fork()).join();
+    }
+    if (message.secondReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.secondReferenceGeometry, writer.uint32(34).fork()).join();
+    }
+    if (message.thirdReferenceGeometry !== undefined) {
+      CollectionObjectName.encode(message.thirdReferenceGeometry, writer.uint32(42).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicPointRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicPointRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.constructionMode = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.firstReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.secondReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.thirdReferenceGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicPointRelationshipRequest>): MakeDynamicPointRelationshipRequest {
+    return MakeDynamicPointRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicPointRelationshipRequest>): MakeDynamicPointRelationshipRequest {
+    const message = createBaseMakeDynamicPointRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.constructionMode = object.constructionMode ?? undefined;
+    message.firstReferenceGeometry =
+      (object.firstReferenceGeometry !== undefined && object.firstReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.firstReferenceGeometry)
+        : undefined;
+    message.secondReferenceGeometry =
+      (object.secondReferenceGeometry !== undefined && object.secondReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.secondReferenceGeometry)
+        : undefined;
+    message.thirdReferenceGeometry =
+      (object.thirdReferenceGeometry !== undefined && object.thirdReferenceGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.thirdReferenceGeometry)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeDynamicPointRelationshipResult(): MakeDynamicPointRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeDynamicPointRelationshipResult: MessageFns<MakeDynamicPointRelationshipResult> = {
+  encode(message: MakeDynamicPointRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeDynamicPointRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeDynamicPointRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeDynamicPointRelationshipResult>): MakeDynamicPointRelationshipResult {
+    return MakeDynamicPointRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeDynamicPointRelationshipResult>): MakeDynamicPointRelationshipResult {
+    const message = createBaseMakeDynamicPointRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeFrameToFrameRelationshipRequest(): MakeFrameToFrameRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    firstFrameName: undefined,
+    secondFrameName: undefined,
+    orientationTolerance: undefined,
+    positionTolerance: undefined,
+  };
+}
+
+export const MakeFrameToFrameRelationshipRequest: MessageFns<MakeFrameToFrameRelationshipRequest> = {
+  encode(message: MakeFrameToFrameRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.firstFrameName !== undefined) {
+      CollectionObjectName.encode(message.firstFrameName, writer.uint32(18).fork()).join();
+    }
+    if (message.secondFrameName !== undefined) {
+      CollectionObjectName.encode(message.secondFrameName, writer.uint32(26).fork()).join();
+    }
+    if (message.orientationTolerance !== undefined) {
+      ToleranceScalarOptions.encode(message.orientationTolerance, writer.uint32(34).fork()).join();
+    }
+    if (message.positionTolerance !== undefined) {
+      ToleranceVectorOptions.encode(message.positionTolerance, writer.uint32(42).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeFrameToFrameRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeFrameToFrameRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.firstFrameName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.secondFrameName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.orientationTolerance = ToleranceScalarOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.positionTolerance = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeFrameToFrameRelationshipRequest>): MakeFrameToFrameRelationshipRequest {
+    return MakeFrameToFrameRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeFrameToFrameRelationshipRequest>): MakeFrameToFrameRelationshipRequest {
+    const message = createBaseMakeFrameToFrameRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.firstFrameName = (object.firstFrameName !== undefined && object.firstFrameName !== null)
+      ? CollectionObjectName.fromPartial(object.firstFrameName)
+      : undefined;
+    message.secondFrameName = (object.secondFrameName !== undefined && object.secondFrameName !== null)
+      ? CollectionObjectName.fromPartial(object.secondFrameName)
+      : undefined;
+    message.orientationTolerance = (object.orientationTolerance !== undefined && object.orientationTolerance !== null)
+      ? ToleranceScalarOptions.fromPartial(object.orientationTolerance)
+      : undefined;
+    message.positionTolerance = (object.positionTolerance !== undefined && object.positionTolerance !== null)
+      ? ToleranceVectorOptions.fromPartial(object.positionTolerance)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeFrameToFrameRelationshipResult(): MakeFrameToFrameRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeFrameToFrameRelationshipResult: MessageFns<MakeFrameToFrameRelationshipResult> = {
+  encode(message: MakeFrameToFrameRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeFrameToFrameRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeFrameToFrameRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeFrameToFrameRelationshipResult>): MakeFrameToFrameRelationshipResult {
+    return MakeFrameToFrameRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeFrameToFrameRelationshipResult>): MakeFrameToFrameRelationshipResult {
+    const message = createBaseMakeFrameToFrameRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGeometryCompareOnlyRelationshipRequest(): MakeGeometryCompareOnlyRelationshipRequest {
+  return { relationshipName: undefined, nominalGeometry: undefined, measuredGeometry: undefined };
+}
+
+export const MakeGeometryCompareOnlyRelationshipRequest: MessageFns<MakeGeometryCompareOnlyRelationshipRequest> = {
+  encode(message: MakeGeometryCompareOnlyRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.nominalGeometry !== undefined) {
+      CollectionObjectName.encode(message.nominalGeometry, writer.uint32(18).fork()).join();
+    }
+    if (message.measuredGeometry !== undefined) {
+      CollectionObjectName.encode(message.measuredGeometry, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGeometryCompareOnlyRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGeometryCompareOnlyRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.nominalGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.measuredGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGeometryCompareOnlyRelationshipRequest>): MakeGeometryCompareOnlyRelationshipRequest {
+    return MakeGeometryCompareOnlyRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakeGeometryCompareOnlyRelationshipRequest>,
+  ): MakeGeometryCompareOnlyRelationshipRequest {
+    const message = createBaseMakeGeometryCompareOnlyRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.nominalGeometry = (object.nominalGeometry !== undefined && object.nominalGeometry !== null)
+      ? CollectionObjectName.fromPartial(object.nominalGeometry)
+      : undefined;
+    message.measuredGeometry = (object.measuredGeometry !== undefined && object.measuredGeometry !== null)
+      ? CollectionObjectName.fromPartial(object.measuredGeometry)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGeometryCompareOnlyRelationshipResult(): MakeGeometryCompareOnlyRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeGeometryCompareOnlyRelationshipResult: MessageFns<MakeGeometryCompareOnlyRelationshipResult> = {
+  encode(message: MakeGeometryCompareOnlyRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGeometryCompareOnlyRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGeometryCompareOnlyRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGeometryCompareOnlyRelationshipResult>): MakeGeometryCompareOnlyRelationshipResult {
+    return MakeGeometryCompareOnlyRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakeGeometryCompareOnlyRelationshipResult>,
+  ): MakeGeometryCompareOnlyRelationshipResult {
+    const message = createBaseMakeGeometryCompareOnlyRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGeometryFitAndCompareToNominalRelationshipRequest(): MakeGeometryFitAndCompareToNominalRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    nominalGeometry: undefined,
+    pointGroupsToFit: [],
+    resultingObjectName: undefined,
+    fitProfileName: undefined,
+  };
+}
+
+export const MakeGeometryFitAndCompareToNominalRelationshipRequest: MessageFns<
+  MakeGeometryFitAndCompareToNominalRelationshipRequest
+> = {
+  encode(
+    message: MakeGeometryFitAndCompareToNominalRelationshipRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.nominalGeometry !== undefined) {
+      CollectionObjectName.encode(message.nominalGeometry, writer.uint32(18).fork()).join();
+    }
+    if (message.pointGroupsToFit !== undefined && message.pointGroupsToFit.length !== 0) {
+      for (const v of message.pointGroupsToFit) {
+        CollectionObjectName.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.resultingObjectName !== undefined) {
+      CollectionObjectName.encode(message.resultingObjectName, writer.uint32(34).fork()).join();
+    }
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(42).string(message.fitProfileName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGeometryFitAndCompareToNominalRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGeometryFitAndCompareToNominalRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.nominalGeometry = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointGroupsToFit!.push(el);
+          }
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.resultingObjectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<MakeGeometryFitAndCompareToNominalRelationshipRequest>,
+  ): MakeGeometryFitAndCompareToNominalRelationshipRequest {
+    return MakeGeometryFitAndCompareToNominalRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakeGeometryFitAndCompareToNominalRelationshipRequest>,
+  ): MakeGeometryFitAndCompareToNominalRelationshipRequest {
+    const message = createBaseMakeGeometryFitAndCompareToNominalRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.nominalGeometry = (object.nominalGeometry !== undefined && object.nominalGeometry !== null)
+      ? CollectionObjectName.fromPartial(object.nominalGeometry)
+      : undefined;
+    message.pointGroupsToFit = object.pointGroupsToFit?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
+      ? CollectionObjectName.fromPartial(object.resultingObjectName)
+      : undefined;
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGeometryFitAndCompareToNominalRelationshipResult(): MakeGeometryFitAndCompareToNominalRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeGeometryFitAndCompareToNominalRelationshipResult: MessageFns<
+  MakeGeometryFitAndCompareToNominalRelationshipResult
+> = {
+  encode(
+    message: MakeGeometryFitAndCompareToNominalRelationshipResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGeometryFitAndCompareToNominalRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGeometryFitAndCompareToNominalRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<MakeGeometryFitAndCompareToNominalRelationshipResult>,
+  ): MakeGeometryFitAndCompareToNominalRelationshipResult {
+    return MakeGeometryFitAndCompareToNominalRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakeGeometryFitAndCompareToNominalRelationshipResult>,
+  ): MakeGeometryFitAndCompareToNominalRelationshipResult {
+    const message = createBaseMakeGeometryFitAndCompareToNominalRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGeometryFitOnlyRelationshipRequest(): MakeGeometryFitOnlyRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    pointGroupsToFit: [],
+    geometryType: undefined,
+    resultingObjectName: undefined,
+    fitProfileName: undefined,
+  };
+}
+
+export const MakeGeometryFitOnlyRelationshipRequest: MessageFns<MakeGeometryFitOnlyRelationshipRequest> = {
+  encode(message: MakeGeometryFitOnlyRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointGroupsToFit !== undefined && message.pointGroupsToFit.length !== 0) {
+      for (const v of message.pointGroupsToFit) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.geometryType !== undefined) {
+      writer.uint32(24).int32(message.geometryType);
+    }
+    if (message.resultingObjectName !== undefined) {
+      CollectionObjectName.encode(message.resultingObjectName, writer.uint32(34).fork()).join();
+    }
+    if (message.fitProfileName !== undefined) {
+      writer.uint32(42).string(message.fitProfileName);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGeometryFitOnlyRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGeometryFitOnlyRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointGroupsToFit!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.geometryType = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.resultingObjectName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.fitProfileName = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGeometryFitOnlyRelationshipRequest>): MakeGeometryFitOnlyRelationshipRequest {
+    return MakeGeometryFitOnlyRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeGeometryFitOnlyRelationshipRequest>): MakeGeometryFitOnlyRelationshipRequest {
+    const message = createBaseMakeGeometryFitOnlyRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.pointGroupsToFit = object.pointGroupsToFit?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.geometryType = object.geometryType ?? undefined;
+    message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
+      ? CollectionObjectName.fromPartial(object.resultingObjectName)
+      : undefined;
+    message.fitProfileName = object.fitProfileName ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGeometryFitOnlyRelationshipResult(): MakeGeometryFitOnlyRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeGeometryFitOnlyRelationshipResult: MessageFns<MakeGeometryFitOnlyRelationshipResult> = {
+  encode(message: MakeGeometryFitOnlyRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGeometryFitOnlyRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGeometryFitOnlyRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGeometryFitOnlyRelationshipResult>): MakeGeometryFitOnlyRelationshipResult {
+    return MakeGeometryFitOnlyRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeGeometryFitOnlyRelationshipResult>): MakeGeometryFitOnlyRelationshipResult {
+    const message = createBaseMakeGeometryFitOnlyRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGroupsToObjectsRelationshipRequest(): MakeGroupsToObjectsRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    pointGroupsInRelationship: [],
+    objectsInRelationship: [],
+    projectionOptions: undefined,
+    autoUpdateAVectorGroup: undefined,
+  };
+}
+
+export const MakeGroupsToObjectsRelationshipRequest: MessageFns<MakeGroupsToObjectsRelationshipRequest> = {
+  encode(message: MakeGroupsToObjectsRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointGroupsInRelationship !== undefined && message.pointGroupsInRelationship.length !== 0) {
+      for (const v of message.pointGroupsInRelationship) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.objectsInRelationship !== undefined && message.objectsInRelationship.length !== 0) {
+      for (const v of message.objectsInRelationship) {
+        CollectionObjectName.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.projectionOptions !== undefined) {
+      ProjectionOptions.encode(message.projectionOptions, writer.uint32(34).fork()).join();
+    }
+    if (message.autoUpdateAVectorGroup !== undefined) {
+      writer.uint32(40).bool(message.autoUpdateAVectorGroup);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGroupsToObjectsRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGroupsToObjectsRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointGroupsInRelationship!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectsInRelationship!.push(el);
+          }
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.projectionOptions = ProjectionOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.autoUpdateAVectorGroup = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGroupsToObjectsRelationshipRequest>): MakeGroupsToObjectsRelationshipRequest {
+    return MakeGroupsToObjectsRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeGroupsToObjectsRelationshipRequest>): MakeGroupsToObjectsRelationshipRequest {
+    const message = createBaseMakeGroupsToObjectsRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.pointGroupsInRelationship =
+      object.pointGroupsInRelationship?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.objectsInRelationship = object.objectsInRelationship?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.projectionOptions = (object.projectionOptions !== undefined && object.projectionOptions !== null)
+      ? ProjectionOptions.fromPartial(object.projectionOptions)
+      : undefined;
+    message.autoUpdateAVectorGroup = object.autoUpdateAVectorGroup ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGroupsToObjectsRelationshipResult(): MakeGroupsToObjectsRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeGroupsToObjectsRelationshipResult: MessageFns<MakeGroupsToObjectsRelationshipResult> = {
+  encode(message: MakeGroupsToObjectsRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGroupsToObjectsRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGroupsToObjectsRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGroupsToObjectsRelationshipResult>): MakeGroupsToObjectsRelationshipResult {
+    return MakeGroupsToObjectsRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeGroupsToObjectsRelationshipResult>): MakeGroupsToObjectsRelationshipResult {
+    const message = createBaseMakeGroupsToObjectsRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGroupToGroupRelationshipRequest(): MakeGroupToGroupRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    firstGroupName: undefined,
+    secondGroupName: undefined,
+    autoUpdateAVectorGroup: undefined,
+    tolerance: undefined,
+    constraint: undefined,
+  };
+}
+
+export const MakeGroupToGroupRelationshipRequest: MessageFns<MakeGroupToGroupRelationshipRequest> = {
+  encode(message: MakeGroupToGroupRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.firstGroupName !== undefined) {
+      CollectionObjectName.encode(message.firstGroupName, writer.uint32(18).fork()).join();
+    }
+    if (message.secondGroupName !== undefined) {
+      CollectionObjectName.encode(message.secondGroupName, writer.uint32(26).fork()).join();
+    }
+    if (message.autoUpdateAVectorGroup !== undefined) {
+      writer.uint32(32).bool(message.autoUpdateAVectorGroup);
+    }
+    if (message.tolerance !== undefined) {
+      ToleranceVectorOptions.encode(message.tolerance, writer.uint32(42).fork()).join();
+    }
+    if (message.constraint !== undefined) {
+      ToleranceVectorOptions.encode(message.constraint, writer.uint32(50).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGroupToGroupRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGroupToGroupRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.firstGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.secondGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.autoUpdateAVectorGroup = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.tolerance = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.constraint = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGroupToGroupRelationshipRequest>): MakeGroupToGroupRelationshipRequest {
+    return MakeGroupToGroupRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeGroupToGroupRelationshipRequest>): MakeGroupToGroupRelationshipRequest {
+    const message = createBaseMakeGroupToGroupRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.firstGroupName = (object.firstGroupName !== undefined && object.firstGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.firstGroupName)
+      : undefined;
+    message.secondGroupName = (object.secondGroupName !== undefined && object.secondGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.secondGroupName)
+      : undefined;
+    message.autoUpdateAVectorGroup = object.autoUpdateAVectorGroup ?? undefined;
+    message.tolerance = (object.tolerance !== undefined && object.tolerance !== null)
+      ? ToleranceVectorOptions.fromPartial(object.tolerance)
+      : undefined;
+    message.constraint = (object.constraint !== undefined && object.constraint !== null)
+      ? ToleranceVectorOptions.fromPartial(object.constraint)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGroupToGroupRelationshipResult(): MakeGroupToGroupRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeGroupToGroupRelationshipResult: MessageFns<MakeGroupToGroupRelationshipResult> = {
+  encode(message: MakeGroupToGroupRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGroupToGroupRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGroupToGroupRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGroupToGroupRelationshipResult>): MakeGroupToGroupRelationshipResult {
+    return MakeGroupToGroupRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakeGroupToGroupRelationshipResult>): MakeGroupToGroupRelationshipResult {
+    const message = createBaseMakeGroupToGroupRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGroupToNominalGroupRelationshipRequest(): MakeGroupToNominalGroupRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    nominalGroupName: undefined,
+    measuredGroupName: undefined,
+    autoUpdateAVectorGroup: undefined,
+    useClosestPoint: undefined,
+    displayClosestPointWatchWindow: undefined,
+    useViewZoomingWithProximity: undefined,
+    ignorePointsBeyondThreshold: undefined,
+    proximityThreshold: undefined,
+    tolerance: undefined,
+    constraint: undefined,
+    fitWeight: undefined,
+  };
+}
+
+export const MakeGroupToNominalGroupRelationshipRequest: MessageFns<MakeGroupToNominalGroupRelationshipRequest> = {
+  encode(message: MakeGroupToNominalGroupRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.nominalGroupName !== undefined) {
+      CollectionObjectName.encode(message.nominalGroupName, writer.uint32(18).fork()).join();
+    }
+    if (message.measuredGroupName !== undefined) {
+      CollectionObjectName.encode(message.measuredGroupName, writer.uint32(26).fork()).join();
+    }
+    if (message.autoUpdateAVectorGroup !== undefined) {
+      writer.uint32(32).bool(message.autoUpdateAVectorGroup);
+    }
+    if (message.useClosestPoint !== undefined) {
+      writer.uint32(40).bool(message.useClosestPoint);
+    }
+    if (message.displayClosestPointWatchWindow !== undefined) {
+      writer.uint32(48).bool(message.displayClosestPointWatchWindow);
+    }
+    if (message.useViewZoomingWithProximity !== undefined) {
+      writer.uint32(56).bool(message.useViewZoomingWithProximity);
+    }
+    if (message.ignorePointsBeyondThreshold !== undefined) {
+      writer.uint32(64).bool(message.ignorePointsBeyondThreshold);
+    }
+    if (message.proximityThreshold !== undefined) {
+      writer.uint32(73).double(message.proximityThreshold);
+    }
+    if (message.tolerance !== undefined) {
+      ToleranceVectorOptions.encode(message.tolerance, writer.uint32(82).fork()).join();
+    }
+    if (message.constraint !== undefined) {
+      ToleranceVectorOptions.encode(message.constraint, writer.uint32(90).fork()).join();
+    }
+    if (message.fitWeight !== undefined) {
+      writer.uint32(97).double(message.fitWeight);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGroupToNominalGroupRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGroupToNominalGroupRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.nominalGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.measuredGroupName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.autoUpdateAVectorGroup = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.useClosestPoint = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.displayClosestPointWatchWindow = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.useViewZoomingWithProximity = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.ignorePointsBeyondThreshold = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 73) {
+            break;
+          }
+
+          message.proximityThreshold = reader.double();
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
+          message.tolerance = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 11: {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.constraint = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 12: {
+          if (tag !== 97) {
+            break;
+          }
+
+          message.fitWeight = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGroupToNominalGroupRelationshipRequest>): MakeGroupToNominalGroupRelationshipRequest {
+    return MakeGroupToNominalGroupRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakeGroupToNominalGroupRelationshipRequest>,
+  ): MakeGroupToNominalGroupRelationshipRequest {
+    const message = createBaseMakeGroupToNominalGroupRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.nominalGroupName = (object.nominalGroupName !== undefined && object.nominalGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.nominalGroupName)
+      : undefined;
+    message.measuredGroupName = (object.measuredGroupName !== undefined && object.measuredGroupName !== null)
+      ? CollectionObjectName.fromPartial(object.measuredGroupName)
+      : undefined;
+    message.autoUpdateAVectorGroup = object.autoUpdateAVectorGroup ?? undefined;
+    message.useClosestPoint = object.useClosestPoint ?? undefined;
+    message.displayClosestPointWatchWindow = object.displayClosestPointWatchWindow ?? undefined;
+    message.useViewZoomingWithProximity = object.useViewZoomingWithProximity ?? undefined;
+    message.ignorePointsBeyondThreshold = object.ignorePointsBeyondThreshold ?? undefined;
+    message.proximityThreshold = object.proximityThreshold ?? undefined;
+    message.tolerance = (object.tolerance !== undefined && object.tolerance !== null)
+      ? ToleranceVectorOptions.fromPartial(object.tolerance)
+      : undefined;
+    message.constraint = (object.constraint !== undefined && object.constraint !== null)
+      ? ToleranceVectorOptions.fromPartial(object.constraint)
+      : undefined;
+    message.fitWeight = object.fitWeight ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeGroupToNominalGroupRelationshipResult(): MakeGroupToNominalGroupRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeGroupToNominalGroupRelationshipResult: MessageFns<MakeGroupToNominalGroupRelationshipResult> = {
+  encode(message: MakeGroupToNominalGroupRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeGroupToNominalGroupRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeGroupToNominalGroupRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakeGroupToNominalGroupRelationshipResult>): MakeGroupToNominalGroupRelationshipResult {
+    return MakeGroupToNominalGroupRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakeGroupToNominalGroupRelationshipResult>,
+  ): MakeGroupToNominalGroupRelationshipResult {
+    const message = createBaseMakeGroupToNominalGroupRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeObjectToObjectDirectionRelationshipRequest(): MakeObjectToObjectDirectionRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    firstObjectInRelationship: undefined,
+    secondObjectInRelationship: undefined,
+    nominalAngle: undefined,
+  };
+}
+
+export const MakeObjectToObjectDirectionRelationshipRequest: MessageFns<
+  MakeObjectToObjectDirectionRelationshipRequest
+> = {
+  encode(
+    message: MakeObjectToObjectDirectionRelationshipRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.firstObjectInRelationship !== undefined) {
+      CollectionObjectName.encode(message.firstObjectInRelationship, writer.uint32(18).fork()).join();
+    }
+    if (message.secondObjectInRelationship !== undefined) {
+      CollectionObjectName.encode(message.secondObjectInRelationship, writer.uint32(26).fork()).join();
+    }
+    if (message.nominalAngle !== undefined) {
+      writer.uint32(33).double(message.nominalAngle);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeObjectToObjectDirectionRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeObjectToObjectDirectionRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.firstObjectInRelationship = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.secondObjectInRelationship = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.nominalAngle = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<MakeObjectToObjectDirectionRelationshipRequest>,
+  ): MakeObjectToObjectDirectionRelationshipRequest {
+    return MakeObjectToObjectDirectionRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakeObjectToObjectDirectionRelationshipRequest>,
+  ): MakeObjectToObjectDirectionRelationshipRequest {
+    const message = createBaseMakeObjectToObjectDirectionRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.firstObjectInRelationship =
+      (object.firstObjectInRelationship !== undefined && object.firstObjectInRelationship !== null)
+        ? CollectionObjectName.fromPartial(object.firstObjectInRelationship)
+        : undefined;
+    message.secondObjectInRelationship =
+      (object.secondObjectInRelationship !== undefined && object.secondObjectInRelationship !== null)
+        ? CollectionObjectName.fromPartial(object.secondObjectInRelationship)
+        : undefined;
+    message.nominalAngle = object.nominalAngle ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeObjectToObjectDirectionRelationshipResult(): MakeObjectToObjectDirectionRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeObjectToObjectDirectionRelationshipResult: MessageFns<MakeObjectToObjectDirectionRelationshipResult> =
+  {
+    encode(
+      message: MakeObjectToObjectDirectionRelationshipResult,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.execution !== undefined) {
+        MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+      }
+      return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): MakeObjectToObjectDirectionRelationshipResult {
+      const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseMakeObjectToObjectDirectionRelationshipResult();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1000: {
+            if (tag !== 8002) {
+              break;
+            }
+
+            message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
+
+    create(
+      base?: DeepPartial<MakeObjectToObjectDirectionRelationshipResult>,
+    ): MakeObjectToObjectDirectionRelationshipResult {
+      return MakeObjectToObjectDirectionRelationshipResult.fromPartial(base ?? {});
+    },
+    fromPartial(
+      object: DeepPartial<MakeObjectToObjectDirectionRelationshipResult>,
+    ): MakeObjectToObjectDirectionRelationshipResult {
+      const message = createBaseMakeObjectToObjectDirectionRelationshipResult();
+      message.execution = (object.execution !== undefined && object.execution !== null)
+        ? MpExecutionDetails.fromPartial(object.execution)
+        : undefined;
+      return message;
+    },
+  };
+
+function createBaseMakePointCloudsToObjectsRelationshipRequest(): MakePointCloudsToObjectsRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    pointCloudsInRelationship: [],
+    objectsInRelationship: [],
+    projectionOptions: undefined,
+    autoUpdateAVectorGroup: undefined,
+  };
+}
+
+export const MakePointCloudsToObjectsRelationshipRequest: MessageFns<MakePointCloudsToObjectsRelationshipRequest> = {
+  encode(
+    message: MakePointCloudsToObjectsRelationshipRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointCloudsInRelationship !== undefined && message.pointCloudsInRelationship.length !== 0) {
+      for (const v of message.pointCloudsInRelationship) {
+        CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.objectsInRelationship !== undefined && message.objectsInRelationship.length !== 0) {
+      for (const v of message.objectsInRelationship) {
+        CollectionObjectName.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.projectionOptions !== undefined) {
+      ProjectionOptions.encode(message.projectionOptions, writer.uint32(34).fork()).join();
+    }
+    if (message.autoUpdateAVectorGroup !== undefined) {
+      writer.uint32(40).bool(message.autoUpdateAVectorGroup);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePointCloudsToObjectsRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePointCloudsToObjectsRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointCloudsInRelationship!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectsInRelationship!.push(el);
+          }
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.projectionOptions = ProjectionOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.autoUpdateAVectorGroup = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePointCloudsToObjectsRelationshipRequest>): MakePointCloudsToObjectsRelationshipRequest {
+    return MakePointCloudsToObjectsRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakePointCloudsToObjectsRelationshipRequest>,
+  ): MakePointCloudsToObjectsRelationshipRequest {
+    const message = createBaseMakePointCloudsToObjectsRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.pointCloudsInRelationship =
+      object.pointCloudsInRelationship?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.objectsInRelationship = object.objectsInRelationship?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.projectionOptions = (object.projectionOptions !== undefined && object.projectionOptions !== null)
+      ? ProjectionOptions.fromPartial(object.projectionOptions)
+      : undefined;
+    message.autoUpdateAVectorGroup = object.autoUpdateAVectorGroup ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakePointCloudsToObjectsRelationshipResult(): MakePointCloudsToObjectsRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakePointCloudsToObjectsRelationshipResult: MessageFns<MakePointCloudsToObjectsRelationshipResult> = {
+  encode(message: MakePointCloudsToObjectsRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePointCloudsToObjectsRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePointCloudsToObjectsRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePointCloudsToObjectsRelationshipResult>): MakePointCloudsToObjectsRelationshipResult {
+    return MakePointCloudsToObjectsRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakePointCloudsToObjectsRelationshipResult>,
+  ): MakePointCloudsToObjectsRelationshipResult {
+    const message = createBaseMakePointCloudsToObjectsRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakePointsToObjectsRelationshipRequest(): MakePointsToObjectsRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    pointsInRelationship: [],
+    objectsInRelationship: [],
+    projectionOptions: undefined,
+    autoUpdateAVectorGroup: undefined,
+  };
+}
+
+export const MakePointsToObjectsRelationshipRequest: MessageFns<MakePointsToObjectsRelationshipRequest> = {
+  encode(message: MakePointsToObjectsRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.pointsInRelationship !== undefined && message.pointsInRelationship.length !== 0) {
+      for (const v of message.pointsInRelationship) {
+        PointName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.objectsInRelationship !== undefined && message.objectsInRelationship.length !== 0) {
+      for (const v of message.objectsInRelationship) {
+        CollectionObjectName.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.projectionOptions !== undefined) {
+      ProjectionOptions.encode(message.projectionOptions, writer.uint32(34).fork()).join();
+    }
+    if (message.autoUpdateAVectorGroup !== undefined) {
+      writer.uint32(40).bool(message.autoUpdateAVectorGroup);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePointsToObjectsRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePointsToObjectsRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointsInRelationship!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objectsInRelationship!.push(el);
+          }
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.projectionOptions = ProjectionOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.autoUpdateAVectorGroup = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePointsToObjectsRelationshipRequest>): MakePointsToObjectsRelationshipRequest {
+    return MakePointsToObjectsRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakePointsToObjectsRelationshipRequest>): MakePointsToObjectsRelationshipRequest {
+    const message = createBaseMakePointsToObjectsRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.pointsInRelationship = object.pointsInRelationship?.map((e) => PointName.fromPartial(e)) || [];
+    message.objectsInRelationship = object.objectsInRelationship?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.projectionOptions = (object.projectionOptions !== undefined && object.projectionOptions !== null)
+      ? ProjectionOptions.fromPartial(object.projectionOptions)
+      : undefined;
+    message.autoUpdateAVectorGroup = object.autoUpdateAVectorGroup ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakePointsToObjectsRelationshipResult(): MakePointsToObjectsRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakePointsToObjectsRelationshipResult: MessageFns<MakePointsToObjectsRelationshipResult> = {
+  encode(message: MakePointsToObjectsRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePointsToObjectsRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePointsToObjectsRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePointsToObjectsRelationshipResult>): MakePointsToObjectsRelationshipResult {
+    return MakePointsToObjectsRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakePointsToObjectsRelationshipResult>): MakePointsToObjectsRelationshipResult {
+    const message = createBaseMakePointsToObjectsRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakePointsToPointsRelationshipRequest(): MakePointsToPointsRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    nominalPoints: [],
+    measuredPoints: [],
+    autoUpdateAVectorGroup: undefined,
+    tolerance: undefined,
+    constraint: undefined,
+  };
+}
+
+export const MakePointsToPointsRelationshipRequest: MessageFns<MakePointsToPointsRelationshipRequest> = {
+  encode(message: MakePointsToPointsRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.nominalPoints !== undefined && message.nominalPoints.length !== 0) {
+      for (const v of message.nominalPoints) {
+        PointName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.measuredPoints !== undefined && message.measuredPoints.length !== 0) {
+      for (const v of message.measuredPoints) {
+        PointName.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.autoUpdateAVectorGroup !== undefined) {
+      writer.uint32(32).bool(message.autoUpdateAVectorGroup);
+    }
+    if (message.tolerance !== undefined) {
+      ToleranceVectorOptions.encode(message.tolerance, writer.uint32(42).fork()).join();
+    }
+    if (message.constraint !== undefined) {
+      ToleranceVectorOptions.encode(message.constraint, writer.uint32(50).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePointsToPointsRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePointsToPointsRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.nominalPoints!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.measuredPoints!.push(el);
+          }
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.autoUpdateAVectorGroup = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.tolerance = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.constraint = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePointsToPointsRelationshipRequest>): MakePointsToPointsRelationshipRequest {
+    return MakePointsToPointsRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakePointsToPointsRelationshipRequest>): MakePointsToPointsRelationshipRequest {
+    const message = createBaseMakePointsToPointsRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.nominalPoints = object.nominalPoints?.map((e) => PointName.fromPartial(e)) || [];
+    message.measuredPoints = object.measuredPoints?.map((e) => PointName.fromPartial(e)) || [];
+    message.autoUpdateAVectorGroup = object.autoUpdateAVectorGroup ?? undefined;
+    message.tolerance = (object.tolerance !== undefined && object.tolerance !== null)
+      ? ToleranceVectorOptions.fromPartial(object.tolerance)
+      : undefined;
+    message.constraint = (object.constraint !== undefined && object.constraint !== null)
+      ? ToleranceVectorOptions.fromPartial(object.constraint)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakePointsToPointsRelationshipResult(): MakePointsToPointsRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakePointsToPointsRelationshipResult: MessageFns<MakePointsToPointsRelationshipResult> = {
+  encode(message: MakePointsToPointsRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePointsToPointsRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePointsToPointsRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePointsToPointsRelationshipResult>): MakePointsToPointsRelationshipResult {
+    return MakePointsToPointsRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakePointsToPointsRelationshipResult>): MakePointsToPointsRelationshipResult {
+    const message = createBaseMakePointsToPointsRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakePointToPointRelationshipRequest(): MakePointToPointRelationshipRequest {
+  return {
+    relationshipName: undefined,
+    firstPointName: undefined,
+    secondPointName: undefined,
+    tolerance: undefined,
+    constraint: undefined,
+  };
+}
+
+export const MakePointToPointRelationshipRequest: MessageFns<MakePointToPointRelationshipRequest> = {
+  encode(message: MakePointToPointRelationshipRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.firstPointName !== undefined) {
+      PointName.encode(message.firstPointName, writer.uint32(18).fork()).join();
+    }
+    if (message.secondPointName !== undefined) {
+      PointName.encode(message.secondPointName, writer.uint32(26).fork()).join();
+    }
+    if (message.tolerance !== undefined) {
+      ToleranceVectorOptions.encode(message.tolerance, writer.uint32(34).fork()).join();
+    }
+    if (message.constraint !== undefined) {
+      ToleranceVectorOptions.encode(message.constraint, writer.uint32(42).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePointToPointRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePointToPointRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.firstPointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.secondPointName = PointName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.tolerance = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.constraint = ToleranceVectorOptions.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePointToPointRelationshipRequest>): MakePointToPointRelationshipRequest {
+    return MakePointToPointRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakePointToPointRelationshipRequest>): MakePointToPointRelationshipRequest {
+    const message = createBaseMakePointToPointRelationshipRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.firstPointName = (object.firstPointName !== undefined && object.firstPointName !== null)
+      ? PointName.fromPartial(object.firstPointName)
+      : undefined;
+    message.secondPointName = (object.secondPointName !== undefined && object.secondPointName !== null)
+      ? PointName.fromPartial(object.secondPointName)
+      : undefined;
+    message.tolerance = (object.tolerance !== undefined && object.tolerance !== null)
+      ? ToleranceVectorOptions.fromPartial(object.tolerance)
+      : undefined;
+    message.constraint = (object.constraint !== undefined && object.constraint !== null)
+      ? ToleranceVectorOptions.fromPartial(object.constraint)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakePointToPointRelationshipResult(): MakePointToPointRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakePointToPointRelationshipResult: MessageFns<MakePointToPointRelationshipResult> = {
+  encode(message: MakePointToPointRelationshipResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakePointToPointRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakePointToPointRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MakePointToPointRelationshipResult>): MakePointToPointRelationshipResult {
+    return MakePointToPointRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<MakePointToPointRelationshipResult>): MakePointToPointRelationshipResult {
+    const message = createBaseMakePointToPointRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMakeVectorGroupToVectorGroupRelationshipRequest(): MakeVectorGroupToVectorGroupRelationshipRequest {
+  return {
+    newVgToVgRelationship: undefined,
+    referenceVectorGroup: undefined,
+    correspondingVectorGroup: undefined,
+    setOpposingVectorGroupPolarity: undefined,
+  };
+}
+
+export const MakeVectorGroupToVectorGroupRelationshipRequest: MessageFns<
+  MakeVectorGroupToVectorGroupRelationshipRequest
+> = {
+  encode(
+    message: MakeVectorGroupToVectorGroupRelationshipRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.newVgToVgRelationship !== undefined) {
+      CollectionItemName.encode(message.newVgToVgRelationship, writer.uint32(10).fork()).join();
+    }
+    if (message.referenceVectorGroup !== undefined) {
+      CollectionObjectName.encode(message.referenceVectorGroup, writer.uint32(18).fork()).join();
+    }
+    if (message.correspondingVectorGroup !== undefined) {
+      CollectionObjectName.encode(message.correspondingVectorGroup, writer.uint32(26).fork()).join();
+    }
+    if (message.setOpposingVectorGroupPolarity !== undefined) {
+      writer.uint32(32).bool(message.setOpposingVectorGroupPolarity);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeVectorGroupToVectorGroupRelationshipRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeVectorGroupToVectorGroupRelationshipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.newVgToVgRelationship = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.referenceVectorGroup = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.correspondingVectorGroup = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.setOpposingVectorGroupPolarity = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<MakeVectorGroupToVectorGroupRelationshipRequest>,
+  ): MakeVectorGroupToVectorGroupRelationshipRequest {
+    return MakeVectorGroupToVectorGroupRelationshipRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakeVectorGroupToVectorGroupRelationshipRequest>,
+  ): MakeVectorGroupToVectorGroupRelationshipRequest {
+    const message = createBaseMakeVectorGroupToVectorGroupRelationshipRequest();
+    message.newVgToVgRelationship =
+      (object.newVgToVgRelationship !== undefined && object.newVgToVgRelationship !== null)
+        ? CollectionItemName.fromPartial(object.newVgToVgRelationship)
+        : undefined;
+    message.referenceVectorGroup = (object.referenceVectorGroup !== undefined && object.referenceVectorGroup !== null)
+      ? CollectionObjectName.fromPartial(object.referenceVectorGroup)
+      : undefined;
+    message.correspondingVectorGroup =
+      (object.correspondingVectorGroup !== undefined && object.correspondingVectorGroup !== null)
+        ? CollectionObjectName.fromPartial(object.correspondingVectorGroup)
+        : undefined;
+    message.setOpposingVectorGroupPolarity = object.setOpposingVectorGroupPolarity ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMakeVectorGroupToVectorGroupRelationshipResult(): MakeVectorGroupToVectorGroupRelationshipResult {
+  return { execution: undefined };
+}
+
+export const MakeVectorGroupToVectorGroupRelationshipResult: MessageFns<
+  MakeVectorGroupToVectorGroupRelationshipResult
+> = {
+  encode(
+    message: MakeVectorGroupToVectorGroupRelationshipResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MakeVectorGroupToVectorGroupRelationshipResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMakeVectorGroupToVectorGroupRelationshipResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<MakeVectorGroupToVectorGroupRelationshipResult>,
+  ): MakeVectorGroupToVectorGroupRelationshipResult {
+    return MakeVectorGroupToVectorGroupRelationshipResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MakeVectorGroupToVectorGroupRelationshipResult>,
+  ): MakeVectorGroupToVectorGroupRelationshipResult {
+    const message = createBaseMakeVectorGroupToVectorGroupRelationshipResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMoveCollectionsByMinimizingRelationshipsRequest(): MoveCollectionsByMinimizingRelationshipsRequest {
+  return {
+    collectionsToMove: [],
+    relationshipsToMinimize: [],
+    solverMode: undefined,
+    motionToAllow: undefined,
+    useFitDialog: undefined,
+    convergenceThreshold: undefined,
+  };
+}
+
+export const MoveCollectionsByMinimizingRelationshipsRequest: MessageFns<
+  MoveCollectionsByMinimizingRelationshipsRequest
+> = {
+  encode(
+    message: MoveCollectionsByMinimizingRelationshipsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.collectionsToMove !== undefined && message.collectionsToMove.length !== 0) {
+      for (const v of message.collectionsToMove) {
+        writer.uint32(10).string(v!);
+      }
+    }
+    if (message.relationshipsToMinimize !== undefined && message.relationshipsToMinimize.length !== 0) {
+      for (const v of message.relationshipsToMinimize) {
+        CollectionItemName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.solverMode !== undefined) {
+      writer.uint32(24).int32(message.solverMode);
+    }
+    if (message.motionToAllow !== undefined) {
+      FitDofOptions.encode(message.motionToAllow, writer.uint32(34).fork()).join();
+    }
+    if (message.useFitDialog !== undefined) {
+      writer.uint32(40).bool(message.useFitDialog);
+    }
+    if (message.convergenceThreshold !== undefined) {
+      writer.uint32(49).double(message.convergenceThreshold);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MoveCollectionsByMinimizingRelationshipsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMoveCollectionsByMinimizingRelationshipsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = reader.string();
+          if (el !== undefined) {
+            message.collectionsToMove!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = CollectionItemName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.relationshipsToMinimize!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.solverMode = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.motionToAllow = FitDofOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.useFitDialog = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.convergenceThreshold = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<MoveCollectionsByMinimizingRelationshipsRequest>,
+  ): MoveCollectionsByMinimizingRelationshipsRequest {
+    return MoveCollectionsByMinimizingRelationshipsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MoveCollectionsByMinimizingRelationshipsRequest>,
+  ): MoveCollectionsByMinimizingRelationshipsRequest {
+    const message = createBaseMoveCollectionsByMinimizingRelationshipsRequest();
+    message.collectionsToMove = object.collectionsToMove?.map((e) => e) || [];
+    message.relationshipsToMinimize = object.relationshipsToMinimize?.map((e) => CollectionItemName.fromPartial(e)) ||
+      [];
+    message.solverMode = object.solverMode ?? undefined;
+    message.motionToAllow = (object.motionToAllow !== undefined && object.motionToAllow !== null)
+      ? FitDofOptions.fromPartial(object.motionToAllow)
+      : undefined;
+    message.useFitDialog = object.useFitDialog ?? undefined;
+    message.convergenceThreshold = object.convergenceThreshold ?? undefined;
+    return message;
+  },
+};
+
+function createBaseMoveCollectionsByMinimizingRelationshipsResult(): MoveCollectionsByMinimizingRelationshipsResult {
+  return { execution: undefined };
+}
+
+export const MoveCollectionsByMinimizingRelationshipsResult: MessageFns<
+  MoveCollectionsByMinimizingRelationshipsResult
+> = {
+  encode(
+    message: MoveCollectionsByMinimizingRelationshipsResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MoveCollectionsByMinimizingRelationshipsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMoveCollectionsByMinimizingRelationshipsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<MoveCollectionsByMinimizingRelationshipsResult>,
+  ): MoveCollectionsByMinimizingRelationshipsResult {
+    return MoveCollectionsByMinimizingRelationshipsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<MoveCollectionsByMinimizingRelationshipsResult>,
+  ): MoveCollectionsByMinimizingRelationshipsResult {
+    const message = createBaseMoveCollectionsByMinimizingRelationshipsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBasePointNameList(): PointNameList {
+  return { values: [] };
+}
+
+export const PointNameList: MessageFns<PointNameList> = {
+  encode(message: PointNameList, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.values !== undefined && message.values.length !== 0) {
+      for (const v of message.values) {
+        PointName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PointNameList {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePointNameList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.values!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PointNameList>): PointNameList {
+    return PointNameList.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PointNameList>): PointNameList {
+    const message = createBasePointNameList();
+    message.values = object.values?.map((e) => PointName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasePointsToPointsRelationshipAssociatedData(): PointsToPointsRelationshipAssociatedData {
+  return { nominalPoints: [], actualPoints: [] };
+}
+
+export const PointsToPointsRelationshipAssociatedData: MessageFns<PointsToPointsRelationshipAssociatedData> = {
+  encode(message: PointsToPointsRelationshipAssociatedData, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.nominalPoints !== undefined && message.nominalPoints.length !== 0) {
+      for (const v of message.nominalPoints) {
+        PointName.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    if (message.actualPoints !== undefined && message.actualPoints.length !== 0) {
+      for (const v of message.actualPoints) {
+        PointName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PointsToPointsRelationshipAssociatedData {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePointsToPointsRelationshipAssociatedData();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.nominalPoints!.push(el);
+          }
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.actualPoints!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PointsToPointsRelationshipAssociatedData>): PointsToPointsRelationshipAssociatedData {
+    return PointsToPointsRelationshipAssociatedData.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PointsToPointsRelationshipAssociatedData>): PointsToPointsRelationshipAssociatedData {
+    const message = createBasePointsToPointsRelationshipAssociatedData();
+    message.nominalPoints = object.nominalPoints?.map((e) => PointName.fromPartial(e)) || [];
+    message.actualPoints = object.actualPoints?.map((e) => PointName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRelationshipAssociatedData(): RelationshipAssociatedData {
+  return { relationshipType: "", individualPoints: [], pointGroups: [], pointClouds: [], objects: [] };
+}
+
+export const RelationshipAssociatedData: MessageFns<RelationshipAssociatedData> = {
+  encode(message: RelationshipAssociatedData, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipType !== undefined && message.relationshipType !== "") {
+      writer.uint32(10).string(message.relationshipType);
+    }
+    if (message.individualPoints !== undefined && message.individualPoints.length !== 0) {
+      for (const v of message.individualPoints) {
+        PointName.encode(v!, writer.uint32(18).fork()).join();
+      }
+    }
+    if (message.pointGroups !== undefined && message.pointGroups.length !== 0) {
+      for (const v of message.pointGroups) {
+        CollectionObjectName.encode(v!, writer.uint32(26).fork()).join();
+      }
+    }
+    if (message.pointClouds !== undefined && message.pointClouds.length !== 0) {
+      for (const v of message.pointClouds) {
+        CollectionObjectName.encode(v!, writer.uint32(34).fork()).join();
+      }
+    }
+    if (message.objects !== undefined && message.objects.length !== 0) {
+      for (const v of message.objects) {
+        CollectionObjectName.encode(v!, writer.uint32(42).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RelationshipAssociatedData {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRelationshipAssociatedData();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipType = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const el = PointName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.individualPoints!.push(el);
+          }
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointGroups!.push(el);
+          }
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.pointClouds!.push(el);
+          }
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          const el = CollectionObjectName.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.objects!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RelationshipAssociatedData>): RelationshipAssociatedData {
+    return RelationshipAssociatedData.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<RelationshipAssociatedData>): RelationshipAssociatedData {
+    const message = createBaseRelationshipAssociatedData();
+    message.relationshipType = object.relationshipType ?? "";
+    message.individualPoints = object.individualPoints?.map((e) => PointName.fromPartial(e)) || [];
+    message.pointGroups = object.pointGroups?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.pointClouds = object.pointClouds?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.objects = object.objects?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRelationshipStatusFlags(): RelationshipStatusFlags {
+  return { dormant: false, success: false, measured: false, failed: false, unmeasured: false };
+}
+
+export const RelationshipStatusFlags: MessageFns<RelationshipStatusFlags> = {
+  encode(message: RelationshipStatusFlags, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.dormant !== undefined && message.dormant !== false) {
+      writer.uint32(8).bool(message.dormant);
+    }
+    if (message.success !== undefined && message.success !== false) {
+      writer.uint32(16).bool(message.success);
+    }
+    if (message.measured !== undefined && message.measured !== false) {
+      writer.uint32(24).bool(message.measured);
+    }
+    if (message.failed !== undefined && message.failed !== false) {
+      writer.uint32(32).bool(message.failed);
+    }
+    if (message.unmeasured !== undefined && message.unmeasured !== false) {
+      writer.uint32(40).bool(message.unmeasured);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RelationshipStatusFlags {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRelationshipStatusFlags();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.dormant = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.success = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.measured = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.failed = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.unmeasured = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RelationshipStatusFlags>): RelationshipStatusFlags {
+    return RelationshipStatusFlags.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<RelationshipStatusFlags>): RelationshipStatusFlags {
+    const message = createBaseRelationshipStatusFlags();
+    message.dormant = object.dormant ?? false;
+    message.success = object.success ?? false;
+    message.measured = object.measured ?? false;
+    message.failed = object.failed ?? false;
+    message.unmeasured = object.unmeasured ?? false;
+    return message;
+  },
+};
+
+function createBaseRelationshipWatchWindowTemplateRequest(): RelationshipWatchWindowTemplateRequest {
+  return {
+    watchWindowTemplateName: undefined,
+    linearPrecision: undefined,
+    angularPrecision: undefined,
+    font: undefined,
+    textColor: undefined,
+    backgroundColor: undefined,
+    highlightColor: undefined,
+    showDeviationXRx: undefined,
+    showDeviationYRy: undefined,
+    showDeviationZRz: undefined,
+    showDeviationMagnitude: undefined,
+    udpNetworkTransmitSettings: undefined,
+    transparentBackground: undefined,
+    hideUnits: undefined,
+  };
+}
+
+export const RelationshipWatchWindowTemplateRequest: MessageFns<RelationshipWatchWindowTemplateRequest> = {
+  encode(message: RelationshipWatchWindowTemplateRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.watchWindowTemplateName !== undefined) {
+      CollectionObjectName.encode(message.watchWindowTemplateName, writer.uint32(10).fork()).join();
+    }
+    if (message.linearPrecision !== undefined) {
+      writer.uint32(16).int32(message.linearPrecision);
+    }
+    if (message.angularPrecision !== undefined) {
+      writer.uint32(24).int32(message.angularPrecision);
+    }
+    if (message.font !== undefined) {
+      Font.encode(message.font, writer.uint32(34).fork()).join();
+    }
+    if (message.textColor !== undefined) {
+      Color.encode(message.textColor, writer.uint32(42).fork()).join();
+    }
+    if (message.backgroundColor !== undefined) {
+      Color.encode(message.backgroundColor, writer.uint32(50).fork()).join();
+    }
+    if (message.highlightColor !== undefined) {
+      Color.encode(message.highlightColor, writer.uint32(58).fork()).join();
+    }
+    if (message.showDeviationXRx !== undefined) {
+      writer.uint32(64).bool(message.showDeviationXRx);
+    }
+    if (message.showDeviationYRy !== undefined) {
+      writer.uint32(72).bool(message.showDeviationYRy);
+    }
+    if (message.showDeviationZRz !== undefined) {
+      writer.uint32(80).bool(message.showDeviationZRz);
+    }
+    if (message.showDeviationMagnitude !== undefined) {
+      writer.uint32(88).bool(message.showDeviationMagnitude);
+    }
+    if (message.udpNetworkTransmitSettings !== undefined) {
+      RelationshipWatchWindowUdpSettings.encode(message.udpNetworkTransmitSettings, writer.uint32(98).fork()).join();
+    }
+    if (message.transparentBackground !== undefined) {
+      writer.uint32(104).bool(message.transparentBackground);
+    }
+    if (message.hideUnits !== undefined) {
+      writer.uint32(112).bool(message.hideUnits);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RelationshipWatchWindowTemplateRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRelationshipWatchWindowTemplateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.watchWindowTemplateName = CollectionObjectName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.linearPrecision = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.angularPrecision = reader.int32();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.font = Font.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.textColor = Color.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.backgroundColor = Color.decode(reader, reader.uint32());
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.highlightColor = Color.decode(reader, reader.uint32());
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.showDeviationXRx = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.showDeviationYRy = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.showDeviationZRz = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.showDeviationMagnitude = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 98) {
+            break;
+          }
+
+          message.udpNetworkTransmitSettings = RelationshipWatchWindowUdpSettings.decode(reader, reader.uint32());
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.transparentBackground = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.hideUnits = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RelationshipWatchWindowTemplateRequest>): RelationshipWatchWindowTemplateRequest {
+    return RelationshipWatchWindowTemplateRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<RelationshipWatchWindowTemplateRequest>): RelationshipWatchWindowTemplateRequest {
+    const message = createBaseRelationshipWatchWindowTemplateRequest();
+    message.watchWindowTemplateName =
+      (object.watchWindowTemplateName !== undefined && object.watchWindowTemplateName !== null)
+        ? CollectionObjectName.fromPartial(object.watchWindowTemplateName)
+        : undefined;
+    message.linearPrecision = object.linearPrecision ?? undefined;
+    message.angularPrecision = object.angularPrecision ?? undefined;
+    message.font = (object.font !== undefined && object.font !== null) ? Font.fromPartial(object.font) : undefined;
+    message.textColor = (object.textColor !== undefined && object.textColor !== null)
+      ? Color.fromPartial(object.textColor)
+      : undefined;
+    message.backgroundColor = (object.backgroundColor !== undefined && object.backgroundColor !== null)
+      ? Color.fromPartial(object.backgroundColor)
+      : undefined;
+    message.highlightColor = (object.highlightColor !== undefined && object.highlightColor !== null)
+      ? Color.fromPartial(object.highlightColor)
+      : undefined;
+    message.showDeviationXRx = object.showDeviationXRx ?? undefined;
+    message.showDeviationYRy = object.showDeviationYRy ?? undefined;
+    message.showDeviationZRz = object.showDeviationZRz ?? undefined;
+    message.showDeviationMagnitude = object.showDeviationMagnitude ?? undefined;
+    message.udpNetworkTransmitSettings =
+      (object.udpNetworkTransmitSettings !== undefined && object.udpNetworkTransmitSettings !== null)
+        ? RelationshipWatchWindowUdpSettings.fromPartial(object.udpNetworkTransmitSettings)
+        : undefined;
+    message.transparentBackground = object.transparentBackground ?? undefined;
+    message.hideUnits = object.hideUnits ?? undefined;
+    return message;
+  },
+};
+
+function createBaseRelationshipWatchWindowTemplateResult(): RelationshipWatchWindowTemplateResult {
+  return { execution: undefined };
+}
+
+export const RelationshipWatchWindowTemplateResult: MessageFns<RelationshipWatchWindowTemplateResult> = {
+  encode(message: RelationshipWatchWindowTemplateResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RelationshipWatchWindowTemplateResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRelationshipWatchWindowTemplateResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RelationshipWatchWindowTemplateResult>): RelationshipWatchWindowTemplateResult {
+    return RelationshipWatchWindowTemplateResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<RelationshipWatchWindowTemplateResult>): RelationshipWatchWindowTemplateResult {
+    const message = createBaseRelationshipWatchWindowTemplateResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseRelationshipWatchWindowUdpSettings(): RelationshipWatchWindowUdpSettings {
+  return { enabled: undefined, broadcast: undefined, ipAddress: undefined, port: undefined };
+}
+
+export const RelationshipWatchWindowUdpSettings: MessageFns<RelationshipWatchWindowUdpSettings> = {
+  encode(message: RelationshipWatchWindowUdpSettings, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.enabled !== undefined) {
+      writer.uint32(8).bool(message.enabled);
+    }
+    if (message.broadcast !== undefined) {
+      writer.uint32(16).bool(message.broadcast);
+    }
+    if (message.ipAddress !== undefined) {
+      writer.uint32(26).string(message.ipAddress);
+    }
+    if (message.port !== undefined) {
+      writer.uint32(32).int32(message.port);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): RelationshipWatchWindowUdpSettings {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRelationshipWatchWindowUdpSettings();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.enabled = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.broadcast = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.ipAddress = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.port = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RelationshipWatchWindowUdpSettings>): RelationshipWatchWindowUdpSettings {
+    return RelationshipWatchWindowUdpSettings.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<RelationshipWatchWindowUdpSettings>): RelationshipWatchWindowUdpSettings {
+    const message = createBaseRelationshipWatchWindowUdpSettings();
+    message.enabled = object.enabled ?? undefined;
+    message.broadcast = object.broadcast ?? undefined;
+    message.ipAddress = object.ipAddress ?? undefined;
+    message.port = object.port ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetGroupToNominalGroupViewZoomingRequest(): SetGroupToNominalGroupViewZoomingRequest {
+  return {
+    relationshipName: undefined,
+    useClosestPoint: undefined,
+    showClosestPointWatchWindow: undefined,
+    useViewZooming: undefined,
+    ignorePointsBeyondThreshold: undefined,
+    proximityThreshold: undefined,
+  };
+}
+
+export const SetGroupToNominalGroupViewZoomingRequest: MessageFns<SetGroupToNominalGroupViewZoomingRequest> = {
+  encode(message: SetGroupToNominalGroupViewZoomingRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.useClosestPoint !== undefined) {
+      writer.uint32(16).bool(message.useClosestPoint);
+    }
+    if (message.showClosestPointWatchWindow !== undefined) {
+      writer.uint32(24).bool(message.showClosestPointWatchWindow);
+    }
+    if (message.useViewZooming !== undefined) {
+      writer.uint32(32).bool(message.useViewZooming);
+    }
+    if (message.ignorePointsBeyondThreshold !== undefined) {
+      writer.uint32(40).bool(message.ignorePointsBeyondThreshold);
+    }
+    if (message.proximityThreshold !== undefined) {
+      writer.uint32(49).double(message.proximityThreshold);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetGroupToNominalGroupViewZoomingRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetGroupToNominalGroupViewZoomingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.useClosestPoint = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.showClosestPointWatchWindow = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.useViewZooming = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.ignorePointsBeyondThreshold = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.proximityThreshold = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetGroupToNominalGroupViewZoomingRequest>): SetGroupToNominalGroupViewZoomingRequest {
+    return SetGroupToNominalGroupViewZoomingRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetGroupToNominalGroupViewZoomingRequest>): SetGroupToNominalGroupViewZoomingRequest {
+    const message = createBaseSetGroupToNominalGroupViewZoomingRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.useClosestPoint = object.useClosestPoint ?? undefined;
+    message.showClosestPointWatchWindow = object.showClosestPointWatchWindow ?? undefined;
+    message.useViewZooming = object.useViewZooming ?? undefined;
+    message.ignorePointsBeyondThreshold = object.ignorePointsBeyondThreshold ?? undefined;
+    message.proximityThreshold = object.proximityThreshold ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetGroupToNominalGroupViewZoomingResult(): SetGroupToNominalGroupViewZoomingResult {
+  return { execution: undefined };
+}
+
+export const SetGroupToNominalGroupViewZoomingResult: MessageFns<SetGroupToNominalGroupViewZoomingResult> = {
+  encode(message: SetGroupToNominalGroupViewZoomingResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetGroupToNominalGroupViewZoomingResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetGroupToNominalGroupViewZoomingResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetGroupToNominalGroupViewZoomingResult>): SetGroupToNominalGroupViewZoomingResult {
+    return SetGroupToNominalGroupViewZoomingResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetGroupToNominalGroupViewZoomingResult>): SetGroupToNominalGroupViewZoomingResult {
+    const message = createBaseSetGroupToNominalGroupViewZoomingResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetObjectToObjectDirectionRelationshipTolerancesRequest(): SetObjectToObjectDirectionRelationshipTolerancesRequest {
+  return {
+    relationshipName: undefined,
+    angleBetweenVectorsTolerances: undefined,
+    mutualPerpendicularLengthTolerances: undefined,
+  };
+}
+
+export const SetObjectToObjectDirectionRelationshipTolerancesRequest: MessageFns<
+  SetObjectToObjectDirectionRelationshipTolerancesRequest
+> = {
+  encode(
+    message: SetObjectToObjectDirectionRelationshipTolerancesRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.angleBetweenVectorsTolerances !== undefined) {
+      ToleranceScalarOptions.encode(message.angleBetweenVectorsTolerances, writer.uint32(18).fork()).join();
+    }
+    if (message.mutualPerpendicularLengthTolerances !== undefined) {
+      ToleranceScalarOptions.encode(message.mutualPerpendicularLengthTolerances, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetObjectToObjectDirectionRelationshipTolerancesRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetObjectToObjectDirectionRelationshipTolerancesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.angleBetweenVectorsTolerances = ToleranceScalarOptions.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.mutualPerpendicularLengthTolerances = ToleranceScalarOptions.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetObjectToObjectDirectionRelationshipTolerancesRequest>,
+  ): SetObjectToObjectDirectionRelationshipTolerancesRequest {
+    return SetObjectToObjectDirectionRelationshipTolerancesRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetObjectToObjectDirectionRelationshipTolerancesRequest>,
+  ): SetObjectToObjectDirectionRelationshipTolerancesRequest {
+    const message = createBaseSetObjectToObjectDirectionRelationshipTolerancesRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.angleBetweenVectorsTolerances =
+      (object.angleBetweenVectorsTolerances !== undefined && object.angleBetweenVectorsTolerances !== null)
+        ? ToleranceScalarOptions.fromPartial(object.angleBetweenVectorsTolerances)
+        : undefined;
+    message.mutualPerpendicularLengthTolerances =
+      (object.mutualPerpendicularLengthTolerances !== undefined && object.mutualPerpendicularLengthTolerances !== null)
+        ? ToleranceScalarOptions.fromPartial(object.mutualPerpendicularLengthTolerances)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseSetObjectToObjectDirectionRelationshipTolerancesResult(): SetObjectToObjectDirectionRelationshipTolerancesResult {
+  return { execution: undefined };
+}
+
+export const SetObjectToObjectDirectionRelationshipTolerancesResult: MessageFns<
+  SetObjectToObjectDirectionRelationshipTolerancesResult
+> = {
+  encode(
+    message: SetObjectToObjectDirectionRelationshipTolerancesResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetObjectToObjectDirectionRelationshipTolerancesResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetObjectToObjectDirectionRelationshipTolerancesResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetObjectToObjectDirectionRelationshipTolerancesResult>,
+  ): SetObjectToObjectDirectionRelationshipTolerancesResult {
+    return SetObjectToObjectDirectionRelationshipTolerancesResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetObjectToObjectDirectionRelationshipTolerancesResult>,
+  ): SetObjectToObjectDirectionRelationshipTolerancesResult {
+    const message = createBaseSetObjectToObjectDirectionRelationshipTolerancesResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetOptimizationPerturbationParametersRequest(): SetOptimizationPerturbationParametersRequest {
+  return { lengthPerturbation: undefined, angularPerturbation: undefined, damping: undefined };
+}
+
+export const SetOptimizationPerturbationParametersRequest: MessageFns<SetOptimizationPerturbationParametersRequest> = {
+  encode(
+    message: SetOptimizationPerturbationParametersRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.lengthPerturbation !== undefined) {
+      writer.uint32(9).double(message.lengthPerturbation);
+    }
+    if (message.angularPerturbation !== undefined) {
+      writer.uint32(17).double(message.angularPerturbation);
+    }
+    if (message.damping !== undefined) {
+      writer.uint32(25).double(message.damping);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetOptimizationPerturbationParametersRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetOptimizationPerturbationParametersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 9) {
+            break;
+          }
+
+          message.lengthPerturbation = reader.double();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.angularPerturbation = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.damping = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetOptimizationPerturbationParametersRequest>,
+  ): SetOptimizationPerturbationParametersRequest {
+    return SetOptimizationPerturbationParametersRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetOptimizationPerturbationParametersRequest>,
+  ): SetOptimizationPerturbationParametersRequest {
+    const message = createBaseSetOptimizationPerturbationParametersRequest();
+    message.lengthPerturbation = object.lengthPerturbation ?? undefined;
+    message.angularPerturbation = object.angularPerturbation ?? undefined;
+    message.damping = object.damping ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetOptimizationPerturbationParametersResult(): SetOptimizationPerturbationParametersResult {
+  return { execution: undefined };
+}
+
+export const SetOptimizationPerturbationParametersResult: MessageFns<SetOptimizationPerturbationParametersResult> = {
+  encode(
+    message: SetOptimizationPerturbationParametersResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetOptimizationPerturbationParametersResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetOptimizationPerturbationParametersResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetOptimizationPerturbationParametersResult>): SetOptimizationPerturbationParametersResult {
+    return SetOptimizationPerturbationParametersResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetOptimizationPerturbationParametersResult>,
+  ): SetOptimizationPerturbationParametersResult {
+    const message = createBaseSetOptimizationPerturbationParametersResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetOptimizationSearchOptionsRequest(): SetOptimizationSearchOptionsRequest {
+  return { maxNumberOfStepSizeReduction: undefined };
+}
+
+export const SetOptimizationSearchOptionsRequest: MessageFns<SetOptimizationSearchOptionsRequest> = {
+  encode(message: SetOptimizationSearchOptionsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.maxNumberOfStepSizeReduction !== undefined) {
+      writer.uint32(8).int32(message.maxNumberOfStepSizeReduction);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetOptimizationSearchOptionsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetOptimizationSearchOptionsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.maxNumberOfStepSizeReduction = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetOptimizationSearchOptionsRequest>): SetOptimizationSearchOptionsRequest {
+    return SetOptimizationSearchOptionsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetOptimizationSearchOptionsRequest>): SetOptimizationSearchOptionsRequest {
+    const message = createBaseSetOptimizationSearchOptionsRequest();
+    message.maxNumberOfStepSizeReduction = object.maxNumberOfStepSizeReduction ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetOptimizationSearchOptionsResult(): SetOptimizationSearchOptionsResult {
+  return { execution: undefined };
+}
+
+export const SetOptimizationSearchOptionsResult: MessageFns<SetOptimizationSearchOptionsResult> = {
+  encode(message: SetOptimizationSearchOptionsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetOptimizationSearchOptionsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetOptimizationSearchOptionsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetOptimizationSearchOptionsResult>): SetOptimizationSearchOptionsResult {
+    return SetOptimizationSearchOptionsResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetOptimizationSearchOptionsResult>): SetOptimizationSearchOptionsResult {
+    const message = createBaseSetOptimizationSearchOptionsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetPointsToPointsRelationshipAssociatedDataRequest(): SetPointsToPointsRelationshipAssociatedDataRequest {
+  return {
+    relationshipName: undefined,
+    nominalPoints: undefined,
+    actualPoints: undefined,
+    ignoreEmptyArguments: undefined,
+  };
+}
+
+export const SetPointsToPointsRelationshipAssociatedDataRequest: MessageFns<
+  SetPointsToPointsRelationshipAssociatedDataRequest
+> = {
+  encode(
+    message: SetPointsToPointsRelationshipAssociatedDataRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.nominalPoints !== undefined) {
+      PointNameList.encode(message.nominalPoints, writer.uint32(18).fork()).join();
+    }
+    if (message.actualPoints !== undefined) {
+      PointNameList.encode(message.actualPoints, writer.uint32(26).fork()).join();
+    }
+    if (message.ignoreEmptyArguments !== undefined) {
+      writer.uint32(32).bool(message.ignoreEmptyArguments);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetPointsToPointsRelationshipAssociatedDataRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetPointsToPointsRelationshipAssociatedDataRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.nominalPoints = PointNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.actualPoints = PointNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.ignoreEmptyArguments = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetPointsToPointsRelationshipAssociatedDataRequest>,
+  ): SetPointsToPointsRelationshipAssociatedDataRequest {
+    return SetPointsToPointsRelationshipAssociatedDataRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetPointsToPointsRelationshipAssociatedDataRequest>,
+  ): SetPointsToPointsRelationshipAssociatedDataRequest {
+    const message = createBaseSetPointsToPointsRelationshipAssociatedDataRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.nominalPoints = (object.nominalPoints !== undefined && object.nominalPoints !== null)
+      ? PointNameList.fromPartial(object.nominalPoints)
+      : undefined;
+    message.actualPoints = (object.actualPoints !== undefined && object.actualPoints !== null)
+      ? PointNameList.fromPartial(object.actualPoints)
+      : undefined;
+    message.ignoreEmptyArguments = object.ignoreEmptyArguments ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetPointsToPointsRelationshipAssociatedDataResult(): SetPointsToPointsRelationshipAssociatedDataResult {
+  return { execution: undefined };
+}
+
+export const SetPointsToPointsRelationshipAssociatedDataResult: MessageFns<
+  SetPointsToPointsRelationshipAssociatedDataResult
+> = {
+  encode(
+    message: SetPointsToPointsRelationshipAssociatedDataResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetPointsToPointsRelationshipAssociatedDataResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetPointsToPointsRelationshipAssociatedDataResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetPointsToPointsRelationshipAssociatedDataResult>,
+  ): SetPointsToPointsRelationshipAssociatedDataResult {
+    return SetPointsToPointsRelationshipAssociatedDataResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetPointsToPointsRelationshipAssociatedDataResult>,
+  ): SetPointsToPointsRelationshipAssociatedDataResult {
+    const message = createBaseSetPointsToPointsRelationshipAssociatedDataResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetRelationshipAssociatedDataRequest(): SetRelationshipAssociatedDataRequest {
+  return {
+    relationshipName: undefined,
+    individualPoints: undefined,
+    pointGroups: undefined,
+    pointClouds: undefined,
+    objects: undefined,
+    ignoreEmptyArguments: undefined,
+  };
+}
+
+export const SetRelationshipAssociatedDataRequest: MessageFns<SetRelationshipAssociatedDataRequest> = {
+  encode(message: SetRelationshipAssociatedDataRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.individualPoints !== undefined) {
+      PointNameList.encode(message.individualPoints, writer.uint32(18).fork()).join();
+    }
+    if (message.pointGroups !== undefined) {
+      CollectionObjectNameList.encode(message.pointGroups, writer.uint32(26).fork()).join();
+    }
+    if (message.pointClouds !== undefined) {
+      CollectionObjectNameList.encode(message.pointClouds, writer.uint32(34).fork()).join();
+    }
+    if (message.objects !== undefined) {
+      CollectionObjectNameList.encode(message.objects, writer.uint32(42).fork()).join();
+    }
+    if (message.ignoreEmptyArguments !== undefined) {
+      writer.uint32(48).bool(message.ignoreEmptyArguments);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetRelationshipAssociatedDataRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetRelationshipAssociatedDataRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.individualPoints = PointNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.pointGroups = CollectionObjectNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.pointClouds = CollectionObjectNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.objects = CollectionObjectNameList.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.ignoreEmptyArguments = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetRelationshipAssociatedDataRequest>): SetRelationshipAssociatedDataRequest {
+    return SetRelationshipAssociatedDataRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetRelationshipAssociatedDataRequest>): SetRelationshipAssociatedDataRequest {
+    const message = createBaseSetRelationshipAssociatedDataRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.individualPoints = (object.individualPoints !== undefined && object.individualPoints !== null)
+      ? PointNameList.fromPartial(object.individualPoints)
+      : undefined;
+    message.pointGroups = (object.pointGroups !== undefined && object.pointGroups !== null)
+      ? CollectionObjectNameList.fromPartial(object.pointGroups)
+      : undefined;
+    message.pointClouds = (object.pointClouds !== undefined && object.pointClouds !== null)
+      ? CollectionObjectNameList.fromPartial(object.pointClouds)
+      : undefined;
+    message.objects = (object.objects !== undefined && object.objects !== null)
+      ? CollectionObjectNameList.fromPartial(object.objects)
+      : undefined;
+    message.ignoreEmptyArguments = object.ignoreEmptyArguments ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetRelationshipAssociatedDataResult(): SetRelationshipAssociatedDataResult {
+  return { execution: undefined };
+}
+
+export const SetRelationshipAssociatedDataResult: MessageFns<SetRelationshipAssociatedDataResult> = {
+  encode(message: SetRelationshipAssociatedDataResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetRelationshipAssociatedDataResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetRelationshipAssociatedDataResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetRelationshipAssociatedDataResult>): SetRelationshipAssociatedDataResult {
+    return SetRelationshipAssociatedDataResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SetRelationshipAssociatedDataResult>): SetRelationshipAssociatedDataResult {
+    const message = createBaseSetRelationshipAssociatedDataResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorGroupToVectorGroupCylindricalZoneRequest(): SetVectorGroupToVectorGroupCylindricalZoneRequest {
+  return {
+    vgToVgRelationship: undefined,
+    radialOffset: undefined,
+    minimumAxialOffset: undefined,
+    maximumAxialOffset: undefined,
+  };
+}
+
+export const SetVectorGroupToVectorGroupCylindricalZoneRequest: MessageFns<
+  SetVectorGroupToVectorGroupCylindricalZoneRequest
+> = {
+  encode(
+    message: SetVectorGroupToVectorGroupCylindricalZoneRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.vgToVgRelationship !== undefined) {
+      CollectionItemName.encode(message.vgToVgRelationship, writer.uint32(10).fork()).join();
+    }
+    if (message.radialOffset !== undefined) {
+      writer.uint32(17).double(message.radialOffset);
+    }
+    if (message.minimumAxialOffset !== undefined) {
+      writer.uint32(25).double(message.minimumAxialOffset);
+    }
+    if (message.maximumAxialOffset !== undefined) {
+      writer.uint32(33).double(message.maximumAxialOffset);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorGroupToVectorGroupCylindricalZoneRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorGroupToVectorGroupCylindricalZoneRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vgToVgRelationship = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.radialOffset = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.minimumAxialOffset = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.maximumAxialOffset = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetVectorGroupToVectorGroupCylindricalZoneRequest>,
+  ): SetVectorGroupToVectorGroupCylindricalZoneRequest {
+    return SetVectorGroupToVectorGroupCylindricalZoneRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetVectorGroupToVectorGroupCylindricalZoneRequest>,
+  ): SetVectorGroupToVectorGroupCylindricalZoneRequest {
+    const message = createBaseSetVectorGroupToVectorGroupCylindricalZoneRequest();
+    message.vgToVgRelationship = (object.vgToVgRelationship !== undefined && object.vgToVgRelationship !== null)
+      ? CollectionItemName.fromPartial(object.vgToVgRelationship)
+      : undefined;
+    message.radialOffset = object.radialOffset ?? undefined;
+    message.minimumAxialOffset = object.minimumAxialOffset ?? undefined;
+    message.maximumAxialOffset = object.maximumAxialOffset ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorGroupToVectorGroupCylindricalZoneResult(): SetVectorGroupToVectorGroupCylindricalZoneResult {
+  return { execution: undefined };
+}
+
+export const SetVectorGroupToVectorGroupCylindricalZoneResult: MessageFns<
+  SetVectorGroupToVectorGroupCylindricalZoneResult
+> = {
+  encode(
+    message: SetVectorGroupToVectorGroupCylindricalZoneResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorGroupToVectorGroupCylindricalZoneResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorGroupToVectorGroupCylindricalZoneResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetVectorGroupToVectorGroupCylindricalZoneResult>,
+  ): SetVectorGroupToVectorGroupCylindricalZoneResult {
+    return SetVectorGroupToVectorGroupCylindricalZoneResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetVectorGroupToVectorGroupCylindricalZoneResult>,
+  ): SetVectorGroupToVectorGroupCylindricalZoneResult {
+    const message = createBaseSetVectorGroupToVectorGroupCylindricalZoneResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorGroupToVectorGroupFitGradientFactorRequest(): SetVectorGroupToVectorGroupFitGradientFactorRequest {
+  return { vgToVgRelationship: undefined, fitGradientFactor: undefined };
+}
+
+export const SetVectorGroupToVectorGroupFitGradientFactorRequest: MessageFns<
+  SetVectorGroupToVectorGroupFitGradientFactorRequest
+> = {
+  encode(
+    message: SetVectorGroupToVectorGroupFitGradientFactorRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.vgToVgRelationship !== undefined) {
+      CollectionItemName.encode(message.vgToVgRelationship, writer.uint32(10).fork()).join();
+    }
+    if (message.fitGradientFactor !== undefined) {
+      writer.uint32(17).double(message.fitGradientFactor);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorGroupToVectorGroupFitGradientFactorRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorGroupToVectorGroupFitGradientFactorRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vgToVgRelationship = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.fitGradientFactor = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetVectorGroupToVectorGroupFitGradientFactorRequest>,
+  ): SetVectorGroupToVectorGroupFitGradientFactorRequest {
+    return SetVectorGroupToVectorGroupFitGradientFactorRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetVectorGroupToVectorGroupFitGradientFactorRequest>,
+  ): SetVectorGroupToVectorGroupFitGradientFactorRequest {
+    const message = createBaseSetVectorGroupToVectorGroupFitGradientFactorRequest();
+    message.vgToVgRelationship = (object.vgToVgRelationship !== undefined && object.vgToVgRelationship !== null)
+      ? CollectionItemName.fromPartial(object.vgToVgRelationship)
+      : undefined;
+    message.fitGradientFactor = object.fitGradientFactor ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorGroupToVectorGroupFitGradientFactorResult(): SetVectorGroupToVectorGroupFitGradientFactorResult {
+  return { execution: undefined };
+}
+
+export const SetVectorGroupToVectorGroupFitGradientFactorResult: MessageFns<
+  SetVectorGroupToVectorGroupFitGradientFactorResult
+> = {
+  encode(
+    message: SetVectorGroupToVectorGroupFitGradientFactorResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorGroupToVectorGroupFitGradientFactorResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorGroupToVectorGroupFitGradientFactorResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetVectorGroupToVectorGroupFitGradientFactorResult>,
+  ): SetVectorGroupToVectorGroupFitGradientFactorResult {
+    return SetVectorGroupToVectorGroupFitGradientFactorResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetVectorGroupToVectorGroupFitGradientFactorResult>,
+  ): SetVectorGroupToVectorGroupFitGradientFactorResult {
+    const message = createBaseSetVectorGroupToVectorGroupFitGradientFactorResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorGroupToVectorGroupFitWeightsRequest(): SetVectorGroupToVectorGroupFitWeightsRequest {
+  return {
+    vgToVgRelationship: undefined,
+    minimumGap: undefined,
+    minimumGapFitWeight: undefined,
+    maximumGap: undefined,
+    maximumGapFitWeight: undefined,
+    nominalGap: undefined,
+    nominalGapFitWeight: undefined,
+  };
+}
+
+export const SetVectorGroupToVectorGroupFitWeightsRequest: MessageFns<SetVectorGroupToVectorGroupFitWeightsRequest> = {
+  encode(
+    message: SetVectorGroupToVectorGroupFitWeightsRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.vgToVgRelationship !== undefined) {
+      CollectionItemName.encode(message.vgToVgRelationship, writer.uint32(10).fork()).join();
+    }
+    if (message.minimumGap !== undefined) {
+      writer.uint32(17).double(message.minimumGap);
+    }
+    if (message.minimumGapFitWeight !== undefined) {
+      writer.uint32(25).double(message.minimumGapFitWeight);
+    }
+    if (message.maximumGap !== undefined) {
+      writer.uint32(33).double(message.maximumGap);
+    }
+    if (message.maximumGapFitWeight !== undefined) {
+      writer.uint32(41).double(message.maximumGapFitWeight);
+    }
+    if (message.nominalGap !== undefined) {
+      writer.uint32(49).double(message.nominalGap);
+    }
+    if (message.nominalGapFitWeight !== undefined) {
+      writer.uint32(57).double(message.nominalGapFitWeight);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorGroupToVectorGroupFitWeightsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorGroupToVectorGroupFitWeightsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vgToVgRelationship = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.minimumGap = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.minimumGapFitWeight = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.maximumGap = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.maximumGapFitWeight = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.nominalGap = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.nominalGapFitWeight = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetVectorGroupToVectorGroupFitWeightsRequest>,
+  ): SetVectorGroupToVectorGroupFitWeightsRequest {
+    return SetVectorGroupToVectorGroupFitWeightsRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetVectorGroupToVectorGroupFitWeightsRequest>,
+  ): SetVectorGroupToVectorGroupFitWeightsRequest {
+    const message = createBaseSetVectorGroupToVectorGroupFitWeightsRequest();
+    message.vgToVgRelationship = (object.vgToVgRelationship !== undefined && object.vgToVgRelationship !== null)
+      ? CollectionItemName.fromPartial(object.vgToVgRelationship)
+      : undefined;
+    message.minimumGap = object.minimumGap ?? undefined;
+    message.minimumGapFitWeight = object.minimumGapFitWeight ?? undefined;
+    message.maximumGap = object.maximumGap ?? undefined;
+    message.maximumGapFitWeight = object.maximumGapFitWeight ?? undefined;
+    message.nominalGap = object.nominalGap ?? undefined;
+    message.nominalGapFitWeight = object.nominalGapFitWeight ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorGroupToVectorGroupFitWeightsResult(): SetVectorGroupToVectorGroupFitWeightsResult {
+  return { execution: undefined };
+}
+
+export const SetVectorGroupToVectorGroupFitWeightsResult: MessageFns<SetVectorGroupToVectorGroupFitWeightsResult> = {
+  encode(
+    message: SetVectorGroupToVectorGroupFitWeightsResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorGroupToVectorGroupFitWeightsResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorGroupToVectorGroupFitWeightsResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SetVectorGroupToVectorGroupFitWeightsResult>): SetVectorGroupToVectorGroupFitWeightsResult {
+    return SetVectorGroupToVectorGroupFitWeightsResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetVectorGroupToVectorGroupFitWeightsResult>,
+  ): SetVectorGroupToVectorGroupFitWeightsResult {
+    const message = createBaseSetVectorGroupToVectorGroupFitWeightsResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorGroupToVectorGroupRelativePolarityRequest(): SetVectorGroupToVectorGroupRelativePolarityRequest {
+  return { vgToVgRelationship: undefined, setOpposingVectorGroupPolarity: undefined };
+}
+
+export const SetVectorGroupToVectorGroupRelativePolarityRequest: MessageFns<
+  SetVectorGroupToVectorGroupRelativePolarityRequest
+> = {
+  encode(
+    message: SetVectorGroupToVectorGroupRelativePolarityRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.vgToVgRelationship !== undefined) {
+      CollectionItemName.encode(message.vgToVgRelationship, writer.uint32(10).fork()).join();
+    }
+    if (message.setOpposingVectorGroupPolarity !== undefined) {
+      writer.uint32(16).bool(message.setOpposingVectorGroupPolarity);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorGroupToVectorGroupRelativePolarityRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorGroupToVectorGroupRelativePolarityRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.vgToVgRelationship = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.setOpposingVectorGroupPolarity = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetVectorGroupToVectorGroupRelativePolarityRequest>,
+  ): SetVectorGroupToVectorGroupRelativePolarityRequest {
+    return SetVectorGroupToVectorGroupRelativePolarityRequest.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetVectorGroupToVectorGroupRelativePolarityRequest>,
+  ): SetVectorGroupToVectorGroupRelativePolarityRequest {
+    const message = createBaseSetVectorGroupToVectorGroupRelativePolarityRequest();
+    message.vgToVgRelationship = (object.vgToVgRelationship !== undefined && object.vgToVgRelationship !== null)
+      ? CollectionItemName.fromPartial(object.vgToVgRelationship)
+      : undefined;
+    message.setOpposingVectorGroupPolarity = object.setOpposingVectorGroupPolarity ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetVectorGroupToVectorGroupRelativePolarityResult(): SetVectorGroupToVectorGroupRelativePolarityResult {
+  return { execution: undefined };
+}
+
+export const SetVectorGroupToVectorGroupRelativePolarityResult: MessageFns<
+  SetVectorGroupToVectorGroupRelativePolarityResult
+> = {
+  encode(
+    message: SetVectorGroupToVectorGroupRelativePolarityResult,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SetVectorGroupToVectorGroupRelativePolarityResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetVectorGroupToVectorGroupRelativePolarityResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<SetVectorGroupToVectorGroupRelativePolarityResult>,
+  ): SetVectorGroupToVectorGroupRelativePolarityResult {
+    return SetVectorGroupToVectorGroupRelativePolarityResult.fromPartial(base ?? {});
+  },
+  fromPartial(
+    object: DeepPartial<SetVectorGroupToVectorGroupRelativePolarityResult>,
+  ): SetVectorGroupToVectorGroupRelativePolarityResult {
+    const message = createBaseSetVectorGroupToVectorGroupRelativePolarityResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSigmoidalGapFitConstraints(): SigmoidalGapFitConstraints {
+  return {
+    useSigmoidalGapConstraints: false,
+    minimumGapBoundary: 0,
+    minimumGapWeight: 0,
+    maximumGapBoundary: 0,
+    maximumGapWeight: 0,
+    nominalGap: 0,
+    nominalGapWeight: 0,
+    gradientSteepnessFactor: 0,
+  };
+}
+
+export const SigmoidalGapFitConstraints: MessageFns<SigmoidalGapFitConstraints> = {
+  encode(message: SigmoidalGapFitConstraints, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.useSigmoidalGapConstraints !== undefined && message.useSigmoidalGapConstraints !== false) {
+      writer.uint32(8).bool(message.useSigmoidalGapConstraints);
+    }
+    if (message.minimumGapBoundary !== undefined && message.minimumGapBoundary !== 0) {
+      writer.uint32(17).double(message.minimumGapBoundary);
+    }
+    if (message.minimumGapWeight !== undefined && message.minimumGapWeight !== 0) {
+      writer.uint32(25).double(message.minimumGapWeight);
+    }
+    if (message.maximumGapBoundary !== undefined && message.maximumGapBoundary !== 0) {
+      writer.uint32(33).double(message.maximumGapBoundary);
+    }
+    if (message.maximumGapWeight !== undefined && message.maximumGapWeight !== 0) {
+      writer.uint32(41).double(message.maximumGapWeight);
+    }
+    if (message.nominalGap !== undefined && message.nominalGap !== 0) {
+      writer.uint32(49).double(message.nominalGap);
+    }
+    if (message.nominalGapWeight !== undefined && message.nominalGapWeight !== 0) {
+      writer.uint32(57).double(message.nominalGapWeight);
+    }
+    if (message.gradientSteepnessFactor !== undefined && message.gradientSteepnessFactor !== 0) {
+      writer.uint32(65).double(message.gradientSteepnessFactor);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SigmoidalGapFitConstraints {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSigmoidalGapFitConstraints();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.useSigmoidalGapConstraints = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.minimumGapBoundary = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 25) {
+            break;
+          }
+
+          message.minimumGapWeight = reader.double();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.maximumGapBoundary = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 41) {
+            break;
+          }
+
+          message.maximumGapWeight = reader.double();
+          continue;
+        }
+        case 6: {
+          if (tag !== 49) {
+            break;
+          }
+
+          message.nominalGap = reader.double();
+          continue;
+        }
+        case 7: {
+          if (tag !== 57) {
+            break;
+          }
+
+          message.nominalGapWeight = reader.double();
+          continue;
+        }
+        case 8: {
+          if (tag !== 65) {
+            break;
+          }
+
+          message.gradientSteepnessFactor = reader.double();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SigmoidalGapFitConstraints>): SigmoidalGapFitConstraints {
+    return SigmoidalGapFitConstraints.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SigmoidalGapFitConstraints>): SigmoidalGapFitConstraints {
+    const message = createBaseSigmoidalGapFitConstraints();
+    message.useSigmoidalGapConstraints = object.useSigmoidalGapConstraints ?? false;
+    message.minimumGapBoundary = object.minimumGapBoundary ?? 0;
+    message.minimumGapWeight = object.minimumGapWeight ?? 0;
+    message.maximumGapBoundary = object.maximumGapBoundary ?? 0;
+    message.maximumGapWeight = object.maximumGapWeight ?? 0;
+    message.nominalGap = object.nominalGap ?? 0;
+    message.nominalGapWeight = object.nominalGapWeight ?? 0;
+    message.gradientSteepnessFactor = object.gradientSteepnessFactor ?? 0;
+    return message;
+  },
+};
+
+function createBaseStartStopRelationshipTrappingRequest(): StartStopRelationshipTrappingRequest {
+  return { relationshipName: undefined, instrumentId: undefined, startTrapping: undefined };
+}
+
+export const StartStopRelationshipTrappingRequest: MessageFns<StartStopRelationshipTrappingRequest> = {
+  encode(message: StartStopRelationshipTrappingRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.relationshipName !== undefined) {
+      CollectionItemName.encode(message.relationshipName, writer.uint32(10).fork()).join();
+    }
+    if (message.instrumentId !== undefined) {
+      CollectionInstrumentId.encode(message.instrumentId, writer.uint32(18).fork()).join();
+    }
+    if (message.startTrapping !== undefined) {
+      writer.uint32(24).bool(message.startTrapping);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): StartStopRelationshipTrappingRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStartStopRelationshipTrappingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.relationshipName = CollectionItemName.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.instrumentId = CollectionInstrumentId.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.startTrapping = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<StartStopRelationshipTrappingRequest>): StartStopRelationshipTrappingRequest {
+    return StartStopRelationshipTrappingRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<StartStopRelationshipTrappingRequest>): StartStopRelationshipTrappingRequest {
+    const message = createBaseStartStopRelationshipTrappingRequest();
+    message.relationshipName = (object.relationshipName !== undefined && object.relationshipName !== null)
+      ? CollectionItemName.fromPartial(object.relationshipName)
+      : undefined;
+    message.instrumentId = (object.instrumentId !== undefined && object.instrumentId !== null)
+      ? CollectionInstrumentId.fromPartial(object.instrumentId)
+      : undefined;
+    message.startTrapping = object.startTrapping ?? undefined;
+    return message;
+  },
+};
+
+function createBaseStartStopRelationshipTrappingResult(): StartStopRelationshipTrappingResult {
+  return { execution: undefined };
+}
+
+export const StartStopRelationshipTrappingResult: MessageFns<StartStopRelationshipTrappingResult> = {
+  encode(message: StartStopRelationshipTrappingResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.execution !== undefined) {
+      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): StartStopRelationshipTrappingResult {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStartStopRelationshipTrappingResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1000: {
+          if (tag !== 8002) {
+            break;
+          }
+
+          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<StartStopRelationshipTrappingResult>): StartStopRelationshipTrappingResult {
+    return StartStopRelationshipTrappingResult.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<StartStopRelationshipTrappingResult>): StartStopRelationshipTrappingResult {
+    const message = createBaseStartStopRelationshipTrappingResult();
+    message.execution = (object.execution !== undefined && object.execution !== null)
+      ? MpExecutionDetails.fromPartial(object.execution)
+      : undefined;
+    return message;
+  },
+};
+
 export type RelationshipOperationsService = typeof RelationshipOperationsService;
 export const RelationshipOperationsService = {
   enableDisableRelationshipsForOptimization: {
@@ -9253,6 +19747,702 @@ export const RelationshipOperationsService = {
     responseDeserialize: (value: Buffer): SetRelationshipWeightsNormalizedResult =>
       SetRelationshipWeightsNormalizedResult.decode(value),
   },
+  setRelationshipAssociatedData: {
+    path: "/briosa.RelationshipOperations/SetRelationshipAssociatedData" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetRelationshipAssociatedDataRequest): Buffer =>
+      Buffer.from(SetRelationshipAssociatedDataRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetRelationshipAssociatedDataRequest =>
+      SetRelationshipAssociatedDataRequest.decode(value),
+    responseSerialize: (value: SetRelationshipAssociatedDataResult): Buffer =>
+      Buffer.from(SetRelationshipAssociatedDataResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetRelationshipAssociatedDataResult =>
+      SetRelationshipAssociatedDataResult.decode(value),
+  },
+  makeVectorGroupToVectorGroupRelationship: {
+    path: "/briosa.RelationshipOperations/MakeVectorGroupToVectorGroupRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeVectorGroupToVectorGroupRelationshipRequest): Buffer =>
+      Buffer.from(MakeVectorGroupToVectorGroupRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeVectorGroupToVectorGroupRelationshipRequest =>
+      MakeVectorGroupToVectorGroupRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeVectorGroupToVectorGroupRelationshipResult): Buffer =>
+      Buffer.from(MakeVectorGroupToVectorGroupRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeVectorGroupToVectorGroupRelationshipResult =>
+      MakeVectorGroupToVectorGroupRelationshipResult.decode(value),
+  },
+  filterGeometryRelationshipOutlierCloudPoints: {
+    path: "/briosa.RelationshipOperations/FilterGeometryRelationshipOutlierCloudPoints" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: FilterGeometryRelationshipOutlierCloudPointsRequest): Buffer =>
+      Buffer.from(FilterGeometryRelationshipOutlierCloudPointsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): FilterGeometryRelationshipOutlierCloudPointsRequest =>
+      FilterGeometryRelationshipOutlierCloudPointsRequest.decode(value),
+    responseSerialize: (value: FilterGeometryRelationshipOutlierCloudPointsResult): Buffer =>
+      Buffer.from(FilterGeometryRelationshipOutlierCloudPointsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): FilterGeometryRelationshipOutlierCloudPointsResult =>
+      FilterGeometryRelationshipOutlierCloudPointsResult.decode(value),
+  },
+  setVectorGroupToVectorGroupCylindricalZone: {
+    path: "/briosa.RelationshipOperations/SetVectorGroupToVectorGroupCylindricalZone" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetVectorGroupToVectorGroupCylindricalZoneRequest): Buffer =>
+      Buffer.from(SetVectorGroupToVectorGroupCylindricalZoneRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetVectorGroupToVectorGroupCylindricalZoneRequest =>
+      SetVectorGroupToVectorGroupCylindricalZoneRequest.decode(value),
+    responseSerialize: (value: SetVectorGroupToVectorGroupCylindricalZoneResult): Buffer =>
+      Buffer.from(SetVectorGroupToVectorGroupCylindricalZoneResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetVectorGroupToVectorGroupCylindricalZoneResult =>
+      SetVectorGroupToVectorGroupCylindricalZoneResult.decode(value),
+  },
+  doRelationshipFit: {
+    path: "/briosa.RelationshipOperations/DoRelationshipFit" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: DoRelationshipFitRequest): Buffer =>
+      Buffer.from(DoRelationshipFitRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): DoRelationshipFitRequest => DoRelationshipFitRequest.decode(value),
+    responseSerialize: (value: DoRelationshipFitResult): Buffer =>
+      Buffer.from(DoRelationshipFitResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): DoRelationshipFitResult => DoRelationshipFitResult.decode(value),
+  },
+  getGeomRelationshipCriteriaNameList: {
+    path: "/briosa.RelationshipOperations/GetGeomRelationshipCriteriaNameList" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetGeomRelationshipCriteriaNameListRequest): Buffer =>
+      Buffer.from(GetGeomRelationshipCriteriaNameListRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetGeomRelationshipCriteriaNameListRequest =>
+      GetGeomRelationshipCriteriaNameListRequest.decode(value),
+    responseSerialize: (value: GetGeomRelationshipCriteriaNameListResult): Buffer =>
+      Buffer.from(GetGeomRelationshipCriteriaNameListResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetGeomRelationshipCriteriaNameListResult =>
+      GetGeomRelationshipCriteriaNameListResult.decode(value),
+  },
+  setGroupToNominalGroupViewZooming: {
+    path: "/briosa.RelationshipOperations/SetGroupToNominalGroupViewZooming" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetGroupToNominalGroupViewZoomingRequest): Buffer =>
+      Buffer.from(SetGroupToNominalGroupViewZoomingRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetGroupToNominalGroupViewZoomingRequest =>
+      SetGroupToNominalGroupViewZoomingRequest.decode(value),
+    responseSerialize: (value: SetGroupToNominalGroupViewZoomingResult): Buffer =>
+      Buffer.from(SetGroupToNominalGroupViewZoomingResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetGroupToNominalGroupViewZoomingResult =>
+      SetGroupToNominalGroupViewZoomingResult.decode(value),
+  },
+  setVectorGroupToVectorGroupFitWeights: {
+    path: "/briosa.RelationshipOperations/SetVectorGroupToVectorGroupFitWeights" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetVectorGroupToVectorGroupFitWeightsRequest): Buffer =>
+      Buffer.from(SetVectorGroupToVectorGroupFitWeightsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetVectorGroupToVectorGroupFitWeightsRequest =>
+      SetVectorGroupToVectorGroupFitWeightsRequest.decode(value),
+    responseSerialize: (value: SetVectorGroupToVectorGroupFitWeightsResult): Buffer =>
+      Buffer.from(SetVectorGroupToVectorGroupFitWeightsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetVectorGroupToVectorGroupFitWeightsResult =>
+      SetVectorGroupToVectorGroupFitWeightsResult.decode(value),
+  },
+  makeDynamicEllipseRelationship: {
+    path: "/briosa.RelationshipOperations/MakeDynamicEllipseRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeDynamicEllipseRelationshipRequest): Buffer =>
+      Buffer.from(MakeDynamicEllipseRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeDynamicEllipseRelationshipRequest =>
+      MakeDynamicEllipseRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeDynamicEllipseRelationshipResult): Buffer =>
+      Buffer.from(MakeDynamicEllipseRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeDynamicEllipseRelationshipResult =>
+      MakeDynamicEllipseRelationshipResult.decode(value),
+  },
+  setObjectToObjectDirectionRelationshipTolerances: {
+    path: "/briosa.RelationshipOperations/SetObjectToObjectDirectionRelationshipTolerances" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetObjectToObjectDirectionRelationshipTolerancesRequest): Buffer =>
+      Buffer.from(SetObjectToObjectDirectionRelationshipTolerancesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetObjectToObjectDirectionRelationshipTolerancesRequest =>
+      SetObjectToObjectDirectionRelationshipTolerancesRequest.decode(value),
+    responseSerialize: (value: SetObjectToObjectDirectionRelationshipTolerancesResult): Buffer =>
+      Buffer.from(SetObjectToObjectDirectionRelationshipTolerancesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetObjectToObjectDirectionRelationshipTolerancesResult =>
+      SetObjectToObjectDirectionRelationshipTolerancesResult.decode(value),
+  },
+  setVectorGroupToVectorGroupFitGradientFactor: {
+    path: "/briosa.RelationshipOperations/SetVectorGroupToVectorGroupFitGradientFactor" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetVectorGroupToVectorGroupFitGradientFactorRequest): Buffer =>
+      Buffer.from(SetVectorGroupToVectorGroupFitGradientFactorRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetVectorGroupToVectorGroupFitGradientFactorRequest =>
+      SetVectorGroupToVectorGroupFitGradientFactorRequest.decode(value),
+    responseSerialize: (value: SetVectorGroupToVectorGroupFitGradientFactorResult): Buffer =>
+      Buffer.from(SetVectorGroupToVectorGroupFitGradientFactorResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetVectorGroupToVectorGroupFitGradientFactorResult =>
+      SetVectorGroupToVectorGroupFitGradientFactorResult.decode(value),
+  },
+  startStopRelationshipTrapping: {
+    path: "/briosa.RelationshipOperations/StartStopRelationshipTrapping" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: StartStopRelationshipTrappingRequest): Buffer =>
+      Buffer.from(StartStopRelationshipTrappingRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): StartStopRelationshipTrappingRequest =>
+      StartStopRelationshipTrappingRequest.decode(value),
+    responseSerialize: (value: StartStopRelationshipTrappingResult): Buffer =>
+      Buffer.from(StartStopRelationshipTrappingResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): StartStopRelationshipTrappingResult =>
+      StartStopRelationshipTrappingResult.decode(value),
+  },
+  makeDynamicCircleRelationship: {
+    path: "/briosa.RelationshipOperations/MakeDynamicCircleRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeDynamicCircleRelationshipRequest): Buffer =>
+      Buffer.from(MakeDynamicCircleRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeDynamicCircleRelationshipRequest =>
+      MakeDynamicCircleRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeDynamicCircleRelationshipResult): Buffer =>
+      Buffer.from(MakeDynamicCircleRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeDynamicCircleRelationshipResult =>
+      MakeDynamicCircleRelationshipResult.decode(value),
+  },
+  getRelationshipAssociatedData: {
+    path: "/briosa.RelationshipOperations/GetRelationshipAssociatedData" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetRelationshipAssociatedDataRequest): Buffer =>
+      Buffer.from(GetRelationshipAssociatedDataRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetRelationshipAssociatedDataRequest =>
+      GetRelationshipAssociatedDataRequest.decode(value),
+    responseSerialize: (value: GetRelationshipAssociatedDataResult): Buffer =>
+      Buffer.from(GetRelationshipAssociatedDataResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetRelationshipAssociatedDataResult =>
+      GetRelationshipAssociatedDataResult.decode(value),
+  },
+  makeDynamicPlaneRelationship: {
+    path: "/briosa.RelationshipOperations/MakeDynamicPlaneRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeDynamicPlaneRelationshipRequest): Buffer =>
+      Buffer.from(MakeDynamicPlaneRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeDynamicPlaneRelationshipRequest =>
+      MakeDynamicPlaneRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeDynamicPlaneRelationshipResult): Buffer =>
+      Buffer.from(MakeDynamicPlaneRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeDynamicPlaneRelationshipResult =>
+      MakeDynamicPlaneRelationshipResult.decode(value),
+  },
+  makePointToPointRelationship: {
+    path: "/briosa.RelationshipOperations/MakePointToPointRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakePointToPointRelationshipRequest): Buffer =>
+      Buffer.from(MakePointToPointRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakePointToPointRelationshipRequest =>
+      MakePointToPointRelationshipRequest.decode(value),
+    responseSerialize: (value: MakePointToPointRelationshipResult): Buffer =>
+      Buffer.from(MakePointToPointRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakePointToPointRelationshipResult =>
+      MakePointToPointRelationshipResult.decode(value),
+  },
+  autoFilterPointsGroupsCloudsToSurfaceFaces: {
+    path: "/briosa.RelationshipOperations/AutoFilterPointsGroupsCloudsToSurfaceFaces" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: AutoFilterPointsGroupsCloudsToSurfaceFacesRequest): Buffer =>
+      Buffer.from(AutoFilterPointsGroupsCloudsToSurfaceFacesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): AutoFilterPointsGroupsCloudsToSurfaceFacesRequest =>
+      AutoFilterPointsGroupsCloudsToSurfaceFacesRequest.decode(value),
+    responseSerialize: (value: AutoFilterPointsGroupsCloudsToSurfaceFacesResult): Buffer =>
+      Buffer.from(AutoFilterPointsGroupsCloudsToSurfaceFacesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): AutoFilterPointsGroupsCloudsToSurfaceFacesResult =>
+      AutoFilterPointsGroupsCloudsToSurfaceFacesResult.decode(value),
+  },
+  makeGeometryFitAndCompareToNominalRelationship: {
+    path: "/briosa.RelationshipOperations/MakeGeometryFitAndCompareToNominalRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeGeometryFitAndCompareToNominalRelationshipRequest): Buffer =>
+      Buffer.from(MakeGeometryFitAndCompareToNominalRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeGeometryFitAndCompareToNominalRelationshipRequest =>
+      MakeGeometryFitAndCompareToNominalRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeGeometryFitAndCompareToNominalRelationshipResult): Buffer =>
+      Buffer.from(MakeGeometryFitAndCompareToNominalRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeGeometryFitAndCompareToNominalRelationshipResult =>
+      MakeGeometryFitAndCompareToNominalRelationshipResult.decode(value),
+  },
+  createPointsToObjectsMap: {
+    path: "/briosa.RelationshipOperations/CreatePointsToObjectsMap" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: CreatePointsToObjectsMapRequest): Buffer =>
+      Buffer.from(CreatePointsToObjectsMapRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): CreatePointsToObjectsMapRequest =>
+      CreatePointsToObjectsMapRequest.decode(value),
+    responseSerialize: (value: CreatePointsToObjectsMapResult): Buffer =>
+      Buffer.from(CreatePointsToObjectsMapResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): CreatePointsToObjectsMapResult =>
+      CreatePointsToObjectsMapResult.decode(value),
+  },
+  makeCloudToSwatchRelationship: {
+    path: "/briosa.RelationshipOperations/MakeCloudToSwatchRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeCloudToSwatchRelationshipRequest): Buffer =>
+      Buffer.from(MakeCloudToSwatchRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeCloudToSwatchRelationshipRequest =>
+      MakeCloudToSwatchRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeCloudToSwatchRelationshipResult): Buffer =>
+      Buffer.from(MakeCloudToSwatchRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeCloudToSwatchRelationshipResult =>
+      MakeCloudToSwatchRelationshipResult.decode(value),
+  },
+  makeGeometryCompareOnlyRelationship: {
+    path: "/briosa.RelationshipOperations/MakeGeometryCompareOnlyRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeGeometryCompareOnlyRelationshipRequest): Buffer =>
+      Buffer.from(MakeGeometryCompareOnlyRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeGeometryCompareOnlyRelationshipRequest =>
+      MakeGeometryCompareOnlyRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeGeometryCompareOnlyRelationshipResult): Buffer =>
+      Buffer.from(MakeGeometryCompareOnlyRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeGeometryCompareOnlyRelationshipResult =>
+      MakeGeometryCompareOnlyRelationshipResult.decode(value),
+  },
+  makeDynamicLineRelationship: {
+    path: "/briosa.RelationshipOperations/MakeDynamicLineRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeDynamicLineRelationshipRequest): Buffer =>
+      Buffer.from(MakeDynamicLineRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeDynamicLineRelationshipRequest =>
+      MakeDynamicLineRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeDynamicLineRelationshipResult): Buffer =>
+      Buffer.from(MakeDynamicLineRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeDynamicLineRelationshipResult =>
+      MakeDynamicLineRelationshipResult.decode(value),
+  },
+  autoFilterCloudsToNominalGeometry2D: {
+    path: "/briosa.RelationshipOperations/AutoFilterCloudsToNominalGeometry2D" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: AutoFilterCloudsToNominalGeometry2DRequest): Buffer =>
+      Buffer.from(AutoFilterCloudsToNominalGeometry2DRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): AutoFilterCloudsToNominalGeometry2DRequest =>
+      AutoFilterCloudsToNominalGeometry2DRequest.decode(value),
+    responseSerialize: (value: AutoFilterCloudsToNominalGeometry2DResult): Buffer =>
+      Buffer.from(AutoFilterCloudsToNominalGeometry2DResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): AutoFilterCloudsToNominalGeometry2DResult =>
+      AutoFilterCloudsToNominalGeometry2DResult.decode(value),
+  },
+  makeDynamicPointRelationship: {
+    path: "/briosa.RelationshipOperations/MakeDynamicPointRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeDynamicPointRelationshipRequest): Buffer =>
+      Buffer.from(MakeDynamicPointRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeDynamicPointRelationshipRequest =>
+      MakeDynamicPointRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeDynamicPointRelationshipResult): Buffer =>
+      Buffer.from(MakeDynamicPointRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeDynamicPointRelationshipResult =>
+      MakeDynamicPointRelationshipResult.decode(value),
+  },
+  makeObjectToObjectDirectionRelationship: {
+    path: "/briosa.RelationshipOperations/MakeObjectToObjectDirectionRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeObjectToObjectDirectionRelationshipRequest): Buffer =>
+      Buffer.from(MakeObjectToObjectDirectionRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeObjectToObjectDirectionRelationshipRequest =>
+      MakeObjectToObjectDirectionRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeObjectToObjectDirectionRelationshipResult): Buffer =>
+      Buffer.from(MakeObjectToObjectDirectionRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeObjectToObjectDirectionRelationshipResult =>
+      MakeObjectToObjectDirectionRelationshipResult.decode(value),
+  },
+  getPointsToPointsRelationshipAssociatedData: {
+    path: "/briosa.RelationshipOperations/GetPointsToPointsRelationshipAssociatedData" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointsToPointsRelationshipAssociatedDataRequest): Buffer =>
+      Buffer.from(GetPointsToPointsRelationshipAssociatedDataRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointsToPointsRelationshipAssociatedDataRequest =>
+      GetPointsToPointsRelationshipAssociatedDataRequest.decode(value),
+    responseSerialize: (value: GetPointsToPointsRelationshipAssociatedDataResult): Buffer =>
+      Buffer.from(GetPointsToPointsRelationshipAssociatedDataResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointsToPointsRelationshipAssociatedDataResult =>
+      GetPointsToPointsRelationshipAssociatedDataResult.decode(value),
+  },
+  setPointsToPointsRelationshipAssociatedData: {
+    path: "/briosa.RelationshipOperations/SetPointsToPointsRelationshipAssociatedData" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetPointsToPointsRelationshipAssociatedDataRequest): Buffer =>
+      Buffer.from(SetPointsToPointsRelationshipAssociatedDataRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetPointsToPointsRelationshipAssociatedDataRequest =>
+      SetPointsToPointsRelationshipAssociatedDataRequest.decode(value),
+    responseSerialize: (value: SetPointsToPointsRelationshipAssociatedDataResult): Buffer =>
+      Buffer.from(SetPointsToPointsRelationshipAssociatedDataResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetPointsToPointsRelationshipAssociatedDataResult =>
+      SetPointsToPointsRelationshipAssociatedDataResult.decode(value),
+  },
+  getPointToPointRelationshipStatistics: {
+    path: "/briosa.RelationshipOperations/GetPointToPointRelationshipStatistics" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointToPointRelationshipStatisticsRequest): Buffer =>
+      Buffer.from(GetPointToPointRelationshipStatisticsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointToPointRelationshipStatisticsRequest =>
+      GetPointToPointRelationshipStatisticsRequest.decode(value),
+    responseSerialize: (value: GetPointToPointRelationshipStatisticsResult): Buffer =>
+      Buffer.from(GetPointToPointRelationshipStatisticsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointToPointRelationshipStatisticsResult =>
+      GetPointToPointRelationshipStatisticsResult.decode(value),
+  },
+  makeFrameToFrameRelationship: {
+    path: "/briosa.RelationshipOperations/MakeFrameToFrameRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeFrameToFrameRelationshipRequest): Buffer =>
+      Buffer.from(MakeFrameToFrameRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeFrameToFrameRelationshipRequest =>
+      MakeFrameToFrameRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeFrameToFrameRelationshipResult): Buffer =>
+      Buffer.from(MakeFrameToFrameRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeFrameToFrameRelationshipResult =>
+      MakeFrameToFrameRelationshipResult.decode(value),
+  },
+  setVectorGroupToVectorGroupRelativePolarity: {
+    path: "/briosa.RelationshipOperations/SetVectorGroupToVectorGroupRelativePolarity" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetVectorGroupToVectorGroupRelativePolarityRequest): Buffer =>
+      Buffer.from(SetVectorGroupToVectorGroupRelativePolarityRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetVectorGroupToVectorGroupRelativePolarityRequest =>
+      SetVectorGroupToVectorGroupRelativePolarityRequest.decode(value),
+    responseSerialize: (value: SetVectorGroupToVectorGroupRelativePolarityResult): Buffer =>
+      Buffer.from(SetVectorGroupToVectorGroupRelativePolarityResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetVectorGroupToVectorGroupRelativePolarityResult =>
+      SetVectorGroupToVectorGroupRelativePolarityResult.decode(value),
+  },
+  makePointsToObjectsRelationship: {
+    path: "/briosa.RelationshipOperations/MakePointsToObjectsRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakePointsToObjectsRelationshipRequest): Buffer =>
+      Buffer.from(MakePointsToObjectsRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakePointsToObjectsRelationshipRequest =>
+      MakePointsToObjectsRelationshipRequest.decode(value),
+    responseSerialize: (value: MakePointsToObjectsRelationshipResult): Buffer =>
+      Buffer.from(MakePointsToObjectsRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakePointsToObjectsRelationshipResult =>
+      MakePointsToObjectsRelationshipResult.decode(value),
+  },
+  makeGroupToGroupRelationship: {
+    path: "/briosa.RelationshipOperations/MakeGroupToGroupRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeGroupToGroupRelationshipRequest): Buffer =>
+      Buffer.from(MakeGroupToGroupRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeGroupToGroupRelationshipRequest =>
+      MakeGroupToGroupRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeGroupToGroupRelationshipResult): Buffer =>
+      Buffer.from(MakeGroupToGroupRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeGroupToGroupRelationshipResult =>
+      MakeGroupToGroupRelationshipResult.decode(value),
+  },
+  deleteRelationship: {
+    path: "/briosa.RelationshipOperations/DeleteRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: DeleteRelationshipRequest): Buffer =>
+      Buffer.from(DeleteRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): DeleteRelationshipRequest => DeleteRelationshipRequest.decode(value),
+    responseSerialize: (value: DeleteRelationshipResult): Buffer =>
+      Buffer.from(DeleteRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): DeleteRelationshipResult => DeleteRelationshipResult.decode(value),
+  },
+  makeAveragePointRelationship: {
+    path: "/briosa.RelationshipOperations/MakeAveragePointRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeAveragePointRelationshipRequest): Buffer =>
+      Buffer.from(MakeAveragePointRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeAveragePointRelationshipRequest =>
+      MakeAveragePointRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeAveragePointRelationshipResult): Buffer =>
+      Buffer.from(MakeAveragePointRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeAveragePointRelationshipResult =>
+      MakeAveragePointRelationshipResult.decode(value),
+  },
+  setOptimizationPerturbationParameters: {
+    path: "/briosa.RelationshipOperations/SetOptimizationPerturbationParameters" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetOptimizationPerturbationParametersRequest): Buffer =>
+      Buffer.from(SetOptimizationPerturbationParametersRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetOptimizationPerturbationParametersRequest =>
+      SetOptimizationPerturbationParametersRequest.decode(value),
+    responseSerialize: (value: SetOptimizationPerturbationParametersResult): Buffer =>
+      Buffer.from(SetOptimizationPerturbationParametersResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetOptimizationPerturbationParametersResult =>
+      SetOptimizationPerturbationParametersResult.decode(value),
+  },
+  getObjectsFromPointsToObjectsMapPointList: {
+    path: "/briosa.RelationshipOperations/GetObjectsFromPointsToObjectsMapPointList" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetObjectsFromPointsToObjectsMapPointListRequest): Buffer =>
+      Buffer.from(GetObjectsFromPointsToObjectsMapPointListRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetObjectsFromPointsToObjectsMapPointListRequest =>
+      GetObjectsFromPointsToObjectsMapPointListRequest.decode(value),
+    responseSerialize: (value: GetObjectsFromPointsToObjectsMapPointListResult): Buffer =>
+      Buffer.from(GetObjectsFromPointsToObjectsMapPointListResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetObjectsFromPointsToObjectsMapPointListResult =>
+      GetObjectsFromPointsToObjectsMapPointListResult.decode(value),
+  },
+  setOptimizationSearchOptions: {
+    path: "/briosa.RelationshipOperations/SetOptimizationSearchOptions" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: SetOptimizationSearchOptionsRequest): Buffer =>
+      Buffer.from(SetOptimizationSearchOptionsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SetOptimizationSearchOptionsRequest =>
+      SetOptimizationSearchOptionsRequest.decode(value),
+    responseSerialize: (value: SetOptimizationSearchOptionsResult): Buffer =>
+      Buffer.from(SetOptimizationSearchOptionsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SetOptimizationSearchOptionsResult =>
+      SetOptimizationSearchOptionsResult.decode(value),
+  },
+  getRelationshipSigmoidalGapFitConstraints: {
+    path: "/briosa.RelationshipOperations/GetRelationshipSigmoidalGapFitConstraints" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetRelationshipSigmoidalGapFitConstraintsRequest): Buffer =>
+      Buffer.from(GetRelationshipSigmoidalGapFitConstraintsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetRelationshipSigmoidalGapFitConstraintsRequest =>
+      GetRelationshipSigmoidalGapFitConstraintsRequest.decode(value),
+    responseSerialize: (value: GetRelationshipSigmoidalGapFitConstraintsResult): Buffer =>
+      Buffer.from(GetRelationshipSigmoidalGapFitConstraintsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetRelationshipSigmoidalGapFitConstraintsResult =>
+      GetRelationshipSigmoidalGapFitConstraintsResult.decode(value),
+  },
+  relationshipWatchWindowTemplate: {
+    path: "/briosa.RelationshipOperations/RelationshipWatchWindowTemplate" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: RelationshipWatchWindowTemplateRequest): Buffer =>
+      Buffer.from(RelationshipWatchWindowTemplateRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): RelationshipWatchWindowTemplateRequest =>
+      RelationshipWatchWindowTemplateRequest.decode(value),
+    responseSerialize: (value: RelationshipWatchWindowTemplateResult): Buffer =>
+      Buffer.from(RelationshipWatchWindowTemplateResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): RelationshipWatchWindowTemplateResult =>
+      RelationshipWatchWindowTemplateResult.decode(value),
+  },
+  extractGeometryFromPointClouds: {
+    path: "/briosa.RelationshipOperations/ExtractGeometryFromPointClouds" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ExtractGeometryFromPointCloudsRequest): Buffer =>
+      Buffer.from(ExtractGeometryFromPointCloudsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ExtractGeometryFromPointCloudsRequest =>
+      ExtractGeometryFromPointCloudsRequest.decode(value),
+    responseSerialize: (value: ExtractGeometryFromPointCloudsResult): Buffer =>
+      Buffer.from(ExtractGeometryFromPointCloudsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ExtractGeometryFromPointCloudsResult =>
+      ExtractGeometryFromPointCloudsResult.decode(value),
+  },
+  makeGroupsToObjectsRelationship: {
+    path: "/briosa.RelationshipOperations/MakeGroupsToObjectsRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeGroupsToObjectsRelationshipRequest): Buffer =>
+      Buffer.from(MakeGroupsToObjectsRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeGroupsToObjectsRelationshipRequest =>
+      MakeGroupsToObjectsRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeGroupsToObjectsRelationshipResult): Buffer =>
+      Buffer.from(MakeGroupsToObjectsRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeGroupsToObjectsRelationshipResult =>
+      MakeGroupsToObjectsRelationshipResult.decode(value),
+  },
+  computeGeometryRelationshipUncertainties: {
+    path: "/briosa.RelationshipOperations/ComputeGeometryRelationshipUncertainties" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ComputeGeometryRelationshipUncertaintiesRequest): Buffer =>
+      Buffer.from(ComputeGeometryRelationshipUncertaintiesRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ComputeGeometryRelationshipUncertaintiesRequest =>
+      ComputeGeometryRelationshipUncertaintiesRequest.decode(value),
+    responseSerialize: (value: ComputeGeometryRelationshipUncertaintiesResult): Buffer =>
+      Buffer.from(ComputeGeometryRelationshipUncertaintiesResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ComputeGeometryRelationshipUncertaintiesResult =>
+      ComputeGeometryRelationshipUncertaintiesResult.decode(value),
+  },
+  getPointsToObjectsRelationshipStatistics: {
+    path: "/briosa.RelationshipOperations/GetPointsToObjectsRelationshipStatistics" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetPointsToObjectsRelationshipStatisticsRequest): Buffer =>
+      Buffer.from(GetPointsToObjectsRelationshipStatisticsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetPointsToObjectsRelationshipStatisticsRequest =>
+      GetPointsToObjectsRelationshipStatisticsRequest.decode(value),
+    responseSerialize: (value: GetPointsToObjectsRelationshipStatisticsResult): Buffer =>
+      Buffer.from(GetPointsToObjectsRelationshipStatisticsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetPointsToObjectsRelationshipStatisticsResult =>
+      GetPointsToObjectsRelationshipStatisticsResult.decode(value),
+  },
+  getRelationshipStatus: {
+    path: "/briosa.RelationshipOperations/GetRelationshipStatus" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetRelationshipStatusRequest): Buffer =>
+      Buffer.from(GetRelationshipStatusRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetRelationshipStatusRequest => GetRelationshipStatusRequest.decode(value),
+    responseSerialize: (value: GetRelationshipStatusResult): Buffer =>
+      Buffer.from(GetRelationshipStatusResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetRelationshipStatusResult => GetRelationshipStatusResult.decode(value),
+  },
+  autoFilterPointsToNominalGeometry3D: {
+    path: "/briosa.RelationshipOperations/AutoFilterPointsToNominalGeometry3D" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: AutoFilterPointsToNominalGeometry3DRequest): Buffer =>
+      Buffer.from(AutoFilterPointsToNominalGeometry3DRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): AutoFilterPointsToNominalGeometry3DRequest =>
+      AutoFilterPointsToNominalGeometry3DRequest.decode(value),
+    responseSerialize: (value: AutoFilterPointsToNominalGeometry3DResult): Buffer =>
+      Buffer.from(AutoFilterPointsToNominalGeometry3DResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): AutoFilterPointsToNominalGeometry3DResult =>
+      AutoFilterPointsToNominalGeometry3DResult.decode(value),
+  },
+  makeGeometryFitOnlyRelationship: {
+    path: "/briosa.RelationshipOperations/MakeGeometryFitOnlyRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeGeometryFitOnlyRelationshipRequest): Buffer =>
+      Buffer.from(MakeGeometryFitOnlyRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeGeometryFitOnlyRelationshipRequest =>
+      MakeGeometryFitOnlyRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeGeometryFitOnlyRelationshipResult): Buffer =>
+      Buffer.from(MakeGeometryFitOnlyRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeGeometryFitOnlyRelationshipResult =>
+      MakeGeometryFitOnlyRelationshipResult.decode(value),
+  },
+  makePointCloudsToObjectsRelationship: {
+    path: "/briosa.RelationshipOperations/MakePointCloudsToObjectsRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakePointCloudsToObjectsRelationshipRequest): Buffer =>
+      Buffer.from(MakePointCloudsToObjectsRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakePointCloudsToObjectsRelationshipRequest =>
+      MakePointCloudsToObjectsRelationshipRequest.decode(value),
+    responseSerialize: (value: MakePointCloudsToObjectsRelationshipResult): Buffer =>
+      Buffer.from(MakePointCloudsToObjectsRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakePointCloudsToObjectsRelationshipResult =>
+      MakePointCloudsToObjectsRelationshipResult.decode(value),
+  },
+  editGeometryRelationshipPointList: {
+    path: "/briosa.RelationshipOperations/EditGeometryRelationshipPointList" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: EditGeometryRelationshipPointListRequest): Buffer =>
+      Buffer.from(EditGeometryRelationshipPointListRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): EditGeometryRelationshipPointListRequest =>
+      EditGeometryRelationshipPointListRequest.decode(value),
+    responseSerialize: (value: EditGeometryRelationshipPointListResult): Buffer =>
+      Buffer.from(EditGeometryRelationshipPointListResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): EditGeometryRelationshipPointListResult =>
+      EditGeometryRelationshipPointListResult.decode(value),
+  },
+  getGeneralRelationshipStatistics: {
+    path: "/briosa.RelationshipOperations/GetGeneralRelationshipStatistics" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GetGeneralRelationshipStatisticsRequest): Buffer =>
+      Buffer.from(GetGeneralRelationshipStatisticsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetGeneralRelationshipStatisticsRequest =>
+      GetGeneralRelationshipStatisticsRequest.decode(value),
+    responseSerialize: (value: GetGeneralRelationshipStatisticsResult): Buffer =>
+      Buffer.from(GetGeneralRelationshipStatisticsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetGeneralRelationshipStatisticsResult =>
+      GetGeneralRelationshipStatisticsResult.decode(value),
+  },
+  makeGroupToNominalGroupRelationship: {
+    path: "/briosa.RelationshipOperations/MakeGroupToNominalGroupRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakeGroupToNominalGroupRelationshipRequest): Buffer =>
+      Buffer.from(MakeGroupToNominalGroupRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakeGroupToNominalGroupRelationshipRequest =>
+      MakeGroupToNominalGroupRelationshipRequest.decode(value),
+    responseSerialize: (value: MakeGroupToNominalGroupRelationshipResult): Buffer =>
+      Buffer.from(MakeGroupToNominalGroupRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakeGroupToNominalGroupRelationshipResult =>
+      MakeGroupToNominalGroupRelationshipResult.decode(value),
+  },
+  generateGeometryRelationshipSummary: {
+    path: "/briosa.RelationshipOperations/GenerateGeometryRelationshipSummary" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: GenerateGeometryRelationshipSummaryRequest): Buffer =>
+      Buffer.from(GenerateGeometryRelationshipSummaryRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GenerateGeometryRelationshipSummaryRequest =>
+      GenerateGeometryRelationshipSummaryRequest.decode(value),
+    responseSerialize: (value: GenerateGeometryRelationshipSummaryResult): Buffer =>
+      Buffer.from(GenerateGeometryRelationshipSummaryResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GenerateGeometryRelationshipSummaryResult =>
+      GenerateGeometryRelationshipSummaryResult.decode(value),
+  },
+  moveCollectionsByMinimizingRelationships: {
+    path: "/briosa.RelationshipOperations/MoveCollectionsByMinimizingRelationships" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MoveCollectionsByMinimizingRelationshipsRequest): Buffer =>
+      Buffer.from(MoveCollectionsByMinimizingRelationshipsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MoveCollectionsByMinimizingRelationshipsRequest =>
+      MoveCollectionsByMinimizingRelationshipsRequest.decode(value),
+    responseSerialize: (value: MoveCollectionsByMinimizingRelationshipsResult): Buffer =>
+      Buffer.from(MoveCollectionsByMinimizingRelationshipsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MoveCollectionsByMinimizingRelationshipsResult =>
+      MoveCollectionsByMinimizingRelationshipsResult.decode(value),
+  },
+  makePointsToPointsRelationship: {
+    path: "/briosa.RelationshipOperations/MakePointsToPointsRelationship" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: MakePointsToPointsRelationshipRequest): Buffer =>
+      Buffer.from(MakePointsToPointsRelationshipRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): MakePointsToPointsRelationshipRequest =>
+      MakePointsToPointsRelationshipRequest.decode(value),
+    responseSerialize: (value: MakePointsToPointsRelationshipResult): Buffer =>
+      Buffer.from(MakePointsToPointsRelationshipResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): MakePointsToPointsRelationshipResult =>
+      MakePointsToPointsRelationshipResult.decode(value),
+  },
+  autoFilterCloudsToNominalGeometry3D: {
+    path: "/briosa.RelationshipOperations/AutoFilterCloudsToNominalGeometry3D" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: AutoFilterCloudsToNominalGeometry3DRequest): Buffer =>
+      Buffer.from(AutoFilterCloudsToNominalGeometry3DRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): AutoFilterCloudsToNominalGeometry3DRequest =>
+      AutoFilterCloudsToNominalGeometry3DRequest.decode(value),
+    responseSerialize: (value: AutoFilterCloudsToNominalGeometry3DResult): Buffer =>
+      Buffer.from(AutoFilterCloudsToNominalGeometry3DResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer): AutoFilterCloudsToNominalGeometry3DResult =>
+      AutoFilterCloudsToNominalGeometry3DResult.decode(value),
+  },
 } as const;
 
 export interface RelationshipOperationsServer extends UntypedServiceImplementation {
@@ -9448,6 +20638,207 @@ export interface RelationshipOperationsServer extends UntypedServiceImplementati
   setRelationshipWeightsNormalized: handleUnaryCall<
     SetRelationshipWeightsNormalizedRequest,
     SetRelationshipWeightsNormalizedResult
+  >;
+  setRelationshipAssociatedData: handleUnaryCall<
+    SetRelationshipAssociatedDataRequest,
+    SetRelationshipAssociatedDataResult
+  >;
+  makeVectorGroupToVectorGroupRelationship: handleUnaryCall<
+    MakeVectorGroupToVectorGroupRelationshipRequest,
+    MakeVectorGroupToVectorGroupRelationshipResult
+  >;
+  filterGeometryRelationshipOutlierCloudPoints: handleUnaryCall<
+    FilterGeometryRelationshipOutlierCloudPointsRequest,
+    FilterGeometryRelationshipOutlierCloudPointsResult
+  >;
+  setVectorGroupToVectorGroupCylindricalZone: handleUnaryCall<
+    SetVectorGroupToVectorGroupCylindricalZoneRequest,
+    SetVectorGroupToVectorGroupCylindricalZoneResult
+  >;
+  doRelationshipFit: handleUnaryCall<DoRelationshipFitRequest, DoRelationshipFitResult>;
+  getGeomRelationshipCriteriaNameList: handleUnaryCall<
+    GetGeomRelationshipCriteriaNameListRequest,
+    GetGeomRelationshipCriteriaNameListResult
+  >;
+  setGroupToNominalGroupViewZooming: handleUnaryCall<
+    SetGroupToNominalGroupViewZoomingRequest,
+    SetGroupToNominalGroupViewZoomingResult
+  >;
+  setVectorGroupToVectorGroupFitWeights: handleUnaryCall<
+    SetVectorGroupToVectorGroupFitWeightsRequest,
+    SetVectorGroupToVectorGroupFitWeightsResult
+  >;
+  makeDynamicEllipseRelationship: handleUnaryCall<
+    MakeDynamicEllipseRelationshipRequest,
+    MakeDynamicEllipseRelationshipResult
+  >;
+  setObjectToObjectDirectionRelationshipTolerances: handleUnaryCall<
+    SetObjectToObjectDirectionRelationshipTolerancesRequest,
+    SetObjectToObjectDirectionRelationshipTolerancesResult
+  >;
+  setVectorGroupToVectorGroupFitGradientFactor: handleUnaryCall<
+    SetVectorGroupToVectorGroupFitGradientFactorRequest,
+    SetVectorGroupToVectorGroupFitGradientFactorResult
+  >;
+  startStopRelationshipTrapping: handleUnaryCall<
+    StartStopRelationshipTrappingRequest,
+    StartStopRelationshipTrappingResult
+  >;
+  makeDynamicCircleRelationship: handleUnaryCall<
+    MakeDynamicCircleRelationshipRequest,
+    MakeDynamicCircleRelationshipResult
+  >;
+  getRelationshipAssociatedData: handleUnaryCall<
+    GetRelationshipAssociatedDataRequest,
+    GetRelationshipAssociatedDataResult
+  >;
+  makeDynamicPlaneRelationship: handleUnaryCall<
+    MakeDynamicPlaneRelationshipRequest,
+    MakeDynamicPlaneRelationshipResult
+  >;
+  makePointToPointRelationship: handleUnaryCall<
+    MakePointToPointRelationshipRequest,
+    MakePointToPointRelationshipResult
+  >;
+  autoFilterPointsGroupsCloudsToSurfaceFaces: handleUnaryCall<
+    AutoFilterPointsGroupsCloudsToSurfaceFacesRequest,
+    AutoFilterPointsGroupsCloudsToSurfaceFacesResult
+  >;
+  makeGeometryFitAndCompareToNominalRelationship: handleUnaryCall<
+    MakeGeometryFitAndCompareToNominalRelationshipRequest,
+    MakeGeometryFitAndCompareToNominalRelationshipResult
+  >;
+  createPointsToObjectsMap: handleUnaryCall<CreatePointsToObjectsMapRequest, CreatePointsToObjectsMapResult>;
+  makeCloudToSwatchRelationship: handleUnaryCall<
+    MakeCloudToSwatchRelationshipRequest,
+    MakeCloudToSwatchRelationshipResult
+  >;
+  makeGeometryCompareOnlyRelationship: handleUnaryCall<
+    MakeGeometryCompareOnlyRelationshipRequest,
+    MakeGeometryCompareOnlyRelationshipResult
+  >;
+  makeDynamicLineRelationship: handleUnaryCall<MakeDynamicLineRelationshipRequest, MakeDynamicLineRelationshipResult>;
+  autoFilterCloudsToNominalGeometry2D: handleUnaryCall<
+    AutoFilterCloudsToNominalGeometry2DRequest,
+    AutoFilterCloudsToNominalGeometry2DResult
+  >;
+  makeDynamicPointRelationship: handleUnaryCall<
+    MakeDynamicPointRelationshipRequest,
+    MakeDynamicPointRelationshipResult
+  >;
+  makeObjectToObjectDirectionRelationship: handleUnaryCall<
+    MakeObjectToObjectDirectionRelationshipRequest,
+    MakeObjectToObjectDirectionRelationshipResult
+  >;
+  getPointsToPointsRelationshipAssociatedData: handleUnaryCall<
+    GetPointsToPointsRelationshipAssociatedDataRequest,
+    GetPointsToPointsRelationshipAssociatedDataResult
+  >;
+  setPointsToPointsRelationshipAssociatedData: handleUnaryCall<
+    SetPointsToPointsRelationshipAssociatedDataRequest,
+    SetPointsToPointsRelationshipAssociatedDataResult
+  >;
+  getPointToPointRelationshipStatistics: handleUnaryCall<
+    GetPointToPointRelationshipStatisticsRequest,
+    GetPointToPointRelationshipStatisticsResult
+  >;
+  makeFrameToFrameRelationship: handleUnaryCall<
+    MakeFrameToFrameRelationshipRequest,
+    MakeFrameToFrameRelationshipResult
+  >;
+  setVectorGroupToVectorGroupRelativePolarity: handleUnaryCall<
+    SetVectorGroupToVectorGroupRelativePolarityRequest,
+    SetVectorGroupToVectorGroupRelativePolarityResult
+  >;
+  makePointsToObjectsRelationship: handleUnaryCall<
+    MakePointsToObjectsRelationshipRequest,
+    MakePointsToObjectsRelationshipResult
+  >;
+  makeGroupToGroupRelationship: handleUnaryCall<
+    MakeGroupToGroupRelationshipRequest,
+    MakeGroupToGroupRelationshipResult
+  >;
+  deleteRelationship: handleUnaryCall<DeleteRelationshipRequest, DeleteRelationshipResult>;
+  makeAveragePointRelationship: handleUnaryCall<
+    MakeAveragePointRelationshipRequest,
+    MakeAveragePointRelationshipResult
+  >;
+  setOptimizationPerturbationParameters: handleUnaryCall<
+    SetOptimizationPerturbationParametersRequest,
+    SetOptimizationPerturbationParametersResult
+  >;
+  getObjectsFromPointsToObjectsMapPointList: handleUnaryCall<
+    GetObjectsFromPointsToObjectsMapPointListRequest,
+    GetObjectsFromPointsToObjectsMapPointListResult
+  >;
+  setOptimizationSearchOptions: handleUnaryCall<
+    SetOptimizationSearchOptionsRequest,
+    SetOptimizationSearchOptionsResult
+  >;
+  getRelationshipSigmoidalGapFitConstraints: handleUnaryCall<
+    GetRelationshipSigmoidalGapFitConstraintsRequest,
+    GetRelationshipSigmoidalGapFitConstraintsResult
+  >;
+  relationshipWatchWindowTemplate: handleUnaryCall<
+    RelationshipWatchWindowTemplateRequest,
+    RelationshipWatchWindowTemplateResult
+  >;
+  extractGeometryFromPointClouds: handleUnaryCall<
+    ExtractGeometryFromPointCloudsRequest,
+    ExtractGeometryFromPointCloudsResult
+  >;
+  makeGroupsToObjectsRelationship: handleUnaryCall<
+    MakeGroupsToObjectsRelationshipRequest,
+    MakeGroupsToObjectsRelationshipResult
+  >;
+  computeGeometryRelationshipUncertainties: handleUnaryCall<
+    ComputeGeometryRelationshipUncertaintiesRequest,
+    ComputeGeometryRelationshipUncertaintiesResult
+  >;
+  getPointsToObjectsRelationshipStatistics: handleUnaryCall<
+    GetPointsToObjectsRelationshipStatisticsRequest,
+    GetPointsToObjectsRelationshipStatisticsResult
+  >;
+  getRelationshipStatus: handleUnaryCall<GetRelationshipStatusRequest, GetRelationshipStatusResult>;
+  autoFilterPointsToNominalGeometry3D: handleUnaryCall<
+    AutoFilterPointsToNominalGeometry3DRequest,
+    AutoFilterPointsToNominalGeometry3DResult
+  >;
+  makeGeometryFitOnlyRelationship: handleUnaryCall<
+    MakeGeometryFitOnlyRelationshipRequest,
+    MakeGeometryFitOnlyRelationshipResult
+  >;
+  makePointCloudsToObjectsRelationship: handleUnaryCall<
+    MakePointCloudsToObjectsRelationshipRequest,
+    MakePointCloudsToObjectsRelationshipResult
+  >;
+  editGeometryRelationshipPointList: handleUnaryCall<
+    EditGeometryRelationshipPointListRequest,
+    EditGeometryRelationshipPointListResult
+  >;
+  getGeneralRelationshipStatistics: handleUnaryCall<
+    GetGeneralRelationshipStatisticsRequest,
+    GetGeneralRelationshipStatisticsResult
+  >;
+  makeGroupToNominalGroupRelationship: handleUnaryCall<
+    MakeGroupToNominalGroupRelationshipRequest,
+    MakeGroupToNominalGroupRelationshipResult
+  >;
+  generateGeometryRelationshipSummary: handleUnaryCall<
+    GenerateGeometryRelationshipSummaryRequest,
+    GenerateGeometryRelationshipSummaryResult
+  >;
+  moveCollectionsByMinimizingRelationships: handleUnaryCall<
+    MoveCollectionsByMinimizingRelationshipsRequest,
+    MoveCollectionsByMinimizingRelationshipsResult
+  >;
+  makePointsToPointsRelationship: handleUnaryCall<
+    MakePointsToPointsRelationshipRequest,
+    MakePointsToPointsRelationshipResult
+  >;
+  autoFilterCloudsToNominalGeometry3D: handleUnaryCall<
+    AutoFilterCloudsToNominalGeometry3DRequest,
+    AutoFilterCloudsToNominalGeometry3DResult
   >;
 }
 
@@ -10285,6 +21676,816 @@ export interface RelationshipOperationsClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: SetRelationshipWeightsNormalizedResult) => void,
+  ): ClientUnaryCall;
+  setRelationshipAssociatedData(
+    request: SetRelationshipAssociatedDataRequest,
+    callback: (error: ServiceError | null, response: SetRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  setRelationshipAssociatedData(
+    request: SetRelationshipAssociatedDataRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  setRelationshipAssociatedData(
+    request: SetRelationshipAssociatedDataRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  makeVectorGroupToVectorGroupRelationship(
+    request: MakeVectorGroupToVectorGroupRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeVectorGroupToVectorGroupRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeVectorGroupToVectorGroupRelationship(
+    request: MakeVectorGroupToVectorGroupRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeVectorGroupToVectorGroupRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeVectorGroupToVectorGroupRelationship(
+    request: MakeVectorGroupToVectorGroupRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeVectorGroupToVectorGroupRelationshipResult) => void,
+  ): ClientUnaryCall;
+  filterGeometryRelationshipOutlierCloudPoints(
+    request: FilterGeometryRelationshipOutlierCloudPointsRequest,
+    callback: (error: ServiceError | null, response: FilterGeometryRelationshipOutlierCloudPointsResult) => void,
+  ): ClientUnaryCall;
+  filterGeometryRelationshipOutlierCloudPoints(
+    request: FilterGeometryRelationshipOutlierCloudPointsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: FilterGeometryRelationshipOutlierCloudPointsResult) => void,
+  ): ClientUnaryCall;
+  filterGeometryRelationshipOutlierCloudPoints(
+    request: FilterGeometryRelationshipOutlierCloudPointsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: FilterGeometryRelationshipOutlierCloudPointsResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupCylindricalZone(
+    request: SetVectorGroupToVectorGroupCylindricalZoneRequest,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupCylindricalZoneResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupCylindricalZone(
+    request: SetVectorGroupToVectorGroupCylindricalZoneRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupCylindricalZoneResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupCylindricalZone(
+    request: SetVectorGroupToVectorGroupCylindricalZoneRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupCylindricalZoneResult) => void,
+  ): ClientUnaryCall;
+  doRelationshipFit(
+    request: DoRelationshipFitRequest,
+    callback: (error: ServiceError | null, response: DoRelationshipFitResult) => void,
+  ): ClientUnaryCall;
+  doRelationshipFit(
+    request: DoRelationshipFitRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: DoRelationshipFitResult) => void,
+  ): ClientUnaryCall;
+  doRelationshipFit(
+    request: DoRelationshipFitRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: DoRelationshipFitResult) => void,
+  ): ClientUnaryCall;
+  getGeomRelationshipCriteriaNameList(
+    request: GetGeomRelationshipCriteriaNameListRequest,
+    callback: (error: ServiceError | null, response: GetGeomRelationshipCriteriaNameListResult) => void,
+  ): ClientUnaryCall;
+  getGeomRelationshipCriteriaNameList(
+    request: GetGeomRelationshipCriteriaNameListRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetGeomRelationshipCriteriaNameListResult) => void,
+  ): ClientUnaryCall;
+  getGeomRelationshipCriteriaNameList(
+    request: GetGeomRelationshipCriteriaNameListRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetGeomRelationshipCriteriaNameListResult) => void,
+  ): ClientUnaryCall;
+  setGroupToNominalGroupViewZooming(
+    request: SetGroupToNominalGroupViewZoomingRequest,
+    callback: (error: ServiceError | null, response: SetGroupToNominalGroupViewZoomingResult) => void,
+  ): ClientUnaryCall;
+  setGroupToNominalGroupViewZooming(
+    request: SetGroupToNominalGroupViewZoomingRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetGroupToNominalGroupViewZoomingResult) => void,
+  ): ClientUnaryCall;
+  setGroupToNominalGroupViewZooming(
+    request: SetGroupToNominalGroupViewZoomingRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetGroupToNominalGroupViewZoomingResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupFitWeights(
+    request: SetVectorGroupToVectorGroupFitWeightsRequest,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupFitWeightsResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupFitWeights(
+    request: SetVectorGroupToVectorGroupFitWeightsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupFitWeightsResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupFitWeights(
+    request: SetVectorGroupToVectorGroupFitWeightsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupFitWeightsResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicEllipseRelationship(
+    request: MakeDynamicEllipseRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeDynamicEllipseRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicEllipseRelationship(
+    request: MakeDynamicEllipseRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeDynamicEllipseRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicEllipseRelationship(
+    request: MakeDynamicEllipseRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeDynamicEllipseRelationshipResult) => void,
+  ): ClientUnaryCall;
+  setObjectToObjectDirectionRelationshipTolerances(
+    request: SetObjectToObjectDirectionRelationshipTolerancesRequest,
+    callback: (error: ServiceError | null, response: SetObjectToObjectDirectionRelationshipTolerancesResult) => void,
+  ): ClientUnaryCall;
+  setObjectToObjectDirectionRelationshipTolerances(
+    request: SetObjectToObjectDirectionRelationshipTolerancesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetObjectToObjectDirectionRelationshipTolerancesResult) => void,
+  ): ClientUnaryCall;
+  setObjectToObjectDirectionRelationshipTolerances(
+    request: SetObjectToObjectDirectionRelationshipTolerancesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetObjectToObjectDirectionRelationshipTolerancesResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupFitGradientFactor(
+    request: SetVectorGroupToVectorGroupFitGradientFactorRequest,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupFitGradientFactorResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupFitGradientFactor(
+    request: SetVectorGroupToVectorGroupFitGradientFactorRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupFitGradientFactorResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupFitGradientFactor(
+    request: SetVectorGroupToVectorGroupFitGradientFactorRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupFitGradientFactorResult) => void,
+  ): ClientUnaryCall;
+  startStopRelationshipTrapping(
+    request: StartStopRelationshipTrappingRequest,
+    callback: (error: ServiceError | null, response: StartStopRelationshipTrappingResult) => void,
+  ): ClientUnaryCall;
+  startStopRelationshipTrapping(
+    request: StartStopRelationshipTrappingRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: StartStopRelationshipTrappingResult) => void,
+  ): ClientUnaryCall;
+  startStopRelationshipTrapping(
+    request: StartStopRelationshipTrappingRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: StartStopRelationshipTrappingResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicCircleRelationship(
+    request: MakeDynamicCircleRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeDynamicCircleRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicCircleRelationship(
+    request: MakeDynamicCircleRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeDynamicCircleRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicCircleRelationship(
+    request: MakeDynamicCircleRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeDynamicCircleRelationshipResult) => void,
+  ): ClientUnaryCall;
+  getRelationshipAssociatedData(
+    request: GetRelationshipAssociatedDataRequest,
+    callback: (error: ServiceError | null, response: GetRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  getRelationshipAssociatedData(
+    request: GetRelationshipAssociatedDataRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  getRelationshipAssociatedData(
+    request: GetRelationshipAssociatedDataRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicPlaneRelationship(
+    request: MakeDynamicPlaneRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeDynamicPlaneRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicPlaneRelationship(
+    request: MakeDynamicPlaneRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeDynamicPlaneRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicPlaneRelationship(
+    request: MakeDynamicPlaneRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeDynamicPlaneRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointToPointRelationship(
+    request: MakePointToPointRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakePointToPointRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointToPointRelationship(
+    request: MakePointToPointRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakePointToPointRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointToPointRelationship(
+    request: MakePointToPointRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakePointToPointRelationshipResult) => void,
+  ): ClientUnaryCall;
+  autoFilterPointsGroupsCloudsToSurfaceFaces(
+    request: AutoFilterPointsGroupsCloudsToSurfaceFacesRequest,
+    callback: (error: ServiceError | null, response: AutoFilterPointsGroupsCloudsToSurfaceFacesResult) => void,
+  ): ClientUnaryCall;
+  autoFilterPointsGroupsCloudsToSurfaceFaces(
+    request: AutoFilterPointsGroupsCloudsToSurfaceFacesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: AutoFilterPointsGroupsCloudsToSurfaceFacesResult) => void,
+  ): ClientUnaryCall;
+  autoFilterPointsGroupsCloudsToSurfaceFaces(
+    request: AutoFilterPointsGroupsCloudsToSurfaceFacesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: AutoFilterPointsGroupsCloudsToSurfaceFacesResult) => void,
+  ): ClientUnaryCall;
+  makeGeometryFitAndCompareToNominalRelationship(
+    request: MakeGeometryFitAndCompareToNominalRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeGeometryFitAndCompareToNominalRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGeometryFitAndCompareToNominalRelationship(
+    request: MakeGeometryFitAndCompareToNominalRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeGeometryFitAndCompareToNominalRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGeometryFitAndCompareToNominalRelationship(
+    request: MakeGeometryFitAndCompareToNominalRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeGeometryFitAndCompareToNominalRelationshipResult) => void,
+  ): ClientUnaryCall;
+  createPointsToObjectsMap(
+    request: CreatePointsToObjectsMapRequest,
+    callback: (error: ServiceError | null, response: CreatePointsToObjectsMapResult) => void,
+  ): ClientUnaryCall;
+  createPointsToObjectsMap(
+    request: CreatePointsToObjectsMapRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: CreatePointsToObjectsMapResult) => void,
+  ): ClientUnaryCall;
+  createPointsToObjectsMap(
+    request: CreatePointsToObjectsMapRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: CreatePointsToObjectsMapResult) => void,
+  ): ClientUnaryCall;
+  makeCloudToSwatchRelationship(
+    request: MakeCloudToSwatchRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeCloudToSwatchRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeCloudToSwatchRelationship(
+    request: MakeCloudToSwatchRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeCloudToSwatchRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeCloudToSwatchRelationship(
+    request: MakeCloudToSwatchRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeCloudToSwatchRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGeometryCompareOnlyRelationship(
+    request: MakeGeometryCompareOnlyRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeGeometryCompareOnlyRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGeometryCompareOnlyRelationship(
+    request: MakeGeometryCompareOnlyRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeGeometryCompareOnlyRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGeometryCompareOnlyRelationship(
+    request: MakeGeometryCompareOnlyRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeGeometryCompareOnlyRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicLineRelationship(
+    request: MakeDynamicLineRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeDynamicLineRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicLineRelationship(
+    request: MakeDynamicLineRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeDynamicLineRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicLineRelationship(
+    request: MakeDynamicLineRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeDynamicLineRelationshipResult) => void,
+  ): ClientUnaryCall;
+  autoFilterCloudsToNominalGeometry2D(
+    request: AutoFilterCloudsToNominalGeometry2DRequest,
+    callback: (error: ServiceError | null, response: AutoFilterCloudsToNominalGeometry2DResult) => void,
+  ): ClientUnaryCall;
+  autoFilterCloudsToNominalGeometry2D(
+    request: AutoFilterCloudsToNominalGeometry2DRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: AutoFilterCloudsToNominalGeometry2DResult) => void,
+  ): ClientUnaryCall;
+  autoFilterCloudsToNominalGeometry2D(
+    request: AutoFilterCloudsToNominalGeometry2DRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: AutoFilterCloudsToNominalGeometry2DResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicPointRelationship(
+    request: MakeDynamicPointRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeDynamicPointRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicPointRelationship(
+    request: MakeDynamicPointRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeDynamicPointRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeDynamicPointRelationship(
+    request: MakeDynamicPointRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeDynamicPointRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeObjectToObjectDirectionRelationship(
+    request: MakeObjectToObjectDirectionRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeObjectToObjectDirectionRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeObjectToObjectDirectionRelationship(
+    request: MakeObjectToObjectDirectionRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeObjectToObjectDirectionRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeObjectToObjectDirectionRelationship(
+    request: MakeObjectToObjectDirectionRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeObjectToObjectDirectionRelationshipResult) => void,
+  ): ClientUnaryCall;
+  getPointsToPointsRelationshipAssociatedData(
+    request: GetPointsToPointsRelationshipAssociatedDataRequest,
+    callback: (error: ServiceError | null, response: GetPointsToPointsRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  getPointsToPointsRelationshipAssociatedData(
+    request: GetPointsToPointsRelationshipAssociatedDataRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointsToPointsRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  getPointsToPointsRelationshipAssociatedData(
+    request: GetPointsToPointsRelationshipAssociatedDataRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointsToPointsRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  setPointsToPointsRelationshipAssociatedData(
+    request: SetPointsToPointsRelationshipAssociatedDataRequest,
+    callback: (error: ServiceError | null, response: SetPointsToPointsRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  setPointsToPointsRelationshipAssociatedData(
+    request: SetPointsToPointsRelationshipAssociatedDataRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetPointsToPointsRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  setPointsToPointsRelationshipAssociatedData(
+    request: SetPointsToPointsRelationshipAssociatedDataRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetPointsToPointsRelationshipAssociatedDataResult) => void,
+  ): ClientUnaryCall;
+  getPointToPointRelationshipStatistics(
+    request: GetPointToPointRelationshipStatisticsRequest,
+    callback: (error: ServiceError | null, response: GetPointToPointRelationshipStatisticsResult) => void,
+  ): ClientUnaryCall;
+  getPointToPointRelationshipStatistics(
+    request: GetPointToPointRelationshipStatisticsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointToPointRelationshipStatisticsResult) => void,
+  ): ClientUnaryCall;
+  getPointToPointRelationshipStatistics(
+    request: GetPointToPointRelationshipStatisticsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointToPointRelationshipStatisticsResult) => void,
+  ): ClientUnaryCall;
+  makeFrameToFrameRelationship(
+    request: MakeFrameToFrameRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeFrameToFrameRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeFrameToFrameRelationship(
+    request: MakeFrameToFrameRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeFrameToFrameRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeFrameToFrameRelationship(
+    request: MakeFrameToFrameRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeFrameToFrameRelationshipResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupRelativePolarity(
+    request: SetVectorGroupToVectorGroupRelativePolarityRequest,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupRelativePolarityResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupRelativePolarity(
+    request: SetVectorGroupToVectorGroupRelativePolarityRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupRelativePolarityResult) => void,
+  ): ClientUnaryCall;
+  setVectorGroupToVectorGroupRelativePolarity(
+    request: SetVectorGroupToVectorGroupRelativePolarityRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetVectorGroupToVectorGroupRelativePolarityResult) => void,
+  ): ClientUnaryCall;
+  makePointsToObjectsRelationship(
+    request: MakePointsToObjectsRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakePointsToObjectsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointsToObjectsRelationship(
+    request: MakePointsToObjectsRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakePointsToObjectsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointsToObjectsRelationship(
+    request: MakePointsToObjectsRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakePointsToObjectsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGroupToGroupRelationship(
+    request: MakeGroupToGroupRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeGroupToGroupRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGroupToGroupRelationship(
+    request: MakeGroupToGroupRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeGroupToGroupRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGroupToGroupRelationship(
+    request: MakeGroupToGroupRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeGroupToGroupRelationshipResult) => void,
+  ): ClientUnaryCall;
+  deleteRelationship(
+    request: DeleteRelationshipRequest,
+    callback: (error: ServiceError | null, response: DeleteRelationshipResult) => void,
+  ): ClientUnaryCall;
+  deleteRelationship(
+    request: DeleteRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: DeleteRelationshipResult) => void,
+  ): ClientUnaryCall;
+  deleteRelationship(
+    request: DeleteRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: DeleteRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeAveragePointRelationship(
+    request: MakeAveragePointRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeAveragePointRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeAveragePointRelationship(
+    request: MakeAveragePointRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeAveragePointRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeAveragePointRelationship(
+    request: MakeAveragePointRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeAveragePointRelationshipResult) => void,
+  ): ClientUnaryCall;
+  setOptimizationPerturbationParameters(
+    request: SetOptimizationPerturbationParametersRequest,
+    callback: (error: ServiceError | null, response: SetOptimizationPerturbationParametersResult) => void,
+  ): ClientUnaryCall;
+  setOptimizationPerturbationParameters(
+    request: SetOptimizationPerturbationParametersRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetOptimizationPerturbationParametersResult) => void,
+  ): ClientUnaryCall;
+  setOptimizationPerturbationParameters(
+    request: SetOptimizationPerturbationParametersRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetOptimizationPerturbationParametersResult) => void,
+  ): ClientUnaryCall;
+  getObjectsFromPointsToObjectsMapPointList(
+    request: GetObjectsFromPointsToObjectsMapPointListRequest,
+    callback: (error: ServiceError | null, response: GetObjectsFromPointsToObjectsMapPointListResult) => void,
+  ): ClientUnaryCall;
+  getObjectsFromPointsToObjectsMapPointList(
+    request: GetObjectsFromPointsToObjectsMapPointListRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetObjectsFromPointsToObjectsMapPointListResult) => void,
+  ): ClientUnaryCall;
+  getObjectsFromPointsToObjectsMapPointList(
+    request: GetObjectsFromPointsToObjectsMapPointListRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetObjectsFromPointsToObjectsMapPointListResult) => void,
+  ): ClientUnaryCall;
+  setOptimizationSearchOptions(
+    request: SetOptimizationSearchOptionsRequest,
+    callback: (error: ServiceError | null, response: SetOptimizationSearchOptionsResult) => void,
+  ): ClientUnaryCall;
+  setOptimizationSearchOptions(
+    request: SetOptimizationSearchOptionsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: SetOptimizationSearchOptionsResult) => void,
+  ): ClientUnaryCall;
+  setOptimizationSearchOptions(
+    request: SetOptimizationSearchOptionsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: SetOptimizationSearchOptionsResult) => void,
+  ): ClientUnaryCall;
+  getRelationshipSigmoidalGapFitConstraints(
+    request: GetRelationshipSigmoidalGapFitConstraintsRequest,
+    callback: (error: ServiceError | null, response: GetRelationshipSigmoidalGapFitConstraintsResult) => void,
+  ): ClientUnaryCall;
+  getRelationshipSigmoidalGapFitConstraints(
+    request: GetRelationshipSigmoidalGapFitConstraintsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetRelationshipSigmoidalGapFitConstraintsResult) => void,
+  ): ClientUnaryCall;
+  getRelationshipSigmoidalGapFitConstraints(
+    request: GetRelationshipSigmoidalGapFitConstraintsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetRelationshipSigmoidalGapFitConstraintsResult) => void,
+  ): ClientUnaryCall;
+  relationshipWatchWindowTemplate(
+    request: RelationshipWatchWindowTemplateRequest,
+    callback: (error: ServiceError | null, response: RelationshipWatchWindowTemplateResult) => void,
+  ): ClientUnaryCall;
+  relationshipWatchWindowTemplate(
+    request: RelationshipWatchWindowTemplateRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: RelationshipWatchWindowTemplateResult) => void,
+  ): ClientUnaryCall;
+  relationshipWatchWindowTemplate(
+    request: RelationshipWatchWindowTemplateRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: RelationshipWatchWindowTemplateResult) => void,
+  ): ClientUnaryCall;
+  extractGeometryFromPointClouds(
+    request: ExtractGeometryFromPointCloudsRequest,
+    callback: (error: ServiceError | null, response: ExtractGeometryFromPointCloudsResult) => void,
+  ): ClientUnaryCall;
+  extractGeometryFromPointClouds(
+    request: ExtractGeometryFromPointCloudsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ExtractGeometryFromPointCloudsResult) => void,
+  ): ClientUnaryCall;
+  extractGeometryFromPointClouds(
+    request: ExtractGeometryFromPointCloudsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ExtractGeometryFromPointCloudsResult) => void,
+  ): ClientUnaryCall;
+  makeGroupsToObjectsRelationship(
+    request: MakeGroupsToObjectsRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeGroupsToObjectsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGroupsToObjectsRelationship(
+    request: MakeGroupsToObjectsRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeGroupsToObjectsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGroupsToObjectsRelationship(
+    request: MakeGroupsToObjectsRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeGroupsToObjectsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  computeGeometryRelationshipUncertainties(
+    request: ComputeGeometryRelationshipUncertaintiesRequest,
+    callback: (error: ServiceError | null, response: ComputeGeometryRelationshipUncertaintiesResult) => void,
+  ): ClientUnaryCall;
+  computeGeometryRelationshipUncertainties(
+    request: ComputeGeometryRelationshipUncertaintiesRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ComputeGeometryRelationshipUncertaintiesResult) => void,
+  ): ClientUnaryCall;
+  computeGeometryRelationshipUncertainties(
+    request: ComputeGeometryRelationshipUncertaintiesRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ComputeGeometryRelationshipUncertaintiesResult) => void,
+  ): ClientUnaryCall;
+  getPointsToObjectsRelationshipStatistics(
+    request: GetPointsToObjectsRelationshipStatisticsRequest,
+    callback: (error: ServiceError | null, response: GetPointsToObjectsRelationshipStatisticsResult) => void,
+  ): ClientUnaryCall;
+  getPointsToObjectsRelationshipStatistics(
+    request: GetPointsToObjectsRelationshipStatisticsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetPointsToObjectsRelationshipStatisticsResult) => void,
+  ): ClientUnaryCall;
+  getPointsToObjectsRelationshipStatistics(
+    request: GetPointsToObjectsRelationshipStatisticsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetPointsToObjectsRelationshipStatisticsResult) => void,
+  ): ClientUnaryCall;
+  getRelationshipStatus(
+    request: GetRelationshipStatusRequest,
+    callback: (error: ServiceError | null, response: GetRelationshipStatusResult) => void,
+  ): ClientUnaryCall;
+  getRelationshipStatus(
+    request: GetRelationshipStatusRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetRelationshipStatusResult) => void,
+  ): ClientUnaryCall;
+  getRelationshipStatus(
+    request: GetRelationshipStatusRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetRelationshipStatusResult) => void,
+  ): ClientUnaryCall;
+  autoFilterPointsToNominalGeometry3D(
+    request: AutoFilterPointsToNominalGeometry3DRequest,
+    callback: (error: ServiceError | null, response: AutoFilterPointsToNominalGeometry3DResult) => void,
+  ): ClientUnaryCall;
+  autoFilterPointsToNominalGeometry3D(
+    request: AutoFilterPointsToNominalGeometry3DRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: AutoFilterPointsToNominalGeometry3DResult) => void,
+  ): ClientUnaryCall;
+  autoFilterPointsToNominalGeometry3D(
+    request: AutoFilterPointsToNominalGeometry3DRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: AutoFilterPointsToNominalGeometry3DResult) => void,
+  ): ClientUnaryCall;
+  makeGeometryFitOnlyRelationship(
+    request: MakeGeometryFitOnlyRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeGeometryFitOnlyRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGeometryFitOnlyRelationship(
+    request: MakeGeometryFitOnlyRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeGeometryFitOnlyRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGeometryFitOnlyRelationship(
+    request: MakeGeometryFitOnlyRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeGeometryFitOnlyRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointCloudsToObjectsRelationship(
+    request: MakePointCloudsToObjectsRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakePointCloudsToObjectsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointCloudsToObjectsRelationship(
+    request: MakePointCloudsToObjectsRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakePointCloudsToObjectsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointCloudsToObjectsRelationship(
+    request: MakePointCloudsToObjectsRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakePointCloudsToObjectsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  editGeometryRelationshipPointList(
+    request: EditGeometryRelationshipPointListRequest,
+    callback: (error: ServiceError | null, response: EditGeometryRelationshipPointListResult) => void,
+  ): ClientUnaryCall;
+  editGeometryRelationshipPointList(
+    request: EditGeometryRelationshipPointListRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: EditGeometryRelationshipPointListResult) => void,
+  ): ClientUnaryCall;
+  editGeometryRelationshipPointList(
+    request: EditGeometryRelationshipPointListRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: EditGeometryRelationshipPointListResult) => void,
+  ): ClientUnaryCall;
+  getGeneralRelationshipStatistics(
+    request: GetGeneralRelationshipStatisticsRequest,
+    callback: (error: ServiceError | null, response: GetGeneralRelationshipStatisticsResult) => void,
+  ): ClientUnaryCall;
+  getGeneralRelationshipStatistics(
+    request: GetGeneralRelationshipStatisticsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetGeneralRelationshipStatisticsResult) => void,
+  ): ClientUnaryCall;
+  getGeneralRelationshipStatistics(
+    request: GetGeneralRelationshipStatisticsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetGeneralRelationshipStatisticsResult) => void,
+  ): ClientUnaryCall;
+  makeGroupToNominalGroupRelationship(
+    request: MakeGroupToNominalGroupRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakeGroupToNominalGroupRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGroupToNominalGroupRelationship(
+    request: MakeGroupToNominalGroupRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakeGroupToNominalGroupRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makeGroupToNominalGroupRelationship(
+    request: MakeGroupToNominalGroupRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakeGroupToNominalGroupRelationshipResult) => void,
+  ): ClientUnaryCall;
+  generateGeometryRelationshipSummary(
+    request: GenerateGeometryRelationshipSummaryRequest,
+    callback: (error: ServiceError | null, response: GenerateGeometryRelationshipSummaryResult) => void,
+  ): ClientUnaryCall;
+  generateGeometryRelationshipSummary(
+    request: GenerateGeometryRelationshipSummaryRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GenerateGeometryRelationshipSummaryResult) => void,
+  ): ClientUnaryCall;
+  generateGeometryRelationshipSummary(
+    request: GenerateGeometryRelationshipSummaryRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GenerateGeometryRelationshipSummaryResult) => void,
+  ): ClientUnaryCall;
+  moveCollectionsByMinimizingRelationships(
+    request: MoveCollectionsByMinimizingRelationshipsRequest,
+    callback: (error: ServiceError | null, response: MoveCollectionsByMinimizingRelationshipsResult) => void,
+  ): ClientUnaryCall;
+  moveCollectionsByMinimizingRelationships(
+    request: MoveCollectionsByMinimizingRelationshipsRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MoveCollectionsByMinimizingRelationshipsResult) => void,
+  ): ClientUnaryCall;
+  moveCollectionsByMinimizingRelationships(
+    request: MoveCollectionsByMinimizingRelationshipsRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MoveCollectionsByMinimizingRelationshipsResult) => void,
+  ): ClientUnaryCall;
+  makePointsToPointsRelationship(
+    request: MakePointsToPointsRelationshipRequest,
+    callback: (error: ServiceError | null, response: MakePointsToPointsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointsToPointsRelationship(
+    request: MakePointsToPointsRelationshipRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: MakePointsToPointsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  makePointsToPointsRelationship(
+    request: MakePointsToPointsRelationshipRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: MakePointsToPointsRelationshipResult) => void,
+  ): ClientUnaryCall;
+  autoFilterCloudsToNominalGeometry3D(
+    request: AutoFilterCloudsToNominalGeometry3DRequest,
+    callback: (error: ServiceError | null, response: AutoFilterCloudsToNominalGeometry3DResult) => void,
+  ): ClientUnaryCall;
+  autoFilterCloudsToNominalGeometry3D(
+    request: AutoFilterCloudsToNominalGeometry3DRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: AutoFilterCloudsToNominalGeometry3DResult) => void,
+  ): ClientUnaryCall;
+  autoFilterCloudsToNominalGeometry3D(
+    request: AutoFilterCloudsToNominalGeometry3DRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: AutoFilterCloudsToNominalGeometry3DResult) => void,
   ): ClientUnaryCall;
 }
 
