@@ -16,14 +16,20 @@ import {
   BriosaTransportError,
   FitConstraintScalarOptions,
   ObjectType,
+  WAVE_B_OPERATIONS,
+  autoFilterPointsGroupsCloudsToSurfaceFaces,
+  cloudDisplayControl,
   deleteObjects,
   createBriosaClient,
   getActiveUnits,
+  getActiveCollectionName,
   getObjectReportingFrame,
+  getCloudPointCount,
   getWorkingDirectory,
   setRelationshipFitConstraintsScalarType,
 } from '../src/index.js';
 import * as waveAOperations from '../src/waveAOperations.js';
+import * as waveBOperations from '../src/waveBOperations.js';
 import { mapServiceError } from '../src/errors.js';
 import {
   BriosaClientImplementation,
@@ -285,14 +291,14 @@ function serviceError(
   });
 }
 
-void test('records merged lifecycle artifact and generated semantics', () => {
+void test('records merged Wave B artifact and generated semantics', () => {
   assert.equal(
     briosaProtocolIdentity.artifactName,
-    'briosa-protocol-0.2.1-sa-2026.1.0529.7',
+    'briosa-protocol-0.3.0-sa-2026.1.0529.7',
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    'dc361c55e09cf2b6cdf5b058c9a2b75d52907bd5',
+    '6eca210980ff251e4d672047b8efa47f6c04ac9f',
   );
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(
@@ -314,6 +320,130 @@ void test('exports all 469 approved Wave A operations as functions', () => {
   assert.equal(new Set(operations).size, 468);
   assert.equal(typeof getWorkingDirectory, 'function');
   assert.equal(operations.length + 1, 469);
+});
+
+void test('exports all 557 approved Wave B operations once', () => {
+  assert.equal(WAVE_B_OPERATIONS.length, 557);
+  assert.equal(new Set(WAVE_B_OPERATIONS).size, 557);
+  assert.equal(469 + WAVE_B_OPERATIONS.length + 1, 1027);
+  const client = createTestClient(new FakeLauncher(), new FakeTransport());
+  const groupedSurfaces = [
+    client.constructionOperations,
+    client.gdtOperations,
+    client.instrumentOperations,
+    client.robotCalibrationApplianceNodeOperations,
+    client.robotOperations,
+  ] as unknown as readonly Readonly<Record<string, unknown>>[];
+  const flatSurface = waveBOperations as Readonly<Record<string, unknown>>;
+  const namingOverrides: Readonly<Record<string, string>> = {
+    filterCloudsToBsplines: 'filterCloudsToBSplines',
+    getCloudRgbValues: 'getCloudRGBValues',
+    getCloudRgbValuesNearPoint: 'getCloudRGBValuesNearPoint',
+    deleteCloudPointsByXyzRange: 'deleteCloudPointsByXYZRange',
+    autoFilterCloudsToNominalGeometry2d: 'autoFilterCloudsToNominalGeometry2D',
+    autoFilterCloudsToNominalGeometry3d: 'autoFilterCloudsToNominalGeometry3D',
+    autoFilterPointsToNominalGeometry3d: 'autoFilterPointsToNominalGeometry3D',
+  };
+  for (const operationId of WAVE_B_OPERATIONS) {
+    const operationName = operationId.split('.', 2)[1];
+    assert.notEqual(operationName, undefined);
+    const conventionalName = operationName!.replaceAll(
+      /_([a-z0-9])/g,
+      (_match, value) => String(value).toUpperCase(),
+    );
+    const method = namingOverrides[conventionalName] ?? conventionalName;
+    assert.ok(
+      typeof flatSurface[method] === 'function' ||
+        groupedSurfaces.some(
+          (surface) => typeof surface[method] === 'function',
+        ),
+      `Missing public Wave B function: ${method}`,
+    );
+  }
+});
+
+void test('maps Wave B defaults, results, groups, and optional list wrappers', async () => {
+  const transport = new FakeTransport();
+  const client = createTestClient(new FakeLauncher(), transport);
+  await client.start();
+
+  assert.equal(
+    typeof client.constructionOperations.autoArrangeCalloutView,
+    'function',
+  );
+  assert.equal(typeof client.gdtOperations.datumAlignment, 'function');
+  assert.equal(
+    typeof client.instrumentOperations.getCurrentTrappingStatus,
+    'function',
+  );
+  assert.equal(
+    typeof client.robotCalibrationApplianceNodeOperations
+      .getCalibrationApplianceNodeData,
+    'function',
+  );
+  assert.equal(typeof client.robotOperations.getRobotPoseForAFrame, 'function');
+
+  await cloudDisplayControl(client);
+  assert.deepEqual(transport.lastOperation, {
+    service: 'CloudAndMeshOperations',
+    rpc: 'CloudDisplayControl',
+    request: { thinDrawIncrement: 1, pointSize: 1 },
+  });
+
+  transport.operationResponse = {
+    currentlyActiveCollectionName: 'Inspection',
+  };
+  assert.equal(await getActiveCollectionName(client), 'Inspection');
+
+  transport.operationResponse = {
+    pointsCount: 42,
+    planarOffset: 0.1,
+    radialOffset: 0.2,
+    activeClippingPlanes: 3,
+  };
+  assert.deepEqual(
+    await getCloudPointCount(client, {
+      cloudName: {
+        collectionName: 'Clouds',
+        objectName: 'Scan 1',
+        objectType: ObjectType.cloud,
+      },
+    }),
+    {
+      pointsCount: 42,
+      planarOffset: 0.1,
+      radialOffset: 0.2,
+      activeClippingPlanes: 3,
+    },
+  );
+
+  transport.operationResponse = {};
+  await autoFilterPointsGroupsCloudsToSurfaceFaces(client, {
+    surfaces: [
+      {
+        collectionName: 'Surfaces',
+        objectName: 'Surface 1',
+        objectType: ObjectType.surface,
+      },
+    ],
+    points: [
+      {
+        collectionName: 'Points',
+        groupName: 'Measured',
+        targetName: 'P1',
+      },
+    ],
+  });
+  const filterRequest = transport.lastOperation?.request as {
+    points?: { values: readonly { targetName: string }[] };
+    groups?: unknown;
+    clouds?: unknown;
+  };
+  assert.equal(filterRequest.points?.values[0]?.targetName, 'P1');
+  assert.equal(filterRequest.groups, undefined);
+  assert.equal(filterRequest.clouds, undefined);
+
+  await client[Symbol.asyncDispose]();
 });
 
 void test('maps Wave A scalar, repeated, structured-default, and result values', async () => {

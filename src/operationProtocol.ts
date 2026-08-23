@@ -1,4 +1,5 @@
 import { BriosaProtocolError } from './errors.js';
+import { registerWaveBOperationValueSchemas } from './waveBOperationSchemas.js';
 
 export type OperationValueSchema =
   | {
@@ -17,7 +18,8 @@ export type OperationValueSchema =
       readonly name: string;
       readonly fields: Readonly<Record<string, OperationMessageField>>;
     }
-  | { readonly kind: 'repeated'; readonly item: OperationValueSchema };
+  | { readonly kind: 'repeated'; readonly item: OperationValueSchema }
+  | { readonly kind: 'listWrapper'; readonly item: OperationValueSchema };
 
 interface OperationMessageField {
   readonly schema: OperationValueSchema;
@@ -869,6 +871,20 @@ Object.assign(operationValueSchemas, {
   },
 });
 
+function registerOperationValueSchema(
+  name: string,
+  schema: OperationValueSchema,
+): void {
+  if (operationValueSchemas[name] !== undefined)
+    throw new Error(`Duplicate operation value schema: ${name}`);
+  operationValueSchemas[name] = schema;
+}
+
+registerWaveBOperationValueSchemas(
+  registerOperationValueSchema,
+  getOperationValueSchema,
+  operationScalarSchemas,
+);
 Object.freeze(operationValueSchemas);
 
 export function getOperationValueSchema(name: string): OperationValueSchema {
@@ -882,6 +898,12 @@ export function repeatedOperationValue(
   item: OperationValueSchema,
 ): OperationValueSchema {
   return { kind: 'repeated', item };
+}
+
+export function listWrapperOperationValue(
+  item: OperationValueSchema,
+): OperationValueSchema {
+  return { kind: 'listWrapper', item };
 }
 
 export function requireOperationInput(value: unknown, name: string): unknown {
@@ -932,6 +954,13 @@ export function toWireOperationValue(
         toWireOperationValue(schema.item, item),
       );
     }
+    case 'listWrapper': {
+      const values = toWireOperationValue(
+        { kind: 'repeated', item: schema.item },
+        value,
+      );
+      return { values };
+    }
     case 'message': {
       if (typeof value !== 'object' || value === null || Array.isArray(value)) {
         throw new TypeError(`${schema.name} must be an object.`);
@@ -954,19 +983,57 @@ export function toWireOperationValue(
 
 export function mapOperationResponse(
   response: Readonly<Record<string, unknown>>,
-  outputs: readonly (readonly [string, OperationValueSchema, string?])[],
+  outputs: readonly (readonly [
+    string,
+    OperationValueSchema,
+    string?,
+    boolean?,
+  ])[],
 ): unknown {
   if (outputs.length === 0) return undefined;
   if (outputs.length === 1) {
-    const [name, schema] = outputs[0]!;
+    const [name, schema, , optional] = outputs[0]!;
+    if (optional === true && response[name] === undefined) return undefined;
     return fromWireOperationValue(schema, requireOutput(response[name], name));
   }
-  return Object.fromEntries(
-    outputs.map(([name, schema, publicName]) => [
-      publicName ?? name,
-      fromWireOperationValue(schema, requireOutput(response[name], name)),
-    ]),
-  );
+  const result: Record<string, unknown> = {};
+  for (const [name, schema, publicName, optional] of outputs) {
+    const value =
+      optional === true && response[name] === undefined
+        ? undefined
+        : fromWireOperationValue(schema, requireOutput(response[name], name));
+    assignPublicOutput(result, publicName ?? name, value);
+  }
+  return result;
+}
+
+function assignPublicOutput(
+  target: Record<string, unknown>,
+  path: string,
+  value: unknown,
+): void {
+  const parts = path.split('.');
+  let current = target;
+  for (const part of parts.slice(0, -1)) {
+    const existing = current[part];
+    if (existing === undefined) {
+      const nested: Record<string, unknown> = {};
+      current[part] = nested;
+      current = nested;
+      continue;
+    }
+    if (
+      typeof existing !== 'object' ||
+      existing === null ||
+      Array.isArray(existing)
+    )
+      throw new BriosaProtocolError('operation-output-shape-drift');
+    current = existing as Record<string, unknown>;
+  }
+  const leaf = parts.at(-1);
+  if (leaf === undefined)
+    throw new BriosaProtocolError('operation-output-shape-drift');
+  current[leaf] = value;
 }
 
 function fromWireOperationValue(
@@ -989,6 +1056,14 @@ function fromWireOperationValue(
       if (!Array.isArray(value))
         throw new BriosaProtocolError('operation-output-shape-drift');
       return value.map((item) => fromWireOperationValue(schema.item, item));
+    case 'listWrapper': {
+      if (typeof value !== 'object' || value === null || Array.isArray(value))
+        throw new BriosaProtocolError('operation-output-shape-drift');
+      const values = (value as Readonly<Record<string, unknown>>).values;
+      if (!Array.isArray(values))
+        throw new BriosaProtocolError('operation-output-shape-drift');
+      return values.map((item) => fromWireOperationValue(schema.item, item));
+    }
     case 'message': {
       if (typeof value !== 'object' || value === null || Array.isArray(value)) {
         throw new BriosaProtocolError('operation-output-shape-drift');

@@ -174,6 +174,14 @@ export enum GeometryType {
   UNRECOGNIZED = -1,
 }
 
+export enum OffsetDirectionType {
+  OFFSET_DIRECTION_TYPE_UNSPECIFIED = 0,
+  OFFSET_DIRECTION_TYPE_BOTH = 1,
+  OFFSET_DIRECTION_TYPE_POSITIVE_ONLY = 2,
+  OFFSET_DIRECTION_TYPE_NEGATIVE_ONLY = 3,
+  UNRECOGNIZED = -1,
+}
+
 export enum ObjectType {
   OBJECT_TYPE_UNSPECIFIED = 0,
   OBJECT_TYPE_ANY = 1,
@@ -431,6 +439,14 @@ export enum WindowState {
   UNRECOGNIZED = -1,
 }
 
+export enum CloudThinningMode {
+  CLOUD_THINNING_MODE_UNSPECIFIED = 0,
+  CLOUD_THINNING_MODE_NONE = 1,
+  CLOUD_THINNING_MODE_RANDOM = 2,
+  CLOUD_THINNING_MODE_NTH_POINT = 3,
+  UNRECOGNIZED = -1,
+}
+
 export interface ChartName {
   name?: string | undefined;
 }
@@ -456,6 +472,11 @@ export interface PointName {
 export interface CollectionInstrumentId {
   collectionName?: string | undefined;
   instrumentId?: number | undefined;
+}
+
+export interface CollectionMachineId {
+  collectionName?: string | undefined;
+  machineId?: number | undefined;
 }
 
 export interface CollectionGroupName {
@@ -612,6 +633,18 @@ export interface PointDeltaReportOptions {
   sortPointNames?: boolean | undefined;
   showToleranceFields?: boolean | undefined;
   colorizeInToleranceFields?: boolean | undefined;
+}
+
+/** Carries the opaque surface-face selection encoding used by SpatialAnalyzer MP commands. */
+export interface SurfaceFaceList {
+  value?: string | undefined;
+}
+
+export interface CloudThinningOptions {
+  mode?: CloudThinningMode | undefined;
+  pointIncrement?: number | undefined;
+  minimumNumberOfPoints?: number | undefined;
+  maximumNumberOfPoints?: number | undefined;
 }
 
 function createBaseChartName(): ChartName {
@@ -922,6 +955,64 @@ export const CollectionInstrumentId: MessageFns<CollectionInstrumentId> = {
     const message = createBaseCollectionInstrumentId();
     message.collectionName = object.collectionName ?? undefined;
     message.instrumentId = object.instrumentId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCollectionMachineId(): CollectionMachineId {
+  return { collectionName: undefined, machineId: undefined };
+}
+
+export const CollectionMachineId: MessageFns<CollectionMachineId> = {
+  encode(message: CollectionMachineId, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.collectionName !== undefined) {
+      writer.uint32(10).string(message.collectionName);
+    }
+    if (message.machineId !== undefined) {
+      writer.uint32(16).int32(message.machineId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CollectionMachineId {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCollectionMachineId();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.collectionName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.machineId = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CollectionMachineId>): CollectionMachineId {
+    return CollectionMachineId.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CollectionMachineId>): CollectionMachineId {
+    const message = createBaseCollectionMachineId();
+    message.collectionName = object.collectionName ?? undefined;
+    message.machineId = object.machineId ?? undefined;
     return message;
   },
 };
@@ -2832,6 +2923,139 @@ export const PointDeltaReportOptions: MessageFns<PointDeltaReportOptions> = {
     message.sortPointNames = object.sortPointNames ?? undefined;
     message.showToleranceFields = object.showToleranceFields ?? undefined;
     message.colorizeInToleranceFields = object.colorizeInToleranceFields ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSurfaceFaceList(): SurfaceFaceList {
+  return { value: "" };
+}
+
+export const SurfaceFaceList: MessageFns<SurfaceFaceList> = {
+  encode(message: SurfaceFaceList, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.value !== undefined && message.value !== "") {
+      writer.uint32(10).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SurfaceFaceList {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSurfaceFaceList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.value = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SurfaceFaceList>): SurfaceFaceList {
+    return SurfaceFaceList.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<SurfaceFaceList>): SurfaceFaceList {
+    const message = createBaseSurfaceFaceList();
+    message.value = object.value ?? "";
+    return message;
+  },
+};
+
+function createBaseCloudThinningOptions(): CloudThinningOptions {
+  return {
+    mode: undefined,
+    pointIncrement: undefined,
+    minimumNumberOfPoints: undefined,
+    maximumNumberOfPoints: undefined,
+  };
+}
+
+export const CloudThinningOptions: MessageFns<CloudThinningOptions> = {
+  encode(message: CloudThinningOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.mode !== undefined) {
+      writer.uint32(8).int32(message.mode);
+    }
+    if (message.pointIncrement !== undefined) {
+      writer.uint32(16).int32(message.pointIncrement);
+    }
+    if (message.minimumNumberOfPoints !== undefined) {
+      writer.uint32(24).int32(message.minimumNumberOfPoints);
+    }
+    if (message.maximumNumberOfPoints !== undefined) {
+      writer.uint32(32).int32(message.maximumNumberOfPoints);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CloudThinningOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCloudThinningOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.mode = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.pointIncrement = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.minimumNumberOfPoints = reader.int32();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.maximumNumberOfPoints = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CloudThinningOptions>): CloudThinningOptions {
+    return CloudThinningOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CloudThinningOptions>): CloudThinningOptions {
+    const message = createBaseCloudThinningOptions();
+    message.mode = object.mode ?? undefined;
+    message.pointIncrement = object.pointIncrement ?? undefined;
+    message.minimumNumberOfPoints = object.minimumNumberOfPoints ?? undefined;
+    message.maximumNumberOfPoints = object.maximumNumberOfPoints ?? undefined;
     return message;
   },
 };

@@ -41,6 +41,18 @@ import {
   GrpcClientTransport,
   type OperationCodec,
 } from './transport.js';
+import {
+  createConstructionOperations,
+  createGdtOperations,
+  createInstrumentOperations,
+  createRobotCalibrationApplianceNodeOperations,
+  createRobotOperations,
+  type ConstructionOperations,
+  type GdtOperations,
+  type InstrumentOperations,
+  type RobotCalibrationApplianceNodeOperations,
+  type RobotOperations,
+} from './waveBOperations.js';
 
 const getWorkingDirectoryInternal = Symbol('getWorkingDirectoryInternal');
 const invokeOperationInternal = Symbol('invokeOperationInternal');
@@ -62,6 +74,11 @@ type TransportFactory = (target: string) => ClientTransport;
 
 /** Opaque public handle for one reusable local Briosa server session. */
 export interface BriosaClient {
+  readonly constructionOperations: ConstructionOperations;
+  readonly gdtOperations: GdtOperations;
+  readonly instrumentOperations: InstrumentOperations;
+  readonly robotCalibrationApplianceNodeOperations: RobotCalibrationApplianceNodeOperations;
+  readonly robotOperations: RobotOperations;
   start(options?: BriosaStartOptions): Promise<void>;
   getServerSnapshot(
     options?: BriosaLifecycleCallOptions,
@@ -101,6 +118,11 @@ export interface BriosaClient {
 
 /** @internal Concrete implementation; not exported from the package root. */
 export class BriosaClientImplementation implements BriosaClient {
+  readonly constructionOperations: ConstructionOperations;
+  readonly gdtOperations: GdtOperations;
+  readonly instrumentOperations: InstrumentOperations;
+  readonly robotCalibrationApplianceNodeOperations: RobotCalibrationApplianceNodeOperations;
+  readonly robotOperations: RobotOperations;
   readonly #options: BriosaClientOptions;
   readonly #serverLauncher: ServerLauncher;
   readonly #transportFactory: TransportFactory;
@@ -121,6 +143,12 @@ export class BriosaClientImplementation implements BriosaClient {
     this.#options = options;
     this.#serverLauncher = serverLauncher;
     this.#transportFactory = transportFactory;
+    this.constructionOperations = createConstructionOperations(this);
+    this.gdtOperations = createGdtOperations(this);
+    this.instrumentOperations = createInstrumentOperations(this);
+    this.robotCalibrationApplianceNodeOperations =
+      createRobotCalibrationApplianceNodeOperations(this);
+    this.robotOperations = createRobotOperations(this);
   }
 
   async start(options: BriosaStartOptions = {}): Promise<void> {
