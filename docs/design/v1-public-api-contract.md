@@ -2,7 +2,7 @@
 
 - Status: Accepted design target
 - Last reviewed: 2026-08-12
-- Scope: The target-specific `@spatialanalyzer/briosa` Node.js package
+- Scope: The target-specific `@spatialanalyzer/briosa-2026.1.0529.7` Node.js package
 - Implementation status: Lifecycle foundation conforming; MP surface expanding
 
 ## Authority and scope
@@ -28,6 +28,12 @@ proposal.
 The current `0.1.0` package remains pre-v1. Its lifecycle foundation now follows
 this contract, while the MP command surface will expand through subsequent
 vertical slices.
+
+The first exact-target package is
+`@spatialanalyzer/briosa-2026.1.0529.7`. Future SA targets use distinct package
+names while retaining release-neutral exported Briosa names. npm aliases can
+give several targets distinct local import specifiers when one application
+needs them in the same dependency graph.
 
 ## Accepted JavaScript/TypeScript rules
 
@@ -276,8 +282,6 @@ The accepted public shape constrains, but intentionally does not settle:
   models and notifications;
 - exact domain factories, branding choices, command mapping layout, and
   mechanically checked naming/capability inventories;
-- exact npm naming, installation, and versioning mechanics for the parent
-  epic's one-module-per-exact-target package model; and
 - the shared test-host artifact, scenario protocol, and thin JavaScript fixture
   API, which remain owned by
   [central issue #148](https://github.com/spatialanalyzer/briosa/issues/148).

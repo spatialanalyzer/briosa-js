@@ -1,6 +1,6 @@
 # Briosa JavaScript/TypeScript Client
 
-`@spatialanalyzer/briosa` is the asynchronous Node.js client for the open-source
+`@spatialanalyzer/briosa-2026.1.0529.7` is the asynchronous Node.js client for the open-source
 [Briosa](https://github.com/spatialanalyzer/briosa) SpatialAnalyzer bridge. It
 provides idiomatic lifecycle and MP APIs while keeping generated protobuf and
 gRPC types private.
@@ -9,13 +9,44 @@ The package does not include SpatialAnalyzer, the SA SDK, or a license. It
 targets SpatialAnalyzer `2026.1.0529.7` exactly and Node.js 20.19 or later. The
 complete protocol identity is pinned in [`protocol.lock.json`](protocol.lock.json).
 
+## Package Identity
+
+The package is named `@spatialanalyzer/briosa-2026.1.0529.7`, while its
+exported Briosa types and functions remain release-neutral. The package has not
+been published to npm yet. After publication, the intended installation command
+is:
+
+```powershell
+npm install @spatialanalyzer/briosa-2026.1.0529.7@0.1.0
+```
+
+Each exact SpatialAnalyzer target will have a separate package name. npm package
+aliases can give several targets distinct local import specifiers when an
+application needs them in one dependency graph; there is no universal runtime
+target selector. Only the `2026.1.0529.7` target package is implemented today.
+
+For example, after another exact-target package exists, an application can use
+locally meaningful aliases without changing either published package:
+
+```json
+{
+  "dependencies": {
+    "briosa-sa-2026-1-0529-7": "npm:@spatialanalyzer/briosa-2026.1.0529.7@0.1.0",
+    "briosa-sa-2027-1-0000-0": "npm:@spatialanalyzer/briosa-2027.1.0000.0@0.1.0"
+  }
+}
+```
+
+The second dependency is only a naming example; Briosa does not currently claim
+support for that SpatialAnalyzer target.
+
 ## Usage
 
 ```ts
 import {
   createBriosaClient,
   getWorkingDirectory,
-} from '@spatialanalyzer/briosa';
+} from '@spatialanalyzer/briosa-2026.1.0529.7';
 
 await using briosa = createBriosaClient();
 await briosa.start();

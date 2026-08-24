@@ -1,8 +1,21 @@
 {
-  "name": "@spatialanalyzer/briosa",
+  "name": "@spatialanalyzer/briosa-2026.1.0529.7",
   "version": "0.1.0",
-  "description": "Thin TypeScript client for the Briosa SpatialAnalyzer gRPC bridge",
+  "description": "Exact-target TypeScript client for Briosa and SpatialAnalyzer 2026.1.0529.7",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spatialanalyzer/briosa-js.git"
+  },
+  "homepage": "https://github.com/spatialanalyzer/briosa-js#readme",
+  "bugs": {
+    "url": "https://github.com/spatialanalyzer/briosa-js/issues"
+  },
+  "keywords": [
+    "briosa",
+    "spatialanalyzer",
+    "grpc"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -30,8 +43,12 @@
     "lint": "eslint src tests tools eng --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "pack:check": "npm pack --dry-run",
+    "package:identity": "node eng/test-package-identity.mjs",
+    "pack:check": "npm run package:identity",
     "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "@bufbuild/protobuf": "2.13.0",
