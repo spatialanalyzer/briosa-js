@@ -6,6 +6,10 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { BriosaStartupError } from './errors.js';
+import {
+  loggingArguments,
+  type BriosaLoggingOptions,
+} from './loggingOptions.js';
 import { briosaProtocolIdentity } from './generated/protocolIdentity.js';
 
 export interface OwnedServer {
@@ -15,7 +19,7 @@ export interface OwnedServer {
 }
 
 export interface ServerLauncher {
-  launch(): Promise<OwnedServer>;
+  launch(logging?: BriosaLoggingOptions): Promise<OwnedServer>;
 }
 
 class ChildProcessServer implements OwnedServer {
@@ -42,17 +46,24 @@ class ChildProcessServer implements OwnedServer {
 }
 
 export class LocalServerLauncher implements ServerLauncher {
-  async launch(): Promise<OwnedServer> {
+  async launch(logging?: BriosaLoggingOptions): Promise<OwnedServer> {
     const executable = resolveServerExecutable();
     const port = await reserveLoopbackPort();
     let child: ChildProcess;
     try {
-      child = spawn(executable, [`--Briosa:Endpoint:Port=${String(port)}`], {
-        cwd: dirname(executable),
-        detached: false,
-        stdio: 'ignore',
-        windowsHide: true,
-      });
+      child = spawn(
+        executable,
+        [
+          `--Briosa:Endpoint:Port=${String(port)}`,
+          ...loggingArguments(logging),
+        ],
+        {
+          cwd: dirname(executable),
+          detached: false,
+          stdio: 'ignore',
+          windowsHide: true,
+        },
+      );
     } catch (cause) {
       throw new BriosaStartupError('server-process-start-failed', { cause });
     }

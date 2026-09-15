@@ -65,6 +65,10 @@ import {
 } from '../src/generated/protocol/briosa/operation_outcomes.js';
 import type { OwnedServer, ServerLauncher } from '../src/serverLauncher.js';
 import type { ClientTransport, OperationCodec } from '../src/transport.js';
+import {
+  loggingArguments,
+  type BriosaLoggingOptions,
+} from '../src/loggingOptions.js';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -80,11 +84,63 @@ class FakeServer implements OwnedServer {
 class FakeLauncher implements ServerLauncher {
   readonly server = new FakeServer();
   launchCount = 0;
-  async launch(): Promise<OwnedServer> {
+  logging: BriosaLoggingOptions | undefined;
+  async launch(logging?: BriosaLoggingOptions): Promise<OwnedServer> {
+    this.logging = logging;
     this.launchCount += 1;
     return this.server;
   }
 }
+
+void test('logging startup controls map to validated server arguments', async () => {
+  const logging: BriosaLoggingOptions = {
+    minimumLevel: 'Debug',
+    categoryLevels: { Microsoft: 'Error' },
+    consoleEnabled: false,
+    fileEnabled: true,
+    fileDirectory: 'C:\\Logs with spaces',
+    maxFileSizeMiB: 4,
+    retainedFileCount: 3,
+    maxAgeDays: 2,
+    maxTotalSizeMiB: 12,
+  };
+  const args = loggingArguments(logging);
+  assert.ok(args.includes('--Logging:LogLevel:Default=Debug'));
+  assert.ok(args.includes('--Logging:LogLevel:Microsoft=Error'));
+  assert.ok(
+    args.includes('--Briosa:Logging:File:Directory=C:\\Logs with spaces'),
+  );
+  assert.ok(args.includes('--Briosa:Logging:File:MaxTotalSizeMiB=12'));
+  assert.deepEqual(loggingArguments(), []);
+  assert.equal(loggingArguments({ maxFileSizeMiB: 512 }).length, 1);
+  assert.throws(
+    () => loggingArguments({ maxFileSizeMiB: 20, maxTotalSizeMiB: 1 }),
+    TypeError,
+  );
+  assert.throws(
+    () => loggingArguments({ fileDirectory: 'relative' }),
+    TypeError,
+  );
+  assert.throws(() => loggingArguments({ retainedFileCount: 0 }), TypeError);
+  assert.throws(
+    () => loggingArguments({ categoryLevels: { 'Default:Injected': 'Trace' } }),
+    TypeError,
+  );
+  const launcher = new FakeLauncher();
+  const client = new BriosaClientImplementation(
+    {},
+    launcher,
+    () => new FakeTransport(),
+  );
+  await client.start({
+    startSpatialAnalyzerSdk: false,
+    launchSpatialAnalyzer: false,
+    connectToSpatialAnalyzer: false,
+    logging,
+  });
+  assert.equal(launcher.logging, logging);
+  await client.stop();
+});
 
 class FakeTransport implements ClientTransport {
   readonly calls: string[] = [];

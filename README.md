@@ -118,3 +118,25 @@ node ./eng/import-protocol-artifact.mjs `
 ```
 
 Never edit `src/generated` or `protocol.lock.json` by hand.
+
+## Server Logging
+
+Pass optional typed `logging` settings to `start`:
+
+```typescript
+await briosa.start({
+  logging: {
+    minimumLevel: 'Debug',
+    consoleEnabled: false,
+    maxFileSizeMiB: 20,
+    retainedFileCount: 10,
+  },
+});
+```
+
+`BriosaLoggingOptions` also exposes `categoryLevels`, `fileEnabled`,
+`fileDirectory`, `maxAgeDays`, and `maxTotalSizeMiB`. Omitted settings preserve
+server configuration. Values are validated before launch; custom directories
+must be absolute Windows paths. Hidden launches retain server-owned JSONL logs.
+See the [shared startup contract](https://github.com/spatialanalyzer/briosa/blob/main/docs/architecture/client-library-behavioral-contract.md#server-logging-startup-controls)
+and [server observability guide](https://github.com/spatialanalyzer/briosa/blob/main/targets/2026.1.0529.7/docs/operations/server-observability.md).
