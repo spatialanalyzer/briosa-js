@@ -1,4 +1,5 @@
 export { createBriosaClient, getWorkingDirectory } from './client.js';
+export type { BriosaLoggingOptions, BriosaLogLevel } from './loggingOptions.js';
 export { getActiveCollectionName } from './activeContextOperations.js';
 export type { BriosaClient } from './client.js';
 export { BriosaCompatibilityError } from './compatibility.js';

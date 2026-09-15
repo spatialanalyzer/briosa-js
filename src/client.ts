@@ -431,7 +431,7 @@ export class BriosaClientImplementation implements BriosaClient {
     let transport: ClientTransport | null = null;
     let session: Session | null = null;
     try {
-      server = await this.#serverLauncher.launch();
+      server = await this.#serverLauncher.launch(options.logging);
       transport = this.#transportFactory(server.target);
       const snapshot = await this.#waitForServer(server, transport, signal);
       session = createSession(server, transport, snapshot);

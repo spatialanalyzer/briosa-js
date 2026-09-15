@@ -1,4 +1,8 @@
 /** Handwritten public lifecycle and discovery types. */
+import {
+  loggingArguments,
+  type BriosaLoggingOptions,
+} from './loggingOptions.js';
 
 export interface BriosaClientOptions {
   readonly commandTimeoutMs?: number | null;
@@ -19,6 +23,7 @@ export interface SpatialAnalyzerLaunchOptions {
 }
 
 export interface BriosaStartOptions extends BriosaLifecycleCallOptions {
+  readonly logging?: BriosaLoggingOptions;
   readonly startSpatialAnalyzerSdk?: boolean;
   readonly launchSpatialAnalyzer?: boolean;
   readonly connectToSpatialAnalyzer?: boolean;
@@ -208,6 +213,7 @@ export interface BriosaServerSnapshot {
 }
 
 export interface NormalizedBriosaStartOptions {
+  readonly logging?: BriosaLoggingOptions;
   readonly startSpatialAnalyzerSdk: boolean;
   readonly launchSpatialAnalyzer: boolean;
   readonly connectToSpatialAnalyzer: boolean;
@@ -228,6 +234,7 @@ export function validateClientOptions(options: BriosaClientOptions): void {
 export function normalizeStartOptions(
   options: BriosaStartOptions,
 ): NormalizedBriosaStartOptions {
+  loggingArguments(options.logging);
   const normalized: NormalizedBriosaStartOptions = {
     startSpatialAnalyzerSdk: options.startSpatialAnalyzerSdk ?? true,
     launchSpatialAnalyzer: options.launchSpatialAnalyzer ?? true,
@@ -235,6 +242,7 @@ export function normalizeStartOptions(
     launchOptions: options.launchOptions ?? {},
     startupTimeoutMs: options.startupTimeoutMs ?? 30_000,
     ...(options.signal === undefined ? {} : { signal: options.signal }),
+    ...(options.logging === undefined ? {} : { logging: options.logging }),
   };
   requirePositiveTimeout(normalized.startupTimeoutMs, 'startupTimeoutMs');
   validateLaunchOptions(normalized.launchOptions);
