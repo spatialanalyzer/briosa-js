@@ -10,6 +10,13 @@ permissions:
 jobs:
   build-test-package:
     name: Node build, test, and package
+    strategy:
+      fail-fast: false
+      matrix:
+        sa-target: ['2024.1.0508.5', '2026.1.0529.7']
+    defaults:
+      run:
+        working-directory: targets/${{ matrix.sa-target }}
     runs-on: windows-latest
     timeout-minutes: 30
 
@@ -51,6 +58,7 @@ jobs:
         with:
           node-version: 22.13.0
           cache: npm
+          cache-dependency-path: targets/${{ matrix.sa-target }}/package-lock.json
 
       - name: Install .NET SDK
         uses: actions/setup-dotnet@v5
@@ -69,8 +77,8 @@ jobs:
       - name: Rebuild pinned protocol artifact
         shell: pwsh
         run: |
-          $outputDirectory = Join-Path $env:GITHUB_WORKSPACE 'artifacts/protocol'
-          ./briosa-source/targets/${{ steps.protocol.outputs.spatial_analyzer_target }}/eng/New-ProtocolArtifact.ps1 `
+          $outputDirectory = Join-Path $PWD 'artifacts/protocol'
+          ../../briosa-source/targets/${{ steps.protocol.outputs.spatial_analyzer_target }}/eng/New-ProtocolArtifact.ps1 `
             -Version "${{ steps.protocol.outputs.briosa_version }}" `
             -SourceRevision "${{ steps.protocol.outputs.source_revision }}" `
             -OutputDirectory $outputDirectory `
@@ -89,7 +97,7 @@ jobs:
       - name: Download pinned client conformance artifact
         shell: pwsh
         run: |
-          $outputDirectory = Join-Path $env:GITHUB_WORKSPACE 'artifacts/conformance'
+          $outputDirectory = Join-Path $PWD 'artifacts/conformance'
           New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
           $releaseBase = "https://github.com/spatialanalyzer/briosa/releases/download/v${{ steps.protocol.outputs.briosa_version }}"
           $fileName = "${{ steps.protocol.outputs.conformance_file_name }}"
@@ -120,3 +128,6 @@ jobs:
 
       - name: Audit runtime dependencies
         run: npm audit --omit=dev
+
+      - name: Verify packed consumer alias
+        run: npm run package:consumer

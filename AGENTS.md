@@ -12,3 +12,10 @@ This repository contains a thin generated client. Public protocol and command se
 - Run locked install, build, tests, linting, formatting, package creation, protocol drift verification, and shared conformance in proportion to the change.
 
 GitHub issues and the organization roadmap are the planning source of truth. Keep changes scoped to the active client issue and link a PR with `Closes #<number>` only when all acceptance criteria are met.
+
+## Exact-target products
+
+- Work in `targets/<exact-sa-release>/`; each product owns its source, locks, tests, tooling, and package metadata.
+- Run build, regeneration, conformance, and packaging from that target directory.
+- Do not reference another target's runtime source or generated transport.
+- CI must cover both supported targets explicitly. Package versions are independent of server versions.

@@ -2,7 +2,7 @@
 
 - Status: Accepted design target
 - Last reviewed: 2026-08-12
-- Scope: The target-specific Briosa Node.js packages
+- Scope: The target-specific `@spatialanalyzer/briosa-2026.1.0529.7` Node.js package
 - Implementation status: Lifecycle foundation conforming; MP surface expanding
 
 ## Authority and scope
@@ -338,9 +338,3 @@ language update.
 
 The default consumer dependency alias is `briosa`, while registry package names
 include the exact SA target. See the target README for the installation command.
-
-## Implemented targets
-
-Independent SA `2024.1.0508.5` and `2026.1.0529.7` products live under
-`targets/`. See the [repository guide](../../README.md) for package selection;
-the target README records signature differences and validation limits.

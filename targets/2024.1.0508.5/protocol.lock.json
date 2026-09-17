@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "artifact": {
+    "name": "briosa-protocol-0.6.0-sa-2024.1.0508.5",
+    "file_name": "briosa-protocol-0.6.0-sa-2024.1.0508.5.zip",
+    "sha256": "2a605fbe58c531c8b876ffae263f9a12ff821bdee0c2aad426afbe6570c428a5",
+    "briosa_version": "0.6.0",
+    "source_revision": "a2825dee76cd817ba3fa697449d35bbd3a38eaeb",
+    "source_repository": "https://github.com/spatialanalyzer/briosa",
+    "source_channel": "github_release"
+  },
+  "protocol": {
+    "generation_contract": "standard-protobuf-grpc",
+    "schema_sha256": "0f4186e72d861eb49383bddd46e560ef71d454bc844989af388a32420c8a8cf2",
+    "descriptor_sha256": "81ecb85dfd1ce24ade47674cfff4da99dfd0d9fe7d565c0ce0f8cf89ac23c815",
+    "package": "briosa",
+    "generator": {
+      "name": "ts-proto",
+      "version": "2.12.0",
+      "options": [
+        "env=node",
+        "esModuleInterop=true",
+        "exportCommonSymbols=false",
+        "forceLong=bigint",
+        "importSuffix=.js",
+        "lowerCaseServiceMethods=true",
+        "oneof=unions-value",
+        "outputJsonMethods=false",
+        "outputServices=grpc-js",
+        "useExactTypes=false",
+        "useOptionals=all"
+      ]
+    },
+    "javascript_semantics": {
+      "int64": "bigint",
+      "optional_fields": "undefined"
+    }
+  },
+  "target": {
+    "spatial_analyzer": "2024.1.0508.5"
+  }
+}

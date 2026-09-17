@@ -1,142 +1,37 @@
-# Briosa JavaScript/TypeScript Client
+# Briosa JavaScript/TypeScript clients
 
-`@spatialanalyzer/briosa-2026.1.0529.7` is the asynchronous Node.js client for the open-source
-[Briosa](https://github.com/spatialanalyzer/briosa) SpatialAnalyzer bridge. It
-provides idiomatic lifecycle and MP APIs while keeping generated protobuf and
-gRPC types private.
+Independent exact-target clients for the [Briosa SpatialAnalyzer bridge](https://github.com/spatialanalyzer/briosa).
 
-The package does not include SpatialAnalyzer, the SA SDK, or a license. It
-targets SpatialAnalyzer `2026.1.0529.7` exactly and Node.js 20.19 or later. The
-complete protocol identity is pinned in [`protocol.lock.json`](protocol.lock.json).
+| SpatialAnalyzer target | Product and development guide | Client version |
+| --- | --- | --- |
+| 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.1.0 |
+| 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.1.0 |
 
-## Package Identity
+Choose the package for your exact SA installation. Each product pins its own
+Briosa v0.6.0 protocol and portable conformance artifacts. Client package versions
+are independent of the Briosa server version. Packages are prepared for initial
+publication; this change does not publish them to a registry.
 
-The package is named `@spatialanalyzer/briosa-2026.1.0529.7`, while its
-exported Briosa types and functions remain release-neutral. The package has not
-been published to npm yet. After publication, the intended installation command
-is:
+Package names include the SA target; application namespaces/imports remain stable.
+See each product guide for installation and examples. Run development commands
+from the chosen `targets/<exact-sa-release>/` directory. CI validates both products.
 
-```powershell
-npm install @spatialanalyzer/briosa-2026.1.0529.7@0.1.0
+SpatialAnalyzer, its SDK, and a license are required separately for real work.
+Portable checks do not establish licensed runtime validation. Broader licensed
+runtime CI and enterprise Artifactory verification remain outstanding before v1.0
+promotion.
+
+## Stable imports
+
+After registry publication, select one target through an npm alias:
+
+```sh
+npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.1.0
 ```
-
-Each exact SpatialAnalyzer target will have a separate package name. npm package
-aliases can give several targets distinct local import specifiers when an
-application needs them in one dependency graph; there is no universal runtime
-target selector. Only the `2026.1.0529.7` target package is implemented today.
-
-For example, after another exact-target package exists, an application can use
-locally meaningful aliases without changing either published package:
-
-```json
-{
-  "dependencies": {
-    "briosa-sa-2026-1-0529-7": "npm:@spatialanalyzer/briosa-2026.1.0529.7@0.1.0",
-    "briosa-sa-2027-1-0000-0": "npm:@spatialanalyzer/briosa-2027.1.0000.0@0.1.0"
-  }
-}
-```
-
-The second dependency is only a naming example; Briosa does not currently claim
-support for that SpatialAnalyzer target.
-
-## Usage
 
 ```ts
-import {
-  createBriosaClient,
-  getWorkingDirectory,
-} from '@spatialanalyzer/briosa-2026.1.0529.7';
-
-await using briosa = createBriosaClient();
-await briosa.start();
-
-const workingDirectory = await getWorkingDirectory(briosa);
+import { createBriosaClient, getWorkingDirectory } from 'briosa';
 ```
 
-Construction is dormant. By default, `start()`:
-
-1. Locates and launches the matching local Briosa server on an owned loopback
-   endpoint.
-2. Starts a disconnected SA SDK generation.
-3. Launches a fresh SpatialAnalyzer application.
-4. Connects the SDK and verifies exact identity and MP readiness.
-
-`BriosaStartOptions` can select a control-plane-only startup or connect to an
-eligible application that is already running. The application and SDK also
-have distinct state, launch, connect, stop, and recovery methods. `stop()` and
-`Symbol.asyncDispose` stop the owned server and SDK but never close
-SpatialAnalyzer.
-
-The client retains lifecycle generations and supplies RPC guards automatically.
-Typed lifecycle failures, compatibility failures, caller cancellation,
-ambiguous MP completion, and replay guidance remain distinct. The client never
-automatically replays an MP operation.
-
-See the [Briosa documentation](https://spatialanalyzer.github.io/briosa-docs/api/javascript/)
-for the complete Next API contract.
-
-## Server Distribution Lookup
-
-The client resolves the matching server distribution in this order:
-
-1. `BRIOSA_SERVER_PATH`
-2. A package-local `briosa-server/Briosa.Server.exe`
-3. `%LOCALAPPDATA%/Briosa/servers/<briosa-version>/sa-<sa-target>/Briosa.Server.exe`
-
-The locator is private so the installer/package layout can evolve without
-adding executable paths to the public startup options.
-
-## Build and Test
-
-```powershell
-npm ci
-npm run build
-npm test
-./eng/Test-Conformance.ps1 `
-  -ArtifactPath C:\path\to\briosa-client-conformance-0.3.0-sa-2026.1.0529.7-win-x64.zip `
-  -NodeExecutable node
-npm run lint
-npm run format:check
-npm run pack:check
-```
-
-Unit tests use fake server/transport boundaries. The shared conformance suite
-runs the real client and server against a portable fake SDK/application host.
-Neither path requires SpatialAnalyzer nor a license.
-
-## Protocol Regeneration
-
-```powershell
-node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.3.0-sa-2026.1.0529.7.zip `
-  --update `
-  --source-channel github_release
-
-node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.3.0-sa-2026.1.0529.7.zip
-```
-
-Never edit `src/generated` or `protocol.lock.json` by hand.
-
-## Server Logging
-
-Pass optional typed `logging` settings to `start`:
-
-```typescript
-await briosa.start({
-  logging: {
-    minimumLevel: 'Debug',
-    consoleEnabled: false,
-    maxFileSizeMiB: 20,
-    retainedFileCount: 10,
-  },
-});
-```
-
-`BriosaLoggingOptions` also exposes `categoryLevels`, `fileEnabled`,
-`fileDirectory`, `maxAgeDays`, and `maxTotalSizeMiB`. Omitted settings preserve
-server configuration. Values are validated before launch; custom directories
-must be absolute Windows paths. Hidden launches retain server-owned JSONL logs.
-See the [shared startup contract](https://github.com/spatialanalyzer/briosa/blob/main/docs/architecture/client-library-behavioral-contract.md#server-logging-startup-controls)
-and [server observability guide](https://github.com/spatialanalyzer/briosa/blob/main/targets/2026.1.0529.7/docs/operations/server-observability.md).
+For SA 2026, replace only the target in the installation command with
+`2026.1.0529.7`. The published distribution keeps its target-qualified name.
