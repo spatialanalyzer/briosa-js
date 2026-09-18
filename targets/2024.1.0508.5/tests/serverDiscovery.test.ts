@@ -133,7 +133,7 @@ const defects: ReadonlyArray<readonly [string, readonly string[], unknown]> = [
   ['receipt.json', ['package', 'spatialAnalyzerTarget'], 'other'],
   ['receipt.json', ['package', 'runtimeIdentifier'], 'win-arm64'],
   ['receipt.json', ['files'], {}],
-  ['receipt.json', ['files', 'Briosa.Worker.exe'], 'invalid'],
+  ['receipt.json', ['files', 'Briosa.Worker.exe'], 'a'.repeat(64) + '\n'],
   ['manifest.json', ['schemaVersion'], 99],
   ['manifest.json', ['artifactName'], 'wrong'],
   ['manifest.json', ['briosaVersion'], '99.0.0'],

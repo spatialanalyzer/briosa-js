@@ -114,6 +114,7 @@ function managedExecutable(store: string): string | undefined {
       const digest = files[name];
       if (
         typeof digest !== 'string' ||
+        digest.length !== 64 ||
         !/^[0-9a-f]{64}$/.test(digest) ||
         !isFile(join(payload, name))
       )
