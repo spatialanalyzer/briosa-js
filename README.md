@@ -9,8 +9,8 @@ Independent exact-target clients for the [Briosa SpatialAnalyzer bridge](https:/
 
 Choose the package for your exact SA installation. Each product pins its own
 Briosa v0.6.0 protocol and portable conformance artifacts. Client package versions
-are independent of the Briosa server version. Packages are prepared for initial
-publication; this change does not publish them to a registry.
+are independent of the Briosa server version. See [Releasing](RELEASING.md) for
+registry publishing and validation.
 
 Package names include the SA target; application namespaces/imports remain stable.
 See each product guide for installation and examples. Run development commands
@@ -23,7 +23,7 @@ promotion.
 
 ## Stable imports
 
-After registry publication, select one target through an npm alias:
+Select one target through an npm alias:
 
 ```sh
 npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.1.0

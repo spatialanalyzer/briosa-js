@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the validated packages to npm (select a release tag)
+        type: boolean
+        default: false
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check tag, package versions, and main ancestry
+        shell: pwsh
+        run: |
+          ./eng/Test-ReleaseVersion.ps1 -ReleaseTag $env:GITHUB_REF
+          git merge-base --is-ancestor HEAD origin/main
+          if ($LASTEXITCODE -ne 0) { throw 'Release commit must be merged into main.' }
+
+  build:
+    needs: validate
+    uses: ./.github/workflows/ci.yml
+    with:
+      upload-release-artifacts: true
+
+  publish:
+    if: github.event_name == 'workflow_dispatch' && inputs.publish
+    needs: [validate, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        sa-target: ['2024.1.0508.5', '2026.1.0529.7']
+    steps:
+      - name: Download validated packages from this run
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: packages-${{ matrix.sa-target }}
+          path: dist
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Publish validated npm archive with GitHub OIDC
+        run: npm publish dist/*.tgz --access public --provenance --ignore-scripts
