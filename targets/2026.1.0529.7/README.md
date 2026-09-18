@@ -62,14 +62,25 @@ this package's exact API.
 
 ## Server Distribution Lookup
 
-The client resolves the matching server distribution in this order:
+Install **Briosa Server 0.6.0 for SA 2026.1.0529.7** with the Briosa Installer.
+Default startup searches these locations in order:
 
-1. `BRIOSA_SERVER_PATH`
-2. A package-local `briosa-server/Briosa.Server.exe`
-3. `%LOCALAPPDATA%/Briosa/servers/<briosa-version>/sa-<sa-target>/Briosa.Server.exe`
+1. `BRIOSA_SERVER_PATH`, pointing to `Briosa.Server.exe`.
+2. A client-local `briosa-server/Briosa.Server.exe`.
+3. `%LOCALAPPDATA%/Briosa/Packages/products/<package-id>/payload/Briosa.Server.exe`.
+4. `%PROGRAMDATA%/Briosa/Packages/products/<package-id>/payload/Briosa.Server.exe`.
+5. The legacy `%LOCALAPPDATA%/Briosa/servers/<briosa-version>/sa-<sa-target>/Briosa.Server.exe`.
 
-The locator is private so the installer/package layout can evolve without
-adding executable paths to the public startup options.
+For this client, `<package-id>` is `briosa-0.6.0-sa-2026.1.0529.7-win-x64`.
+Managed installations must have a matching committed receipt, manifest, and required
+entry points. Missing or invalid candidates are skipped; discovery never selects a
+different server version or SA target. Runtime compatibility checks still apply.
+Installer verification/repair checks package integrity separately.
+
+For a custom Installer store, set `BRIOSA_SERVER_PATH` to the desired product's
+`payload/Briosa.Server.exe`. Custom stores are not searched automatically.
+The [shared discovery contract](https://github.com/spatialanalyzer/briosa/blob/main/docs/architecture/installed-package-store.md#client-server-discovery)
+defines precedence, eligibility, root handling, and the installation/runtime boundary.
 
 ## Build and Test
 

@@ -1,16 +1,13 @@
 import { spawn, type ChildProcess } from 'node:child_process';
-import { existsSync } from 'node:fs';
 import { createServer } from 'node:net';
-import { homedir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
 import { BriosaStartupError } from './errors.js';
 import {
   loggingArguments,
   type BriosaLoggingOptions,
 } from './loggingOptions.js';
-import { briosaProtocolIdentity } from './generated/protocolIdentity.js';
+import { resolveServerExecutable } from './serverDiscovery.js';
 
 export interface OwnedServer {
   readonly target: string;
@@ -69,34 +66,6 @@ export class LocalServerLauncher implements ServerLauncher {
     }
     return new ChildProcessServer(`127.0.0.1:${String(port)}`, child);
   }
-}
-
-function resolveServerExecutable(): string {
-  const moduleDirectory = dirname(fileURLToPath(import.meta.url));
-  const localAppData =
-    process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local');
-  const candidates = [
-    process.env.BRIOSA_SERVER_PATH,
-    join(moduleDirectory, 'briosa-server', 'Briosa.Server.exe'),
-    join(
-      localAppData,
-      'Briosa',
-      'servers',
-      briosaProtocolIdentity.briosaVersion,
-      `sa-${briosaProtocolIdentity.spatialAnalyzerTarget}`,
-      'Briosa.Server.exe',
-    ),
-  ];
-  for (const candidate of candidates) {
-    if (
-      candidate !== undefined &&
-      candidate.toLowerCase().endsWith('briosa.server.exe') &&
-      existsSync(candidate)
-    ) {
-      return resolve(candidate);
-    }
-  }
-  throw new BriosaStartupError('server-distribution-not-found');
 }
 
 async function reserveLoopbackPort(): Promise<number> {
