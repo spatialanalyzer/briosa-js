@@ -64,4 +64,4 @@ jobs:
           node-version: '24.21.0'
           package-manager-cache: false
       - name: Publish validated npm archive with GitHub OIDC
-        run: npm publish dist/*.tgz --access public --provenance --ignore-scripts
+        run: npm publish ./dist/*.tgz --access public --provenance --ignore-scripts
