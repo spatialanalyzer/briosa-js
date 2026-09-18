@@ -12,9 +12,7 @@ complete protocol identity is pinned in [`protocol.lock.json`](protocol.lock.jso
 ## Package Identity
 
 The package is named `@spatialanalyzer/briosa-2026.1.0529.7`, while its
-exported Briosa types and functions remain release-neutral. The package has not
-been published to npm yet. After publication, the intended installation command
-is:
+exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
 npm install briosa@npm:@spatialanalyzer/briosa-2026.1.0529.7@0.1.0
