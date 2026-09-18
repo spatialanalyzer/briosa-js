@@ -1,7 +1,7 @@
 # Releasing npm clients
 
-Each release publishes two independent exact-SA products. The initial package
-version is `0.1.0`, independent of the pinned Briosa Server `0.6.0` version.
+Each release publishes two independent exact-SA products. The current package
+version is `0.1.1`, independent of the pinned Briosa Server `0.6.1` version.
 This procedure does not establish licensed runtime or enterprise Artifactory
 validation, which remain outstanding before v1.0 promotion.
 

@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
   "artifact": {
-    "name": "briosa-protocol-0.6.0-sa-2024.1.0508.5",
-    "file_name": "briosa-protocol-0.6.0-sa-2024.1.0508.5.zip",
-    "sha256": "2a605fbe58c531c8b876ffae263f9a12ff821bdee0c2aad426afbe6570c428a5",
-    "briosa_version": "0.6.0",
-    "source_revision": "a2825dee76cd817ba3fa697449d35bbd3a38eaeb",
+    "name": "briosa-protocol-0.6.1-sa-2024.1.0508.5",
+    "file_name": "briosa-protocol-0.6.1-sa-2024.1.0508.5.zip",
+    "sha256": "4717d6c2e63830e5b065c8541c99e42f322955b34a769042f9cdb0608cdc2f71",
+    "briosa_version": "0.6.1",
+    "source_revision": "32a3b56ba4ae31ea5ec6ec3b2aa051eb61c866aa",
     "source_repository": "https://github.com/spatialanalyzer/briosa",
     "source_channel": "github_release"
   },

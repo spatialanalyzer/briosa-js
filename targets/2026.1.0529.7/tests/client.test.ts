@@ -350,11 +350,11 @@ function serviceError(
 void test('records merged Wave B artifact and generated semantics', () => {
   assert.equal(
     briosaProtocolIdentity.artifactName,
-    'briosa-protocol-0.6.0-sa-2026.1.0529.7',
+    'briosa-protocol-0.6.1-sa-2026.1.0529.7',
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    'a2825dee76cd817ba3fa697449d35bbd3a38eaeb',
+    '32a3b56ba4ae31ea5ec6ec3b2aa051eb61c866aa',
   );
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(

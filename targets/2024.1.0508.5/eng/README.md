@@ -9,7 +9,7 @@ generated-byte drift.
 
 ```powershell
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.6.0-sa-2024.1.0508.5.zip `
+  --artifact C:\path\to\briosa-protocol-0.6.1-sa-2024.1.0508.5.zip `
   --update `
   --source-channel github_release
 ```

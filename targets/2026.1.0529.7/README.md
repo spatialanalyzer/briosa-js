@@ -15,7 +15,7 @@ The package is named `@spatialanalyzer/briosa-2026.1.0529.7`, while its
 exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
-npm install briosa@npm:@spatialanalyzer/briosa-2026.1.0529.7@0.1.0
+npm install briosa@npm:@spatialanalyzer/briosa-2026.1.0529.7@0.1.1
 ```
 
 Each exact SpatialAnalyzer target has an independent package. Install the chosen
@@ -60,7 +60,7 @@ this package's exact API.
 
 ## Server Distribution Lookup
 
-Install **Briosa Server 0.6.0 for SA 2026.1.0529.7** with the Briosa Installer.
+Install **Briosa Server 0.6.1 for SA 2026.1.0529.7** with the Briosa Installer.
 Default startup searches these locations in order:
 
 1. `BRIOSA_SERVER_PATH`, pointing to `Briosa.Server.exe`.
@@ -69,7 +69,7 @@ Default startup searches these locations in order:
 4. `%PROGRAMDATA%/Briosa/Packages/products/<package-id>/payload/Briosa.Server.exe`.
 5. The legacy `%LOCALAPPDATA%/Briosa/servers/<briosa-version>/sa-<sa-target>/Briosa.Server.exe`.
 
-For this client, `<package-id>` is `briosa-0.6.0-sa-2026.1.0529.7-win-x64`.
+For this client, `<package-id>` is `briosa-0.6.1-sa-2026.1.0529.7-win-x64`.
 Managed installations must have a matching committed receipt, manifest, and required
 entry points. Missing or invalid candidates are skipped; discovery never selects a
 different server version or SA target. Runtime compatibility checks still apply.
@@ -90,7 +90,7 @@ npm ci
 npm run build
 npm test
 ./eng/Test-Conformance.ps1 `
-  -ArtifactPath C:\path\to\briosa-client-conformance-0.6.0-sa-2026.1.0529.7-win-x64.zip `
+  -ArtifactPath C:\path\to\briosa-client-conformance-0.6.1-sa-2026.1.0529.7-win-x64.zip `
   -NodeExecutable node
 npm run lint
 npm run format:check
@@ -106,12 +106,12 @@ Neither path requires SpatialAnalyzer nor a license.
 
 ```powershell
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.6.0-sa-2026.1.0529.7.zip `
+  --artifact C:\path\to\briosa-protocol-0.6.1-sa-2026.1.0529.7.zip `
   --update `
   --source-channel github_release
 
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.6.0-sa-2026.1.0529.7.zip
+  --artifact C:\path\to\briosa-protocol-0.6.1-sa-2026.1.0529.7.zip
 ```
 
 Never edit `src/generated` or `protocol.lock.json` by hand.
@@ -140,7 +140,7 @@ and [server observability guide](https://github.com/spatialanalyzer/briosa/blob/
 
 ## Compatibility and validation
 
-This package pins the matching Briosa v0.6.0 protocol and conformance bundles.
+This package pins the matching Briosa v0.6.1 protocol and conformance bundles.
 Startup checks the server version, source revision, protocol package, and exact
 SA target before admitting MP calls. The other SA target is not interchangeable.
 

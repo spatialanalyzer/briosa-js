@@ -25,7 +25,7 @@ The language split was established in
 accepted the choices below after reviewing all 26 rules in the original .NET
 proposal.
 
-The current `0.1.0` package remains pre-v1. Its lifecycle foundation now follows
+The current `0.1.1` package remains pre-v1. Its lifecycle foundation now follows
 this contract, while the MP command surface will expand through subsequent
 vertical slices.
 
