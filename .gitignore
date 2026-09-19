@@ -142,3 +142,5 @@ artifacts/
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+# Exact pinned server checkout used only by compatibility CI.
+/briosa-source/

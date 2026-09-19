@@ -39,23 +39,45 @@ foreach ($scope in @('machine','user')) {
 }
 @{ elevated=$elevated; registrations=@($entries); diagnostics=@($diagnostics) } | ConvertTo-Json -Depth 5 -Compress
 `;
+export const windowsAclPolicyScript = String.raw`
+function Test-BriosaAcl($acl, [bool]$includeWrite) {
+  $descriptor = [Security.AccessControl.RawSecurityDescriptor]::new($acl.GetSecurityDescriptorBinaryForm(), 0)
+  if ($null -eq $descriptor.DiscretionaryAcl) { return $false }
+  $trusted = @('S-1-5-32-544','S-1-5-18','S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464')
+  if ($trusted -notcontains $acl.GetOwner([Security.Principal.SecurityIdentifier]).Value) { return $false }
+  $changes = [Security.AccessControl.FileSystemRights]'Delete,DeleteSubdirectoriesAndFiles,ChangePermissions,TakeOwnership'
+  if ($includeWrite) { $changes = $changes -bor [Security.AccessControl.FileSystemRights]::Write }
+  foreach ($rule in $acl.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier])) {
+    if ($rule.AccessControlType -ne 'Allow' -or ($rule.PropagationFlags -band [Security.AccessControl.PropagationFlags]::InheritOnly) -ne 0) { continue }
+    $genericWrite = ([int64]$rule.FileSystemRights -band 0x50000000) -ne 0
+    if ((($rule.FileSystemRights -band $changes) -ne 0 -or $genericWrite) -and $trusted -notcontains $rule.IdentityReference.Value) { return $false }
+  }
+  return $true
+}
+`;
 const protectionScript =
   preamble +
+  windowsAclPolicyScript +
   String.raw`
 try {
   $path = [Console]::In.ReadToEnd() | ConvertFrom-Json
   $payload = [IO.Path]::GetDirectoryName($path)
-  $paths = @('manifest.json','Briosa.Server.exe','Briosa.Worker.exe') | ForEach-Object { [IO.Path]::Combine($payload, $_) }
-  $directory = [IO.DirectoryInfo]::new($payload)
-  while ($null -ne $directory.Parent) { $paths += $directory.FullName; $directory = $directory.Parent }
-  $trusted = @('S-1-5-32-544','S-1-5-18')
-  $write = [Security.AccessControl.FileSystemRights]'Write,Delete,DeleteSubdirectoriesAndFiles,ChangePermissions,TakeOwnership'
-  foreach ($item in $paths) {
-    $acl = Get-Acl -LiteralPath $item
-    if ($trusted -notcontains $acl.GetOwner([Security.Principal.SecurityIdentifier]).Value) { throw 'owner' }
-    foreach ($rule in $acl.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier])) {
-      if ($rule.AccessControlType -eq 'Allow' -and ($rule.FileSystemRights -band $write) -ne 0 -and $trusted -notcontains $rule.IdentityReference.Value) { throw 'access' }
+  $pending = [Collections.Generic.Stack[IO.DirectoryInfo]]::new()
+  $pending.Push([IO.DirectoryInfo]::new($payload))
+  $count = 0
+  while ($pending.Count -gt 0) {
+    $current = $pending.Pop()
+    foreach ($item in $current.EnumerateFileSystemInfos()) {
+      $count++
+      if ($count -gt 10000 -or ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'layout' }
+      if (-not (Test-BriosaAcl (Get-Acl -LiteralPath $item.FullName) $true)) { throw 'access' }
+      if ($item -is [IO.DirectoryInfo]) { $pending.Push($item) }
     }
+  }
+  $directory = [IO.DirectoryInfo]::new($payload)
+  while ($null -ne $directory.Parent) {
+    if (-not (Test-BriosaAcl (Get-Acl -LiteralPath $directory.FullName) ($directory.FullName -eq $payload))) { throw 'access' }
+    $directory = $directory.Parent
   }
   [Console]::Write('true')
 } catch { [Console]::Write('false') }
