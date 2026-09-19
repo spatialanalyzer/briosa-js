@@ -27,7 +27,9 @@ try {
         ConvertTo-Json | Set-Content (Join-Path $consumer 'package.json') -Encoding utf8
     Push-Location $consumer
     try {
-        & npm.cmd install --ignore-scripts --no-audit --no-fund
+        $npmDirectory = Split-Path (Get-Command npm.cmd -ErrorAction Stop).Source -Parent
+        $npmCli = Join-Path $npmDirectory 'node_modules/npm/bin/npm-cli.js'
+        & $FixtureExecutable $npmCli install --ignore-scripts --no-audit --no-fund
         if ($LASTEXITCODE -ne 0) { throw 'Published Node consumer install failed.' }
     }
     finally { Pop-Location }
