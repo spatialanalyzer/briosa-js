@@ -24,7 +24,7 @@ jobs:
       run:
         working-directory: targets/${{ matrix.sa-target }}
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
@@ -40,15 +40,14 @@ jobs:
         run: |
           $lock = Get-Content protocol.lock.json -Raw | ConvertFrom-Json
           $conformance = Get-Content conformance.lock.json -Raw | ConvertFrom-Json
-          if ($conformance.artifact.source_revision -ne $lock.artifact.source_revision -or
-              $conformance.artifact.briosa_version -ne $lock.artifact.briosa_version -or
-              $conformance.target.spatial_analyzer -ne $lock.target.spatial_analyzer) {
-            throw "Protocol and conformance locks must identify the same Briosa product."
+          if ($conformance.target.spatial_analyzer -ne $lock.target.spatial_analyzer) {
+            throw "Conformance and protocol artifacts must target the same exact SA release."
           }
           "source_revision=$($lock.artifact.source_revision)" | Out-File $env:GITHUB_OUTPUT -Append
           "briosa_version=$($lock.artifact.briosa_version)" | Out-File $env:GITHUB_OUTPUT -Append
           "artifact_file_name=$($lock.artifact.file_name)" | Out-File $env:GITHUB_OUTPUT -Append
           "artifact_sha256=$($lock.artifact.sha256)" | Out-File $env:GITHUB_OUTPUT -Append
+          "conformance_version=$($conformance.artifact.briosa_version)" | Out-File $env:GITHUB_OUTPUT -Append
           "conformance_file_name=$($conformance.artifact.file_name)" | Out-File $env:GITHUB_OUTPUT -Append
           "spatial_analyzer_target=$($lock.target.spatial_analyzer)" | Out-File $env:GITHUB_OUTPUT -Append
 
@@ -105,7 +104,7 @@ jobs:
         run: |
           $outputDirectory = Join-Path $PWD 'artifacts/conformance'
           New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
-          $releaseBase = "https://github.com/spatialanalyzer/briosa/releases/download/v${{ steps.protocol.outputs.briosa_version }}"
+          $releaseBase = "https://github.com/spatialanalyzer/briosa/releases/download/v${{ steps.protocol.outputs.conformance_version }}"
           $fileName = "${{ steps.protocol.outputs.conformance_file_name }}"
           Invoke-WebRequest "$releaseBase/$fileName" -OutFile (Join-Path $outputDirectory $fileName)
           Invoke-WebRequest "$releaseBase/$fileName.sha256" -OutFile (Join-Path $outputDirectory "$fileName.sha256")
@@ -121,7 +120,24 @@ jobs:
         run: >
           ./eng/Test-Conformance.ps1
           -ArtifactPath "artifacts/conformance/${{ steps.protocol.outputs.conformance_file_name }}"
+          -EvidencePath artifacts/legacy-conformance-evidence.json
           -NodeExecutable node
+
+      - name: Test the contract-aware server from pinned source
+        shell: pwsh
+        run: >
+          ./eng/Test-CurrentServerConformance.ps1
+          -SourceTarget "${{ github.workspace }}/briosa-source/targets/${{ matrix.sa-target }}"
+
+      - name: Retain cross-version compatibility evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: compatibility-${{ matrix.sa-target }}
+          path: |
+            targets/${{ matrix.sa-target }}/artifacts/legacy-conformance-evidence.json
+            targets/${{ matrix.sa-target }}/artifacts/current-conformance/evidence.json
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Lint
         run: npm run lint
@@ -139,8 +155,19 @@ jobs:
         run: npm run package:consumer
 
       - name: Pack release archive
-        if: inputs.upload-release-artifacts
         run: npm pack --pack-destination .
+
+      - name: Test actual client package against both server generations
+        shell: pwsh
+        run: ./eng/Test-PackageCompatibility.ps1
+
+      - name: Retain packaged cross-version compatibility evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: packaged-compatibility-${{ matrix.sa-target }}
+          path: targets/${{ matrix.sa-target }}/artifacts/*-package-evidence.json
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Retain validated release packages
         if: inputs.upload-release-artifacts

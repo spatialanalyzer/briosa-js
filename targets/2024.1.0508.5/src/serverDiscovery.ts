@@ -1,127 +1,274 @@
-import { readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { basename, dirname, isAbsolute, join, resolve } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-
 import { BriosaStartupError } from './errors.js';
 import { briosaProtocolIdentity as identity } from './generated/protocolIdentity.js';
+import {
+  installationId,
+  noLinks,
+  object,
+  parseMetadata,
+  readInstallation,
+  textField,
+} from './installationMetadata.js';
+import {
+  localPath,
+  normalizeSelection,
+  pathKey,
+  type BriosaDiscoveryDiagnostic,
+  type BriosaDiscoveryReport,
+  type BriosaInstallation,
+  type BriosaServerSelection,
+  type InstallationScope,
+} from './installationModels.js';
+import { legacyVersion, selectInstallation } from './installationPolicy.js';
+import {
+  isProtectedInstallation,
+  readWindowsRegistrations,
+} from './windowsDiscovery.js';
 
-interface DiscoveryPaths {
-  configured?: string | undefined;
-  moduleDirectory: string;
-  localAppData: string;
-  commonAppData: string;
+// Internal injection keeps portable tests independent of the native Registry.
+export interface DiscoveryPlatform {
+  readonly platform: string;
+  readonly moduleDirectory: string;
+  readonly localAppData: string;
+  readonly commonAppData: string;
+  readonly environmentOverride: string | undefined;
+  readRegistry(): Promise<Record<string, unknown>>;
+  isProtected(path: string): Promise<boolean>;
 }
-
-// Internal module; the package exports only its public facade.
-export function resolveServerExecutable(
-  paths: DiscoveryPaths = defaultPaths(),
-): string {
-  for (const candidate of [
-    paths.configured,
-    join(paths.moduleDirectory, 'briosa-server', 'Briosa.Server.exe'),
-  ]) {
-    if (
-      candidate &&
-      basename(candidate).toLowerCase() === 'briosa.server.exe' &&
-      isFile(candidate)
-    ) {
-      return resolve(candidate);
+const defaultPlatform: DiscoveryPlatform = {
+  platform: process.platform,
+  moduleDirectory: dirname(fileURLToPath(import.meta.url)),
+  get localAppData() {
+    return process.env.LOCALAPPDATA || join(homedir(), 'AppData', 'Local');
+  },
+  get commonAppData() {
+    return process.env.PROGRAMDATA ?? '';
+  },
+  get environmentOverride() {
+    return process.env.BRIOSA_SERVER_PATH;
+  },
+  readRegistry: readWindowsRegistrations,
+  isProtected: isProtectedInstallation,
+};
+/** Enumerates local installation evidence without launching Briosa, the SDK, or SA. */
+export async function discoverWithPlatform(
+  selection: BriosaServerSelection = {},
+  platform: DiscoveryPlatform = defaultPlatform,
+): Promise<BriosaDiscoveryReport> {
+  const options = normalizeSelection(selection);
+  if (platform.platform !== 'win32')
+    return {
+      installations: [],
+      diagnostics: [],
+      selected: null,
+      diagnosticCode: 'server-platform-unsupported',
+    };
+  let explicit = options.executablePath;
+  if (
+    explicit === undefined &&
+    options.installationId === undefined &&
+    options.useLegacyEnvironmentOverride
+  )
+    explicit = platform.environmentOverride;
+  if (explicit !== undefined) {
+    try {
+      const candidate = readInstallation(explicit, 'portable');
+      return {
+        installations: [candidate],
+        diagnostics: [],
+        ...selectInstallation([candidate], {
+          ...options,
+          executablePath: explicit,
+        }),
+      };
+    } catch {
+      return {
+        installations: [],
+        diagnostics: [{ path: explicit, code: 'server-installation-invalid' }],
+        selected: null,
+        diagnosticCode: 'server-installation-invalid',
+      };
     }
   }
-  for (const root of [paths.localAppData, paths.commonAppData]) {
-    if (!isAbsolute(root)) continue;
-    const candidate = managedExecutable(join(root, 'Briosa', 'Packages'));
-    if (candidate !== undefined) return candidate;
+  const candidates: BriosaInstallation[] = [],
+    diagnostics: BriosaDiscoveryDiagnostic[] = [];
+  let registry: Record<string, unknown>;
+  try {
+    registry = await platform.readRegistry();
+  } catch {
+    return {
+      installations: [],
+      diagnostics: [
+        { path: 'Registry64', code: 'server-registration-unavailable' },
+      ],
+      selected: null,
+      diagnosticCode: 'server-registration-unavailable',
+    };
   }
-  if (isAbsolute(paths.localAppData)) {
-    const legacy = join(
-      paths.localAppData,
-      'Briosa',
-      'servers',
-      identity.briosaVersion,
-      `sa-${identity.spatialAnalyzerTarget}`,
-      'Briosa.Server.exe',
-    );
-    if (isFile(legacy)) return resolve(legacy);
+  const elevated = registry.elevated === true;
+  async function add(
+    path: string,
+    scope: InstallationScope,
+    hint?: Record<string, unknown>,
+  ): Promise<void> {
+    if (
+      !(options.allowedScopes ?? []).includes(scope) ||
+      (elevated && scope !== 'machine')
+    )
+      return;
+    try {
+      const candidate = readInstallation(path, scope);
+      if (
+        hint !== undefined &&
+        (hint.installationId !== candidate.installationId ||
+          hint.serverVersion !== candidate.version ||
+          hint.spatialAnalyzerTarget !== candidate.spatialAnalyzerTarget ||
+          hint.runtimeIdentifier !== candidate.runtimeIdentifier ||
+          hint.packageId !==
+            'briosa-' +
+              candidate.version +
+              '-sa-' +
+              candidate.spatialAnalyzerTarget +
+              '-' +
+              candidate.runtimeIdentifier)
+      )
+        throw new Error('Registration mismatch.');
+      if (elevated && !(await platform.isProtected(path))) {
+        diagnostics.push({ path, code: 'server-installation-unprotected' });
+        return;
+      }
+      if (
+        !candidates.some(
+          (c) =>
+            pathKey(c.executablePath) === pathKey(candidate.executablePath),
+        )
+      )
+        candidates.push(candidate);
+    } catch {
+      diagnostics.push({ path, code: 'server-installation-invalid' });
+    }
   }
-  throw new BriosaStartupError('server-distribution-not-found');
-}
-
-function defaultPaths(): DiscoveryPaths {
+  for (const raw of Array.isArray(registry.diagnostics)
+    ? registry.diagnostics
+    : []) {
+    const d = object(raw);
+    diagnostics.push({
+      path: textField(d, 'path'),
+      code: textField(d, 'code'),
+    });
+  }
+  for (const raw of Array.isArray(registry.registrations)
+    ? registry.registrations
+    : []) {
+    try {
+      const entry = object(raw),
+        scope = textField(entry, 'scope');
+      if (scope !== 'user' && scope !== 'machine')
+        throw new Error('Invalid scope.');
+      const registration = textField(entry, 'registration');
+      if (registration.length > 32768)
+        throw new Error('Registration size limit.');
+      const hint = parseMetadata(registration),
+        directory = textField(hint, 'productDirectory');
+      if (
+        hint.schemaVersion !== 1 ||
+        !localPath(directory) ||
+        entry.id !== hint.installationId ||
+        hint.installationId !== installationId(directory)
+      )
+        throw new Error('Registration mismatch.');
+      await add(join(directory, 'payload', 'Briosa.Server.exe'), scope, hint);
+    } catch {
+      diagnostics.push({
+        path: 'Registry64',
+        code: 'server-registration-invalid',
+      });
+    }
+  }
+  const roots: [string, InstallationScope][] = [
+    [join(platform.localAppData, 'Briosa', 'Packages'), 'user'],
+    ...(platform.commonAppData
+      ? [
+          [join(platform.commonAppData, 'Briosa', 'Packages'), 'machine'] as [
+            string,
+            InstallationScope,
+          ],
+        ]
+      : []),
+    ...(options.searchRoots ?? []).map(
+      (path) => [path, 'portable'] as [string, InstallationScope],
+    ),
+  ];
+  for (const [root, scope] of roots) {
+    if (
+      !localPath(root) ||
+      !(options.allowedScopes ?? []).includes(scope) ||
+      (elevated && scope !== 'machine')
+    )
+      continue;
+    try {
+      noLinks(root);
+      const products = join(root, 'products');
+      if (!existsSync(products)) continue;
+      noLinks(products);
+      for (const product of readdirSync(products, {
+        withFileTypes: true,
+      }).slice(0, 1000))
+        if (product.isDirectory())
+          await add(
+            join(products, product.name, 'payload', 'Briosa.Server.exe'),
+            scope,
+          );
+    } catch {
+      diagnostics.push({ path: root, code: 'server-store-unavailable' });
+    }
+  }
+  if (!elevated)
+    for (const path of [
+      join(platform.moduleDirectory, 'briosa-server', 'Briosa.Server.exe'),
+      join(
+        platform.localAppData,
+        'Briosa',
+        'servers',
+        legacyVersion,
+        'sa-' + identity.spatialAnalyzerTarget,
+        'Briosa.Server.exe',
+      ),
+    ])
+      if (existsSync(path)) await add(path, 'portable');
+  const result = selectInstallation(candidates, options);
+  for (const candidate of candidates) {
+    const { diagnosticCode } = selectInstallation([candidate], options);
+    if (diagnosticCode)
+      diagnostics.push({
+        path: candidate.executablePath,
+        code: diagnosticCode,
+      });
+  }
+  if (!candidates.length && diagnostics.length)
+    result.diagnosticCode = 'server-installation-invalid';
   return {
-    configured: process.env.BRIOSA_SERVER_PATH,
-    moduleDirectory: dirname(fileURLToPath(import.meta.url)),
-    localAppData:
-      process.env.LOCALAPPDATA || join(homedir(), 'AppData', 'Local'),
-    commonAppData: process.env.PROGRAMDATA ?? '',
+    installations: Object.freeze(candidates),
+    diagnostics: Object.freeze(diagnostics),
+    ...result,
   };
 }
-
-function isFile(path: string): boolean {
-  try {
-    return statSync(path).isFile();
-  } catch {
-    return false;
-  }
+export async function resolveInstallation(
+  selection: BriosaServerSelection = {},
+): Promise<BriosaInstallation> {
+  const report = await discoverInstallations(selection);
+  if (report.selected === null)
+    throw new BriosaStartupError(
+      report.diagnosticCode ?? 'server-distribution-not-found',
+    );
+  return report.selected;
 }
 
-function object(value: unknown): Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : {};
-}
-
-function managedExecutable(store: string): string | undefined {
-  const id = `briosa-${identity.briosaVersion}-sa-${identity.spatialAnalyzerTarget}-win-x64`;
-  const product = join(store, 'products', id);
-  const payload = join(product, 'payload');
-  try {
-    const receipt = object(
-      JSON.parse(
-        readFileSync(join(product, 'receipt.json'), 'utf8'),
-      ) as unknown,
-    );
-    const manifest = object(
-      JSON.parse(
-        readFileSync(join(payload, 'manifest.json'), 'utf8'),
-      ) as unknown,
-    );
-    const pkg = object(receipt.package);
-    if (
-      receipt.schemaVersion !== 1 ||
-      manifest.schemaVersion !== 2 ||
-      pkg.id !== id ||
-      pkg.component !== 'server' ||
-      pkg.version !== identity.briosaVersion ||
-      pkg.runtimeIdentifier !== 'win-x64' ||
-      pkg.spatialAnalyzerTarget !== identity.spatialAnalyzerTarget ||
-      manifest.artifactName !== id ||
-      manifest.briosaVersion !== identity.briosaVersion ||
-      manifest.spatialAnalyzerTarget !== identity.spatialAnalyzerTarget ||
-      manifest.runtimeIdentifier !== 'win-x64' ||
-      manifest.sourceRevision !== identity.sourceRevision ||
-      manifest.protocolPackage !== 'briosa' ||
-      manifest.spatialAnalyzerBundled !== false
-    )
-      return undefined;
-    const files = object(receipt.files);
-    for (const name of [
-      'manifest.json',
-      'Briosa.Server.exe',
-      'Briosa.Worker.exe',
-    ]) {
-      const digest = files[name];
-      if (
-        typeof digest !== 'string' ||
-        digest.length !== 64 ||
-        !/^[0-9a-f]{64}$/.test(digest) ||
-        !isFile(join(payload, name))
-      )
-        return undefined;
-    }
-    return resolve(payload, 'Briosa.Server.exe');
-  } catch {
-    return undefined;
-  }
+export async function discoverInstallations(
+  selection: BriosaServerSelection = {},
+): Promise<BriosaDiscoveryReport> {
+  return await discoverWithPlatform(selection, defaultPlatform);
 }

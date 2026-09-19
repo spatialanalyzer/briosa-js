@@ -316,6 +316,7 @@ function matchingSnapshot(
         : SpatialAnalyzerExecutionReadinessState.SPATIAL_ANALYZER_EXECUTION_READINESS_STATE_UNVERIFIED,
       targetIsolationMode:
         TargetIsolationMode.TARGET_ISOLATION_MODE_SINGLE_TENANT,
+      compatibility: { major: 1, revision: 0 },
       readyForMp: ready,
     },
     {
@@ -350,11 +351,11 @@ function serviceError(
 void test('records merged Wave B artifact and generated semantics', () => {
   assert.equal(
     briosaProtocolIdentity.artifactName,
-    'briosa-protocol-0.6.1-sa-2026.1.0529.7',
+    'briosa-protocol-0.7.0-sa-2026.1.0529.7',
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    '32a3b56ba4ae31ea5ec6ec3b2aa051eb61c866aa',
+    '4303a3322074869b35a3f16f9e35484a7bd5c830',
   );
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(

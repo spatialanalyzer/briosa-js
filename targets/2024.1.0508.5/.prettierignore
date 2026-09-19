@@ -4,3 +4,4 @@ artifacts/
 briosa-source/
 src/generated/
 package-lock.json
+tests/fixtures/selection-cases.json

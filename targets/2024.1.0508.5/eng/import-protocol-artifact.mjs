@@ -138,9 +138,39 @@ function extractArchive(artifactPath, extractRoot) {
 
 function verifyBundle(bundleRoot, artifactPath, artifactHash, update) {
   const manifest = readJson(resolve(bundleRoot, 'manifest.json'));
+  const compatibility = manifest.compatibility;
+  if (
+    !compatibility ||
+    !['major', 'revision'].every(
+      (key) =>
+        Number.isInteger(compatibility[key]) &&
+        compatibility[key] >= 0 &&
+        compatibility[key] <= 4294967295,
+    ) ||
+    compatibility.major === 0
+  )
+    throw new Error('Invalid behavioral compatibility coordinates.');
+  const contract = readJson(
+    resolve(bundleRoot, 'compatibility', 'contract.json'),
+  );
+  assertEqual(
+    contract.schemaVersion,
+    1,
+    'Unsupported behavioral declaration schema.',
+  );
+  assertEqual(
+    contract.major,
+    compatibility.major,
+    'Compatibility major differs from declaration.',
+  );
+  assertEqual(
+    contract.revision,
+    compatibility.revision,
+    'Compatibility revision differs from declaration.',
+  );
   assertEqual(
     manifest.schema_version,
-    2,
+    3,
     'Unsupported protocol manifest schema.',
   );
   assertEqual(
@@ -323,6 +353,8 @@ function generateProtocol(bundleRoot, outputRoot, manifest, artifactHash) {
       artifactSha256: artifactHash,
       briosaVersion: manifest.briosa_version,
       sourceRevision: manifest.source_revision,
+      compatibilityMajor: manifest.compatibility.major,
+      compatibilityRevision: manifest.compatibility.revision,
       protocolSchemaSha256: manifest.protocol_schema_sha256,
       descriptorSetSha256: manifest.descriptor_set_sha256,
       protocolPackage: manifest.protocol_package,
@@ -376,6 +408,13 @@ try {
       throw new Error('Generated path escaped the repository.');
     rmSync(generatedRoot, { force: true, recursive: true });
     cpSync(generated, generatedRoot, { recursive: true });
+    mkdirSync(resolve(repositoryRoot, 'tests', 'fixtures'), {
+      recursive: true,
+    });
+    cpSync(
+      resolve(bundleRoot, 'compatibility', 'selection-cases.json'),
+      resolve(repositoryRoot, 'tests', 'fixtures', 'selection-cases.json'),
+    );
     const lock = {
       schema_version: 2,
       artifact: {
@@ -407,6 +446,19 @@ try {
     console.log('Updated generated protocol code and protocol.lock.json.');
   } else {
     compareTrees(generated, generatedRoot);
+    assertEqual(
+      sha256(
+        readFileSync(
+          resolve(repositoryRoot, 'tests', 'fixtures', 'selection-cases.json'),
+        ),
+      ),
+      sha256(
+        readFileSync(
+          resolve(bundleRoot, 'compatibility', 'selection-cases.json'),
+        ),
+      ),
+      'Shared installation fixtures drifted.',
+    );
     console.log(
       'Verified protocol artifact identity and generated-code drift.',
     );
