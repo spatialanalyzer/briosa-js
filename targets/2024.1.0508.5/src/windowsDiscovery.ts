@@ -4,6 +4,7 @@ import { object } from './installationMetadata.js';
 
 const preamble = String.raw`
 $ErrorActionPreference = 'Stop'
+$ProgressPreference = 'SilentlyContinue'
 [Console]::InputEncoding = [Text.UTF8Encoding]::new($false)
 [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
 `;
@@ -78,7 +79,8 @@ export function runWindowsAdapter(script: string, input = ''): Promise<string> {
       ],
       {
         windowsHide: true,
-        timeout: 10000,
+        // Windows PowerShell's first launch can initialize system modules.
+        timeout: 30000,
         maxBuffer: 8 * 1024 * 1024,
         encoding: 'utf8',
       },
