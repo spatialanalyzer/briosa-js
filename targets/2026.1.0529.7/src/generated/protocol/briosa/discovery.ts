@@ -121,7 +121,17 @@ export interface GetServerInfoResponse {
   spatialAnalyzerExecutionReadinessState?: SpatialAnalyzerExecutionReadinessState | undefined;
   targetIsolationMode?: TargetIsolationMode | undefined;
   activatedSdkIdentity?: RuntimeIdentityEvidence | undefined;
-  connectedSpatialAnalyzerIdentity?: RuntimeIdentityEvidence | undefined;
+  connectedSpatialAnalyzerIdentity?:
+    | RuntimeIdentityEvidence
+    | undefined;
+  /** Behavioral promise, independent of release and source identity. */
+  compatibility?: CompatibilityContract | undefined;
+}
+
+/** Scoped to the exact SA target. Revisions preserve earlier behavior. */
+export interface CompatibilityContract {
+  major?: number | undefined;
+  revision?: number | undefined;
 }
 
 export interface RuntimeIdentityEvidence {
@@ -199,6 +209,7 @@ function createBaseGetServerInfoResponse(): GetServerInfoResponse {
     targetIsolationMode: 0,
     activatedSdkIdentity: undefined,
     connectedSpatialAnalyzerIdentity: undefined,
+    compatibility: undefined,
   };
 }
 
@@ -238,6 +249,9 @@ export const GetServerInfoResponse: MessageFns<GetServerInfoResponse> = {
     }
     if (message.connectedSpatialAnalyzerIdentity !== undefined) {
       RuntimeIdentityEvidence.encode(message.connectedSpatialAnalyzerIdentity, writer.uint32(82).fork()).join();
+    }
+    if (message.compatibility !== undefined) {
+      CompatibilityContract.encode(message.compatibility, writer.uint32(90).fork()).join();
     }
     return writer;
   },
@@ -329,6 +343,14 @@ export const GetServerInfoResponse: MessageFns<GetServerInfoResponse> = {
           message.connectedSpatialAnalyzerIdentity = RuntimeIdentityEvidence.decode(reader, reader.uint32());
           continue;
         }
+        case 11: {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.compatibility = CompatibilityContract.decode(reader, reader.uint32());
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -360,6 +382,67 @@ export const GetServerInfoResponse: MessageFns<GetServerInfoResponse> = {
       (object.connectedSpatialAnalyzerIdentity !== undefined && object.connectedSpatialAnalyzerIdentity !== null)
         ? RuntimeIdentityEvidence.fromPartial(object.connectedSpatialAnalyzerIdentity)
         : undefined;
+    message.compatibility = (object.compatibility !== undefined && object.compatibility !== null)
+      ? CompatibilityContract.fromPartial(object.compatibility)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseCompatibilityContract(): CompatibilityContract {
+  return { major: 0, revision: 0 };
+}
+
+export const CompatibilityContract: MessageFns<CompatibilityContract> = {
+  encode(message: CompatibilityContract, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.major !== undefined && message.major !== 0) {
+      writer.uint32(8).uint32(message.major);
+    }
+    if (message.revision !== undefined && message.revision !== 0) {
+      writer.uint32(16).uint32(message.revision);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): CompatibilityContract {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCompatibilityContract();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.major = reader.uint32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.revision = reader.uint32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CompatibilityContract>): CompatibilityContract {
+    return CompatibilityContract.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<CompatibilityContract>): CompatibilityContract {
+    const message = createBaseCompatibilityContract();
+    message.major = object.major ?? 0;
+    message.revision = object.revision ?? 0;
     return message;
   },
 };

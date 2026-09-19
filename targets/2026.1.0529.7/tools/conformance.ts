@@ -63,6 +63,16 @@ async function runScenario(scenario: string): Promise<void> {
       startOptions = { launchSpatialAnalyzer: false };
     }
 
+    const executablePath = process.env.BRIOSA_SERVER_PATH;
+    requireCondition(
+      executablePath !== undefined,
+      'The conformance server path is required.',
+    );
+    startOptions = {
+      ...startOptions,
+      serverSelection: { executablePath, allowPrerelease: true },
+    };
+
     if (scenario === 'identity-mismatch') {
       const error = await captureError(() => briosa.start(startOptions));
       requireCondition(

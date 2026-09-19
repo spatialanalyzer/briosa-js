@@ -1,5 +1,9 @@
 /** Handwritten public lifecycle and discovery types. */
 import {
+  normalizeSelection,
+  type BriosaServerSelection,
+} from './installationModels.js';
+import {
   loggingArguments,
   type BriosaLoggingOptions,
 } from './loggingOptions.js';
@@ -23,6 +27,7 @@ export interface SpatialAnalyzerLaunchOptions {
 }
 
 export interface BriosaStartOptions extends BriosaLifecycleCallOptions {
+  readonly serverSelection?: BriosaServerSelection;
   readonly logging?: BriosaLoggingOptions;
   readonly startSpatialAnalyzerSdk?: boolean;
   readonly launchSpatialAnalyzer?: boolean;
@@ -213,6 +218,7 @@ export interface BriosaServerSnapshot {
 }
 
 export interface NormalizedBriosaStartOptions {
+  readonly serverSelection: BriosaServerSelection;
   readonly logging?: BriosaLoggingOptions;
   readonly startSpatialAnalyzerSdk: boolean;
   readonly launchSpatialAnalyzer: boolean;
@@ -236,6 +242,7 @@ export function normalizeStartOptions(
 ): NormalizedBriosaStartOptions {
   loggingArguments(options.logging);
   const normalized: NormalizedBriosaStartOptions = {
+    serverSelection: normalizeSelection(options.serverSelection),
     startSpatialAnalyzerSdk: options.startSpatialAnalyzerSdk ?? true,
     launchSpatialAnalyzer: options.launchSpatialAnalyzer ?? true,
     connectToSpatialAnalyzer: options.connectToSpatialAnalyzer ?? true,

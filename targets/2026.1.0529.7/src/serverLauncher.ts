@@ -7,16 +7,26 @@ import {
   loggingArguments,
   type BriosaLoggingOptions,
 } from './loggingOptions.js';
-import { resolveServerExecutable } from './serverDiscovery.js';
+import { resolveInstallation } from './serverDiscovery.js';
+import { readInstallation } from './installationMetadata.js';
+import {
+  normalizeSelection,
+  type BriosaInstallation,
+  type BriosaServerSelection,
+} from './installationModels.js';
 
 export interface OwnedServer {
+  readonly installation?: BriosaInstallation;
   readonly target: string;
   readonly hasExited: boolean;
   close(): Promise<void>;
 }
 
 export interface ServerLauncher {
-  launch(logging?: BriosaLoggingOptions): Promise<OwnedServer>;
+  launch(
+    logging?: BriosaLoggingOptions,
+    selection?: BriosaServerSelection,
+  ): Promise<OwnedServer>;
 }
 
 class ChildProcessServer implements OwnedServer {
@@ -25,6 +35,7 @@ class ChildProcessServer implements OwnedServer {
   constructor(
     readonly target: string,
     process: ChildProcess,
+    readonly installation: BriosaInstallation,
   ) {
     this.#process = process;
   }
@@ -43,16 +54,32 @@ class ChildProcessServer implements OwnedServer {
 }
 
 export class LocalServerLauncher implements ServerLauncher {
-  async launch(logging?: BriosaLoggingOptions): Promise<OwnedServer> {
-    const executable = resolveServerExecutable();
+  async launch(
+    logging?: BriosaLoggingOptions,
+    selection?: BriosaServerSelection,
+  ): Promise<OwnedServer> {
+    const options = normalizeSelection(selection);
+    const installation = await resolveInstallation(options);
+    const executable = installation.executablePath;
     const port = await reserveLoopbackPort();
     let child: ChildProcess;
     try {
+      if (
+        JSON.stringify(readInstallation(executable, installation.scope)) !==
+        JSON.stringify(installation)
+      )
+        throw new BriosaStartupError('server-installation-changed');
       child = spawn(
         executable,
         [
           `--Briosa:Endpoint:Port=${String(port)}`,
           ...loggingArguments(logging),
+          ...(options.spatialAnalyzerExecutablePath === undefined
+            ? []
+            : [
+                '--Briosa:SpatialAnalyzer:ExecutablePath=' +
+                  options.spatialAnalyzerExecutablePath,
+              ]),
         ],
         {
           cwd: dirname(executable),
@@ -64,7 +91,19 @@ export class LocalServerLauncher implements ServerLauncher {
     } catch (cause) {
       throw new BriosaStartupError('server-process-start-failed', { cause });
     }
-    return new ChildProcessServer(`127.0.0.1:${String(port)}`, child);
+    await new Promise<void>((resolve, reject) => {
+      child.once('error', (cause) =>
+        reject(
+          new BriosaStartupError('server-process-start-failed', { cause }),
+        ),
+      );
+      child.once('spawn', resolve);
+    });
+    return new ChildProcessServer(
+      `127.0.0.1:${String(port)}`,
+      child,
+      installation,
+    );
   }
 }
 

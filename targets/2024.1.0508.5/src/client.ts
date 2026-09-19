@@ -1,4 +1,5 @@
 import { status } from '@grpc/grpc-js';
+import { validateInstallation } from './compatibility.js';
 
 import {
   BriosaCallAbortedError,
@@ -431,7 +432,10 @@ export class BriosaClientImplementation implements BriosaClient {
     let transport: ClientTransport | null = null;
     let session: Session | null = null;
     try {
-      server = await this.#serverLauncher.launch(options.logging);
+      server = await this.#serverLauncher.launch(
+        options.logging,
+        options.serverSelection,
+      );
       transport = this.#transportFactory(server.target);
       const snapshot = await this.#waitForServer(server, transport, signal);
       session = createSession(server, transport, snapshot);
@@ -495,7 +499,9 @@ export class BriosaClientImplementation implements BriosaClient {
         throw new BriosaStartupError('server-process-exited');
       }
       try {
-        return mapSnapshot(...(await transport.getServerSnapshot(signal)));
+        const snapshot = await transport.getServerSnapshot(signal);
+        validateInstallation(snapshot[0], server.installation);
+        return mapSnapshot(...snapshot);
       } catch (error) {
         if (!isServiceError(error) || error.code !== status.UNAVAILABLE) {
           throw error;

@@ -15,7 +15,7 @@ The package is named `@spatialanalyzer/briosa-2024.1.0508.5`, while its
 exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
-npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.1.1
+npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.2.0
 ```
 
 Each exact SpatialAnalyzer target has an independent package. Install the chosen
@@ -58,27 +58,63 @@ See the [Briosa documentation](https://spatialanalyzer.github.io/briosa-docs/api
 for the client API overview. The target-specific source and locked protocol define
 this package's exact API.
 
-## Server Distribution Lookup
+## Server selection
 
-Install **Briosa Server 0.6.1 for SA 2024.1.0508.5** with the Briosa Installer.
-Default startup searches these locations in order:
+Applications select a server independently of their protocol generation pin.
+On Windows x64, discovery reads Registry64 installation hints, committed
+canonical stores, explicit search roots, and supported local layouts. It validates
+receipts and manifests, filters the exact SA target and compatibility contract,
+and selects the highest compatible stable release. No internet access is needed.
 
-1. `BRIOSA_SERVER_PATH`, pointing to `Briosa.Server.exe`.
-2. A client-local `briosa-server/Briosa.Server.exe`.
-3. `%LOCALAPPDATA%/Briosa/Packages/products/<package-id>/payload/Briosa.Server.exe`.
-4. `%PROGRAMDATA%/Briosa/Packages/products/<package-id>/payload/Briosa.Server.exe`.
-5. The legacy `%LOCALAPPDATA%/Briosa/servers/<briosa-version>/sa-<sa-target>/Briosa.Server.exe`.
+This client requires behavioral contract **1.0** (major 1, revision at least 0).
+The exact published Server 0.6.1 identity is also supported through a tested
+legacy exception. Other servers without contract metadata are rejected. Protocol
+and source pins remain exact build inputs; startup verifies the running server
+against its selected installation instead of requiring the generation build.
 
-For this client, `<package-id>` is `briosa-0.6.1-sa-2024.1.0508.5-win-x64`.
-Managed installations must have a matching committed receipt, manifest, and required
-entry points. Missing or invalid candidates are skipped; discovery never selects a
-different server version or SA target. Runtime compatibility checks still apply.
-Installer verification/repair checks package integrity separately.
+A missing or incompatible explicit choice fails without selecting another
+installation. The choice is fixed for the session, including worker recovery.
+Prereleases require explicit opt-in. Conflicting manifests for the same release
+precedence produce an ambiguity error; identical copies prefer machine, user,
+then portable scope and a stable path order. Elevated automatic discovery admits
+only protected machine installations.
 
-For a custom Installer store, set `BRIOSA_SERVER_PATH` to the desired product's
-`payload/Briosa.Server.exe`. Custom stores are not searched automatically.
-The [shared discovery contract](https://github.com/spatialanalyzer/briosa/blob/main/docs/architecture/installed-package-store.md#client-server-discovery)
-defines precedence, eligibility, root handling, and the installation/runtime boundary.
+The optional selection settings include an executable path or installation ID,
+an exact version, minimum version (inclusive), maximum version (exclusive),
+excluded versions, search roots, allowed scopes, and an SA executable path.
+Search roots name package stores with a committed `products` directory.
+Read-only discovery returns candidates, the selected identity, and rejection codes
+without starting Briosa, the SDK, or SA. Detailed paths belong to explicitly
+requested diagnostics; installer **Verify/Repair** provides full payload checks.
+
+`BRIOSA_SERVER_PATH` is ignored by default in client 0.2. Use a direct selection
+option in new applications. Existing scripts can opt in to the legacy environment
+override; an invalid override fails without fallback. Direct selectors take
+precedence. Published 0.1.0/0.1.1 packages retain their original behavior.
+
+Custom stores can be registered through the Installer's **Register existing
+installations** action or `packages register` command. Alternatively provide a
+search root or executable path per application. No machine-wide active server is
+selected. Installing several SA releases does not establish concurrent execution:
+the server still verifies the activated SDK and connected SA independently.
+
+The [shared selection contract](https://github.com/spatialanalyzer/briosa/blob/main/docs/architecture/installation-selection-and-compatibility.md)
+owns these rules and the [compatibility matrix](https://github.com/spatialanalyzer/briosa/blob/main/compatibility/matrix.json)
+distinguishes tested pairs from declared forward compatibility.
+
+```ts
+import { discoverInstallations } from 'briosa';
+
+const selection = { version: '0.6.1' };
+const report = await discoverInstallations(selection); // no process launch
+await briosa.start({ serverSelection: selection });
+```
+
+Use `executablePath`, `installationId`, `minimumVersion`, `maximumVersionExclusive`,
+`excludedVersions`, `searchRoots`, `allowedScopes`, `allowPrerelease`,
+`spatialAnalyzerExecutablePath`, and `useLegacyEnvironmentOverride` as needed.
+The Node Registry adapter uses a bounded hidden PowerShell subprocess with
+profiles disabled. Paths are passed as data, not shell expressions.
 
 ## Build and Test
 
@@ -106,12 +142,12 @@ Neither path requires SpatialAnalyzer nor a license.
 
 ```powershell
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.6.1-sa-2024.1.0508.5.zip `
+  --artifact C:\path\to\briosa-protocol-0.7.0-sa-2024.1.0508.5.zip `
   --update `
   --source-channel github_release
 
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.6.1-sa-2024.1.0508.5.zip
+  --artifact C:\path\to\briosa-protocol-0.7.0-sa-2024.1.0508.5.zip
 ```
 
 Never edit `src/generated` or `protocol.lock.json` by hand.
@@ -140,9 +176,9 @@ and [server observability guide](https://github.com/spatialanalyzer/briosa/blob/
 
 ## Compatibility and validation
 
-This package pins the matching Briosa v0.6.1 protocol and conformance bundles.
-Startup checks the server version, source revision, protocol package, and exact
-SA target before admitting MP calls. The other SA target is not interchangeable.
+This package pins its generation artifact and tests the declared compatibility
+contract against packaged servers, including the retained 0.6.1 baseline.
+Exact SA target, runtime identity, capabilities, and readiness still gate MP calls.
 
 Portable conformance covers lifecycle, identity mismatch, denied capabilities,
 typed MP and output failure, deadlines, cancellation, watchdog recovery, SDK loss,

@@ -1,4 +1,15 @@
 export { createBriosaClient, getWorkingDirectory } from './client.js';
+export {
+  discoverInstallations,
+  resolveInstallation,
+} from './serverDiscovery.js';
+export type {
+  BriosaServerSelection,
+  BriosaInstallation,
+  BriosaDiscoveryReport,
+  BriosaDiscoveryDiagnostic,
+  InstallationScope,
+} from './installationModels.js';
 export type { BriosaLoggingOptions, BriosaLogLevel } from './loggingOptions.js';
 export { getActiveCollectionName } from './activeContextOperations.js';
 export type { BriosaClient } from './client.js';
