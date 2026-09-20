@@ -1,5 +1,7 @@
 # Briosa JavaScript/TypeScript clients
 
+[Documentation](https://briosa.dev/) | [API Reference](https://briosa.dev/api/javascript) | [First MP Command](https://briosa.dev/docs/getting-started/first-request)
+
 Independent exact-target clients for the [Briosa SpatialAnalyzer bridge](https://github.com/spatialanalyzer/briosa).
 
 | SpatialAnalyzer target | Product and development guide | Client version |
