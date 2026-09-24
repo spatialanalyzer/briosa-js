@@ -261,14 +261,32 @@ export interface CreatePointCalloutRequest {
   viewYPosition?: number | undefined;
   showPointCollection?: boolean | undefined;
   showPointGroup?: boolean | undefined;
-  showPointTarget?: boolean | undefined;
-  showXR?: boolean | undefined;
-  showYTheta?: boolean | undefined;
-  showZPhi?: boolean | undefined;
-  showUnits?: boolean | undefined;
-  showUxUr?: boolean | undefined;
-  showUyUtheta?: boolean | undefined;
-  showUzUphi?: boolean | undefined;
+  showPointTarget?:
+    | boolean
+    | undefined;
+  /** MP qualifier: R. */
+  showX?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Theta. */
+  showY?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Phi. */
+  showZ?: boolean | undefined;
+  showUnits?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Ur. */
+  showUx?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Utheta. */
+  showUy?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Uphi. */
+  showUz?: boolean | undefined;
   showUmag?: boolean | undefined;
   desiredCoordinateSystem?: CoordinateSystemType | undefined;
   notes?: string[] | undefined;
@@ -1821,8 +1839,11 @@ export interface GetGradientAtProjectedPointOnSurfaceResult {
 }
 
 export interface GetGradientAtProjectedPointOnSurfaceEdgeRequest {
-  pointToProject?: PointName | undefined;
-  surfaceEdgeBSpline?: CollectionObjectName | undefined;
+  pointToProject?:
+    | PointName
+    | undefined;
+  /** MP qualifier: B-Spline. */
+  surfaceEdge?: CollectionObjectName | undefined;
   surfaceName?: CollectionObjectName | undefined;
   edgeOffsetDirection?: Vector | undefined;
   edgeOffsetDistance?: number | undefined;
@@ -1944,8 +1965,11 @@ export interface ConstructPointsCylindricallyShiftedRequest {
   referenceObjectName?: CollectionObjectName | undefined;
   originalPoints?: PointName[] | undefined;
   groupForNewPoints?: CollectionObjectName | undefined;
-  radialShift?: number | undefined;
-  thetaShiftDegrees?: number | undefined;
+  radialShift?:
+    | number
+    | undefined;
+  /** Angle in degrees. */
+  thetaShift?: number | undefined;
   planarShift?: number | undefined;
 }
 
@@ -2093,9 +2117,15 @@ export interface ClearHiddenPointBarDatabaseResult {
 }
 
 export interface CreateHiddenPointRodRequest {
-  hiddenPointRodName?: string | undefined;
-  targetToTargetDistance?: number | undefined;
-  targetToTipDistance?: number | undefined;
+  hiddenPointRodName?:
+    | string
+    | undefined;
+  /** MP qualifier: Target to Target. */
+  aToBDistance?:
+    | number
+    | undefined;
+  /** MP qualifier: Target to Tip. */
+  aToCDistance?: number | undefined;
   interPointTolerance?: number | undefined;
 }
 
@@ -2162,8 +2192,11 @@ export interface ConstructScaleBarResult {
 }
 
 export interface ConstructSphereRequest {
-  sphereName?: CollectionObjectName | undefined;
-  sphereCenterInWorkingCoordinates?: Vector | undefined;
+  sphereName?:
+    | CollectionObjectName
+    | undefined;
+  /** Expressed in working coordinates. */
+  sphereCenter?: Vector | undefined;
   sphereRadius?: number | undefined;
 }
 
@@ -3711,13 +3744,13 @@ function createBaseCreatePointCalloutRequest(): CreatePointCalloutRequest {
     showPointCollection: undefined,
     showPointGroup: undefined,
     showPointTarget: undefined,
-    showXR: undefined,
-    showYTheta: undefined,
-    showZPhi: undefined,
+    showX: undefined,
+    showY: undefined,
+    showZ: undefined,
     showUnits: undefined,
-    showUxUr: undefined,
-    showUyUtheta: undefined,
-    showUzUphi: undefined,
+    showUx: undefined,
+    showUy: undefined,
+    showUz: undefined,
     showUmag: undefined,
     desiredCoordinateSystem: undefined,
     notes: [],
@@ -3748,26 +3781,26 @@ export const CreatePointCalloutRequest: MessageFns<CreatePointCalloutRequest> = 
     if (message.showPointTarget !== undefined) {
       writer.uint32(56).bool(message.showPointTarget);
     }
-    if (message.showXR !== undefined) {
-      writer.uint32(64).bool(message.showXR);
+    if (message.showX !== undefined) {
+      writer.uint32(64).bool(message.showX);
     }
-    if (message.showYTheta !== undefined) {
-      writer.uint32(72).bool(message.showYTheta);
+    if (message.showY !== undefined) {
+      writer.uint32(72).bool(message.showY);
     }
-    if (message.showZPhi !== undefined) {
-      writer.uint32(80).bool(message.showZPhi);
+    if (message.showZ !== undefined) {
+      writer.uint32(80).bool(message.showZ);
     }
     if (message.showUnits !== undefined) {
       writer.uint32(88).bool(message.showUnits);
     }
-    if (message.showUxUr !== undefined) {
-      writer.uint32(96).bool(message.showUxUr);
+    if (message.showUx !== undefined) {
+      writer.uint32(96).bool(message.showUx);
     }
-    if (message.showUyUtheta !== undefined) {
-      writer.uint32(104).bool(message.showUyUtheta);
+    if (message.showUy !== undefined) {
+      writer.uint32(104).bool(message.showUy);
     }
-    if (message.showUzUphi !== undefined) {
-      writer.uint32(112).bool(message.showUzUphi);
+    if (message.showUz !== undefined) {
+      writer.uint32(112).bool(message.showUz);
     }
     if (message.showUmag !== undefined) {
       writer.uint32(120).bool(message.showUmag);
@@ -3854,7 +3887,7 @@ export const CreatePointCalloutRequest: MessageFns<CreatePointCalloutRequest> = 
             break;
           }
 
-          message.showXR = reader.bool();
+          message.showX = reader.bool();
           continue;
         }
         case 9: {
@@ -3862,7 +3895,7 @@ export const CreatePointCalloutRequest: MessageFns<CreatePointCalloutRequest> = 
             break;
           }
 
-          message.showYTheta = reader.bool();
+          message.showY = reader.bool();
           continue;
         }
         case 10: {
@@ -3870,7 +3903,7 @@ export const CreatePointCalloutRequest: MessageFns<CreatePointCalloutRequest> = 
             break;
           }
 
-          message.showZPhi = reader.bool();
+          message.showZ = reader.bool();
           continue;
         }
         case 11: {
@@ -3886,7 +3919,7 @@ export const CreatePointCalloutRequest: MessageFns<CreatePointCalloutRequest> = 
             break;
           }
 
-          message.showUxUr = reader.bool();
+          message.showUx = reader.bool();
           continue;
         }
         case 13: {
@@ -3894,7 +3927,7 @@ export const CreatePointCalloutRequest: MessageFns<CreatePointCalloutRequest> = 
             break;
           }
 
-          message.showUyUtheta = reader.bool();
+          message.showUy = reader.bool();
           continue;
         }
         case 14: {
@@ -3902,7 +3935,7 @@ export const CreatePointCalloutRequest: MessageFns<CreatePointCalloutRequest> = 
             break;
           }
 
-          message.showUzUphi = reader.bool();
+          message.showUz = reader.bool();
           continue;
         }
         case 15: {
@@ -3966,13 +3999,13 @@ export const CreatePointCalloutRequest: MessageFns<CreatePointCalloutRequest> = 
     message.showPointCollection = object.showPointCollection ?? undefined;
     message.showPointGroup = object.showPointGroup ?? undefined;
     message.showPointTarget = object.showPointTarget ?? undefined;
-    message.showXR = object.showXR ?? undefined;
-    message.showYTheta = object.showYTheta ?? undefined;
-    message.showZPhi = object.showZPhi ?? undefined;
+    message.showX = object.showX ?? undefined;
+    message.showY = object.showY ?? undefined;
+    message.showZ = object.showZ ?? undefined;
     message.showUnits = object.showUnits ?? undefined;
-    message.showUxUr = object.showUxUr ?? undefined;
-    message.showUyUtheta = object.showUyUtheta ?? undefined;
-    message.showUzUphi = object.showUzUphi ?? undefined;
+    message.showUx = object.showUx ?? undefined;
+    message.showUy = object.showUy ?? undefined;
+    message.showUz = object.showUz ?? undefined;
     message.showUmag = object.showUmag ?? undefined;
     message.desiredCoordinateSystem = object.desiredCoordinateSystem ?? undefined;
     message.notes = object.notes?.map((e) => e) || [];
@@ -24519,7 +24552,7 @@ export const GetGradientAtProjectedPointOnSurfaceResult: MessageFns<GetGradientA
 function createBaseGetGradientAtProjectedPointOnSurfaceEdgeRequest(): GetGradientAtProjectedPointOnSurfaceEdgeRequest {
   return {
     pointToProject: undefined,
-    surfaceEdgeBSpline: undefined,
+    surfaceEdge: undefined,
     surfaceName: undefined,
     edgeOffsetDirection: undefined,
     edgeOffsetDistance: undefined,
@@ -24537,8 +24570,8 @@ export const GetGradientAtProjectedPointOnSurfaceEdgeRequest: MessageFns<
     if (message.pointToProject !== undefined) {
       PointName.encode(message.pointToProject, writer.uint32(10).fork()).join();
     }
-    if (message.surfaceEdgeBSpline !== undefined) {
-      CollectionObjectName.encode(message.surfaceEdgeBSpline, writer.uint32(18).fork()).join();
+    if (message.surfaceEdge !== undefined) {
+      CollectionObjectName.encode(message.surfaceEdge, writer.uint32(18).fork()).join();
     }
     if (message.surfaceName !== undefined) {
       CollectionObjectName.encode(message.surfaceName, writer.uint32(26).fork()).join();
@@ -24575,7 +24608,7 @@ export const GetGradientAtProjectedPointOnSurfaceEdgeRequest: MessageFns<
             break;
           }
 
-          message.surfaceEdgeBSpline = CollectionObjectName.decode(reader, reader.uint32());
+          message.surfaceEdge = CollectionObjectName.decode(reader, reader.uint32());
           continue;
         }
         case 3: {
@@ -24631,8 +24664,8 @@ export const GetGradientAtProjectedPointOnSurfaceEdgeRequest: MessageFns<
     message.pointToProject = (object.pointToProject !== undefined && object.pointToProject !== null)
       ? PointName.fromPartial(object.pointToProject)
       : undefined;
-    message.surfaceEdgeBSpline = (object.surfaceEdgeBSpline !== undefined && object.surfaceEdgeBSpline !== null)
-      ? CollectionObjectName.fromPartial(object.surfaceEdgeBSpline)
+    message.surfaceEdge = (object.surfaceEdge !== undefined && object.surfaceEdge !== null)
+      ? CollectionObjectName.fromPartial(object.surfaceEdge)
       : undefined;
     message.surfaceName = (object.surfaceName !== undefined && object.surfaceName !== null)
       ? CollectionObjectName.fromPartial(object.surfaceName)
@@ -26166,7 +26199,7 @@ function createBaseConstructPointsCylindricallyShiftedRequest(): ConstructPoints
     originalPoints: [],
     groupForNewPoints: undefined,
     radialShift: undefined,
-    thetaShiftDegrees: undefined,
+    thetaShift: undefined,
     planarShift: undefined,
   };
 }
@@ -26187,8 +26220,8 @@ export const ConstructPointsCylindricallyShiftedRequest: MessageFns<ConstructPoi
     if (message.radialShift !== undefined) {
       writer.uint32(33).double(message.radialShift);
     }
-    if (message.thetaShiftDegrees !== undefined) {
-      writer.uint32(41).double(message.thetaShiftDegrees);
+    if (message.thetaShift !== undefined) {
+      writer.uint32(41).double(message.thetaShift);
     }
     if (message.planarShift !== undefined) {
       writer.uint32(49).double(message.planarShift);
@@ -26243,7 +26276,7 @@ export const ConstructPointsCylindricallyShiftedRequest: MessageFns<ConstructPoi
             break;
           }
 
-          message.thetaShiftDegrees = reader.double();
+          message.thetaShift = reader.double();
           continue;
         }
         case 6: {
@@ -26278,7 +26311,7 @@ export const ConstructPointsCylindricallyShiftedRequest: MessageFns<ConstructPoi
       ? CollectionObjectName.fromPartial(object.groupForNewPoints)
       : undefined;
     message.radialShift = object.radialShift ?? undefined;
-    message.thetaShiftDegrees = object.thetaShiftDegrees ?? undefined;
+    message.thetaShift = object.thetaShift ?? undefined;
     message.planarShift = object.planarShift ?? undefined;
     return message;
   },
@@ -28152,8 +28185,8 @@ export const ClearHiddenPointBarDatabaseResult: MessageFns<ClearHiddenPointBarDa
 function createBaseCreateHiddenPointRodRequest(): CreateHiddenPointRodRequest {
   return {
     hiddenPointRodName: undefined,
-    targetToTargetDistance: undefined,
-    targetToTipDistance: undefined,
+    aToBDistance: undefined,
+    aToCDistance: undefined,
     interPointTolerance: undefined,
   };
 }
@@ -28163,11 +28196,11 @@ export const CreateHiddenPointRodRequest: MessageFns<CreateHiddenPointRodRequest
     if (message.hiddenPointRodName !== undefined) {
       writer.uint32(10).string(message.hiddenPointRodName);
     }
-    if (message.targetToTargetDistance !== undefined) {
-      writer.uint32(17).double(message.targetToTargetDistance);
+    if (message.aToBDistance !== undefined) {
+      writer.uint32(17).double(message.aToBDistance);
     }
-    if (message.targetToTipDistance !== undefined) {
-      writer.uint32(25).double(message.targetToTipDistance);
+    if (message.aToCDistance !== undefined) {
+      writer.uint32(25).double(message.aToCDistance);
     }
     if (message.interPointTolerance !== undefined) {
       writer.uint32(33).double(message.interPointTolerance);
@@ -28195,7 +28228,7 @@ export const CreateHiddenPointRodRequest: MessageFns<CreateHiddenPointRodRequest
             break;
           }
 
-          message.targetToTargetDistance = reader.double();
+          message.aToBDistance = reader.double();
           continue;
         }
         case 3: {
@@ -28203,7 +28236,7 @@ export const CreateHiddenPointRodRequest: MessageFns<CreateHiddenPointRodRequest
             break;
           }
 
-          message.targetToTipDistance = reader.double();
+          message.aToCDistance = reader.double();
           continue;
         }
         case 4: {
@@ -28229,8 +28262,8 @@ export const CreateHiddenPointRodRequest: MessageFns<CreateHiddenPointRodRequest
   fromPartial(object: DeepPartial<CreateHiddenPointRodRequest>): CreateHiddenPointRodRequest {
     const message = createBaseCreateHiddenPointRodRequest();
     message.hiddenPointRodName = object.hiddenPointRodName ?? undefined;
-    message.targetToTargetDistance = object.targetToTargetDistance ?? undefined;
-    message.targetToTipDistance = object.targetToTipDistance ?? undefined;
+    message.aToBDistance = object.aToBDistance ?? undefined;
+    message.aToCDistance = object.aToCDistance ?? undefined;
     message.interPointTolerance = object.interPointTolerance ?? undefined;
     return message;
   },
@@ -29031,7 +29064,7 @@ export const ConstructScaleBarResult: MessageFns<ConstructScaleBarResult> = {
 };
 
 function createBaseConstructSphereRequest(): ConstructSphereRequest {
-  return { sphereName: undefined, sphereCenterInWorkingCoordinates: undefined, sphereRadius: undefined };
+  return { sphereName: undefined, sphereCenter: undefined, sphereRadius: undefined };
 }
 
 export const ConstructSphereRequest: MessageFns<ConstructSphereRequest> = {
@@ -29039,8 +29072,8 @@ export const ConstructSphereRequest: MessageFns<ConstructSphereRequest> = {
     if (message.sphereName !== undefined) {
       CollectionObjectName.encode(message.sphereName, writer.uint32(10).fork()).join();
     }
-    if (message.sphereCenterInWorkingCoordinates !== undefined) {
-      Vector.encode(message.sphereCenterInWorkingCoordinates, writer.uint32(18).fork()).join();
+    if (message.sphereCenter !== undefined) {
+      Vector.encode(message.sphereCenter, writer.uint32(18).fork()).join();
     }
     if (message.sphereRadius !== undefined) {
       writer.uint32(25).double(message.sphereRadius);
@@ -29068,7 +29101,7 @@ export const ConstructSphereRequest: MessageFns<ConstructSphereRequest> = {
             break;
           }
 
-          message.sphereCenterInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          message.sphereCenter = Vector.decode(reader, reader.uint32());
           continue;
         }
         case 3: {
@@ -29096,10 +29129,9 @@ export const ConstructSphereRequest: MessageFns<ConstructSphereRequest> = {
     message.sphereName = (object.sphereName !== undefined && object.sphereName !== null)
       ? CollectionObjectName.fromPartial(object.sphereName)
       : undefined;
-    message.sphereCenterInWorkingCoordinates =
-      (object.sphereCenterInWorkingCoordinates !== undefined && object.sphereCenterInWorkingCoordinates !== null)
-        ? Vector.fromPartial(object.sphereCenterInWorkingCoordinates)
-        : undefined;
+    message.sphereCenter = (object.sphereCenter !== undefined && object.sphereCenter !== null)
+      ? Vector.fromPartial(object.sphereCenter)
+      : undefined;
     message.sphereRadius = object.sphereRadius ?? undefined;
     return message;
   },

@@ -324,9 +324,16 @@ export interface CombinePointGroupsResult {
 }
 
 export interface ComputeCteScaleFactorRequest {
-  materialCtePerDegreeFahrenheit?: number | undefined;
-  initialTemperatureFahrenheit?: number | undefined;
-  finalTemperatureFahrenheit?: number | undefined;
+  /** Coefficient per degree Fahrenheit. */
+  materialCte?:
+    | number
+    | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  initialTemperature?:
+    | number
+    | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  finalTemperature?: number | undefined;
 }
 
 export interface ComputeCteScaleFactorResult {
@@ -420,10 +427,19 @@ export interface CreateTemplatedInstrumentUsmnRequest {
   enableRy?: boolean | undefined;
   enableRz?: boolean | undefined;
   enableScale?: boolean | undefined;
-  enableComponentWeights?: boolean | undefined;
-  azimuthWeight?: number | undefined;
-  elevationWeight?: number | undefined;
-  distanceWeight?: number | undefined;
+  enableComponentWeights?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Azimuth. */
+  component1Weight?:
+    | number
+    | undefined;
+  /** MP qualifier: Elevation. */
+  component2Weight?:
+    | number
+    | undefined;
+  /** MP qualifier: Distance. */
+  component3Weight?: number | undefined;
 }
 
 export interface CreateTemplatedInstrumentUsmnResult {
@@ -582,11 +598,23 @@ export interface GetCurrentInstrumentPositionUpdateRequest {
 }
 
 export interface GetCurrentInstrumentPositionUpdateResult {
-  xOrR?: number | undefined;
-  yOrThetaDegrees?: number | undefined;
-  zOrPhiDegrees?: number | undefined;
-  timeSinceUpdateSeconds?: number | undefined;
-  timestampApproximate?: string | undefined;
+  xOrR?:
+    | number
+    | undefined;
+  /** Angle in degrees. */
+  yOrTheta?:
+    | number
+    | undefined;
+  /** Angle in degrees. */
+  zOrPhi?:
+    | number
+    | undefined;
+  /** Time in seconds. */
+  timeSinceUpdate?:
+    | number
+    | undefined;
+  /** MP qualifier: Approximate. */
+  timestamp?: string | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -634,7 +662,8 @@ export interface GetInstrumentInterfaceResponseTimeoutRequest {
 }
 
 export interface GetInstrumentInterfaceResponseTimeoutResult {
-  timeoutSeconds?: number | undefined;
+  /** Time in seconds. */
+  timeout?: number | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -653,7 +682,8 @@ export interface GetInstrumentPartTemperatureRequest {
 }
 
 export interface GetInstrumentPartTemperatureResult {
-  partTemperatureFahrenheit?: number | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  partTemperature?: number | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -709,9 +739,16 @@ export interface GetInstrumentWeatherSettingRequest {
 }
 
 export interface GetInstrumentWeatherSettingResult {
-  temperatureFahrenheit?: number | undefined;
-  pressureMmhg?: number | undefined;
-  relativeHumidityPercent?: number | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  temperature?:
+    | number
+    | undefined;
+  /** Pressure in millimeters of mercury. */
+  pressure?:
+    | number
+    | undefined;
+  /** Relative humidity in percent. */
+  relativeHumidity?: number | undefined;
   setAutomatically?: boolean | undefined;
   execution?: MpExecutionDetails | undefined;
 }
@@ -789,11 +826,18 @@ export interface GetTrackerEdmTheodoliteUncertaintiesRequest {
 }
 
 export interface GetTrackerEdmTheodoliteUncertaintiesResult {
-  thetaDispersionArcseconds?: number | undefined;
-  thetaThreshold?: number | undefined;
-  phiDispersionArcseconds?: number | undefined;
-  phiThreshold?: number | undefined;
-  distancePpm?: number | undefined;
+  /** Angle in arcseconds. */
+  thetaDispersion?: number | undefined;
+  thetaThreshold?:
+    | number
+    | undefined;
+  /** Angle in arcseconds. */
+  phiDispersion?: number | undefined;
+  phiThreshold?:
+    | number
+    | undefined;
+  /** Value in parts per million. */
+  distance?: number | undefined;
   distanceThreshold?: number | undefined;
   execution?: MpExecutionDetails | undefined;
 }
@@ -998,8 +1042,11 @@ export interface LocateInstrumentsUsmnRequest {
   excludedGroups?: CollectionObjectName[] | undefined;
   excludeSingleInstrumentPoints?: boolean | undefined;
   runUncertaintyFieldAnalysis?: boolean | undefined;
-  analysisSamples?: number | undefined;
-  analysisTimeLimitMinutes?: number | undefined;
+  analysisSamples?:
+    | number
+    | undefined;
+  /** Time in minutes; 0 disables the time limit. */
+  analysisTimeLimit?: number | undefined;
 }
 
 export interface LocateInstrumentsUsmnResult {
@@ -1040,17 +1087,42 @@ export interface LrApdisPerformMcmCalibrationResult {
 }
 
 export interface LrFlipTestResult {
-  frontRangeInches?: number | undefined;
-  frontAzimuthDegrees?: number | undefined;
-  frontElevationDegrees?: number | undefined;
-  frontQuality?: number | undefined;
-  backRangeInches?: number | undefined;
-  backAzimuthDegrees?: number | undefined;
-  backElevationDegrees?: number | undefined;
-  backQuality?: number | undefined;
-  frontBackDifferenceRangeInches?: number | undefined;
-  frontBackDifferenceAzimuthDegrees?: number | undefined;
-  frontBackDifferenceElevationDegrees?: number | undefined;
+  /** Length in inches. */
+  frontRange?:
+    | number
+    | undefined;
+  /** Angle in degrees. */
+  frontAzimuth?:
+    | number
+    | undefined;
+  /** Angle in degrees. */
+  frontElevation?: number | undefined;
+  frontQuality?:
+    | number
+    | undefined;
+  /** Length in inches. */
+  backRange?:
+    | number
+    | undefined;
+  /** Angle in degrees. */
+  backAzimuth?:
+    | number
+    | undefined;
+  /** Angle in degrees. */
+  backElevation?: number | undefined;
+  backQuality?:
+    | number
+    | undefined;
+  /** Length in inches. */
+  frontBackDifferenceRange?:
+    | number
+    | undefined;
+  /** Angle in degrees. */
+  frontBackDifferenceAzimuth?:
+    | number
+    | undefined;
+  /** Angle in degrees. */
+  frontBackDifferenceElevation?: number | undefined;
 }
 
 export interface LrGetMostRecentSnrInfoRequest {
@@ -1081,16 +1153,32 @@ export interface LrHardwareDisconnectResult {
 }
 
 export interface LrLoSeparationTestResult {
-  primaryLoIndex?: number | undefined;
-  secondaryLoIndex?: number | undefined;
-  primaryLoMeasurementCount?: number | undefined;
-  primaryLoRangeMeanInches?: number | undefined;
-  primaryLoRangeStandardDeviationInches?: number | undefined;
+  /** Indexing starts at 1. */
+  primaryLo?:
+    | number
+    | undefined;
+  /** Indexing starts at 1. */
+  secondaryLo?: number | undefined;
+  primaryLoMeasurementCount?:
+    | number
+    | undefined;
+  /** Length in inches. */
+  primaryLoRangeMean?:
+    | number
+    | undefined;
+  /** Length in inches. */
+  primaryLoRangeStandardDeviation?: number | undefined;
   primaryLoQualityMean?: number | undefined;
   primaryLoQualityStandardDeviation?: number | undefined;
-  secondaryLoMeasurementCount?: number | undefined;
-  secondaryLoRangeMeanInches?: number | undefined;
-  secondaryLoRangeStandardDeviationInches?: number | undefined;
+  secondaryLoMeasurementCount?:
+    | number
+    | undefined;
+  /** Length in inches. */
+  secondaryLoRangeMean?:
+    | number
+    | undefined;
+  /** Length in inches. */
+  secondaryLoRangeStandardDeviation?: number | undefined;
   secondaryLoQualityMean?: number | undefined;
   secondaryLoQualityStandardDeviation?: number | undefined;
 }
@@ -1109,7 +1197,8 @@ export interface LrSelfTestLinearizationRequest {
 }
 
 export interface LrSelfTestLinearizationResult {
-  linearityKhz?: number | undefined;
+  /** Frequency in kilohertz. */
+  linearity?: number | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -1129,11 +1218,18 @@ export interface LrSelfTestRequest {
 }
 
 export interface LrSelfTestResult {
-  referenceArmLengthInches?: number | undefined;
+  /** Length in inches. */
+  referenceArmLength?: number | undefined;
   referenceArmQuality?: number | undefined;
-  mirrorMeasurementCount?: number | undefined;
-  mirrorMeasurementRangeMeanInches?: number | undefined;
-  mirrorMeasurementRangeStandardDeviationInches?: number | undefined;
+  mirrorMeasurementCount?:
+    | number
+    | undefined;
+  /** Length in inches. */
+  mirrorMeasurementRangeMean?:
+    | number
+    | undefined;
+  /** Length in inches. */
+  mirrorMeasurementRangeStandardDeviation?: number | undefined;
   mirrorMeasurementQualityMean?: number | undefined;
   mirrorMeasurementQualityStandardDeviation?: number | undefined;
   passedReferenceArmQualityThreshold?: boolean | undefined;
@@ -1156,9 +1252,15 @@ export interface LrSetRedLaserIntensityResult {
 export interface LrSnrInfo {
   snr?: number | undefined;
   sizeOfDataArray?: number | undefined;
-  peakValueIndex?: number | undefined;
-  peakValueDb?: number | undefined;
-  measuredRangeMeters?: number | undefined;
+  peakValueIndex?:
+    | number
+    | undefined;
+  /** Value in decibels. */
+  peakValue?:
+    | number
+    | undefined;
+  /** Range in meters. */
+  measuredRange?: number | undefined;
 }
 
 export interface LrVerifyHardwareConnectionRequest {
@@ -1316,10 +1418,19 @@ export interface ObservationInfo {
   sphericalValues?: ObservationSphericalValues | undefined;
   active?: boolean | undefined;
   timestamp?: string | undefined;
-  rmsError?: number | undefined;
-  temperatureFahrenheit?: number | undefined;
-  pressureInHg?: number | undefined;
-  relativeHumidityPercent?: number | undefined;
+  rmsError?:
+    | number
+    | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  temperature?:
+    | number
+    | undefined;
+  /** Pressure in inches of mercury. */
+  pressure?:
+    | number
+    | undefined;
+  /** Relative humidity in percent. */
+  relativeHumidity?: number | undefined;
   infoData?: string | undefined;
 }
 
@@ -1478,8 +1589,11 @@ export interface SetInstrumentGroupAndTargetResult {
 }
 
 export interface SetInstrumentInterfaceResponseTimeoutRequest {
-  instrument?: CollectionInstrumentId | undefined;
-  timeoutSeconds?: number | undefined;
+  instrument?:
+    | CollectionInstrumentId
+    | undefined;
+  /** Time in seconds. */
+  timeout?: number | undefined;
 }
 
 export interface SetInstrumentInterfaceResponseTimeoutResult {
@@ -1516,10 +1630,19 @@ export interface SetInstrumentTransformResult {
 }
 
 export interface SetInstrumentWeatherSettingRequest {
-  instrument?: CollectionInstrumentId | undefined;
-  temperatureFahrenheit?: number | undefined;
-  pressureMmhg?: number | undefined;
-  relativeHumidityPercent?: number | undefined;
+  instrument?:
+    | CollectionInstrumentId
+    | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  temperature?:
+    | number
+    | undefined;
+  /** Pressure in millimeters of mercury. */
+  pressure?:
+    | number
+    | undefined;
+  /** Relative humidity in percent. */
+  relativeHumidity?: number | undefined;
   setAutomatically?: boolean | undefined;
 }
 
@@ -1622,12 +1745,21 @@ export interface SetTargetComputationOptionsResult {
 }
 
 export interface SetTrackerEdmTheodoliteUncertaintiesRequest {
-  instrument?: CollectionInstrumentId | undefined;
-  thetaDispersionArcseconds?: number | undefined;
-  thetaThreshold?: number | undefined;
-  phiDispersionArcseconds?: number | undefined;
-  phiThreshold?: number | undefined;
-  distancePpm?: number | undefined;
+  instrument?:
+    | CollectionInstrumentId
+    | undefined;
+  /** Angle in arcseconds. */
+  thetaDispersion?: number | undefined;
+  thetaThreshold?:
+    | number
+    | undefined;
+  /** Angle in arcseconds. */
+  phiDispersion?: number | undefined;
+  phiThreshold?:
+    | number
+    | undefined;
+  /** Value in parts per million. */
+  distance?: number | undefined;
   distanceThreshold?: number | undefined;
 }
 
@@ -4990,23 +5122,19 @@ export const CombinePointGroupsResult: MessageFns<CombinePointGroupsResult> = {
 };
 
 function createBaseComputeCteScaleFactorRequest(): ComputeCteScaleFactorRequest {
-  return {
-    materialCtePerDegreeFahrenheit: undefined,
-    initialTemperatureFahrenheit: undefined,
-    finalTemperatureFahrenheit: undefined,
-  };
+  return { materialCte: undefined, initialTemperature: undefined, finalTemperature: undefined };
 }
 
 export const ComputeCteScaleFactorRequest: MessageFns<ComputeCteScaleFactorRequest> = {
   encode(message: ComputeCteScaleFactorRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.materialCtePerDegreeFahrenheit !== undefined) {
-      writer.uint32(9).double(message.materialCtePerDegreeFahrenheit);
+    if (message.materialCte !== undefined) {
+      writer.uint32(9).double(message.materialCte);
     }
-    if (message.initialTemperatureFahrenheit !== undefined) {
-      writer.uint32(17).double(message.initialTemperatureFahrenheit);
+    if (message.initialTemperature !== undefined) {
+      writer.uint32(17).double(message.initialTemperature);
     }
-    if (message.finalTemperatureFahrenheit !== undefined) {
-      writer.uint32(25).double(message.finalTemperatureFahrenheit);
+    if (message.finalTemperature !== undefined) {
+      writer.uint32(25).double(message.finalTemperature);
     }
     return writer;
   },
@@ -5023,7 +5151,7 @@ export const ComputeCteScaleFactorRequest: MessageFns<ComputeCteScaleFactorReque
             break;
           }
 
-          message.materialCtePerDegreeFahrenheit = reader.double();
+          message.materialCte = reader.double();
           continue;
         }
         case 2: {
@@ -5031,7 +5159,7 @@ export const ComputeCteScaleFactorRequest: MessageFns<ComputeCteScaleFactorReque
             break;
           }
 
-          message.initialTemperatureFahrenheit = reader.double();
+          message.initialTemperature = reader.double();
           continue;
         }
         case 3: {
@@ -5039,7 +5167,7 @@ export const ComputeCteScaleFactorRequest: MessageFns<ComputeCteScaleFactorReque
             break;
           }
 
-          message.finalTemperatureFahrenheit = reader.double();
+          message.finalTemperature = reader.double();
           continue;
         }
       }
@@ -5056,9 +5184,9 @@ export const ComputeCteScaleFactorRequest: MessageFns<ComputeCteScaleFactorReque
   },
   fromPartial(object: DeepPartial<ComputeCteScaleFactorRequest>): ComputeCteScaleFactorRequest {
     const message = createBaseComputeCteScaleFactorRequest();
-    message.materialCtePerDegreeFahrenheit = object.materialCtePerDegreeFahrenheit ?? undefined;
-    message.initialTemperatureFahrenheit = object.initialTemperatureFahrenheit ?? undefined;
-    message.finalTemperatureFahrenheit = object.finalTemperatureFahrenheit ?? undefined;
+    message.materialCte = object.materialCte ?? undefined;
+    message.initialTemperature = object.initialTemperature ?? undefined;
+    message.finalTemperature = object.finalTemperature ?? undefined;
     return message;
   },
 };
@@ -6096,9 +6224,9 @@ function createBaseCreateTemplatedInstrumentUsmnRequest(): CreateTemplatedInstru
     enableRz: undefined,
     enableScale: undefined,
     enableComponentWeights: undefined,
-    azimuthWeight: undefined,
-    elevationWeight: undefined,
-    distanceWeight: undefined,
+    component1Weight: undefined,
+    component2Weight: undefined,
+    component3Weight: undefined,
   };
 }
 
@@ -6140,14 +6268,14 @@ export const CreateTemplatedInstrumentUsmnRequest: MessageFns<CreateTemplatedIns
     if (message.enableComponentWeights !== undefined) {
       writer.uint32(96).bool(message.enableComponentWeights);
     }
-    if (message.azimuthWeight !== undefined) {
-      writer.uint32(105).double(message.azimuthWeight);
+    if (message.component1Weight !== undefined) {
+      writer.uint32(105).double(message.component1Weight);
     }
-    if (message.elevationWeight !== undefined) {
-      writer.uint32(113).double(message.elevationWeight);
+    if (message.component2Weight !== undefined) {
+      writer.uint32(113).double(message.component2Weight);
     }
-    if (message.distanceWeight !== undefined) {
-      writer.uint32(121).double(message.distanceWeight);
+    if (message.component3Weight !== undefined) {
+      writer.uint32(121).double(message.component3Weight);
     }
     return writer;
   },
@@ -6260,7 +6388,7 @@ export const CreateTemplatedInstrumentUsmnRequest: MessageFns<CreateTemplatedIns
             break;
           }
 
-          message.azimuthWeight = reader.double();
+          message.component1Weight = reader.double();
           continue;
         }
         case 14: {
@@ -6268,7 +6396,7 @@ export const CreateTemplatedInstrumentUsmnRequest: MessageFns<CreateTemplatedIns
             break;
           }
 
-          message.elevationWeight = reader.double();
+          message.component2Weight = reader.double();
           continue;
         }
         case 15: {
@@ -6276,7 +6404,7 @@ export const CreateTemplatedInstrumentUsmnRequest: MessageFns<CreateTemplatedIns
             break;
           }
 
-          message.distanceWeight = reader.double();
+          message.component3Weight = reader.double();
           continue;
         }
       }
@@ -6310,9 +6438,9 @@ export const CreateTemplatedInstrumentUsmnRequest: MessageFns<CreateTemplatedIns
     message.enableRz = object.enableRz ?? undefined;
     message.enableScale = object.enableScale ?? undefined;
     message.enableComponentWeights = object.enableComponentWeights ?? undefined;
-    message.azimuthWeight = object.azimuthWeight ?? undefined;
-    message.elevationWeight = object.elevationWeight ?? undefined;
-    message.distanceWeight = object.distanceWeight ?? undefined;
+    message.component1Weight = object.component1Weight ?? undefined;
+    message.component2Weight = object.component2Weight ?? undefined;
+    message.component3Weight = object.component3Weight ?? undefined;
     return message;
   },
 };
@@ -8259,14 +8387,7 @@ export const GetCurrentInstrumentPositionUpdateRequest: MessageFns<GetCurrentIns
 };
 
 function createBaseGetCurrentInstrumentPositionUpdateResult(): GetCurrentInstrumentPositionUpdateResult {
-  return {
-    xOrR: 0,
-    yOrThetaDegrees: 0,
-    zOrPhiDegrees: 0,
-    timeSinceUpdateSeconds: 0,
-    timestampApproximate: "",
-    execution: undefined,
-  };
+  return { xOrR: 0, yOrTheta: 0, zOrPhi: 0, timeSinceUpdate: 0, timestamp: "", execution: undefined };
 }
 
 export const GetCurrentInstrumentPositionUpdateResult: MessageFns<GetCurrentInstrumentPositionUpdateResult> = {
@@ -8274,17 +8395,17 @@ export const GetCurrentInstrumentPositionUpdateResult: MessageFns<GetCurrentInst
     if (message.xOrR !== undefined && message.xOrR !== 0) {
       writer.uint32(9).double(message.xOrR);
     }
-    if (message.yOrThetaDegrees !== undefined && message.yOrThetaDegrees !== 0) {
-      writer.uint32(17).double(message.yOrThetaDegrees);
+    if (message.yOrTheta !== undefined && message.yOrTheta !== 0) {
+      writer.uint32(17).double(message.yOrTheta);
     }
-    if (message.zOrPhiDegrees !== undefined && message.zOrPhiDegrees !== 0) {
-      writer.uint32(25).double(message.zOrPhiDegrees);
+    if (message.zOrPhi !== undefined && message.zOrPhi !== 0) {
+      writer.uint32(25).double(message.zOrPhi);
     }
-    if (message.timeSinceUpdateSeconds !== undefined && message.timeSinceUpdateSeconds !== 0) {
-      writer.uint32(33).double(message.timeSinceUpdateSeconds);
+    if (message.timeSinceUpdate !== undefined && message.timeSinceUpdate !== 0) {
+      writer.uint32(33).double(message.timeSinceUpdate);
     }
-    if (message.timestampApproximate !== undefined && message.timestampApproximate !== "") {
-      writer.uint32(42).string(message.timestampApproximate);
+    if (message.timestamp !== undefined && message.timestamp !== "") {
+      writer.uint32(42).string(message.timestamp);
     }
     if (message.execution !== undefined) {
       MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
@@ -8312,7 +8433,7 @@ export const GetCurrentInstrumentPositionUpdateResult: MessageFns<GetCurrentInst
             break;
           }
 
-          message.yOrThetaDegrees = reader.double();
+          message.yOrTheta = reader.double();
           continue;
         }
         case 3: {
@@ -8320,7 +8441,7 @@ export const GetCurrentInstrumentPositionUpdateResult: MessageFns<GetCurrentInst
             break;
           }
 
-          message.zOrPhiDegrees = reader.double();
+          message.zOrPhi = reader.double();
           continue;
         }
         case 4: {
@@ -8328,7 +8449,7 @@ export const GetCurrentInstrumentPositionUpdateResult: MessageFns<GetCurrentInst
             break;
           }
 
-          message.timeSinceUpdateSeconds = reader.double();
+          message.timeSinceUpdate = reader.double();
           continue;
         }
         case 5: {
@@ -8336,7 +8457,7 @@ export const GetCurrentInstrumentPositionUpdateResult: MessageFns<GetCurrentInst
             break;
           }
 
-          message.timestampApproximate = reader.string();
+          message.timestamp = reader.string();
           continue;
         }
         case 1000: {
@@ -8362,10 +8483,10 @@ export const GetCurrentInstrumentPositionUpdateResult: MessageFns<GetCurrentInst
   fromPartial(object: DeepPartial<GetCurrentInstrumentPositionUpdateResult>): GetCurrentInstrumentPositionUpdateResult {
     const message = createBaseGetCurrentInstrumentPositionUpdateResult();
     message.xOrR = object.xOrR ?? 0;
-    message.yOrThetaDegrees = object.yOrThetaDegrees ?? 0;
-    message.zOrPhiDegrees = object.zOrPhiDegrees ?? 0;
-    message.timeSinceUpdateSeconds = object.timeSinceUpdateSeconds ?? 0;
-    message.timestampApproximate = object.timestampApproximate ?? "";
+    message.yOrTheta = object.yOrTheta ?? 0;
+    message.zOrPhi = object.zOrPhi ?? 0;
+    message.timeSinceUpdate = object.timeSinceUpdate ?? 0;
+    message.timestamp = object.timestamp ?? "";
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -8921,7 +9042,7 @@ export const GetInstrumentInterfaceResponseTimeoutRequest: MessageFns<GetInstrum
 };
 
 function createBaseGetInstrumentInterfaceResponseTimeoutResult(): GetInstrumentInterfaceResponseTimeoutResult {
-  return { timeoutSeconds: 0, execution: undefined };
+  return { timeout: 0, execution: undefined };
 }
 
 export const GetInstrumentInterfaceResponseTimeoutResult: MessageFns<GetInstrumentInterfaceResponseTimeoutResult> = {
@@ -8929,8 +9050,8 @@ export const GetInstrumentInterfaceResponseTimeoutResult: MessageFns<GetInstrume
     message: GetInstrumentInterfaceResponseTimeoutResult,
     writer: BinaryWriter = new BinaryWriter(),
   ): BinaryWriter {
-    if (message.timeoutSeconds !== undefined && message.timeoutSeconds !== 0) {
-      writer.uint32(9).double(message.timeoutSeconds);
+    if (message.timeout !== undefined && message.timeout !== 0) {
+      writer.uint32(9).double(message.timeout);
     }
     if (message.execution !== undefined) {
       MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
@@ -8950,7 +9071,7 @@ export const GetInstrumentInterfaceResponseTimeoutResult: MessageFns<GetInstrume
             break;
           }
 
-          message.timeoutSeconds = reader.double();
+          message.timeout = reader.double();
           continue;
         }
         case 1000: {
@@ -8977,7 +9098,7 @@ export const GetInstrumentInterfaceResponseTimeoutResult: MessageFns<GetInstrume
     object: DeepPartial<GetInstrumentInterfaceResponseTimeoutResult>,
   ): GetInstrumentInterfaceResponseTimeoutResult {
     const message = createBaseGetInstrumentInterfaceResponseTimeoutResult();
-    message.timeoutSeconds = object.timeoutSeconds ?? 0;
+    message.timeout = object.timeout ?? 0;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -9154,13 +9275,13 @@ export const GetInstrumentPartTemperatureRequest: MessageFns<GetInstrumentPartTe
 };
 
 function createBaseGetInstrumentPartTemperatureResult(): GetInstrumentPartTemperatureResult {
-  return { partTemperatureFahrenheit: undefined, execution: undefined };
+  return { partTemperature: undefined, execution: undefined };
 }
 
 export const GetInstrumentPartTemperatureResult: MessageFns<GetInstrumentPartTemperatureResult> = {
   encode(message: GetInstrumentPartTemperatureResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.partTemperatureFahrenheit !== undefined) {
-      writer.uint32(9).double(message.partTemperatureFahrenheit);
+    if (message.partTemperature !== undefined) {
+      writer.uint32(9).double(message.partTemperature);
     }
     if (message.execution !== undefined) {
       MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
@@ -9180,7 +9301,7 @@ export const GetInstrumentPartTemperatureResult: MessageFns<GetInstrumentPartTem
             break;
           }
 
-          message.partTemperatureFahrenheit = reader.double();
+          message.partTemperature = reader.double();
           continue;
         }
         case 1000: {
@@ -9205,7 +9326,7 @@ export const GetInstrumentPartTemperatureResult: MessageFns<GetInstrumentPartTem
   },
   fromPartial(object: DeepPartial<GetInstrumentPartTemperatureResult>): GetInstrumentPartTemperatureResult {
     const message = createBaseGetInstrumentPartTemperatureResult();
-    message.partTemperatureFahrenheit = object.partTemperatureFahrenheit ?? undefined;
+    message.partTemperature = object.partTemperature ?? undefined;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -9867,9 +9988,9 @@ export const GetInstrumentWeatherSettingRequest: MessageFns<GetInstrumentWeather
 
 function createBaseGetInstrumentWeatherSettingResult(): GetInstrumentWeatherSettingResult {
   return {
-    temperatureFahrenheit: undefined,
-    pressureMmhg: undefined,
-    relativeHumidityPercent: undefined,
+    temperature: undefined,
+    pressure: undefined,
+    relativeHumidity: undefined,
     setAutomatically: undefined,
     execution: undefined,
   };
@@ -9877,14 +9998,14 @@ function createBaseGetInstrumentWeatherSettingResult(): GetInstrumentWeatherSett
 
 export const GetInstrumentWeatherSettingResult: MessageFns<GetInstrumentWeatherSettingResult> = {
   encode(message: GetInstrumentWeatherSettingResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.temperatureFahrenheit !== undefined) {
-      writer.uint32(9).double(message.temperatureFahrenheit);
+    if (message.temperature !== undefined) {
+      writer.uint32(9).double(message.temperature);
     }
-    if (message.pressureMmhg !== undefined) {
-      writer.uint32(17).double(message.pressureMmhg);
+    if (message.pressure !== undefined) {
+      writer.uint32(17).double(message.pressure);
     }
-    if (message.relativeHumidityPercent !== undefined) {
-      writer.uint32(25).double(message.relativeHumidityPercent);
+    if (message.relativeHumidity !== undefined) {
+      writer.uint32(25).double(message.relativeHumidity);
     }
     if (message.setAutomatically !== undefined) {
       writer.uint32(32).bool(message.setAutomatically);
@@ -9907,7 +10028,7 @@ export const GetInstrumentWeatherSettingResult: MessageFns<GetInstrumentWeatherS
             break;
           }
 
-          message.temperatureFahrenheit = reader.double();
+          message.temperature = reader.double();
           continue;
         }
         case 2: {
@@ -9915,7 +10036,7 @@ export const GetInstrumentWeatherSettingResult: MessageFns<GetInstrumentWeatherS
             break;
           }
 
-          message.pressureMmhg = reader.double();
+          message.pressure = reader.double();
           continue;
         }
         case 3: {
@@ -9923,7 +10044,7 @@ export const GetInstrumentWeatherSettingResult: MessageFns<GetInstrumentWeatherS
             break;
           }
 
-          message.relativeHumidityPercent = reader.double();
+          message.relativeHumidity = reader.double();
           continue;
         }
         case 4: {
@@ -9956,9 +10077,9 @@ export const GetInstrumentWeatherSettingResult: MessageFns<GetInstrumentWeatherS
   },
   fromPartial(object: DeepPartial<GetInstrumentWeatherSettingResult>): GetInstrumentWeatherSettingResult {
     const message = createBaseGetInstrumentWeatherSettingResult();
-    message.temperatureFahrenheit = object.temperatureFahrenheit ?? undefined;
-    message.pressureMmhg = object.pressureMmhg ?? undefined;
-    message.relativeHumidityPercent = object.relativeHumidityPercent ?? undefined;
+    message.temperature = object.temperature ?? undefined;
+    message.pressure = object.pressure ?? undefined;
+    message.relativeHumidity = object.relativeHumidity ?? undefined;
     message.setAutomatically = object.setAutomatically ?? undefined;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
@@ -10875,11 +10996,11 @@ export const GetTrackerEdmTheodoliteUncertaintiesRequest: MessageFns<GetTrackerE
 
 function createBaseGetTrackerEdmTheodoliteUncertaintiesResult(): GetTrackerEdmTheodoliteUncertaintiesResult {
   return {
-    thetaDispersionArcseconds: undefined,
+    thetaDispersion: undefined,
     thetaThreshold: undefined,
-    phiDispersionArcseconds: undefined,
+    phiDispersion: undefined,
     phiThreshold: undefined,
-    distancePpm: undefined,
+    distance: undefined,
     distanceThreshold: undefined,
     execution: undefined,
   };
@@ -10887,20 +11008,20 @@ function createBaseGetTrackerEdmTheodoliteUncertaintiesResult(): GetTrackerEdmTh
 
 export const GetTrackerEdmTheodoliteUncertaintiesResult: MessageFns<GetTrackerEdmTheodoliteUncertaintiesResult> = {
   encode(message: GetTrackerEdmTheodoliteUncertaintiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.thetaDispersionArcseconds !== undefined) {
-      writer.uint32(9).double(message.thetaDispersionArcseconds);
+    if (message.thetaDispersion !== undefined) {
+      writer.uint32(9).double(message.thetaDispersion);
     }
     if (message.thetaThreshold !== undefined) {
       writer.uint32(17).double(message.thetaThreshold);
     }
-    if (message.phiDispersionArcseconds !== undefined) {
-      writer.uint32(25).double(message.phiDispersionArcseconds);
+    if (message.phiDispersion !== undefined) {
+      writer.uint32(25).double(message.phiDispersion);
     }
     if (message.phiThreshold !== undefined) {
       writer.uint32(33).double(message.phiThreshold);
     }
-    if (message.distancePpm !== undefined) {
-      writer.uint32(41).double(message.distancePpm);
+    if (message.distance !== undefined) {
+      writer.uint32(41).double(message.distance);
     }
     if (message.distanceThreshold !== undefined) {
       writer.uint32(49).double(message.distanceThreshold);
@@ -10923,7 +11044,7 @@ export const GetTrackerEdmTheodoliteUncertaintiesResult: MessageFns<GetTrackerEd
             break;
           }
 
-          message.thetaDispersionArcseconds = reader.double();
+          message.thetaDispersion = reader.double();
           continue;
         }
         case 2: {
@@ -10939,7 +11060,7 @@ export const GetTrackerEdmTheodoliteUncertaintiesResult: MessageFns<GetTrackerEd
             break;
           }
 
-          message.phiDispersionArcseconds = reader.double();
+          message.phiDispersion = reader.double();
           continue;
         }
         case 4: {
@@ -10955,7 +11076,7 @@ export const GetTrackerEdmTheodoliteUncertaintiesResult: MessageFns<GetTrackerEd
             break;
           }
 
-          message.distancePpm = reader.double();
+          message.distance = reader.double();
           continue;
         }
         case 6: {
@@ -10990,11 +11111,11 @@ export const GetTrackerEdmTheodoliteUncertaintiesResult: MessageFns<GetTrackerEd
     object: DeepPartial<GetTrackerEdmTheodoliteUncertaintiesResult>,
   ): GetTrackerEdmTheodoliteUncertaintiesResult {
     const message = createBaseGetTrackerEdmTheodoliteUncertaintiesResult();
-    message.thetaDispersionArcseconds = object.thetaDispersionArcseconds ?? undefined;
+    message.thetaDispersion = object.thetaDispersion ?? undefined;
     message.thetaThreshold = object.thetaThreshold ?? undefined;
-    message.phiDispersionArcseconds = object.phiDispersionArcseconds ?? undefined;
+    message.phiDispersion = object.phiDispersion ?? undefined;
     message.phiThreshold = object.phiThreshold ?? undefined;
-    message.distancePpm = object.distancePpm ?? undefined;
+    message.distance = object.distance ?? undefined;
     message.distanceThreshold = object.distanceThreshold ?? undefined;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
@@ -13459,7 +13580,7 @@ function createBaseLocateInstrumentsUsmnRequest(): LocateInstrumentsUsmnRequest 
     excludeSingleInstrumentPoints: undefined,
     runUncertaintyFieldAnalysis: undefined,
     analysisSamples: undefined,
-    analysisTimeLimitMinutes: undefined,
+    analysisTimeLimit: undefined,
   };
 }
 
@@ -13505,8 +13626,8 @@ export const LocateInstrumentsUsmnRequest: MessageFns<LocateInstrumentsUsmnReque
     if (message.analysisSamples !== undefined) {
       writer.uint32(96).int32(message.analysisSamples);
     }
-    if (message.analysisTimeLimitMinutes !== undefined) {
-      writer.uint32(105).double(message.analysisTimeLimitMinutes);
+    if (message.analysisTimeLimit !== undefined) {
+      writer.uint32(105).double(message.analysisTimeLimit);
     }
     return writer;
   },
@@ -13625,7 +13746,7 @@ export const LocateInstrumentsUsmnRequest: MessageFns<LocateInstrumentsUsmnReque
             break;
           }
 
-          message.analysisTimeLimitMinutes = reader.double();
+          message.analysisTimeLimit = reader.double();
           continue;
         }
       }
@@ -13658,7 +13779,7 @@ export const LocateInstrumentsUsmnRequest: MessageFns<LocateInstrumentsUsmnReque
     message.excludeSingleInstrumentPoints = object.excludeSingleInstrumentPoints ?? undefined;
     message.runUncertaintyFieldAnalysis = object.runUncertaintyFieldAnalysis ?? undefined;
     message.analysisSamples = object.analysisSamples ?? undefined;
-    message.analysisTimeLimitMinutes = object.analysisTimeLimitMinutes ?? undefined;
+    message.analysisTimeLimit = object.analysisTimeLimit ?? undefined;
     return message;
   },
 };
@@ -14116,56 +14237,54 @@ export const LrApdisPerformMcmCalibrationResult: MessageFns<LrApdisPerformMcmCal
 
 function createBaseLrFlipTestResult(): LrFlipTestResult {
   return {
-    frontRangeInches: 0,
-    frontAzimuthDegrees: 0,
-    frontElevationDegrees: 0,
+    frontRange: 0,
+    frontAzimuth: 0,
+    frontElevation: 0,
     frontQuality: 0,
-    backRangeInches: 0,
-    backAzimuthDegrees: 0,
-    backElevationDegrees: 0,
+    backRange: 0,
+    backAzimuth: 0,
+    backElevation: 0,
     backQuality: 0,
-    frontBackDifferenceRangeInches: 0,
-    frontBackDifferenceAzimuthDegrees: 0,
-    frontBackDifferenceElevationDegrees: 0,
+    frontBackDifferenceRange: 0,
+    frontBackDifferenceAzimuth: 0,
+    frontBackDifferenceElevation: 0,
   };
 }
 
 export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
   encode(message: LrFlipTestResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.frontRangeInches !== undefined && message.frontRangeInches !== 0) {
-      writer.uint32(9).double(message.frontRangeInches);
+    if (message.frontRange !== undefined && message.frontRange !== 0) {
+      writer.uint32(9).double(message.frontRange);
     }
-    if (message.frontAzimuthDegrees !== undefined && message.frontAzimuthDegrees !== 0) {
-      writer.uint32(17).double(message.frontAzimuthDegrees);
+    if (message.frontAzimuth !== undefined && message.frontAzimuth !== 0) {
+      writer.uint32(17).double(message.frontAzimuth);
     }
-    if (message.frontElevationDegrees !== undefined && message.frontElevationDegrees !== 0) {
-      writer.uint32(25).double(message.frontElevationDegrees);
+    if (message.frontElevation !== undefined && message.frontElevation !== 0) {
+      writer.uint32(25).double(message.frontElevation);
     }
     if (message.frontQuality !== undefined && message.frontQuality !== 0) {
       writer.uint32(33).double(message.frontQuality);
     }
-    if (message.backRangeInches !== undefined && message.backRangeInches !== 0) {
-      writer.uint32(41).double(message.backRangeInches);
+    if (message.backRange !== undefined && message.backRange !== 0) {
+      writer.uint32(41).double(message.backRange);
     }
-    if (message.backAzimuthDegrees !== undefined && message.backAzimuthDegrees !== 0) {
-      writer.uint32(49).double(message.backAzimuthDegrees);
+    if (message.backAzimuth !== undefined && message.backAzimuth !== 0) {
+      writer.uint32(49).double(message.backAzimuth);
     }
-    if (message.backElevationDegrees !== undefined && message.backElevationDegrees !== 0) {
-      writer.uint32(57).double(message.backElevationDegrees);
+    if (message.backElevation !== undefined && message.backElevation !== 0) {
+      writer.uint32(57).double(message.backElevation);
     }
     if (message.backQuality !== undefined && message.backQuality !== 0) {
       writer.uint32(65).double(message.backQuality);
     }
-    if (message.frontBackDifferenceRangeInches !== undefined && message.frontBackDifferenceRangeInches !== 0) {
-      writer.uint32(73).double(message.frontBackDifferenceRangeInches);
+    if (message.frontBackDifferenceRange !== undefined && message.frontBackDifferenceRange !== 0) {
+      writer.uint32(73).double(message.frontBackDifferenceRange);
     }
-    if (message.frontBackDifferenceAzimuthDegrees !== undefined && message.frontBackDifferenceAzimuthDegrees !== 0) {
-      writer.uint32(81).double(message.frontBackDifferenceAzimuthDegrees);
+    if (message.frontBackDifferenceAzimuth !== undefined && message.frontBackDifferenceAzimuth !== 0) {
+      writer.uint32(81).double(message.frontBackDifferenceAzimuth);
     }
-    if (
-      message.frontBackDifferenceElevationDegrees !== undefined && message.frontBackDifferenceElevationDegrees !== 0
-    ) {
-      writer.uint32(89).double(message.frontBackDifferenceElevationDegrees);
+    if (message.frontBackDifferenceElevation !== undefined && message.frontBackDifferenceElevation !== 0) {
+      writer.uint32(89).double(message.frontBackDifferenceElevation);
     }
     return writer;
   },
@@ -14182,7 +14301,7 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
             break;
           }
 
-          message.frontRangeInches = reader.double();
+          message.frontRange = reader.double();
           continue;
         }
         case 2: {
@@ -14190,7 +14309,7 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
             break;
           }
 
-          message.frontAzimuthDegrees = reader.double();
+          message.frontAzimuth = reader.double();
           continue;
         }
         case 3: {
@@ -14198,7 +14317,7 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
             break;
           }
 
-          message.frontElevationDegrees = reader.double();
+          message.frontElevation = reader.double();
           continue;
         }
         case 4: {
@@ -14214,7 +14333,7 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
             break;
           }
 
-          message.backRangeInches = reader.double();
+          message.backRange = reader.double();
           continue;
         }
         case 6: {
@@ -14222,7 +14341,7 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
             break;
           }
 
-          message.backAzimuthDegrees = reader.double();
+          message.backAzimuth = reader.double();
           continue;
         }
         case 7: {
@@ -14230,7 +14349,7 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
             break;
           }
 
-          message.backElevationDegrees = reader.double();
+          message.backElevation = reader.double();
           continue;
         }
         case 8: {
@@ -14246,7 +14365,7 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
             break;
           }
 
-          message.frontBackDifferenceRangeInches = reader.double();
+          message.frontBackDifferenceRange = reader.double();
           continue;
         }
         case 10: {
@@ -14254,7 +14373,7 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
             break;
           }
 
-          message.frontBackDifferenceAzimuthDegrees = reader.double();
+          message.frontBackDifferenceAzimuth = reader.double();
           continue;
         }
         case 11: {
@@ -14262,7 +14381,7 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
             break;
           }
 
-          message.frontBackDifferenceElevationDegrees = reader.double();
+          message.frontBackDifferenceElevation = reader.double();
           continue;
         }
       }
@@ -14279,17 +14398,17 @@ export const LrFlipTestResult: MessageFns<LrFlipTestResult> = {
   },
   fromPartial(object: DeepPartial<LrFlipTestResult>): LrFlipTestResult {
     const message = createBaseLrFlipTestResult();
-    message.frontRangeInches = object.frontRangeInches ?? 0;
-    message.frontAzimuthDegrees = object.frontAzimuthDegrees ?? 0;
-    message.frontElevationDegrees = object.frontElevationDegrees ?? 0;
+    message.frontRange = object.frontRange ?? 0;
+    message.frontAzimuth = object.frontAzimuth ?? 0;
+    message.frontElevation = object.frontElevation ?? 0;
     message.frontQuality = object.frontQuality ?? 0;
-    message.backRangeInches = object.backRangeInches ?? 0;
-    message.backAzimuthDegrees = object.backAzimuthDegrees ?? 0;
-    message.backElevationDegrees = object.backElevationDegrees ?? 0;
+    message.backRange = object.backRange ?? 0;
+    message.backAzimuth = object.backAzimuth ?? 0;
+    message.backElevation = object.backElevation ?? 0;
     message.backQuality = object.backQuality ?? 0;
-    message.frontBackDifferenceRangeInches = object.frontBackDifferenceRangeInches ?? 0;
-    message.frontBackDifferenceAzimuthDegrees = object.frontBackDifferenceAzimuthDegrees ?? 0;
-    message.frontBackDifferenceElevationDegrees = object.frontBackDifferenceElevationDegrees ?? 0;
+    message.frontBackDifferenceRange = object.frontBackDifferenceRange ?? 0;
+    message.frontBackDifferenceAzimuth = object.frontBackDifferenceAzimuth ?? 0;
+    message.frontBackDifferenceElevation = object.frontBackDifferenceElevation ?? 0;
     return message;
   },
 };
@@ -14620,16 +14739,16 @@ export const LrHardwareDisconnectResult: MessageFns<LrHardwareDisconnectResult> 
 
 function createBaseLrLoSeparationTestResult(): LrLoSeparationTestResult {
   return {
-    primaryLoIndex: 0,
-    secondaryLoIndex: 0,
+    primaryLo: 0,
+    secondaryLo: 0,
     primaryLoMeasurementCount: 0,
-    primaryLoRangeMeanInches: 0,
-    primaryLoRangeStandardDeviationInches: 0,
+    primaryLoRangeMean: 0,
+    primaryLoRangeStandardDeviation: 0,
     primaryLoQualityMean: 0,
     primaryLoQualityStandardDeviation: 0,
     secondaryLoMeasurementCount: 0,
-    secondaryLoRangeMeanInches: 0,
-    secondaryLoRangeStandardDeviationInches: 0,
+    secondaryLoRangeMean: 0,
+    secondaryLoRangeStandardDeviation: 0,
     secondaryLoQualityMean: 0,
     secondaryLoQualityStandardDeviation: 0,
   };
@@ -14637,22 +14756,20 @@ function createBaseLrLoSeparationTestResult(): LrLoSeparationTestResult {
 
 export const LrLoSeparationTestResult: MessageFns<LrLoSeparationTestResult> = {
   encode(message: LrLoSeparationTestResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.primaryLoIndex !== undefined && message.primaryLoIndex !== 0) {
-      writer.uint32(8).int32(message.primaryLoIndex);
+    if (message.primaryLo !== undefined && message.primaryLo !== 0) {
+      writer.uint32(8).int32(message.primaryLo);
     }
-    if (message.secondaryLoIndex !== undefined && message.secondaryLoIndex !== 0) {
-      writer.uint32(16).int32(message.secondaryLoIndex);
+    if (message.secondaryLo !== undefined && message.secondaryLo !== 0) {
+      writer.uint32(16).int32(message.secondaryLo);
     }
     if (message.primaryLoMeasurementCount !== undefined && message.primaryLoMeasurementCount !== 0) {
       writer.uint32(24).int32(message.primaryLoMeasurementCount);
     }
-    if (message.primaryLoRangeMeanInches !== undefined && message.primaryLoRangeMeanInches !== 0) {
-      writer.uint32(33).double(message.primaryLoRangeMeanInches);
+    if (message.primaryLoRangeMean !== undefined && message.primaryLoRangeMean !== 0) {
+      writer.uint32(33).double(message.primaryLoRangeMean);
     }
-    if (
-      message.primaryLoRangeStandardDeviationInches !== undefined && message.primaryLoRangeStandardDeviationInches !== 0
-    ) {
-      writer.uint32(41).double(message.primaryLoRangeStandardDeviationInches);
+    if (message.primaryLoRangeStandardDeviation !== undefined && message.primaryLoRangeStandardDeviation !== 0) {
+      writer.uint32(41).double(message.primaryLoRangeStandardDeviation);
     }
     if (message.primaryLoQualityMean !== undefined && message.primaryLoQualityMean !== 0) {
       writer.uint32(49).double(message.primaryLoQualityMean);
@@ -14663,14 +14780,11 @@ export const LrLoSeparationTestResult: MessageFns<LrLoSeparationTestResult> = {
     if (message.secondaryLoMeasurementCount !== undefined && message.secondaryLoMeasurementCount !== 0) {
       writer.uint32(64).int32(message.secondaryLoMeasurementCount);
     }
-    if (message.secondaryLoRangeMeanInches !== undefined && message.secondaryLoRangeMeanInches !== 0) {
-      writer.uint32(73).double(message.secondaryLoRangeMeanInches);
+    if (message.secondaryLoRangeMean !== undefined && message.secondaryLoRangeMean !== 0) {
+      writer.uint32(73).double(message.secondaryLoRangeMean);
     }
-    if (
-      message.secondaryLoRangeStandardDeviationInches !== undefined &&
-      message.secondaryLoRangeStandardDeviationInches !== 0
-    ) {
-      writer.uint32(81).double(message.secondaryLoRangeStandardDeviationInches);
+    if (message.secondaryLoRangeStandardDeviation !== undefined && message.secondaryLoRangeStandardDeviation !== 0) {
+      writer.uint32(81).double(message.secondaryLoRangeStandardDeviation);
     }
     if (message.secondaryLoQualityMean !== undefined && message.secondaryLoQualityMean !== 0) {
       writer.uint32(89).double(message.secondaryLoQualityMean);
@@ -14695,7 +14809,7 @@ export const LrLoSeparationTestResult: MessageFns<LrLoSeparationTestResult> = {
             break;
           }
 
-          message.primaryLoIndex = reader.int32();
+          message.primaryLo = reader.int32();
           continue;
         }
         case 2: {
@@ -14703,7 +14817,7 @@ export const LrLoSeparationTestResult: MessageFns<LrLoSeparationTestResult> = {
             break;
           }
 
-          message.secondaryLoIndex = reader.int32();
+          message.secondaryLo = reader.int32();
           continue;
         }
         case 3: {
@@ -14719,7 +14833,7 @@ export const LrLoSeparationTestResult: MessageFns<LrLoSeparationTestResult> = {
             break;
           }
 
-          message.primaryLoRangeMeanInches = reader.double();
+          message.primaryLoRangeMean = reader.double();
           continue;
         }
         case 5: {
@@ -14727,7 +14841,7 @@ export const LrLoSeparationTestResult: MessageFns<LrLoSeparationTestResult> = {
             break;
           }
 
-          message.primaryLoRangeStandardDeviationInches = reader.double();
+          message.primaryLoRangeStandardDeviation = reader.double();
           continue;
         }
         case 6: {
@@ -14759,7 +14873,7 @@ export const LrLoSeparationTestResult: MessageFns<LrLoSeparationTestResult> = {
             break;
           }
 
-          message.secondaryLoRangeMeanInches = reader.double();
+          message.secondaryLoRangeMean = reader.double();
           continue;
         }
         case 10: {
@@ -14767,7 +14881,7 @@ export const LrLoSeparationTestResult: MessageFns<LrLoSeparationTestResult> = {
             break;
           }
 
-          message.secondaryLoRangeStandardDeviationInches = reader.double();
+          message.secondaryLoRangeStandardDeviation = reader.double();
           continue;
         }
         case 11: {
@@ -14800,16 +14914,16 @@ export const LrLoSeparationTestResult: MessageFns<LrLoSeparationTestResult> = {
   },
   fromPartial(object: DeepPartial<LrLoSeparationTestResult>): LrLoSeparationTestResult {
     const message = createBaseLrLoSeparationTestResult();
-    message.primaryLoIndex = object.primaryLoIndex ?? 0;
-    message.secondaryLoIndex = object.secondaryLoIndex ?? 0;
+    message.primaryLo = object.primaryLo ?? 0;
+    message.secondaryLo = object.secondaryLo ?? 0;
     message.primaryLoMeasurementCount = object.primaryLoMeasurementCount ?? 0;
-    message.primaryLoRangeMeanInches = object.primaryLoRangeMeanInches ?? 0;
-    message.primaryLoRangeStandardDeviationInches = object.primaryLoRangeStandardDeviationInches ?? 0;
+    message.primaryLoRangeMean = object.primaryLoRangeMean ?? 0;
+    message.primaryLoRangeStandardDeviation = object.primaryLoRangeStandardDeviation ?? 0;
     message.primaryLoQualityMean = object.primaryLoQualityMean ?? 0;
     message.primaryLoQualityStandardDeviation = object.primaryLoQualityStandardDeviation ?? 0;
     message.secondaryLoMeasurementCount = object.secondaryLoMeasurementCount ?? 0;
-    message.secondaryLoRangeMeanInches = object.secondaryLoRangeMeanInches ?? 0;
-    message.secondaryLoRangeStandardDeviationInches = object.secondaryLoRangeStandardDeviationInches ?? 0;
+    message.secondaryLoRangeMean = object.secondaryLoRangeMean ?? 0;
+    message.secondaryLoRangeStandardDeviation = object.secondaryLoRangeStandardDeviation ?? 0;
     message.secondaryLoQualityMean = object.secondaryLoQualityMean ?? 0;
     message.secondaryLoQualityStandardDeviation = object.secondaryLoQualityStandardDeviation ?? 0;
     return message;
@@ -14975,13 +15089,13 @@ export const LrSelfTestLinearizationRequest: MessageFns<LrSelfTestLinearizationR
 };
 
 function createBaseLrSelfTestLinearizationResult(): LrSelfTestLinearizationResult {
-  return { linearityKhz: 0, execution: undefined };
+  return { linearity: 0, execution: undefined };
 }
 
 export const LrSelfTestLinearizationResult: MessageFns<LrSelfTestLinearizationResult> = {
   encode(message: LrSelfTestLinearizationResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.linearityKhz !== undefined && message.linearityKhz !== 0) {
-      writer.uint32(9).double(message.linearityKhz);
+    if (message.linearity !== undefined && message.linearity !== 0) {
+      writer.uint32(9).double(message.linearity);
     }
     if (message.execution !== undefined) {
       MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
@@ -15001,7 +15115,7 @@ export const LrSelfTestLinearizationResult: MessageFns<LrSelfTestLinearizationRe
             break;
           }
 
-          message.linearityKhz = reader.double();
+          message.linearity = reader.double();
           continue;
         }
         case 1000: {
@@ -15026,7 +15140,7 @@ export const LrSelfTestLinearizationResult: MessageFns<LrSelfTestLinearizationRe
   },
   fromPartial(object: DeepPartial<LrSelfTestLinearizationResult>): LrSelfTestLinearizationResult {
     const message = createBaseLrSelfTestLinearizationResult();
-    message.linearityKhz = object.linearityKhz ?? 0;
+    message.linearity = object.linearity ?? 0;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -15218,11 +15332,11 @@ export const LrSelfTestRequest: MessageFns<LrSelfTestRequest> = {
 
 function createBaseLrSelfTestResult(): LrSelfTestResult {
   return {
-    referenceArmLengthInches: 0,
+    referenceArmLength: 0,
     referenceArmQuality: 0,
     mirrorMeasurementCount: 0,
-    mirrorMeasurementRangeMeanInches: 0,
-    mirrorMeasurementRangeStandardDeviationInches: 0,
+    mirrorMeasurementRangeMean: 0,
+    mirrorMeasurementRangeStandardDeviation: 0,
     mirrorMeasurementQualityMean: 0,
     mirrorMeasurementQualityStandardDeviation: 0,
     passedReferenceArmQualityThreshold: false,
@@ -15236,8 +15350,8 @@ function createBaseLrSelfTestResult(): LrSelfTestResult {
 
 export const LrSelfTestResult: MessageFns<LrSelfTestResult> = {
   encode(message: LrSelfTestResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.referenceArmLengthInches !== undefined && message.referenceArmLengthInches !== 0) {
-      writer.uint32(9).double(message.referenceArmLengthInches);
+    if (message.referenceArmLength !== undefined && message.referenceArmLength !== 0) {
+      writer.uint32(9).double(message.referenceArmLength);
     }
     if (message.referenceArmQuality !== undefined && message.referenceArmQuality !== 0) {
       writer.uint32(17).double(message.referenceArmQuality);
@@ -15245,14 +15359,14 @@ export const LrSelfTestResult: MessageFns<LrSelfTestResult> = {
     if (message.mirrorMeasurementCount !== undefined && message.mirrorMeasurementCount !== 0) {
       writer.uint32(24).int32(message.mirrorMeasurementCount);
     }
-    if (message.mirrorMeasurementRangeMeanInches !== undefined && message.mirrorMeasurementRangeMeanInches !== 0) {
-      writer.uint32(33).double(message.mirrorMeasurementRangeMeanInches);
+    if (message.mirrorMeasurementRangeMean !== undefined && message.mirrorMeasurementRangeMean !== 0) {
+      writer.uint32(33).double(message.mirrorMeasurementRangeMean);
     }
     if (
-      message.mirrorMeasurementRangeStandardDeviationInches !== undefined &&
-      message.mirrorMeasurementRangeStandardDeviationInches !== 0
+      message.mirrorMeasurementRangeStandardDeviation !== undefined &&
+      message.mirrorMeasurementRangeStandardDeviation !== 0
     ) {
-      writer.uint32(41).double(message.mirrorMeasurementRangeStandardDeviationInches);
+      writer.uint32(41).double(message.mirrorMeasurementRangeStandardDeviation);
     }
     if (message.mirrorMeasurementQualityMean !== undefined && message.mirrorMeasurementQualityMean !== 0) {
       writer.uint32(49).double(message.mirrorMeasurementQualityMean);
@@ -15301,7 +15415,7 @@ export const LrSelfTestResult: MessageFns<LrSelfTestResult> = {
             break;
           }
 
-          message.referenceArmLengthInches = reader.double();
+          message.referenceArmLength = reader.double();
           continue;
         }
         case 2: {
@@ -15325,7 +15439,7 @@ export const LrSelfTestResult: MessageFns<LrSelfTestResult> = {
             break;
           }
 
-          message.mirrorMeasurementRangeMeanInches = reader.double();
+          message.mirrorMeasurementRangeMean = reader.double();
           continue;
         }
         case 5: {
@@ -15333,7 +15447,7 @@ export const LrSelfTestResult: MessageFns<LrSelfTestResult> = {
             break;
           }
 
-          message.mirrorMeasurementRangeStandardDeviationInches = reader.double();
+          message.mirrorMeasurementRangeStandardDeviation = reader.double();
           continue;
         }
         case 6: {
@@ -15414,11 +15528,11 @@ export const LrSelfTestResult: MessageFns<LrSelfTestResult> = {
   },
   fromPartial(object: DeepPartial<LrSelfTestResult>): LrSelfTestResult {
     const message = createBaseLrSelfTestResult();
-    message.referenceArmLengthInches = object.referenceArmLengthInches ?? 0;
+    message.referenceArmLength = object.referenceArmLength ?? 0;
     message.referenceArmQuality = object.referenceArmQuality ?? 0;
     message.mirrorMeasurementCount = object.mirrorMeasurementCount ?? 0;
-    message.mirrorMeasurementRangeMeanInches = object.mirrorMeasurementRangeMeanInches ?? 0;
-    message.mirrorMeasurementRangeStandardDeviationInches = object.mirrorMeasurementRangeStandardDeviationInches ?? 0;
+    message.mirrorMeasurementRangeMean = object.mirrorMeasurementRangeMean ?? 0;
+    message.mirrorMeasurementRangeStandardDeviation = object.mirrorMeasurementRangeStandardDeviation ?? 0;
     message.mirrorMeasurementQualityMean = object.mirrorMeasurementQualityMean ?? 0;
     message.mirrorMeasurementQualityStandardDeviation = object.mirrorMeasurementQualityStandardDeviation ?? 0;
     message.passedReferenceArmQualityThreshold = object.passedReferenceArmQualityThreshold ?? false;
@@ -15542,7 +15656,7 @@ export const LrSetRedLaserIntensityResult: MessageFns<LrSetRedLaserIntensityResu
 };
 
 function createBaseLrSnrInfo(): LrSnrInfo {
-  return { snr: 0, sizeOfDataArray: 0, peakValueIndex: 0, peakValueDb: 0, measuredRangeMeters: 0 };
+  return { snr: 0, sizeOfDataArray: 0, peakValueIndex: 0, peakValue: 0, measuredRange: 0 };
 }
 
 export const LrSnrInfo: MessageFns<LrSnrInfo> = {
@@ -15556,11 +15670,11 @@ export const LrSnrInfo: MessageFns<LrSnrInfo> = {
     if (message.peakValueIndex !== undefined && message.peakValueIndex !== 0) {
       writer.uint32(24).int32(message.peakValueIndex);
     }
-    if (message.peakValueDb !== undefined && message.peakValueDb !== 0) {
-      writer.uint32(33).double(message.peakValueDb);
+    if (message.peakValue !== undefined && message.peakValue !== 0) {
+      writer.uint32(33).double(message.peakValue);
     }
-    if (message.measuredRangeMeters !== undefined && message.measuredRangeMeters !== 0) {
-      writer.uint32(41).double(message.measuredRangeMeters);
+    if (message.measuredRange !== undefined && message.measuredRange !== 0) {
+      writer.uint32(41).double(message.measuredRange);
     }
     return writer;
   },
@@ -15601,7 +15715,7 @@ export const LrSnrInfo: MessageFns<LrSnrInfo> = {
             break;
           }
 
-          message.peakValueDb = reader.double();
+          message.peakValue = reader.double();
           continue;
         }
         case 5: {
@@ -15609,7 +15723,7 @@ export const LrSnrInfo: MessageFns<LrSnrInfo> = {
             break;
           }
 
-          message.measuredRangeMeters = reader.double();
+          message.measuredRange = reader.double();
           continue;
         }
       }
@@ -15629,8 +15743,8 @@ export const LrSnrInfo: MessageFns<LrSnrInfo> = {
     message.snr = object.snr ?? 0;
     message.sizeOfDataArray = object.sizeOfDataArray ?? 0;
     message.peakValueIndex = object.peakValueIndex ?? 0;
-    message.peakValueDb = object.peakValueDb ?? 0;
-    message.measuredRangeMeters = object.measuredRangeMeters ?? 0;
+    message.peakValue = object.peakValue ?? 0;
+    message.measuredRange = object.measuredRange ?? 0;
     return message;
   },
 };
@@ -17604,9 +17718,9 @@ function createBaseObservationInfo(): ObservationInfo {
     active: false,
     timestamp: "",
     rmsError: 0,
-    temperatureFahrenheit: 0,
-    pressureInHg: 0,
-    relativeHumidityPercent: 0,
+    temperature: 0,
+    pressure: 0,
+    relativeHumidity: 0,
     infoData: "",
   };
 }
@@ -17628,14 +17742,14 @@ export const ObservationInfo: MessageFns<ObservationInfo> = {
     if (message.rmsError !== undefined && message.rmsError !== 0) {
       writer.uint32(41).double(message.rmsError);
     }
-    if (message.temperatureFahrenheit !== undefined && message.temperatureFahrenheit !== 0) {
-      writer.uint32(49).double(message.temperatureFahrenheit);
+    if (message.temperature !== undefined && message.temperature !== 0) {
+      writer.uint32(49).double(message.temperature);
     }
-    if (message.pressureInHg !== undefined && message.pressureInHg !== 0) {
-      writer.uint32(57).double(message.pressureInHg);
+    if (message.pressure !== undefined && message.pressure !== 0) {
+      writer.uint32(57).double(message.pressure);
     }
-    if (message.relativeHumidityPercent !== undefined && message.relativeHumidityPercent !== 0) {
-      writer.uint32(65).double(message.relativeHumidityPercent);
+    if (message.relativeHumidity !== undefined && message.relativeHumidity !== 0) {
+      writer.uint32(65).double(message.relativeHumidity);
     }
     if (message.infoData !== undefined && message.infoData !== "") {
       writer.uint32(74).string(message.infoData);
@@ -17695,7 +17809,7 @@ export const ObservationInfo: MessageFns<ObservationInfo> = {
             break;
           }
 
-          message.temperatureFahrenheit = reader.double();
+          message.temperature = reader.double();
           continue;
         }
         case 7: {
@@ -17703,7 +17817,7 @@ export const ObservationInfo: MessageFns<ObservationInfo> = {
             break;
           }
 
-          message.pressureInHg = reader.double();
+          message.pressure = reader.double();
           continue;
         }
         case 8: {
@@ -17711,7 +17825,7 @@ export const ObservationInfo: MessageFns<ObservationInfo> = {
             break;
           }
 
-          message.relativeHumidityPercent = reader.double();
+          message.relativeHumidity = reader.double();
           continue;
         }
         case 9: {
@@ -17745,9 +17859,9 @@ export const ObservationInfo: MessageFns<ObservationInfo> = {
     message.active = object.active ?? false;
     message.timestamp = object.timestamp ?? "";
     message.rmsError = object.rmsError ?? 0;
-    message.temperatureFahrenheit = object.temperatureFahrenheit ?? 0;
-    message.pressureInHg = object.pressureInHg ?? 0;
-    message.relativeHumidityPercent = object.relativeHumidityPercent ?? 0;
+    message.temperature = object.temperature ?? 0;
+    message.pressure = object.pressure ?? 0;
+    message.relativeHumidity = object.relativeHumidity ?? 0;
     message.infoData = object.infoData ?? "";
     return message;
   },
@@ -19710,7 +19824,7 @@ export const SetInstrumentGroupAndTargetResult: MessageFns<SetInstrumentGroupAnd
 };
 
 function createBaseSetInstrumentInterfaceResponseTimeoutRequest(): SetInstrumentInterfaceResponseTimeoutRequest {
-  return { instrument: undefined, timeoutSeconds: undefined };
+  return { instrument: undefined, timeout: undefined };
 }
 
 export const SetInstrumentInterfaceResponseTimeoutRequest: MessageFns<SetInstrumentInterfaceResponseTimeoutRequest> = {
@@ -19721,8 +19835,8 @@ export const SetInstrumentInterfaceResponseTimeoutRequest: MessageFns<SetInstrum
     if (message.instrument !== undefined) {
       CollectionInstrumentId.encode(message.instrument, writer.uint32(10).fork()).join();
     }
-    if (message.timeoutSeconds !== undefined) {
-      writer.uint32(17).double(message.timeoutSeconds);
+    if (message.timeout !== undefined) {
+      writer.uint32(17).double(message.timeout);
     }
     return writer;
   },
@@ -19747,7 +19861,7 @@ export const SetInstrumentInterfaceResponseTimeoutRequest: MessageFns<SetInstrum
             break;
           }
 
-          message.timeoutSeconds = reader.double();
+          message.timeout = reader.double();
           continue;
         }
       }
@@ -19771,7 +19885,7 @@ export const SetInstrumentInterfaceResponseTimeoutRequest: MessageFns<SetInstrum
     message.instrument = (object.instrument !== undefined && object.instrument !== null)
       ? CollectionInstrumentId.fromPartial(object.instrument)
       : undefined;
-    message.timeoutSeconds = object.timeoutSeconds ?? undefined;
+    message.timeout = object.timeout ?? undefined;
     return message;
   },
 };
@@ -20193,9 +20307,9 @@ export const SetInstrumentTransformResult: MessageFns<SetInstrumentTransformResu
 function createBaseSetInstrumentWeatherSettingRequest(): SetInstrumentWeatherSettingRequest {
   return {
     instrument: undefined,
-    temperatureFahrenheit: undefined,
-    pressureMmhg: undefined,
-    relativeHumidityPercent: undefined,
+    temperature: undefined,
+    pressure: undefined,
+    relativeHumidity: undefined,
     setAutomatically: undefined,
   };
 }
@@ -20205,14 +20319,14 @@ export const SetInstrumentWeatherSettingRequest: MessageFns<SetInstrumentWeather
     if (message.instrument !== undefined) {
       CollectionInstrumentId.encode(message.instrument, writer.uint32(10).fork()).join();
     }
-    if (message.temperatureFahrenheit !== undefined) {
-      writer.uint32(17).double(message.temperatureFahrenheit);
+    if (message.temperature !== undefined) {
+      writer.uint32(17).double(message.temperature);
     }
-    if (message.pressureMmhg !== undefined) {
-      writer.uint32(25).double(message.pressureMmhg);
+    if (message.pressure !== undefined) {
+      writer.uint32(25).double(message.pressure);
     }
-    if (message.relativeHumidityPercent !== undefined) {
-      writer.uint32(33).double(message.relativeHumidityPercent);
+    if (message.relativeHumidity !== undefined) {
+      writer.uint32(33).double(message.relativeHumidity);
     }
     if (message.setAutomatically !== undefined) {
       writer.uint32(40).bool(message.setAutomatically);
@@ -20240,7 +20354,7 @@ export const SetInstrumentWeatherSettingRequest: MessageFns<SetInstrumentWeather
             break;
           }
 
-          message.temperatureFahrenheit = reader.double();
+          message.temperature = reader.double();
           continue;
         }
         case 3: {
@@ -20248,7 +20362,7 @@ export const SetInstrumentWeatherSettingRequest: MessageFns<SetInstrumentWeather
             break;
           }
 
-          message.pressureMmhg = reader.double();
+          message.pressure = reader.double();
           continue;
         }
         case 4: {
@@ -20256,7 +20370,7 @@ export const SetInstrumentWeatherSettingRequest: MessageFns<SetInstrumentWeather
             break;
           }
 
-          message.relativeHumidityPercent = reader.double();
+          message.relativeHumidity = reader.double();
           continue;
         }
         case 5: {
@@ -20284,9 +20398,9 @@ export const SetInstrumentWeatherSettingRequest: MessageFns<SetInstrumentWeather
     message.instrument = (object.instrument !== undefined && object.instrument !== null)
       ? CollectionInstrumentId.fromPartial(object.instrument)
       : undefined;
-    message.temperatureFahrenheit = object.temperatureFahrenheit ?? undefined;
-    message.pressureMmhg = object.pressureMmhg ?? undefined;
-    message.relativeHumidityPercent = object.relativeHumidityPercent ?? undefined;
+    message.temperature = object.temperature ?? undefined;
+    message.pressure = object.pressure ?? undefined;
+    message.relativeHumidity = object.relativeHumidity ?? undefined;
     message.setAutomatically = object.setAutomatically ?? undefined;
     return message;
   },
@@ -21497,11 +21611,11 @@ export const SetTargetComputationOptionsResult: MessageFns<SetTargetComputationO
 function createBaseSetTrackerEdmTheodoliteUncertaintiesRequest(): SetTrackerEdmTheodoliteUncertaintiesRequest {
   return {
     instrument: undefined,
-    thetaDispersionArcseconds: undefined,
+    thetaDispersion: undefined,
     thetaThreshold: undefined,
-    phiDispersionArcseconds: undefined,
+    phiDispersion: undefined,
     phiThreshold: undefined,
-    distancePpm: undefined,
+    distance: undefined,
     distanceThreshold: undefined,
   };
 }
@@ -21514,20 +21628,20 @@ export const SetTrackerEdmTheodoliteUncertaintiesRequest: MessageFns<SetTrackerE
     if (message.instrument !== undefined) {
       CollectionInstrumentId.encode(message.instrument, writer.uint32(10).fork()).join();
     }
-    if (message.thetaDispersionArcseconds !== undefined) {
-      writer.uint32(17).double(message.thetaDispersionArcseconds);
+    if (message.thetaDispersion !== undefined) {
+      writer.uint32(17).double(message.thetaDispersion);
     }
     if (message.thetaThreshold !== undefined) {
       writer.uint32(25).double(message.thetaThreshold);
     }
-    if (message.phiDispersionArcseconds !== undefined) {
-      writer.uint32(33).double(message.phiDispersionArcseconds);
+    if (message.phiDispersion !== undefined) {
+      writer.uint32(33).double(message.phiDispersion);
     }
     if (message.phiThreshold !== undefined) {
       writer.uint32(41).double(message.phiThreshold);
     }
-    if (message.distancePpm !== undefined) {
-      writer.uint32(49).double(message.distancePpm);
+    if (message.distance !== undefined) {
+      writer.uint32(49).double(message.distance);
     }
     if (message.distanceThreshold !== undefined) {
       writer.uint32(57).double(message.distanceThreshold);
@@ -21555,7 +21669,7 @@ export const SetTrackerEdmTheodoliteUncertaintiesRequest: MessageFns<SetTrackerE
             break;
           }
 
-          message.thetaDispersionArcseconds = reader.double();
+          message.thetaDispersion = reader.double();
           continue;
         }
         case 3: {
@@ -21571,7 +21685,7 @@ export const SetTrackerEdmTheodoliteUncertaintiesRequest: MessageFns<SetTrackerE
             break;
           }
 
-          message.phiDispersionArcseconds = reader.double();
+          message.phiDispersion = reader.double();
           continue;
         }
         case 5: {
@@ -21587,7 +21701,7 @@ export const SetTrackerEdmTheodoliteUncertaintiesRequest: MessageFns<SetTrackerE
             break;
           }
 
-          message.distancePpm = reader.double();
+          message.distance = reader.double();
           continue;
         }
         case 7: {
@@ -21617,11 +21731,11 @@ export const SetTrackerEdmTheodoliteUncertaintiesRequest: MessageFns<SetTrackerE
     message.instrument = (object.instrument !== undefined && object.instrument !== null)
       ? CollectionInstrumentId.fromPartial(object.instrument)
       : undefined;
-    message.thetaDispersionArcseconds = object.thetaDispersionArcseconds ?? undefined;
+    message.thetaDispersion = object.thetaDispersion ?? undefined;
     message.thetaThreshold = object.thetaThreshold ?? undefined;
-    message.phiDispersionArcseconds = object.phiDispersionArcseconds ?? undefined;
+    message.phiDispersion = object.phiDispersion ?? undefined;
     message.phiThreshold = object.phiThreshold ?? undefined;
-    message.distancePpm = object.distancePpm ?? undefined;
+    message.distance = object.distance ?? undefined;
     message.distanceThreshold = object.distanceThreshold ?? undefined;
     return message;
   },

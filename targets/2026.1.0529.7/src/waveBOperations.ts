@@ -154,7 +154,8 @@ type WorldFixedXyzTransformComponents = Values.WorldFixedXyzTransformComponents;
 type WorldFixedXyzTransformVectors = Values.WorldFixedXyzTransformVectors;
 
 export interface CloudDisplayControlInput {
-  readonly thinDrawIncrement?: number;
+  /** MP qualifier: Draw Increment. */
+  readonly thin?: number;
   readonly pointSize?: number;
 }
 
@@ -977,7 +978,8 @@ export interface ConstructPointsCylindricallyShiftedInput {
   readonly originalPoints: Iterable<PointName>;
   readonly groupForNewPoints: CollectionObjectName;
   readonly radialShift?: number;
-  readonly thetaShiftDegrees?: number;
+  /** Angle in degrees. */
+  readonly thetaShift?: number;
   readonly planarShift?: number;
 }
 
@@ -1063,7 +1065,8 @@ export interface ConstructPointsWildcardSelectionInput {
 
 export interface ConstructSphereInput {
   readonly sphereName: CollectionObjectName;
-  readonly sphereCenterInWorkingCoordinates: Vector;
+  /** Expressed in working coordinates. */
+  readonly sphereCenter: Vector;
   readonly sphereRadius: number;
 }
 
@@ -1228,8 +1231,10 @@ export interface CreateHiddenPointInput {
 
 export interface CreateHiddenPointRodInput {
   readonly hiddenPointRodName: string;
-  readonly targetToTargetDistance?: number;
-  readonly targetToTipDistance?: number;
+  /** MP qualifier: Target to Target. */
+  readonly aToBDistance?: number;
+  /** MP qualifier: Target to Tip. */
+  readonly aToCDistance?: number;
   readonly interPointTolerance?: number;
 }
 
@@ -1653,7 +1658,8 @@ export interface GetGradientAtProjectedPointOnSurfaceInput {
 
 export interface GetGradientAtProjectedPointOnSurfaceEdgeInput {
   readonly pointToProject: PointName;
-  readonly surfaceEdgeBSpline: CollectionObjectName;
+  /** MP qualifier: B-Spline. */
+  readonly surfaceEdge: CollectionObjectName;
   readonly surfaceName: CollectionObjectName;
   readonly edgeOffsetDirection?: Vector;
   readonly edgeOffsetDistance?: number;
@@ -1994,9 +2000,12 @@ export interface CombinePointGroupsInput {
 }
 
 export interface ComputeCteScaleFactorInput {
-  readonly materialCtePerDegreeFahrenheit?: number;
-  readonly initialTemperatureFahrenheit?: number;
-  readonly finalTemperatureFahrenheit?: number;
+  /** Coefficient per degree Fahrenheit. */
+  readonly materialCte?: number;
+  /** Temperature in degrees Fahrenheit. */
+  readonly initialTemperature?: number;
+  /** Temperature in degrees Fahrenheit. */
+  readonly finalTemperature?: number;
 }
 
 export interface ConfigureAndMeasureInput {
@@ -2051,9 +2060,12 @@ export interface CreateTemplatedInstrumentUsmnInput {
   readonly enableRz?: boolean;
   readonly enableScale?: boolean;
   readonly enableComponentWeights?: boolean;
-  readonly azimuthWeight?: number;
-  readonly elevationWeight?: number;
-  readonly distanceWeight?: number;
+  /** MP qualifier: Azimuth. */
+  readonly component1Weight?: number;
+  /** MP qualifier: Elevation. */
+  readonly component2Weight?: number;
+  /** MP qualifier: Distance. */
+  readonly component3Weight?: number;
 }
 
 export interface DeleteInstrumentInput {
@@ -2358,7 +2370,8 @@ export interface LocateInstrumentsUsmnInput {
   readonly excludeSingleInstrumentPoints?: boolean;
   readonly runUncertaintyFieldAnalysis?: boolean;
   readonly analysisSamples?: number;
-  readonly analysisTimeLimitMinutes?: number;
+  /** Time in minutes; 0 disables the time limit. */
+  readonly analysisTimeLimit?: number;
 }
 
 export interface LrApdisActivateMcmCalibrationInput extends LrInstrumentInput {
@@ -2379,11 +2392,14 @@ export interface LrHardwareConnectInput {
 }
 
 export interface LrSelfTestResult {
-  readonly referenceArmLengthInches: number;
+  /** Length in inches. */
+  readonly referenceArmLength: number;
   readonly referenceArmQuality: number;
   readonly mirrorMeasurementCount: number;
-  readonly mirrorMeasurementRangeMeanInches: number;
-  readonly mirrorMeasurementRangeStandardDeviationInches: number;
+  /** Length in inches. */
+  readonly mirrorMeasurementRangeMean: number;
+  /** Length in inches. */
+  readonly mirrorMeasurementRangeStandardDeviation: number;
   readonly mirrorMeasurementQualityMean: number;
   readonly mirrorMeasurementQualityStandardDeviation: number;
   readonly passedReferenceArmQualityThreshold: boolean;
@@ -2564,9 +2580,12 @@ export interface SetInstrumentTransformInput {
 
 export interface SetInstrumentWeatherSettingInput {
   readonly instrument: CollectionInstrumentId;
-  readonly temperatureFahrenheit?: number;
-  readonly pressureMmHg?: number;
-  readonly relativeHumidityPercent?: number;
+  /** Temperature in degrees Fahrenheit. */
+  readonly temperature?: number;
+  /** Pressure in millimeters of mercury. */
+  readonly pressure?: number;
+  /** Relative humidity in percent. */
+  readonly relativeHumidity?: number;
   readonly setAutomatically?: boolean;
 }
 
@@ -2667,11 +2686,14 @@ export interface SetTargetComputationOptionsInput {
 
 export interface SetTrackerEdmTheodoliteUncertaintiesInput {
   readonly instrument: CollectionInstrumentId;
-  readonly thetaDispersionArcseconds?: number;
+  /** Angle in arcseconds. */
+  readonly thetaDispersion?: number;
   readonly thetaThreshold?: number;
-  readonly phiDispersionArcseconds?: number;
+  /** Angle in arcseconds. */
+  readonly phiDispersion?: number;
   readonly phiThreshold?: number;
-  readonly distancePpm?: number;
+  /** Value in parts per million. */
+  readonly distance?: number;
   readonly distanceThreshold?: number;
 }
 
@@ -3288,7 +3310,8 @@ export interface SetCalibrationApplianceNodeInstrumentInput {
 
 export interface SetCalibrationApplianceNodeInstrumentDwellTimeInput {
   readonly calibrationApplianceNode: CollectionObjectName;
-  readonly measurementDwellTimeSeconds?: number;
+  /** Time in seconds. */
+  readonly measurementDwellTime?: number;
 }
 
 export interface SetCalibrationApplianceNodeIntegerValueInput {
@@ -3474,13 +3497,15 @@ export interface SetCalibrationApplianceRealValueInput {
 export interface SetRobotCalibrationMeasurementOffsetInToolFrameInput {
   readonly machineId: CollectionMachineId;
   readonly calibrationName?: string;
-  readonly measurementFrameRelativeToTool?: Transform;
+  /** MP qualifier: relative to tool. */
+  readonly measurementFrame?: Transform;
 }
 
 export interface SetRobotCalibrationToolFrameInput {
   readonly machineId: CollectionMachineId;
   readonly calibrationName?: string;
-  readonly toolFrameRelativeToFlange?: Transform;
+  /** MP qualifier: relative to flange. */
+  readonly toolFrame?: Transform;
 }
 
 export interface SetRobotMachineBaseTransformInput {
@@ -3553,13 +3578,9 @@ export async function cloudDisplayControl(
 ): Promise<void> {
   const request =
     CloudAndMeshOperationsProtocol.CloudDisplayControlRequest.fromPartial({
-      thinDrawIncrement: toWireOperationValue(
+      thin: toWireOperationValue(
         operationScalarSchemas.integer,
-        resolveOperationDefault(
-          input?.thinDrawIncrement,
-          1,
-          'thinDrawIncrement',
-        ),
+        resolveOperationDefault(input?.thin, 1, 'thin'),
       ),
       pointSize: toWireOperationValue(
         operationScalarSchemas.integer,
@@ -7764,28 +7785,28 @@ export async function relationshipWatchWindowTemplate(
                 getOperationValueSchema('color'),
                 input?.options?.highlightColor,
               ),
-        showDeviationXRx: toWireOperationValue(
+        showDeviationX: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.options?.showDeviationXRx,
+            input?.options?.showDeviationX,
             true,
-            'showDeviationXRx',
+            'showDeviationX',
           ),
         ),
-        showDeviationYRy: toWireOperationValue(
+        showDeviationY: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.options?.showDeviationYRy,
+            input?.options?.showDeviationY,
             true,
-            'showDeviationYRy',
+            'showDeviationY',
           ),
         ),
-        showDeviationZRz: toWireOperationValue(
+        showDeviationZ: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.options?.showDeviationZRz,
+            input?.options?.showDeviationZ,
             true,
-            'showDeviationZRz',
+            'showDeviationZ',
           ),
         ),
         showDeviationMagnitude: toWireOperationValue(
@@ -13189,13 +13210,9 @@ async function constructPointsCylindricallyShiftedOperation(
           operationScalarSchemas.number,
           resolveOperationDefault(input.radialShift, 0, 'radialShift'),
         ),
-        thetaShiftDegrees: toWireOperationValue(
+        thetaShift: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.thetaShiftDegrees,
-            0,
-            'thetaShiftDegrees',
-          ),
+          resolveOperationDefault(input.thetaShift, 0, 'thetaShift'),
         ),
         planarShift: toWireOperationValue(
           operationScalarSchemas.number,
@@ -13794,12 +13811,9 @@ async function constructSphereOperation(
         getOperationValueSchema('collectionObjectName'),
         requireOperationInput(input.sphereName, 'sphereName'),
       ),
-      sphereCenterInWorkingCoordinates: toWireOperationValue(
+      sphereCenter: toWireOperationValue(
         getOperationValueSchema('vector'),
-        requireOperationInput(
-          input.sphereCenterInWorkingCoordinates,
-          'sphereCenterInWorkingCoordinates',
-        ),
+        requireOperationInput(input.sphereCenter, 'sphereCenter'),
       ),
       sphereRadius: toWireOperationValue(
         operationScalarSchemas.number,
@@ -14833,21 +14847,13 @@ async function createHiddenPointRodOperation(
           'hiddenPointRodName',
         ),
       ),
-      targetToTargetDistance: toWireOperationValue(
+      aToBDistance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.targetToTargetDistance,
-          0,
-          'targetToTargetDistance',
-        ),
+        resolveOperationDefault(input.aToBDistance, 0, 'aToBDistance'),
       ),
-      targetToTipDistance: toWireOperationValue(
+      aToCDistance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.targetToTipDistance,
-          0,
-          'targetToTipDistance',
-        ),
+        resolveOperationDefault(input.aToCDistance, 0, 'aToCDistance'),
       ),
       interPointTolerance: toWireOperationValue(
         operationScalarSchemas.number,
@@ -15133,33 +15139,33 @@ async function createPointCalloutOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(input.showPointTarget, true, 'showPointTarget'),
       ),
-      showXR: toWireOperationValue(
+      showX: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input.showX, true, 'showXR'),
+        resolveOperationDefault(input.showX, true, 'showX'),
       ),
-      showYTheta: toWireOperationValue(
+      showY: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input.showY, true, 'showYTheta'),
+        resolveOperationDefault(input.showY, true, 'showY'),
       ),
-      showZPhi: toWireOperationValue(
+      showZ: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input.showZ, true, 'showZPhi'),
+        resolveOperationDefault(input.showZ, true, 'showZ'),
       ),
       showUnits: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(input.showUnits, false, 'showUnits'),
       ),
-      showUxUr: toWireOperationValue(
+      showUx: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input.showUx, false, 'showUxUr'),
+        resolveOperationDefault(input.showUx, false, 'showUx'),
       ),
-      showUyUtheta: toWireOperationValue(
+      showUy: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input.showUy, false, 'showUyUtheta'),
+        resolveOperationDefault(input.showUy, false, 'showUy'),
       ),
-      showUzUphi: toWireOperationValue(
+      showUz: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input.showUz, false, 'showUzUphi'),
+        resolveOperationDefault(input.showUz, false, 'showUz'),
       ),
       showUmag: toWireOperationValue(
         operationScalarSchemas.boolean,
@@ -17760,9 +17766,9 @@ async function getGradientAtProjectedPointOnSurfaceEdgeOperation(
           getOperationValueSchema('pointName'),
           requireOperationInput(input.pointToProject, 'pointToProject'),
         ),
-        surfaceEdgeBSpline: toWireOperationValue(
+        surfaceEdge: toWireOperationValue(
           getOperationValueSchema('collectionObjectName'),
-          requireOperationInput(input.surfaceEdgeBSpline, 'surfaceEdgeBSpline'),
+          requireOperationInput(input.surfaceEdge, 'surfaceEdge'),
         ),
         surfaceName: toWireOperationValue(
           getOperationValueSchema('collectionObjectName'),
@@ -20008,20 +20014,20 @@ async function makeGdtFeatureCheckAnnotationOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(options.circularArea, false, 'circularArea'),
       ),
-      perUnitAreaLengthDistance: toWireOperationValue(
+      perUnitLengthDistance: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          options.perUnitAreaLengthDistance,
+          options.perUnitLengthDistance,
           0,
-          'perUnitAreaLengthDistance',
+          'perUnitLengthDistance',
         ),
       ),
-      perUnitAreaLengthStepOverPercent: toWireOperationValue(
+      perUnitLengthStepOverPercent: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          options.perUnitAreaLengthStepOverPercent,
+          options.perUnitLengthStepOverPercent,
           50,
-          'perUnitAreaLengthStepOverPercent',
+          'perUnitLengthStepOverPercent',
         ),
       ),
       perUnitAreaWidthDistance: toWireOperationValue(
@@ -21368,7 +21374,7 @@ export interface InstrumentOperations {
   ): Promise<void>;
   setInstrumentInterfaceResponseTimeout(
     instrument: CollectionInstrumentId,
-    timeoutSeconds?: number,
+    timeout?: number,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   setInstrumentMeasurementModeProfile(
@@ -22519,29 +22525,21 @@ async function computeCteScaleFactorOperation(
 ): Promise<number> {
   const request =
     InstrumentOperationsProtocol.ComputeCteScaleFactorRequest.fromPartial({
-      materialCtePerDegreeFahrenheit: toWireOperationValue(
+      materialCte: toWireOperationValue(
+        operationScalarSchemas.number,
+        resolveOperationDefault(input?.materialCte, 0, 'materialCte'),
+      ),
+      initialTemperature: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input?.materialCtePerDegreeFahrenheit,
+          input?.initialTemperature,
           0,
-          'materialCtePerDegreeFahrenheit',
+          'initialTemperature',
         ),
       ),
-      initialTemperatureFahrenheit: toWireOperationValue(
+      finalTemperature: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input?.initialTemperatureFahrenheit,
-          0,
-          'initialTemperatureFahrenheit',
-        ),
-      ),
-      finalTemperatureFahrenheit: toWireOperationValue(
-        operationScalarSchemas.number,
-        resolveOperationDefault(
-          input?.finalTemperatureFahrenheit,
-          0,
-          'finalTemperatureFahrenheit',
-        ),
+        resolveOperationDefault(input?.finalTemperature, 0, 'finalTemperature'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -22920,17 +22918,29 @@ async function createTemplatedInstrumentUsmnOperation(
             'enableComponentWeights',
           ),
         ),
-        azimuthWeight: toWireOperationValue(
+        component1Weight: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.azimuthWeight, 1, 'azimuthWeight'),
+          resolveOperationDefault(
+            input.component1Weight,
+            1,
+            'component1Weight',
+          ),
         ),
-        elevationWeight: toWireOperationValue(
+        component2Weight: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.elevationWeight, 1, 'elevationWeight'),
+          resolveOperationDefault(
+            input.component2Weight,
+            1,
+            'component2Weight',
+          ),
         ),
-        distanceWeight: toWireOperationValue(
+        component3Weight: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.distanceWeight, 1, 'distanceWeight'),
+          resolveOperationDefault(
+            input.component3Weight,
+            1,
+            'component3Weight',
+          ),
         ),
       } as never,
     );
@@ -23582,10 +23592,10 @@ async function getCurrentInstrumentPositionUpdateOperation(
   );
   return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
     ['xOrR', operationScalarSchemas.number],
-    ['yOrThetaDegrees', operationScalarSchemas.number],
-    ['zOrPhiDegrees', operationScalarSchemas.number],
-    ['timeSinceUpdateSeconds', operationScalarSchemas.number],
-    ['timestampApproximate', operationScalarSchemas.string],
+    ['yOrTheta', operationScalarSchemas.number],
+    ['zOrPhi', operationScalarSchemas.number],
+    ['timeSinceUpdate', operationScalarSchemas.number],
+    ['timestamp', operationScalarSchemas.string],
   ]) as InstrumentPositionUpdate;
 }
 async function getCurrentTrappingStatusOperation(
@@ -23773,7 +23783,7 @@ async function getInstrumentInterfaceResponseTimeoutOperation(
     callOptions,
   );
   return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    ['timeoutSeconds', operationScalarSchemas.number],
+    ['timeout', operationScalarSchemas.number],
   ]) as number;
 }
 async function getInstrumentMeasurementModeProfileOperation(
@@ -23859,7 +23869,7 @@ async function getInstrumentPartTemperatureOperation(
     callOptions,
   );
   return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    ['partTemperatureFahrenheit', operationScalarSchemas.number],
+    ['partTemperature', operationScalarSchemas.number],
   ]) as number;
 }
 async function getInstrumentScaleFactorOperation(
@@ -24030,9 +24040,9 @@ async function getInstrumentWeatherSettingOperation(
     callOptions,
   );
   return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    ['temperatureFahrenheit', operationScalarSchemas.number],
-    ['pressureMmhg', operationScalarSchemas.number, 'pressureMmHg'],
-    ['relativeHumidityPercent', operationScalarSchemas.number],
+    ['temperature', operationScalarSchemas.number],
+    ['pressure', operationScalarSchemas.number, 'pressure'],
+    ['relativeHumidity', operationScalarSchemas.number],
     ['setAutomatically', operationScalarSchemas.boolean],
   ]) as InstrumentWeatherSetting;
 }
@@ -24311,11 +24321,11 @@ async function getTrackerEdmTheodoliteUncertaintiesOperation(
     callOptions,
   );
   return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    ['thetaDispersionArcseconds', operationScalarSchemas.number],
+    ['thetaDispersion', operationScalarSchemas.number],
     ['thetaThreshold', operationScalarSchemas.number],
-    ['phiDispersionArcseconds', operationScalarSchemas.number],
+    ['phiDispersion', operationScalarSchemas.number],
     ['phiThreshold', operationScalarSchemas.number],
-    ['distancePpm', operationScalarSchemas.number],
+    ['distance', operationScalarSchemas.number],
     ['distanceThreshold', operationScalarSchemas.number],
   ]) as TrackerEdmTheodoliteUncertainties;
 }
@@ -25081,12 +25091,12 @@ async function locateInstrumentsUsmnOperation(
         operationScalarSchemas.integer,
         resolveOperationDefault(input.analysisSamples, 300, 'analysisSamples'),
       ),
-      analysisTimeLimitMinutes: toWireOperationValue(
+      analysisTimeLimit: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.analysisTimeLimitMinutes,
+          input.analysisTimeLimit,
           4,
-          'analysisTimeLimitMinutes',
+          'analysisTimeLimit',
         ),
       ),
     } as never);
@@ -25332,14 +25342,11 @@ async function lrSelfTestOperation(
     callOptions,
   );
   return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    ['referenceArmLengthInches', operationScalarSchemas.number],
+    ['referenceArmLength', operationScalarSchemas.number],
     ['referenceArmQuality', operationScalarSchemas.number],
     ['mirrorMeasurementCount', operationScalarSchemas.integer],
-    ['mirrorMeasurementRangeMeanInches', operationScalarSchemas.number],
-    [
-      'mirrorMeasurementRangeStandardDeviationInches',
-      operationScalarSchemas.number,
-    ],
+    ['mirrorMeasurementRangeMean', operationScalarSchemas.number],
+    ['mirrorMeasurementRangeStandardDeviation', operationScalarSchemas.number],
     ['mirrorMeasurementQualityMean', operationScalarSchemas.number],
     [
       'mirrorMeasurementQualityStandardDeviation',
@@ -25377,7 +25384,7 @@ async function lrSelfTestFlipTestOperation(
     callOptions,
   );
   return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    ['result', getOperationValueSchema('lrFlipTestResult'), 'frontRangeInches'],
+    ['result', getOperationValueSchema('lrFlipTestResult'), 'frontRange'],
   ]) as LrFlipTestResult;
 }
 async function lrSelfTestLinearizationOperation(
@@ -25402,7 +25409,7 @@ async function lrSelfTestLinearizationOperation(
     callOptions,
   );
   return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    ['linearityKhz', operationScalarSchemas.number],
+    ['linearity', operationScalarSchemas.number],
   ]) as number;
 }
 async function lrSelfTestLoSepOperation(
@@ -25444,7 +25451,7 @@ async function lrSelfTestLoSepOperation(
     [
       'result',
       getOperationValueSchema('lrLoSeparationTestResult'),
-      'primaryLoIndex',
+      'primaryLo',
     ],
   ]) as LrLoSeparationTestResult;
 }
@@ -26657,7 +26664,7 @@ async function setInstrumentGroupAndTargetOperation(
 async function setInstrumentInterfaceResponseTimeoutOperation(
   briosa: BriosaClient,
   instrument: CollectionInstrumentId,
-  timeoutSeconds?: number,
+  timeout?: number,
   callOptions: BriosaCallOptions = {},
 ): Promise<void> {
   const request =
@@ -26667,9 +26674,9 @@ async function setInstrumentInterfaceResponseTimeoutOperation(
           getOperationValueSchema('collectionInstrumentId'),
           requireOperationInput(instrument, 'instrument'),
         ),
-        timeoutSeconds: toWireOperationValue(
+        timeout: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(timeoutSeconds, 0, 'timeoutSeconds'),
+          resolveOperationDefault(timeout, 0, 'timeout'),
         ),
       } as never,
     );
@@ -26810,24 +26817,20 @@ async function setInstrumentWeatherSettingOperation(
           getOperationValueSchema('collectionInstrumentId'),
           requireOperationInput(input.instrument, 'instrument'),
         ),
-        temperatureFahrenheit: toWireOperationValue(
+        temperature: toWireOperationValue(
+          operationScalarSchemas.number,
+          resolveOperationDefault(input.temperature, 0, 'temperature'),
+        ),
+        pressure: toWireOperationValue(
+          operationScalarSchemas.number,
+          resolveOperationDefault(input.pressure, 0, 'pressure'),
+        ),
+        relativeHumidity: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(
-            input.temperatureFahrenheit,
+            input.relativeHumidity,
             0,
-            'temperatureFahrenheit',
-          ),
-        ),
-        pressureMmhg: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.pressureMmHg, 0, 'pressureMmhg'),
-        ),
-        relativeHumidityPercent: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.relativeHumidityPercent,
-            0,
-            'relativeHumidityPercent',
+            'relativeHumidity',
           ),
         ),
         setAutomatically: toWireOperationValue(
@@ -27498,13 +27501,9 @@ async function setTrackerEdmTheodoliteUncertaintiesOperation(
           getOperationValueSchema('collectionInstrumentId'),
           requireOperationInput(input.instrument, 'instrument'),
         ),
-        thetaDispersionArcseconds: toWireOperationValue(
+        thetaDispersion: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.thetaDispersionArcseconds,
-            1,
-            'thetaDispersionArcseconds',
-          ),
+          resolveOperationDefault(input.thetaDispersion, 1, 'thetaDispersion'),
         ),
         thetaThreshold: toWireOperationValue(
           operationScalarSchemas.number,
@@ -27514,21 +27513,17 @@ async function setTrackerEdmTheodoliteUncertaintiesOperation(
             'thetaThreshold',
           ),
         ),
-        phiDispersionArcseconds: toWireOperationValue(
+        phiDispersion: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.phiDispersionArcseconds,
-            1,
-            'phiDispersionArcseconds',
-          ),
+          resolveOperationDefault(input.phiDispersion, 1, 'phiDispersion'),
         ),
         phiThreshold: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(input.phiThreshold, 0.001, 'phiThreshold'),
         ),
-        distancePpm: toWireOperationValue(
+        distance: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.distancePpm, 2.5, 'distancePpm'),
+          resolveOperationDefault(input.distance, 2.5, 'distance'),
         ),
         distanceThreshold: toWireOperationValue(
           operationScalarSchemas.number,
@@ -28950,15 +28945,11 @@ export function createInstrumentOperations(
       ),
     setInstrumentGroupAndTarget: (input, callOptions) =>
       setInstrumentGroupAndTargetOperation(briosa, input, callOptions),
-    setInstrumentInterfaceResponseTimeout: (
-      instrument,
-      timeoutSeconds,
-      callOptions,
-    ) =>
+    setInstrumentInterfaceResponseTimeout: (instrument, timeout, callOptions) =>
       setInstrumentInterfaceResponseTimeoutOperation(
         briosa,
         instrument,
-        timeoutSeconds,
+        timeout,
         callOptions,
       ),
     setInstrumentMeasurementModeProfile: (input, callOptions) =>
@@ -29644,12 +29635,12 @@ async function setCalibrationApplianceNodeInstrumentDwellTimeOperation(
             'calibrationApplianceNode',
           ),
         ),
-        measurementDwellTimeSeconds: toWireOperationValue(
+        measurementDwellTime: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(
-            input.measurementDwellTimeSeconds,
+            input.measurementDwellTime,
             0,
-            'measurementDwellTimeSeconds',
+            'measurementDwellTime',
           ),
         ),
       } as never,
@@ -31325,12 +31316,12 @@ async function setRobotCalibrationMeasurementOffsetInToolFrameOperation(
           operationScalarSchemas.string,
           resolveOperationDefault(input.calibrationName, '', 'calibrationName'),
         ),
-        measurementFrameRelativeToTool:
-          input.measurementFrameRelativeToTool == null
+        measurementFrame:
+          input.measurementFrame == null
             ? undefined
             : toWireOperationValue(
                 getOperationValueSchema('transform'),
-                input.measurementFrameRelativeToTool,
+                input.measurementFrame,
               ),
       } as never,
     );
@@ -31365,12 +31356,12 @@ async function setRobotCalibrationToolFrameOperation(
         operationScalarSchemas.string,
         resolveOperationDefault(input.calibrationName, '', 'calibrationName'),
       ),
-      toolFrameRelativeToFlange:
-        input.toolFrameRelativeToFlange == null
+      toolFrame:
+        input.toolFrame == null
           ? undefined
           : toWireOperationValue(
               getOperationValueSchema('transform'),
-              input.toolFrameRelativeToFlange,
+              input.toolFrame,
             ),
     } as never);
   const response = await invokeClientOperation(

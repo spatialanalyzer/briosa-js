@@ -593,23 +593,23 @@ export function registerWaveBOperationValueSchemas(
     kind: 'message',
     name: 'LrFlipTestResult',
     fields: {
-      frontRangeInches: { schema: scalars.number, optional: false },
-      frontAzimuthDegrees: { schema: scalars.number, optional: false },
-      frontElevationDegrees: { schema: scalars.number, optional: false },
+      frontRange: { schema: scalars.number, optional: false },
+      frontAzimuth: { schema: scalars.number, optional: false },
+      frontElevation: { schema: scalars.number, optional: false },
       frontQuality: { schema: scalars.number, optional: false },
-      backRangeInches: { schema: scalars.number, optional: false },
-      backAzimuthDegrees: { schema: scalars.number, optional: false },
-      backElevationDegrees: { schema: scalars.number, optional: false },
+      backRange: { schema: scalars.number, optional: false },
+      backAzimuth: { schema: scalars.number, optional: false },
+      backElevation: { schema: scalars.number, optional: false },
       backQuality: { schema: scalars.number, optional: false },
-      frontBackDifferenceRangeInches: {
+      frontBackDifferenceRange: {
         schema: scalars.number,
         optional: false,
       },
-      frontBackDifferenceAzimuthDegrees: {
+      frontBackDifferenceAzimuth: {
         schema: scalars.number,
         optional: false,
       },
-      frontBackDifferenceElevationDegrees: {
+      frontBackDifferenceElevation: {
         schema: scalars.number,
         optional: false,
       },
@@ -619,11 +619,11 @@ export function registerWaveBOperationValueSchemas(
     kind: 'message',
     name: 'LrLoSeparationTestResult',
     fields: {
-      primaryLoIndex: { schema: scalars.integer, optional: false },
-      secondaryLoIndex: { schema: scalars.integer, optional: false },
+      primaryLo: { schema: scalars.integer, optional: false },
+      secondaryLo: { schema: scalars.integer, optional: false },
       primaryLoMeasurementCount: { schema: scalars.integer, optional: false },
-      primaryLoRangeMeanInches: { schema: scalars.number, optional: false },
-      primaryLoRangeStandardDeviationInches: {
+      primaryLoRangeMean: { schema: scalars.number, optional: false },
+      primaryLoRangeStandardDeviation: {
         schema: scalars.number,
         optional: false,
       },
@@ -633,8 +633,8 @@ export function registerWaveBOperationValueSchemas(
         optional: false,
       },
       secondaryLoMeasurementCount: { schema: scalars.integer, optional: false },
-      secondaryLoRangeMeanInches: { schema: scalars.number, optional: false },
-      secondaryLoRangeStandardDeviationInches: {
+      secondaryLoRangeMean: { schema: scalars.number, optional: false },
+      secondaryLoRangeStandardDeviation: {
         schema: scalars.number,
         optional: false,
       },
@@ -652,8 +652,8 @@ export function registerWaveBOperationValueSchemas(
       snr: { schema: scalars.number, optional: false },
       sizeOfDataArray: { schema: scalars.integer, optional: false },
       peakValueIndex: { schema: scalars.integer, optional: false },
-      peakValueDb: { schema: scalars.number, optional: false },
-      measuredRangeMeters: { schema: scalars.number, optional: false },
+      peakValue: { schema: scalars.number, optional: false },
+      measuredRange: { schema: scalars.number, optional: false },
     },
   });
   register('objectOriginResult', {
@@ -811,9 +811,9 @@ export function registerWaveBOperationValueSchemas(
       active: { schema: scalars.boolean, optional: false },
       timestamp: { schema: scalars.string, optional: false },
       rmsError: { schema: scalars.number, optional: false },
-      temperatureFahrenheit: { schema: scalars.number, optional: false },
-      pressureInHg: { schema: scalars.number, optional: false },
-      relativeHumidityPercent: { schema: scalars.number, optional: false },
+      temperature: { schema: scalars.number, optional: false },
+      pressure: { schema: scalars.number, optional: false },
+      relativeHumidity: { schema: scalars.number, optional: false },
       infoData: { schema: scalars.string, optional: false },
     },
   });

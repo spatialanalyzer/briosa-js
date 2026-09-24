@@ -196,8 +196,11 @@ export interface CreateChartFromVectorGroupRequest {
   vectorGroupName?: CollectionObjectName | undefined;
   chartType?: ChartType | undefined;
   dataSetToChart?: DatasetType | undefined;
-  auxDataSetToChart?: DatasetType | undefined;
-  templateChartNameOptional?: ChartName | undefined;
+  auxDataSetToChart?:
+    | DatasetType
+    | undefined;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  templateChartName?: ChartName | undefined;
   showInterface?: boolean | undefined;
 }
 
@@ -212,8 +215,11 @@ export interface DefineReportTemplateRequest {
   itemsToReport?: CollectionObjectName[] | undefined;
   relationshipsToReport?: CollectionItemName[] | undefined;
   eventsToReport?: CollectionItemName[] | undefined;
-  reportOutputOptions?: ReportOutputOptions | undefined;
-  reportPageSettingsSaReportOnly?: ReportPageSettings | undefined;
+  reportOutputOptions?:
+    | ReportOutputOptions
+    | undefined;
+  /** MP qualifier: SA Report only. */
+  reportPageSettings?: ReportPageSettings | undefined;
   generateNow?: boolean | undefined;
   showGeneratedReport?: boolean | undefined;
 }
@@ -357,8 +363,11 @@ export interface MakeCustomTableResult {
 }
 
 export interface MakeNewSaReportRequest {
-  newSaReportName?: CollectionObjectName | undefined;
-  saReportTemplateOptional?: CollectionObjectName | undefined;
+  newSaReportName?:
+    | CollectionObjectName
+    | undefined;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  saReportTemplate?: CollectionObjectName | undefined;
 }
 
 export interface MakeNewSaReportResult {
@@ -443,8 +452,11 @@ export interface OutputSaReportToPdfResult {
 }
 
 export interface QuickReportRequest {
-  itemName?: CollectionObjectName | undefined;
-  reportNameOptional?: string | undefined;
+  itemName?:
+    | CollectionObjectName
+    | undefined;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  reportName?: string | undefined;
   openReport?: boolean | undefined;
 }
 
@@ -496,8 +508,11 @@ export interface SaveChartToJPegFileResult {
 }
 
 export interface SaveCurrentViewBmpJpgPngGifTiffRequest {
-  fileToSaveTo?: FileReference | undefined;
-  renderScaleFactor10UsesWindowSize?: number | undefined;
+  fileToSaveTo?:
+    | FileReference
+    | undefined;
+  /** 1.0 uses the window size. */
+  renderScaleFactor?: number | undefined;
 }
 
 export interface SaveCurrentViewBmpJpgPngGifTiffResult {
@@ -2575,7 +2590,7 @@ function createBaseCreateChartFromVectorGroupRequest(): CreateChartFromVectorGro
     chartType: undefined,
     dataSetToChart: undefined,
     auxDataSetToChart: undefined,
-    templateChartNameOptional: undefined,
+    templateChartName: undefined,
     showInterface: undefined,
   };
 }
@@ -2597,8 +2612,8 @@ export const CreateChartFromVectorGroupRequest: MessageFns<CreateChartFromVector
     if (message.auxDataSetToChart !== undefined) {
       writer.uint32(40).int32(message.auxDataSetToChart);
     }
-    if (message.templateChartNameOptional !== undefined) {
-      ChartName.encode(message.templateChartNameOptional, writer.uint32(50).fork()).join();
+    if (message.templateChartName !== undefined) {
+      ChartName.encode(message.templateChartName, writer.uint32(50).fork()).join();
     }
     if (message.showInterface !== undefined) {
       writer.uint32(56).bool(message.showInterface);
@@ -2658,7 +2673,7 @@ export const CreateChartFromVectorGroupRequest: MessageFns<CreateChartFromVector
             break;
           }
 
-          message.templateChartNameOptional = ChartName.decode(reader, reader.uint32());
+          message.templateChartName = ChartName.decode(reader, reader.uint32());
           continue;
         }
         case 7: {
@@ -2692,10 +2707,9 @@ export const CreateChartFromVectorGroupRequest: MessageFns<CreateChartFromVector
     message.chartType = object.chartType ?? undefined;
     message.dataSetToChart = object.dataSetToChart ?? undefined;
     message.auxDataSetToChart = object.auxDataSetToChart ?? undefined;
-    message.templateChartNameOptional =
-      (object.templateChartNameOptional !== undefined && object.templateChartNameOptional !== null)
-        ? ChartName.fromPartial(object.templateChartNameOptional)
-        : undefined;
+    message.templateChartName = (object.templateChartName !== undefined && object.templateChartName !== null)
+      ? ChartName.fromPartial(object.templateChartName)
+      : undefined;
     message.showInterface = object.showInterface ?? undefined;
     return message;
   },
@@ -2758,7 +2772,7 @@ function createBaseDefineReportTemplateRequest(): DefineReportTemplateRequest {
     relationshipsToReport: [],
     eventsToReport: [],
     reportOutputOptions: undefined,
-    reportPageSettingsSaReportOnly: undefined,
+    reportPageSettings: undefined,
     generateNow: undefined,
     showGeneratedReport: undefined,
   };
@@ -2795,8 +2809,8 @@ export const DefineReportTemplateRequest: MessageFns<DefineReportTemplateRequest
     if (message.reportOutputOptions !== undefined) {
       ReportOutputOptions.encode(message.reportOutputOptions, writer.uint32(58).fork()).join();
     }
-    if (message.reportPageSettingsSaReportOnly !== undefined) {
-      writer.uint32(64).int32(message.reportPageSettingsSaReportOnly);
+    if (message.reportPageSettings !== undefined) {
+      writer.uint32(64).int32(message.reportPageSettings);
     }
     if (message.generateNow !== undefined) {
       writer.uint32(72).bool(message.generateNow);
@@ -2887,7 +2901,7 @@ export const DefineReportTemplateRequest: MessageFns<DefineReportTemplateRequest
             break;
           }
 
-          message.reportPageSettingsSaReportOnly = reader.int32() as any;
+          message.reportPageSettings = reader.int32() as any;
           continue;
         }
         case 9: {
@@ -2933,7 +2947,7 @@ export const DefineReportTemplateRequest: MessageFns<DefineReportTemplateRequest
     message.reportOutputOptions = (object.reportOutputOptions !== undefined && object.reportOutputOptions !== null)
       ? ReportOutputOptions.fromPartial(object.reportOutputOptions)
       : undefined;
-    message.reportPageSettingsSaReportOnly = object.reportPageSettingsSaReportOnly ?? undefined;
+    message.reportPageSettings = object.reportPageSettings ?? undefined;
     message.generateNow = object.generateNow ?? undefined;
     message.showGeneratedReport = object.showGeneratedReport ?? undefined;
     return message;
@@ -4591,7 +4605,7 @@ export const MakeCustomTableResult: MessageFns<MakeCustomTableResult> = {
 };
 
 function createBaseMakeNewSaReportRequest(): MakeNewSaReportRequest {
-  return { newSaReportName: undefined, saReportTemplateOptional: undefined };
+  return { newSaReportName: undefined, saReportTemplate: undefined };
 }
 
 export const MakeNewSaReportRequest: MessageFns<MakeNewSaReportRequest> = {
@@ -4599,8 +4613,8 @@ export const MakeNewSaReportRequest: MessageFns<MakeNewSaReportRequest> = {
     if (message.newSaReportName !== undefined) {
       CollectionObjectName.encode(message.newSaReportName, writer.uint32(10).fork()).join();
     }
-    if (message.saReportTemplateOptional !== undefined) {
-      CollectionObjectName.encode(message.saReportTemplateOptional, writer.uint32(18).fork()).join();
+    if (message.saReportTemplate !== undefined) {
+      CollectionObjectName.encode(message.saReportTemplate, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -4625,7 +4639,7 @@ export const MakeNewSaReportRequest: MessageFns<MakeNewSaReportRequest> = {
             break;
           }
 
-          message.saReportTemplateOptional = CollectionObjectName.decode(reader, reader.uint32());
+          message.saReportTemplate = CollectionObjectName.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -4645,10 +4659,9 @@ export const MakeNewSaReportRequest: MessageFns<MakeNewSaReportRequest> = {
     message.newSaReportName = (object.newSaReportName !== undefined && object.newSaReportName !== null)
       ? CollectionObjectName.fromPartial(object.newSaReportName)
       : undefined;
-    message.saReportTemplateOptional =
-      (object.saReportTemplateOptional !== undefined && object.saReportTemplateOptional !== null)
-        ? CollectionObjectName.fromPartial(object.saReportTemplateOptional)
-        : undefined;
+    message.saReportTemplate = (object.saReportTemplate !== undefined && object.saReportTemplate !== null)
+      ? CollectionObjectName.fromPartial(object.saReportTemplate)
+      : undefined;
     return message;
   },
 };
@@ -5645,7 +5658,7 @@ export const OutputSaReportToPdfResult: MessageFns<OutputSaReportToPdfResult> = 
 };
 
 function createBaseQuickReportRequest(): QuickReportRequest {
-  return { itemName: undefined, reportNameOptional: undefined, openReport: undefined };
+  return { itemName: undefined, reportName: undefined, openReport: undefined };
 }
 
 export const QuickReportRequest: MessageFns<QuickReportRequest> = {
@@ -5653,8 +5666,8 @@ export const QuickReportRequest: MessageFns<QuickReportRequest> = {
     if (message.itemName !== undefined) {
       CollectionObjectName.encode(message.itemName, writer.uint32(10).fork()).join();
     }
-    if (message.reportNameOptional !== undefined) {
-      writer.uint32(18).string(message.reportNameOptional);
+    if (message.reportName !== undefined) {
+      writer.uint32(18).string(message.reportName);
     }
     if (message.openReport !== undefined) {
       writer.uint32(24).bool(message.openReport);
@@ -5682,7 +5695,7 @@ export const QuickReportRequest: MessageFns<QuickReportRequest> = {
             break;
           }
 
-          message.reportNameOptional = reader.string();
+          message.reportName = reader.string();
           continue;
         }
         case 3: {
@@ -5710,7 +5723,7 @@ export const QuickReportRequest: MessageFns<QuickReportRequest> = {
     message.itemName = (object.itemName !== undefined && object.itemName !== null)
       ? CollectionObjectName.fromPartial(object.itemName)
       : undefined;
-    message.reportNameOptional = object.reportNameOptional ?? undefined;
+    message.reportName = object.reportName ?? undefined;
     message.openReport = object.openReport ?? undefined;
     return message;
   },
@@ -6269,7 +6282,7 @@ export const SaveChartToJPegFileResult: MessageFns<SaveChartToJPegFileResult> = 
 };
 
 function createBaseSaveCurrentViewBmpJpgPngGifTiffRequest(): SaveCurrentViewBmpJpgPngGifTiffRequest {
-  return { fileToSaveTo: undefined, renderScaleFactor10UsesWindowSize: undefined };
+  return { fileToSaveTo: undefined, renderScaleFactor: undefined };
 }
 
 export const SaveCurrentViewBmpJpgPngGifTiffRequest: MessageFns<SaveCurrentViewBmpJpgPngGifTiffRequest> = {
@@ -6277,8 +6290,8 @@ export const SaveCurrentViewBmpJpgPngGifTiffRequest: MessageFns<SaveCurrentViewB
     if (message.fileToSaveTo !== undefined) {
       FileReference.encode(message.fileToSaveTo, writer.uint32(10).fork()).join();
     }
-    if (message.renderScaleFactor10UsesWindowSize !== undefined) {
-      writer.uint32(17).double(message.renderScaleFactor10UsesWindowSize);
+    if (message.renderScaleFactor !== undefined) {
+      writer.uint32(17).double(message.renderScaleFactor);
     }
     return writer;
   },
@@ -6303,7 +6316,7 @@ export const SaveCurrentViewBmpJpgPngGifTiffRequest: MessageFns<SaveCurrentViewB
             break;
           }
 
-          message.renderScaleFactor10UsesWindowSize = reader.double();
+          message.renderScaleFactor = reader.double();
           continue;
         }
       }
@@ -6323,7 +6336,7 @@ export const SaveCurrentViewBmpJpgPngGifTiffRequest: MessageFns<SaveCurrentViewB
     message.fileToSaveTo = (object.fileToSaveTo !== undefined && object.fileToSaveTo !== null)
       ? FileReference.fromPartial(object.fileToSaveTo)
       : undefined;
-    message.renderScaleFactor10UsesWindowSize = object.renderScaleFactor10UsesWindowSize ?? undefined;
+    message.renderScaleFactor = object.renderScaleFactor ?? undefined;
     return message;
   },
 };

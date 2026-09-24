@@ -397,9 +397,15 @@ export interface MakeGdtFeatureCheckAnnotationRequest {
   tolerance?: string | undefined;
   isSlot?: boolean | undefined;
   perUnitLengthOrArea?: boolean | undefined;
-  circularArea?: boolean | undefined;
-  perUnitAreaLengthDistance?: number | undefined;
-  perUnitAreaLengthStepOverPercent?: number | undefined;
+  circularArea?:
+    | boolean
+    | undefined;
+  /** MP qualifier: area. */
+  perUnitLengthDistance?:
+    | number
+    | undefined;
+  /** MP qualifier: area. */
+  perUnitLengthStepOverPercent?: number | undefined;
   perUnitAreaWidthDistance?: number | undefined;
   perUnitAreaWidthStepOverPercent?: number | undefined;
   perUnitAreaCircleDiameter?: number | undefined;
@@ -4144,8 +4150,8 @@ function createBaseMakeGdtFeatureCheckAnnotationRequest(): MakeGdtFeatureCheckAn
     isSlot: undefined,
     perUnitLengthOrArea: undefined,
     circularArea: undefined,
-    perUnitAreaLengthDistance: undefined,
-    perUnitAreaLengthStepOverPercent: undefined,
+    perUnitLengthDistance: undefined,
+    perUnitLengthStepOverPercent: undefined,
     perUnitAreaWidthDistance: undefined,
     perUnitAreaWidthStepOverPercent: undefined,
     perUnitAreaCircleDiameter: undefined,
@@ -4211,11 +4217,11 @@ export const MakeGdtFeatureCheckAnnotationRequest: MessageFns<MakeGdtFeatureChec
     if (message.circularArea !== undefined) {
       writer.uint32(112).bool(message.circularArea);
     }
-    if (message.perUnitAreaLengthDistance !== undefined) {
-      writer.uint32(121).double(message.perUnitAreaLengthDistance);
+    if (message.perUnitLengthDistance !== undefined) {
+      writer.uint32(121).double(message.perUnitLengthDistance);
     }
-    if (message.perUnitAreaLengthStepOverPercent !== undefined) {
-      writer.uint32(129).double(message.perUnitAreaLengthStepOverPercent);
+    if (message.perUnitLengthStepOverPercent !== undefined) {
+      writer.uint32(129).double(message.perUnitLengthStepOverPercent);
     }
     if (message.perUnitAreaWidthDistance !== undefined) {
       writer.uint32(137).double(message.perUnitAreaWidthDistance);
@@ -4392,7 +4398,7 @@ export const MakeGdtFeatureCheckAnnotationRequest: MessageFns<MakeGdtFeatureChec
             break;
           }
 
-          message.perUnitAreaLengthDistance = reader.double();
+          message.perUnitLengthDistance = reader.double();
           continue;
         }
         case 16: {
@@ -4400,7 +4406,7 @@ export const MakeGdtFeatureCheckAnnotationRequest: MessageFns<MakeGdtFeatureChec
             break;
           }
 
-          message.perUnitAreaLengthStepOverPercent = reader.double();
+          message.perUnitLengthStepOverPercent = reader.double();
           continue;
         }
         case 17: {
@@ -4545,8 +4551,8 @@ export const MakeGdtFeatureCheckAnnotationRequest: MessageFns<MakeGdtFeatureChec
     message.isSlot = object.isSlot ?? undefined;
     message.perUnitLengthOrArea = object.perUnitLengthOrArea ?? undefined;
     message.circularArea = object.circularArea ?? undefined;
-    message.perUnitAreaLengthDistance = object.perUnitAreaLengthDistance ?? undefined;
-    message.perUnitAreaLengthStepOverPercent = object.perUnitAreaLengthStepOverPercent ?? undefined;
+    message.perUnitLengthDistance = object.perUnitLengthDistance ?? undefined;
+    message.perUnitLengthStepOverPercent = object.perUnitLengthStepOverPercent ?? undefined;
     message.perUnitAreaWidthDistance = object.perUnitAreaWidthDistance ?? undefined;
     message.perUnitAreaWidthStepOverPercent = object.perUnitAreaWidthStepOverPercent ?? undefined;
     message.perUnitAreaCircleDiameter = object.perUnitAreaCircleDiameter ?? undefined;

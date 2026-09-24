@@ -93,7 +93,8 @@ export interface GetAngularRepresentationRequest {
 }
 
 export interface GetAngularRepresentationResult {
-  value0360False180?: boolean | undefined;
+  /** False selects the +/-180 angular representation. */
+  value0360?: boolean | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -180,7 +181,8 @@ export interface GetPointNotesResult {
 }
 
 export interface GetScreenResolutionRequest {
-  display1Primary?: number | undefined;
+  /** -1 selects the primary display. */
+  display?: number | undefined;
 }
 
 export interface GetScreenResolutionResult {
@@ -309,7 +311,8 @@ export interface SetActiveUnitsResult {
 }
 
 export interface SetAngularRepresentationRequest {
-  value0360False180?: boolean | undefined;
+  /** False selects the +/-180 angular representation. */
+  value0360?: boolean | undefined;
 }
 
 export interface SetAngularRepresentationResult {
@@ -343,8 +346,11 @@ export interface SetAutomaticRelationshipConstructionStateResult {
 
 export interface SetCollectionNotesRequest {
   collection?: CollectionName | undefined;
-  notes?: string[] | undefined;
-  appendFalseOverwrite?: boolean | undefined;
+  notes?:
+    | string[]
+    | undefined;
+  /** False overwrites existing notes. */
+  append?: boolean | undefined;
 }
 
 export interface SetCollectionNotesResult {
@@ -365,8 +371,11 @@ export interface SetDecimalDigitsForDisplayResult {
 
 export interface SetFolderNotesRequest {
   folderPath?: string | undefined;
-  notes?: string[] | undefined;
-  appendFalseOverwrite?: boolean | undefined;
+  notes?:
+    | string[]
+    | undefined;
+  /** False overwrites existing notes. */
+  append?: boolean | undefined;
 }
 
 export interface SetFolderNotesResult {
@@ -401,8 +410,11 @@ export interface SetNotificationCancelOverrideResult {
 
 export interface SetObjectNotesRequest {
   object?: CollectionObjectName | undefined;
-  notes?: string[] | undefined;
-  appendFalseOverwrite?: boolean | undefined;
+  notes?:
+    | string[]
+    | undefined;
+  /** False overwrites existing notes. */
+  append?: boolean | undefined;
 }
 
 export interface SetObjectNotesResult {
@@ -438,8 +450,11 @@ export interface SetOpcDaTagValueStringResult {
 
 export interface SetPointNotesRequest {
   point?: PointName | undefined;
-  notes?: string[] | undefined;
-  appendFalseOverwrite?: boolean | undefined;
+  notes?:
+    | string[]
+    | undefined;
+  /** False overwrites existing notes. */
+  append?: boolean | undefined;
 }
 
 export interface SetPointNotesResult {
@@ -447,8 +462,11 @@ export interface SetPointNotesResult {
 }
 
 export interface SetUserInterfaceProfileRequest {
-  profileName?: string | undefined;
-  profileFileNameOptional?: FileReference | undefined;
+  profileName?:
+    | string
+    | undefined;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  profileFileName?: FileReference | undefined;
 }
 
 export interface SetUserInterfaceProfileResult {
@@ -1143,13 +1161,13 @@ export const GetAngularRepresentationRequest: MessageFns<GetAngularRepresentatio
 };
 
 function createBaseGetAngularRepresentationResult(): GetAngularRepresentationResult {
-  return { value0360False180: undefined, execution: undefined };
+  return { value0360: undefined, execution: undefined };
 }
 
 export const GetAngularRepresentationResult: MessageFns<GetAngularRepresentationResult> = {
   encode(message: GetAngularRepresentationResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.value0360False180 !== undefined) {
-      writer.uint32(8).bool(message.value0360False180);
+    if (message.value0360 !== undefined) {
+      writer.uint32(8).bool(message.value0360);
     }
     if (message.execution !== undefined) {
       MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
@@ -1169,7 +1187,7 @@ export const GetAngularRepresentationResult: MessageFns<GetAngularRepresentation
             break;
           }
 
-          message.value0360False180 = reader.bool();
+          message.value0360 = reader.bool();
           continue;
         }
         case 1000: {
@@ -1194,7 +1212,7 @@ export const GetAngularRepresentationResult: MessageFns<GetAngularRepresentation
   },
   fromPartial(object: DeepPartial<GetAngularRepresentationResult>): GetAngularRepresentationResult {
     const message = createBaseGetAngularRepresentationResult();
-    message.value0360False180 = object.value0360False180 ?? undefined;
+    message.value0360 = object.value0360 ?? undefined;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -2205,13 +2223,13 @@ export const GetPointNotesResult: MessageFns<GetPointNotesResult> = {
 };
 
 function createBaseGetScreenResolutionRequest(): GetScreenResolutionRequest {
-  return { display1Primary: undefined };
+  return { display: undefined };
 }
 
 export const GetScreenResolutionRequest: MessageFns<GetScreenResolutionRequest> = {
   encode(message: GetScreenResolutionRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.display1Primary !== undefined) {
-      writer.uint32(8).int32(message.display1Primary);
+    if (message.display !== undefined) {
+      writer.uint32(8).int32(message.display);
     }
     return writer;
   },
@@ -2228,7 +2246,7 @@ export const GetScreenResolutionRequest: MessageFns<GetScreenResolutionRequest> 
             break;
           }
 
-          message.display1Primary = reader.int32();
+          message.display = reader.int32();
           continue;
         }
       }
@@ -2245,7 +2263,7 @@ export const GetScreenResolutionRequest: MessageFns<GetScreenResolutionRequest> 
   },
   fromPartial(object: DeepPartial<GetScreenResolutionRequest>): GetScreenResolutionRequest {
     const message = createBaseGetScreenResolutionRequest();
-    message.display1Primary = object.display1Primary ?? undefined;
+    message.display = object.display ?? undefined;
     return message;
   },
 };
@@ -3780,13 +3798,13 @@ export const SetActiveUnitsResult: MessageFns<SetActiveUnitsResult> = {
 };
 
 function createBaseSetAngularRepresentationRequest(): SetAngularRepresentationRequest {
-  return { value0360False180: undefined };
+  return { value0360: undefined };
 }
 
 export const SetAngularRepresentationRequest: MessageFns<SetAngularRepresentationRequest> = {
   encode(message: SetAngularRepresentationRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.value0360False180 !== undefined) {
-      writer.uint32(8).bool(message.value0360False180);
+    if (message.value0360 !== undefined) {
+      writer.uint32(8).bool(message.value0360);
     }
     return writer;
   },
@@ -3803,7 +3821,7 @@ export const SetAngularRepresentationRequest: MessageFns<SetAngularRepresentatio
             break;
           }
 
-          message.value0360False180 = reader.bool();
+          message.value0360 = reader.bool();
           continue;
         }
       }
@@ -3820,7 +3838,7 @@ export const SetAngularRepresentationRequest: MessageFns<SetAngularRepresentatio
   },
   fromPartial(object: DeepPartial<SetAngularRepresentationRequest>): SetAngularRepresentationRequest {
     const message = createBaseSetAngularRepresentationRequest();
-    message.value0360False180 = object.value0360False180 ?? undefined;
+    message.value0360 = object.value0360 ?? undefined;
     return message;
   },
 };
@@ -4186,7 +4204,7 @@ export const SetAutomaticRelationshipConstructionStateResult: MessageFns<
 };
 
 function createBaseSetCollectionNotesRequest(): SetCollectionNotesRequest {
-  return { collection: undefined, notes: [], appendFalseOverwrite: undefined };
+  return { collection: undefined, notes: [], append: undefined };
 }
 
 export const SetCollectionNotesRequest: MessageFns<SetCollectionNotesRequest> = {
@@ -4199,8 +4217,8 @@ export const SetCollectionNotesRequest: MessageFns<SetCollectionNotesRequest> = 
         writer.uint32(18).string(v!);
       }
     }
-    if (message.appendFalseOverwrite !== undefined) {
-      writer.uint32(24).bool(message.appendFalseOverwrite);
+    if (message.append !== undefined) {
+      writer.uint32(24).bool(message.append);
     }
     return writer;
   },
@@ -4236,7 +4254,7 @@ export const SetCollectionNotesRequest: MessageFns<SetCollectionNotesRequest> = 
             break;
           }
 
-          message.appendFalseOverwrite = reader.bool();
+          message.append = reader.bool();
           continue;
         }
       }
@@ -4257,7 +4275,7 @@ export const SetCollectionNotesRequest: MessageFns<SetCollectionNotesRequest> = 
       ? CollectionName.fromPartial(object.collection)
       : undefined;
     message.notes = object.notes?.map((e) => e) || [];
-    message.appendFalseOverwrite = object.appendFalseOverwrite ?? undefined;
+    message.append = object.append ?? undefined;
     return message;
   },
 };
@@ -4453,7 +4471,7 @@ export const SetDecimalDigitsForDisplayResult: MessageFns<SetDecimalDigitsForDis
 };
 
 function createBaseSetFolderNotesRequest(): SetFolderNotesRequest {
-  return { folderPath: undefined, notes: [], appendFalseOverwrite: undefined };
+  return { folderPath: undefined, notes: [], append: undefined };
 }
 
 export const SetFolderNotesRequest: MessageFns<SetFolderNotesRequest> = {
@@ -4466,8 +4484,8 @@ export const SetFolderNotesRequest: MessageFns<SetFolderNotesRequest> = {
         writer.uint32(18).string(v!);
       }
     }
-    if (message.appendFalseOverwrite !== undefined) {
-      writer.uint32(24).bool(message.appendFalseOverwrite);
+    if (message.append !== undefined) {
+      writer.uint32(24).bool(message.append);
     }
     return writer;
   },
@@ -4503,7 +4521,7 @@ export const SetFolderNotesRequest: MessageFns<SetFolderNotesRequest> = {
             break;
           }
 
-          message.appendFalseOverwrite = reader.bool();
+          message.append = reader.bool();
           continue;
         }
       }
@@ -4522,7 +4540,7 @@ export const SetFolderNotesRequest: MessageFns<SetFolderNotesRequest> = {
     const message = createBaseSetFolderNotesRequest();
     message.folderPath = object.folderPath ?? undefined;
     message.notes = object.notes?.map((e) => e) || [];
-    message.appendFalseOverwrite = object.appendFalseOverwrite ?? undefined;
+    message.append = object.append ?? undefined;
     return message;
   },
 };
@@ -4886,7 +4904,7 @@ export const SetNotificationCancelOverrideResult: MessageFns<SetNotificationCanc
 };
 
 function createBaseSetObjectNotesRequest(): SetObjectNotesRequest {
-  return { object: undefined, notes: [], appendFalseOverwrite: undefined };
+  return { object: undefined, notes: [], append: undefined };
 }
 
 export const SetObjectNotesRequest: MessageFns<SetObjectNotesRequest> = {
@@ -4899,8 +4917,8 @@ export const SetObjectNotesRequest: MessageFns<SetObjectNotesRequest> = {
         writer.uint32(18).string(v!);
       }
     }
-    if (message.appendFalseOverwrite !== undefined) {
-      writer.uint32(24).bool(message.appendFalseOverwrite);
+    if (message.append !== undefined) {
+      writer.uint32(24).bool(message.append);
     }
     return writer;
   },
@@ -4936,7 +4954,7 @@ export const SetObjectNotesRequest: MessageFns<SetObjectNotesRequest> = {
             break;
           }
 
-          message.appendFalseOverwrite = reader.bool();
+          message.append = reader.bool();
           continue;
         }
       }
@@ -4957,7 +4975,7 @@ export const SetObjectNotesRequest: MessageFns<SetObjectNotesRequest> = {
       ? CollectionObjectName.fromPartial(object.object)
       : undefined;
     message.notes = object.notes?.map((e) => e) || [];
-    message.appendFalseOverwrite = object.appendFalseOverwrite ?? undefined;
+    message.append = object.append ?? undefined;
     return message;
   },
 };
@@ -5329,7 +5347,7 @@ export const SetOpcDaTagValueStringResult: MessageFns<SetOpcDaTagValueStringResu
 };
 
 function createBaseSetPointNotesRequest(): SetPointNotesRequest {
-  return { point: undefined, notes: [], appendFalseOverwrite: undefined };
+  return { point: undefined, notes: [], append: undefined };
 }
 
 export const SetPointNotesRequest: MessageFns<SetPointNotesRequest> = {
@@ -5342,8 +5360,8 @@ export const SetPointNotesRequest: MessageFns<SetPointNotesRequest> = {
         writer.uint32(18).string(v!);
       }
     }
-    if (message.appendFalseOverwrite !== undefined) {
-      writer.uint32(24).bool(message.appendFalseOverwrite);
+    if (message.append !== undefined) {
+      writer.uint32(24).bool(message.append);
     }
     return writer;
   },
@@ -5379,7 +5397,7 @@ export const SetPointNotesRequest: MessageFns<SetPointNotesRequest> = {
             break;
           }
 
-          message.appendFalseOverwrite = reader.bool();
+          message.append = reader.bool();
           continue;
         }
       }
@@ -5400,7 +5418,7 @@ export const SetPointNotesRequest: MessageFns<SetPointNotesRequest> = {
       ? PointName.fromPartial(object.point)
       : undefined;
     message.notes = object.notes?.map((e) => e) || [];
-    message.appendFalseOverwrite = object.appendFalseOverwrite ?? undefined;
+    message.append = object.append ?? undefined;
     return message;
   },
 };
@@ -5454,7 +5472,7 @@ export const SetPointNotesResult: MessageFns<SetPointNotesResult> = {
 };
 
 function createBaseSetUserInterfaceProfileRequest(): SetUserInterfaceProfileRequest {
-  return { profileName: undefined, profileFileNameOptional: undefined };
+  return { profileName: undefined, profileFileName: undefined };
 }
 
 export const SetUserInterfaceProfileRequest: MessageFns<SetUserInterfaceProfileRequest> = {
@@ -5462,8 +5480,8 @@ export const SetUserInterfaceProfileRequest: MessageFns<SetUserInterfaceProfileR
     if (message.profileName !== undefined) {
       writer.uint32(10).string(message.profileName);
     }
-    if (message.profileFileNameOptional !== undefined) {
-      FileReference.encode(message.profileFileNameOptional, writer.uint32(18).fork()).join();
+    if (message.profileFileName !== undefined) {
+      FileReference.encode(message.profileFileName, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -5488,7 +5506,7 @@ export const SetUserInterfaceProfileRequest: MessageFns<SetUserInterfaceProfileR
             break;
           }
 
-          message.profileFileNameOptional = FileReference.decode(reader, reader.uint32());
+          message.profileFileName = FileReference.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -5506,10 +5524,9 @@ export const SetUserInterfaceProfileRequest: MessageFns<SetUserInterfaceProfileR
   fromPartial(object: DeepPartial<SetUserInterfaceProfileRequest>): SetUserInterfaceProfileRequest {
     const message = createBaseSetUserInterfaceProfileRequest();
     message.profileName = object.profileName ?? undefined;
-    message.profileFileNameOptional =
-      (object.profileFileNameOptional !== undefined && object.profileFileNameOptional !== null)
-        ? FileReference.fromPartial(object.profileFileNameOptional)
-        : undefined;
+    message.profileFileName = (object.profileFileName !== undefined && object.profileFileName !== null)
+      ? FileReference.fromPartial(object.profileFileName)
+      : undefined;
     return message;
   },
 };

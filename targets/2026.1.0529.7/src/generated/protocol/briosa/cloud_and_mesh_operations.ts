@@ -62,7 +62,8 @@ export enum RGBColorChannel {
 }
 
 export interface CloudDisplayControlRequest {
-  thinDrawIncrement?: number | undefined;
+  /** MP qualifier: Draw Increment. */
+  thin?: number | undefined;
   pointSize?: number | undefined;
 }
 
@@ -430,13 +431,13 @@ export interface MeshFillHolesResult {
 }
 
 function createBaseCloudDisplayControlRequest(): CloudDisplayControlRequest {
-  return { thinDrawIncrement: undefined, pointSize: undefined };
+  return { thin: undefined, pointSize: undefined };
 }
 
 export const CloudDisplayControlRequest: MessageFns<CloudDisplayControlRequest> = {
   encode(message: CloudDisplayControlRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.thinDrawIncrement !== undefined) {
-      writer.uint32(8).int32(message.thinDrawIncrement);
+    if (message.thin !== undefined) {
+      writer.uint32(8).int32(message.thin);
     }
     if (message.pointSize !== undefined) {
       writer.uint32(16).int32(message.pointSize);
@@ -456,7 +457,7 @@ export const CloudDisplayControlRequest: MessageFns<CloudDisplayControlRequest> 
             break;
           }
 
-          message.thinDrawIncrement = reader.int32();
+          message.thin = reader.int32();
           continue;
         }
         case 2: {
@@ -481,7 +482,7 @@ export const CloudDisplayControlRequest: MessageFns<CloudDisplayControlRequest> 
   },
   fromPartial(object: DeepPartial<CloudDisplayControlRequest>): CloudDisplayControlRequest {
     const message = createBaseCloudDisplayControlRequest();
-    message.thinDrawIncrement = object.thinDrawIncrement ?? undefined;
+    message.thin = object.thin ?? undefined;
     message.pointSize = object.pointSize ?? undefined;
     return message;
   },

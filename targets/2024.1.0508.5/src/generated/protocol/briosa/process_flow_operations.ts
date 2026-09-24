@@ -87,9 +87,15 @@ export interface AskForStringPullDownVersionResult {
 export interface AskForUserDecisionFromImageRequest {
   imageFile?: FileReference | undefined;
   imageMapXmlFile?: FileReference | undefined;
-  windowCaption?: string | undefined;
-  windowWidth0Default?: number | undefined;
-  windowHeight0Default?: number | undefined;
+  windowCaption?:
+    | string
+    | undefined;
+  /** 0 uses the default window dimension. */
+  windowWidth?:
+    | number
+    | undefined;
+  /** 0 uses the default window dimension. */
+  windowHeight?: number | undefined;
 }
 
 export interface AskForUserDecisionFromImageResult {
@@ -99,10 +105,19 @@ export interface AskForUserDecisionFromImageResult {
 
 export interface AskForUserDecisionFromStringsRequest {
   questionOrStatement?: string[] | undefined;
-  font?: Font | undefined;
-  button1TextEmptyToHideButton?: string | undefined;
-  button2TextEmptyToHideButton?: string | undefined;
-  button3TextEmptyToHideButton?: string | undefined;
+  font?:
+    | Font
+    | undefined;
+  /** An empty string hides the button. */
+  button1Text?:
+    | string
+    | undefined;
+  /** An empty string hides the button. */
+  button2Text?:
+    | string
+    | undefined;
+  /** An empty string hides the button. */
+  button3Text?: string | undefined;
 }
 
 export interface AskForUserDecisionFromStringsResult {
@@ -898,8 +913,8 @@ function createBaseAskForUserDecisionFromImageRequest(): AskForUserDecisionFromI
     imageFile: undefined,
     imageMapXmlFile: undefined,
     windowCaption: undefined,
-    windowWidth0Default: undefined,
-    windowHeight0Default: undefined,
+    windowWidth: undefined,
+    windowHeight: undefined,
   };
 }
 
@@ -914,11 +929,11 @@ export const AskForUserDecisionFromImageRequest: MessageFns<AskForUserDecisionFr
     if (message.windowCaption !== undefined) {
       writer.uint32(26).string(message.windowCaption);
     }
-    if (message.windowWidth0Default !== undefined) {
-      writer.uint32(32).int32(message.windowWidth0Default);
+    if (message.windowWidth !== undefined) {
+      writer.uint32(32).int32(message.windowWidth);
     }
-    if (message.windowHeight0Default !== undefined) {
-      writer.uint32(40).int32(message.windowHeight0Default);
+    if (message.windowHeight !== undefined) {
+      writer.uint32(40).int32(message.windowHeight);
     }
     return writer;
   },
@@ -959,7 +974,7 @@ export const AskForUserDecisionFromImageRequest: MessageFns<AskForUserDecisionFr
             break;
           }
 
-          message.windowWidth0Default = reader.int32();
+          message.windowWidth = reader.int32();
           continue;
         }
         case 5: {
@@ -967,7 +982,7 @@ export const AskForUserDecisionFromImageRequest: MessageFns<AskForUserDecisionFr
             break;
           }
 
-          message.windowHeight0Default = reader.int32();
+          message.windowHeight = reader.int32();
           continue;
         }
       }
@@ -991,8 +1006,8 @@ export const AskForUserDecisionFromImageRequest: MessageFns<AskForUserDecisionFr
       ? FileReference.fromPartial(object.imageMapXmlFile)
       : undefined;
     message.windowCaption = object.windowCaption ?? undefined;
-    message.windowWidth0Default = object.windowWidth0Default ?? undefined;
-    message.windowHeight0Default = object.windowHeight0Default ?? undefined;
+    message.windowWidth = object.windowWidth ?? undefined;
+    message.windowHeight = object.windowHeight ?? undefined;
     return message;
   },
 };
@@ -1061,9 +1076,9 @@ function createBaseAskForUserDecisionFromStringsRequest(): AskForUserDecisionFro
   return {
     questionOrStatement: [],
     font: undefined,
-    button1TextEmptyToHideButton: undefined,
-    button2TextEmptyToHideButton: undefined,
-    button3TextEmptyToHideButton: undefined,
+    button1Text: undefined,
+    button2Text: undefined,
+    button3Text: undefined,
   };
 }
 
@@ -1077,14 +1092,14 @@ export const AskForUserDecisionFromStringsRequest: MessageFns<AskForUserDecision
     if (message.font !== undefined) {
       Font.encode(message.font, writer.uint32(18).fork()).join();
     }
-    if (message.button1TextEmptyToHideButton !== undefined) {
-      writer.uint32(26).string(message.button1TextEmptyToHideButton);
+    if (message.button1Text !== undefined) {
+      writer.uint32(26).string(message.button1Text);
     }
-    if (message.button2TextEmptyToHideButton !== undefined) {
-      writer.uint32(34).string(message.button2TextEmptyToHideButton);
+    if (message.button2Text !== undefined) {
+      writer.uint32(34).string(message.button2Text);
     }
-    if (message.button3TextEmptyToHideButton !== undefined) {
-      writer.uint32(42).string(message.button3TextEmptyToHideButton);
+    if (message.button3Text !== undefined) {
+      writer.uint32(42).string(message.button3Text);
     }
     return writer;
   },
@@ -1120,7 +1135,7 @@ export const AskForUserDecisionFromStringsRequest: MessageFns<AskForUserDecision
             break;
           }
 
-          message.button1TextEmptyToHideButton = reader.string();
+          message.button1Text = reader.string();
           continue;
         }
         case 4: {
@@ -1128,7 +1143,7 @@ export const AskForUserDecisionFromStringsRequest: MessageFns<AskForUserDecision
             break;
           }
 
-          message.button2TextEmptyToHideButton = reader.string();
+          message.button2Text = reader.string();
           continue;
         }
         case 5: {
@@ -1136,7 +1151,7 @@ export const AskForUserDecisionFromStringsRequest: MessageFns<AskForUserDecision
             break;
           }
 
-          message.button3TextEmptyToHideButton = reader.string();
+          message.button3Text = reader.string();
           continue;
         }
       }
@@ -1155,9 +1170,9 @@ export const AskForUserDecisionFromStringsRequest: MessageFns<AskForUserDecision
     const message = createBaseAskForUserDecisionFromStringsRequest();
     message.questionOrStatement = object.questionOrStatement?.map((e) => e) || [];
     message.font = (object.font !== undefined && object.font !== null) ? Font.fromPartial(object.font) : undefined;
-    message.button1TextEmptyToHideButton = object.button1TextEmptyToHideButton ?? undefined;
-    message.button2TextEmptyToHideButton = object.button2TextEmptyToHideButton ?? undefined;
-    message.button3TextEmptyToHideButton = object.button3TextEmptyToHideButton ?? undefined;
+    message.button1Text = object.button1Text ?? undefined;
+    message.button2Text = object.button2Text ?? undefined;
+    message.button3Text = object.button3Text ?? undefined;
     return message;
   },
 };
