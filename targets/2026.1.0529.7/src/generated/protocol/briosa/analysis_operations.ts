@@ -46,8 +46,11 @@ import {
 export interface AngleBetweenLineAndPlaneRequest {
   selectedLine?: CollectionObjectName | undefined;
   selectedPlane?: CollectionObjectName | undefined;
-  nominalAngle?: number | undefined;
-  angleTolerance00ForNone?: number | undefined;
+  nominalAngle?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  angleTolerance?: number | undefined;
 }
 
 export interface AngleBetweenLineAndPlaneResult {
@@ -58,8 +61,11 @@ export interface AngleBetweenLineAndPlaneResult {
 export interface AngleBetweenTwoLinesRequest {
   line1?: CollectionObjectName | undefined;
   line2?: CollectionObjectName | undefined;
-  nominalAngle?: number | undefined;
-  angleTolerance00ForNone?: number | undefined;
+  nominalAngle?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  angleTolerance?: number | undefined;
 }
 
 export interface AngleBetweenTwoLinesResult {
@@ -70,8 +76,11 @@ export interface AngleBetweenTwoLinesResult {
 export interface AngleBetweenTwoPlanesNormalsRequest {
   planeA?: CollectionObjectName | undefined;
   planeB?: CollectionObjectName | undefined;
-  nominalAngle?: number | undefined;
-  angleTolerance00ForNone?: number | undefined;
+  nominalAngle?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  angleTolerance?: number | undefined;
 }
 
 export interface AngleBetweenTwoPlanesNormalsResult {
@@ -82,9 +91,15 @@ export interface AngleBetweenTwoPlanesNormalsResult {
 export interface BestFitTransformationGroupToGroupRequest {
   referenceGroup?: CollectionObjectName | undefined;
   correspondingGroup?: CollectionObjectName | undefined;
-  showInterface?: boolean | undefined;
-  rmsTolerance00ForNone?: number | undefined;
-  maximumAbsoluteTolerance00ForNone?: number | undefined;
+  showInterface?:
+    | boolean
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  rmsTolerance?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  maximumAbsoluteTolerance?: number | undefined;
   allowScale?: boolean | undefined;
   allowX?: boolean | undefined;
   allowY?: boolean | undefined;
@@ -93,8 +108,11 @@ export interface BestFitTransformationGroupToGroupRequest {
   allowRy?: boolean | undefined;
   allowRz?: boolean | undefined;
   lockDegreesOfFreedom?: boolean | undefined;
-  generateEvent?: boolean | undefined;
-  filePathForCsvTextReportRequiresShowInterfaceTrue?: FileReference | undefined;
+  generateEvent?:
+    | boolean
+    | undefined;
+  /** Requires Show Interface to be true. */
+  filePathForCsvTextReport?: FileReference | undefined;
 }
 
 export interface BestFitTransformationGroupToGroupResult {
@@ -149,10 +167,16 @@ export interface FitGeometryToPointGroupRequest {
   groupToFit?: CollectionObjectName | undefined;
   resultingObjectName?: CollectionObjectName | undefined;
   fitProfileName?: string | undefined;
-  reportDeviations?: boolean | undefined;
-  fitInterfaceTolerance10UseProfile?: number | undefined;
-  ignoreOutOfTolerancePoints?: boolean | undefined;
-  startingConditionGeometryOptional?: CollectionObjectName | undefined;
+  reportDeviations?:
+    | boolean
+    | undefined;
+  /** -1.0 uses the profile tolerance. */
+  fitInterfaceTolerance?: number | undefined;
+  ignoreOutOfTolerancePoints?:
+    | boolean
+    | undefined;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  startingConditionGeometry?: CollectionObjectName | undefined;
 }
 
 export interface FitGeometryToPointGroupResult {
@@ -165,10 +189,16 @@ export interface FitGeometryToPointGroupProjectedToPlaneRequest {
   planeName?: CollectionObjectName | undefined;
   resultingObjectName?: CollectionObjectName | undefined;
   fitProfileName?: string | undefined;
-  reportDeviations?: boolean | undefined;
-  fitInterfaceTolerance10UseProfile?: number | undefined;
-  ignoreOutOfTolerancePoints?: boolean | undefined;
-  startingConditionGeometryOptional?: CollectionObjectName | undefined;
+  reportDeviations?:
+    | boolean
+    | undefined;
+  /** -1.0 uses the profile tolerance. */
+  fitInterfaceTolerance?: number | undefined;
+  ignoreOutOfTolerancePoints?:
+    | boolean
+    | undefined;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  startingConditionGeometry?: CollectionObjectName | undefined;
 }
 
 export interface FitGeometryToPointGroupProjectedToPlaneResult {
@@ -180,10 +210,16 @@ export interface FitGeometryToPointsRequest {
   pointsToFit?: PointName[] | undefined;
   resultingObjectName?: CollectionObjectName | undefined;
   fitProfileName?: string | undefined;
-  reportDeviations?: boolean | undefined;
-  fitInterfaceTolerance10UseProfile?: number | undefined;
-  ignoreOutOfTolerancePoints?: boolean | undefined;
-  startingConditionGeometryOptional?: CollectionObjectName | undefined;
+  reportDeviations?:
+    | boolean
+    | undefined;
+  /** -1.0 uses the profile tolerance. */
+  fitInterfaceTolerance?: number | undefined;
+  ignoreOutOfTolerancePoints?:
+    | boolean
+    | undefined;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  startingConditionGeometry?: CollectionObjectName | undefined;
 }
 
 export interface FitGeometryToPointsResult {
@@ -221,8 +257,12 @@ export interface GetConePropertiesRequest {
 }
 
 export interface GetConePropertiesResult {
-  coneEndPointInWorkingCoordinates?: Vector | undefined;
-  coneAxisInWorkingCoordinates?: Vector | undefined;
+  /** Expressed in working coordinates. */
+  coneEndPoint?:
+    | Vector
+    | undefined;
+  /** Expressed in working coordinates. */
+  coneAxis?: Vector | undefined;
   coneLength?: number | undefined;
   coneThetaStart?: number | undefined;
   coneThetaSpan?: number | undefined;
@@ -365,9 +405,16 @@ export interface GetMeasurementWeatherDataRequest {
 }
 
 export interface GetMeasurementWeatherDataResult {
-  temperatureDegF?: number | undefined;
-  pressureInHg?: number | undefined;
-  humidityRh?: number | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  temperature?:
+    | number
+    | undefined;
+  /** Pressure in inches of mercury. */
+  pressure?:
+    | number
+    | undefined;
+  /** Relative humidity in percent. */
+  humidity?: number | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -535,14 +582,27 @@ export interface GetSlotPropertiesRequest {
 }
 
 export interface GetSlotPropertiesResult {
-  slotTransformInWorkingCoordinates?: Transform | undefined;
-  centerInWorkingCoordinates?: Vector | undefined;
-  normalDirectionInWorkingCoordinates?: Vector | undefined;
+  /** Expressed in working coordinates. */
+  slotTransform?:
+    | Transform
+    | undefined;
+  /** Expressed in working coordinates. */
+  center?:
+    | Vector
+    | undefined;
+  /** Expressed in working coordinates. */
+  normalDirection?: Vector | undefined;
   slotLength?: number | undefined;
   slotWidth?: number | undefined;
-  roundSlotType?: boolean | undefined;
-  centerlinePt1InWorkingCoordinates?: Vector | undefined;
-  centerlinePt2InWorkingCoordinates?: Vector | undefined;
+  roundSlotType?:
+    | boolean
+    | undefined;
+  /** Expressed in working coordinates. */
+  centerlinePt1?:
+    | Vector
+    | undefined;
+  /** Expressed in working coordinates. */
+  centerlinePt2?: Vector | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -612,9 +672,15 @@ export interface GetTransformForIthFrameInFrameSetResult {
 export interface GroupToSurfaceFitRequest {
   groupToFit?: CollectionObjectName | undefined;
   surface?: CollectionObjectName | undefined;
-  doConventionalFit?: boolean | undefined;
-  rmsTolerance00ForNone?: number | undefined;
-  maximumAbsoluteTolerance00ForNone?: number | undefined;
+  doConventionalFit?:
+    | boolean
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  rmsTolerance?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  maximumAbsoluteTolerance?: number | undefined;
 }
 
 export interface GroupToSurfaceFitResult {
@@ -645,12 +711,21 @@ export interface IsObjectOfTypeResult {
 
 export interface MakeCircleFitProfileRequest {
   fitProfileName?: string | undefined;
-  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
-  overrideRadialOffset10UseCurrent?: number | undefined;
-  measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset | undefined;
-  overridePlanarOffset10UseCurrent?: number | undefined;
-  planarOffsetDirection?: NormalDirection | undefined;
-  lockRadius10DoNotLock?: number | undefined;
+  measuredSideForRadialOffset?:
+    | MeasuredSideForRadialOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overrideRadialOffset?: number | undefined;
+  measuredSideForPlanarOffset?:
+    | MeasuredSideForPlanarOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overridePlanarOffset?: number | undefined;
+  planarOffsetDirection?:
+    | NormalDirection
+    | undefined;
+  /** -1.0 leaves this dimension unlocked. */
+  lockRadius?: number | undefined;
   circleComputationTechnique?: CompTechnique | undefined;
   reverseNormalVectorAfterFit?: boolean | undefined;
   makeCardinalPoints?: boolean | undefined;
@@ -664,9 +739,15 @@ export interface MakeCircleFitProfileResult {
 
 export interface MakeConeFitProfileRequest {
   fitProfileName?: string | undefined;
-  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
-  overrideRadialOffset10UseCurrent?: number | undefined;
-  lockAngleInDegrees10DoNotLock?: number | undefined;
+  measuredSideForRadialOffset?:
+    | MeasuredSideForRadialOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overrideRadialOffset?:
+    | number
+    | undefined;
+  /** -1.0 leaves this dimension unlocked. */
+  lockAngleInDegrees?: number | undefined;
   useExhaustiveSearch?: boolean | undefined;
   makeCardinalPoints?: boolean | undefined;
   cardinalPt1Vertex?: boolean | undefined;
@@ -680,9 +761,15 @@ export interface MakeConeFitProfileResult {
 
 export interface MakeCylinderFitProfileRequest {
   fitProfileName?: string | undefined;
-  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
-  overrideRadialOffset10UseCurrent?: number | undefined;
-  lockRadius10DoNotLock?: number | undefined;
+  measuredSideForRadialOffset?:
+    | MeasuredSideForRadialOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overrideRadialOffset?:
+    | number
+    | undefined;
+  /** -1.0 leaves this dimension unlocked. */
+  lockRadius?: number | undefined;
   lockedRadiusFitMethod?: FitMethod | undefined;
   constrainToNominalAxis?: boolean | undefined;
   constrainToNominalOrientation?: boolean | undefined;
@@ -703,10 +790,16 @@ export interface MakeCylinderFitProfileResult {
 
 export interface MakeEllipseFitProfileRequest {
   fitProfileName?: string | undefined;
-  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
-  overrideRadialOffset10UseCurrent?: number | undefined;
-  measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset | undefined;
-  overridePlanarOffset10UseCurrent?: number | undefined;
+  measuredSideForRadialOffset?:
+    | MeasuredSideForRadialOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overrideRadialOffset?: number | undefined;
+  measuredSideForPlanarOffset?:
+    | MeasuredSideForPlanarOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overridePlanarOffset?: number | undefined;
   planarOffsetDirection?: NormalDirection | undefined;
   reverseNormalVectorAfterFit?: boolean | undefined;
   makeCardinalPoints?: boolean | undefined;
@@ -735,9 +828,15 @@ export interface MakeLineFitProfileResult {
 
 export interface MakeParaboloidFitProfileRequest {
   fitProfileName?: string | undefined;
-  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
-  overrideRadialOffset10UseCurrent?: number | undefined;
-  lockFocalLength10DoNotLock?: number | undefined;
+  measuredSideForRadialOffset?:
+    | MeasuredSideForRadialOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overrideRadialOffset?:
+    | number
+    | undefined;
+  /** -1.0 leaves this dimension unlocked. */
+  lockFocalLength?: number | undefined;
   degreeOfFreedom?: DegreeOfFreedom | undefined;
   makeCardinalPoints?: boolean | undefined;
   cardinalPt1Vertex?: boolean | undefined;
@@ -750,8 +849,11 @@ export interface MakeParaboloidFitProfileResult {
 
 export interface MakePlaneFitProfileRequest {
   fitProfileName?: string | undefined;
-  measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset | undefined;
-  overridePlanarOffset10UseCurrent?: number | undefined;
+  measuredSideForPlanarOffset?:
+    | MeasuredSideForPlanarOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overridePlanarOffset?: number | undefined;
   planarOffsetDirection?: NormalDirection | undefined;
   reverseNormalVectorAfterFit?: boolean | undefined;
   makeCardinalPoints?: boolean | undefined;
@@ -765,10 +867,16 @@ export interface MakePlaneFitProfileResult {
 
 export interface MakeSlotFitProfileRequest {
   fitProfileName?: string | undefined;
-  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
-  overrideRadialOffset10UseCurrent?: number | undefined;
-  measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset | undefined;
-  overridePlanarOffset10UseCurrent?: number | undefined;
+  measuredSideForRadialOffset?:
+    | MeasuredSideForRadialOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overrideRadialOffset?: number | undefined;
+  measuredSideForPlanarOffset?:
+    | MeasuredSideForPlanarOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overridePlanarOffset?: number | undefined;
   planarOffsetDirection?: NormalDirection | undefined;
   slotType?: SlotType | undefined;
   slotComputationTechnique?: CompTechnique | undefined;
@@ -786,9 +894,15 @@ export interface MakeSlotFitProfileResult {
 
 export interface MakeSphereFitProfileRequest {
   fitProfileName?: string | undefined;
-  measuredSideForRadialOffset?: MeasuredSideForRadialOffset | undefined;
-  overrideRadialOffset10UseCurrent?: number | undefined;
-  lockRadius10DoNotLock?: number | undefined;
+  measuredSideForRadialOffset?:
+    | MeasuredSideForRadialOffset
+    | undefined;
+  /** -1.0 uses the current offset. */
+  overrideRadialOffset?:
+    | number
+    | undefined;
+  /** -1.0 leaves this dimension unlocked. */
+  lockRadius?: number | undefined;
   makeCardinalPoints?: boolean | undefined;
   cardinalPt1Center?: boolean | undefined;
   computationMethod?: SphereFitComputationMode | undefined;
@@ -840,9 +954,15 @@ export interface QueryCloudsToObjectsRequest {
   resultingObjectName?: CollectionObjectName | undefined;
   projectionOptions?: ProjectionOptions | undefined;
   proximity?: number | undefined;
-  skipFactor?: number | undefined;
-  rmsTolerance00ForNone?: number | undefined;
-  maximumAbsoluteTolerance00ForNone?: number | undefined;
+  skipFactor?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  rmsTolerance?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  maximumAbsoluteTolerance?: number | undefined;
 }
 
 export interface QueryCloudsToObjectsResult {
@@ -857,9 +977,15 @@ export interface QueryCloudsToSurfaceRequest {
   resultingObjectName?: CollectionObjectName | undefined;
   projectionOptions?: ProjectionOptions | undefined;
   proximity?: number | undefined;
-  skipFactor?: number | undefined;
-  rmsTolerance00ForNone?: number | undefined;
-  maximumAbsoluteTolerance00ForNone?: number | undefined;
+  skipFactor?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  rmsTolerance?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  maximumAbsoluteTolerance?: number | undefined;
 }
 
 export interface QueryCloudsToSurfaceResult {
@@ -876,20 +1002,39 @@ export interface QueryFrameToFrameRequest {
 export interface QueryFrameToFrameResult {
   x?: number | undefined;
   y?: number | undefined;
-  z?: number | undefined;
-  rxRoll?: number | undefined;
-  ryPitch?: number | undefined;
-  rzYaw?: number | undefined;
+  z?:
+    | number
+    | undefined;
+  /** MP qualifier: Roll. */
+  rx?:
+    | number
+    | undefined;
+  /** MP qualifier: Pitch. */
+  ry?:
+    | number
+    | undefined;
+  /** MP qualifier: Yaw. */
+  rz?: number | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
 export interface QueryGroupsToObjectsRequest {
-  groupNameListGroupsToProject?: CollectionObjectName[] | undefined;
-  objectNameListObjectsToProjectTo?: CollectionObjectName[] | undefined;
+  /** MP qualifier: Groups to Project. */
+  groupNameList?:
+    | CollectionObjectName[]
+    | undefined;
+  /** MP qualifier: Objects to Project to. */
+  objectNameList?: CollectionObjectName[] | undefined;
   resultingObjectName?: CollectionObjectName | undefined;
-  projectionOptions?: ProjectionOptions | undefined;
-  rmsTolerance00ForNone?: number | undefined;
-  maximumAbsoluteTolerance00ForNone?: number | undefined;
+  projectionOptions?:
+    | ProjectionOptions
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  rmsTolerance?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  maximumAbsoluteTolerance?: number | undefined;
   showResultsDialog?: boolean | undefined;
 }
 
@@ -942,12 +1087,21 @@ export interface QueryPointsToCircleResult {
 }
 
 export interface QueryPointsToObjectsRequest {
-  pointNames?: PointName[] | undefined;
-  objectNameListObjectsToProjectTo?: CollectionObjectName[] | undefined;
+  pointNames?:
+    | PointName[]
+    | undefined;
+  /** MP qualifier: Objects to Project to. */
+  objectNameList?: CollectionObjectName[] | undefined;
   resultingObjectName?: CollectionObjectName | undefined;
-  projectionOptions?: ProjectionOptions | undefined;
-  rmsTolerance00ForNone?: number | undefined;
-  maximumAbsoluteTolerance00ForNone?: number | undefined;
+  projectionOptions?:
+    | ProjectionOptions
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  rmsTolerance?:
+    | number
+    | undefined;
+  /** 0.0 disables this tolerance. */
+  maximumAbsoluteTolerance?: number | undefined;
   showResultsDialog?: boolean | undefined;
 }
 
@@ -1039,9 +1193,15 @@ export interface SetCirclePropertiesResult {
 }
 
 export interface SetConePropertiesRequest {
-  coneName?: CollectionObjectName | undefined;
-  coneEndPointInWorkingCoordinates?: Vector | undefined;
-  coneAxisInWorkingCoordinates?: Vector | undefined;
+  coneName?:
+    | CollectionObjectName
+    | undefined;
+  /** Expressed in working coordinates. */
+  coneEndPoint?:
+    | Vector
+    | undefined;
+  /** Expressed in working coordinates. */
+  coneAxis?: Vector | undefined;
   coneLength?: number | undefined;
   coneThetaStart?: number | undefined;
   coneThetaSpan?: number | undefined;
@@ -1104,8 +1264,11 @@ export interface SetGeometryRelationshipFitProfileResult {
 export interface SetLinePropertiesRequest {
   lineName?: CollectionObjectName | undefined;
   beginCoordinate?: Vector | undefined;
-  endCoordinate?: Vector | undefined;
-  lengthOptional?: number | undefined;
+  endCoordinate?:
+    | Vector
+    | undefined;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  length?: number | undefined;
 }
 
 export interface SetLinePropertiesResult {
@@ -1187,11 +1350,23 @@ export interface SphereAxisCheckResult {
 }
 
 export interface TemperatureCompensateAGroupRequest {
-  originalGroup?: CollectionObjectName | undefined;
-  scalingOriginCoordinateFrame?: FrameName | undefined;
-  materialCte1DegF?: number | undefined;
-  initialTemperatureF?: number | undefined;
-  finalTemperatureF?: number | undefined;
+  originalGroup?:
+    | CollectionObjectName
+    | undefined;
+  /** MP qualifier: coordinate frame. */
+  scalingOrigin?:
+    | FrameName
+    | undefined;
+  /** Coefficient per degree Fahrenheit. */
+  materialCte?:
+    | number
+    | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  initialTemperature?:
+    | number
+    | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  finalTemperature?: number | undefined;
   scaledGroupName?: CollectionObjectName | undefined;
 }
 
@@ -1238,12 +1413,7 @@ export interface TranslateObjectsByDeltaResult {
 }
 
 function createBaseAngleBetweenLineAndPlaneRequest(): AngleBetweenLineAndPlaneRequest {
-  return {
-    selectedLine: undefined,
-    selectedPlane: undefined,
-    nominalAngle: undefined,
-    angleTolerance00ForNone: undefined,
-  };
+  return { selectedLine: undefined, selectedPlane: undefined, nominalAngle: undefined, angleTolerance: undefined };
 }
 
 export const AngleBetweenLineAndPlaneRequest: MessageFns<AngleBetweenLineAndPlaneRequest> = {
@@ -1257,8 +1427,8 @@ export const AngleBetweenLineAndPlaneRequest: MessageFns<AngleBetweenLineAndPlan
     if (message.nominalAngle !== undefined) {
       writer.uint32(25).double(message.nominalAngle);
     }
-    if (message.angleTolerance00ForNone !== undefined) {
-      writer.uint32(33).double(message.angleTolerance00ForNone);
+    if (message.angleTolerance !== undefined) {
+      writer.uint32(33).double(message.angleTolerance);
     }
     return writer;
   },
@@ -1299,7 +1469,7 @@ export const AngleBetweenLineAndPlaneRequest: MessageFns<AngleBetweenLineAndPlan
             break;
           }
 
-          message.angleTolerance00ForNone = reader.double();
+          message.angleTolerance = reader.double();
           continue;
         }
       }
@@ -1323,7 +1493,7 @@ export const AngleBetweenLineAndPlaneRequest: MessageFns<AngleBetweenLineAndPlan
       ? CollectionObjectName.fromPartial(object.selectedPlane)
       : undefined;
     message.nominalAngle = object.nominalAngle ?? undefined;
-    message.angleTolerance00ForNone = object.angleTolerance00ForNone ?? undefined;
+    message.angleTolerance = object.angleTolerance ?? undefined;
     return message;
   },
 };
@@ -1389,7 +1559,7 @@ export const AngleBetweenLineAndPlaneResult: MessageFns<AngleBetweenLineAndPlane
 };
 
 function createBaseAngleBetweenTwoLinesRequest(): AngleBetweenTwoLinesRequest {
-  return { line1: undefined, line2: undefined, nominalAngle: undefined, angleTolerance00ForNone: undefined };
+  return { line1: undefined, line2: undefined, nominalAngle: undefined, angleTolerance: undefined };
 }
 
 export const AngleBetweenTwoLinesRequest: MessageFns<AngleBetweenTwoLinesRequest> = {
@@ -1403,8 +1573,8 @@ export const AngleBetweenTwoLinesRequest: MessageFns<AngleBetweenTwoLinesRequest
     if (message.nominalAngle !== undefined) {
       writer.uint32(25).double(message.nominalAngle);
     }
-    if (message.angleTolerance00ForNone !== undefined) {
-      writer.uint32(33).double(message.angleTolerance00ForNone);
+    if (message.angleTolerance !== undefined) {
+      writer.uint32(33).double(message.angleTolerance);
     }
     return writer;
   },
@@ -1445,7 +1615,7 @@ export const AngleBetweenTwoLinesRequest: MessageFns<AngleBetweenTwoLinesRequest
             break;
           }
 
-          message.angleTolerance00ForNone = reader.double();
+          message.angleTolerance = reader.double();
           continue;
         }
       }
@@ -1469,7 +1639,7 @@ export const AngleBetweenTwoLinesRequest: MessageFns<AngleBetweenTwoLinesRequest
       ? CollectionObjectName.fromPartial(object.line2)
       : undefined;
     message.nominalAngle = object.nominalAngle ?? undefined;
-    message.angleTolerance00ForNone = object.angleTolerance00ForNone ?? undefined;
+    message.angleTolerance = object.angleTolerance ?? undefined;
     return message;
   },
 };
@@ -1535,7 +1705,7 @@ export const AngleBetweenTwoLinesResult: MessageFns<AngleBetweenTwoLinesResult> 
 };
 
 function createBaseAngleBetweenTwoPlanesNormalsRequest(): AngleBetweenTwoPlanesNormalsRequest {
-  return { planeA: undefined, planeB: undefined, nominalAngle: undefined, angleTolerance00ForNone: undefined };
+  return { planeA: undefined, planeB: undefined, nominalAngle: undefined, angleTolerance: undefined };
 }
 
 export const AngleBetweenTwoPlanesNormalsRequest: MessageFns<AngleBetweenTwoPlanesNormalsRequest> = {
@@ -1549,8 +1719,8 @@ export const AngleBetweenTwoPlanesNormalsRequest: MessageFns<AngleBetweenTwoPlan
     if (message.nominalAngle !== undefined) {
       writer.uint32(25).double(message.nominalAngle);
     }
-    if (message.angleTolerance00ForNone !== undefined) {
-      writer.uint32(33).double(message.angleTolerance00ForNone);
+    if (message.angleTolerance !== undefined) {
+      writer.uint32(33).double(message.angleTolerance);
     }
     return writer;
   },
@@ -1591,7 +1761,7 @@ export const AngleBetweenTwoPlanesNormalsRequest: MessageFns<AngleBetweenTwoPlan
             break;
           }
 
-          message.angleTolerance00ForNone = reader.double();
+          message.angleTolerance = reader.double();
           continue;
         }
       }
@@ -1615,7 +1785,7 @@ export const AngleBetweenTwoPlanesNormalsRequest: MessageFns<AngleBetweenTwoPlan
       ? CollectionObjectName.fromPartial(object.planeB)
       : undefined;
     message.nominalAngle = object.nominalAngle ?? undefined;
-    message.angleTolerance00ForNone = object.angleTolerance00ForNone ?? undefined;
+    message.angleTolerance = object.angleTolerance ?? undefined;
     return message;
   },
 };
@@ -1685,8 +1855,8 @@ function createBaseBestFitTransformationGroupToGroupRequest(): BestFitTransforma
     referenceGroup: undefined,
     correspondingGroup: undefined,
     showInterface: undefined,
-    rmsTolerance00ForNone: undefined,
-    maximumAbsoluteTolerance00ForNone: undefined,
+    rmsTolerance: undefined,
+    maximumAbsoluteTolerance: undefined,
     allowScale: undefined,
     allowX: undefined,
     allowY: undefined,
@@ -1696,7 +1866,7 @@ function createBaseBestFitTransformationGroupToGroupRequest(): BestFitTransforma
     allowRz: undefined,
     lockDegreesOfFreedom: undefined,
     generateEvent: undefined,
-    filePathForCsvTextReportRequiresShowInterfaceTrue: undefined,
+    filePathForCsvTextReport: undefined,
   };
 }
 
@@ -1711,11 +1881,11 @@ export const BestFitTransformationGroupToGroupRequest: MessageFns<BestFitTransfo
     if (message.showInterface !== undefined) {
       writer.uint32(24).bool(message.showInterface);
     }
-    if (message.rmsTolerance00ForNone !== undefined) {
-      writer.uint32(33).double(message.rmsTolerance00ForNone);
+    if (message.rmsTolerance !== undefined) {
+      writer.uint32(33).double(message.rmsTolerance);
     }
-    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
-      writer.uint32(41).double(message.maximumAbsoluteTolerance00ForNone);
+    if (message.maximumAbsoluteTolerance !== undefined) {
+      writer.uint32(41).double(message.maximumAbsoluteTolerance);
     }
     if (message.allowScale !== undefined) {
       writer.uint32(48).bool(message.allowScale);
@@ -1744,8 +1914,8 @@ export const BestFitTransformationGroupToGroupRequest: MessageFns<BestFitTransfo
     if (message.generateEvent !== undefined) {
       writer.uint32(112).bool(message.generateEvent);
     }
-    if (message.filePathForCsvTextReportRequiresShowInterfaceTrue !== undefined) {
-      FileReference.encode(message.filePathForCsvTextReportRequiresShowInterfaceTrue, writer.uint32(122).fork()).join();
+    if (message.filePathForCsvTextReport !== undefined) {
+      FileReference.encode(message.filePathForCsvTextReport, writer.uint32(122).fork()).join();
     }
     return writer;
   },
@@ -1786,7 +1956,7 @@ export const BestFitTransformationGroupToGroupRequest: MessageFns<BestFitTransfo
             break;
           }
 
-          message.rmsTolerance00ForNone = reader.double();
+          message.rmsTolerance = reader.double();
           continue;
         }
         case 5: {
@@ -1794,7 +1964,7 @@ export const BestFitTransformationGroupToGroupRequest: MessageFns<BestFitTransfo
             break;
           }
 
-          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          message.maximumAbsoluteTolerance = reader.double();
           continue;
         }
         case 6: {
@@ -1874,7 +2044,7 @@ export const BestFitTransformationGroupToGroupRequest: MessageFns<BestFitTransfo
             break;
           }
 
-          message.filePathForCsvTextReportRequiresShowInterfaceTrue = FileReference.decode(reader, reader.uint32());
+          message.filePathForCsvTextReport = FileReference.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -1898,8 +2068,8 @@ export const BestFitTransformationGroupToGroupRequest: MessageFns<BestFitTransfo
       ? CollectionObjectName.fromPartial(object.correspondingGroup)
       : undefined;
     message.showInterface = object.showInterface ?? undefined;
-    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
-    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    message.rmsTolerance = object.rmsTolerance ?? undefined;
+    message.maximumAbsoluteTolerance = object.maximumAbsoluteTolerance ?? undefined;
     message.allowScale = object.allowScale ?? undefined;
     message.allowX = object.allowX ?? undefined;
     message.allowY = object.allowY ?? undefined;
@@ -1909,10 +2079,9 @@ export const BestFitTransformationGroupToGroupRequest: MessageFns<BestFitTransfo
     message.allowRz = object.allowRz ?? undefined;
     message.lockDegreesOfFreedom = object.lockDegreesOfFreedom ?? undefined;
     message.generateEvent = object.generateEvent ?? undefined;
-    message.filePathForCsvTextReportRequiresShowInterfaceTrue =
-      (object.filePathForCsvTextReportRequiresShowInterfaceTrue !== undefined &&
-          object.filePathForCsvTextReportRequiresShowInterfaceTrue !== null)
-        ? FileReference.fromPartial(object.filePathForCsvTextReportRequiresShowInterfaceTrue)
+    message.filePathForCsvTextReport =
+      (object.filePathForCsvTextReport !== undefined && object.filePathForCsvTextReport !== null)
+        ? FileReference.fromPartial(object.filePathForCsvTextReport)
         : undefined;
     return message;
   },
@@ -2545,9 +2714,9 @@ function createBaseFitGeometryToPointGroupRequest(): FitGeometryToPointGroupRequ
     resultingObjectName: undefined,
     fitProfileName: undefined,
     reportDeviations: undefined,
-    fitInterfaceTolerance10UseProfile: undefined,
+    fitInterfaceTolerance: undefined,
     ignoreOutOfTolerancePoints: undefined,
-    startingConditionGeometryOptional: undefined,
+    startingConditionGeometry: undefined,
   };
 }
 
@@ -2568,14 +2737,14 @@ export const FitGeometryToPointGroupRequest: MessageFns<FitGeometryToPointGroupR
     if (message.reportDeviations !== undefined) {
       writer.uint32(40).bool(message.reportDeviations);
     }
-    if (message.fitInterfaceTolerance10UseProfile !== undefined) {
-      writer.uint32(49).double(message.fitInterfaceTolerance10UseProfile);
+    if (message.fitInterfaceTolerance !== undefined) {
+      writer.uint32(49).double(message.fitInterfaceTolerance);
     }
     if (message.ignoreOutOfTolerancePoints !== undefined) {
       writer.uint32(56).bool(message.ignoreOutOfTolerancePoints);
     }
-    if (message.startingConditionGeometryOptional !== undefined) {
-      CollectionObjectName.encode(message.startingConditionGeometryOptional, writer.uint32(66).fork()).join();
+    if (message.startingConditionGeometry !== undefined) {
+      CollectionObjectName.encode(message.startingConditionGeometry, writer.uint32(66).fork()).join();
     }
     return writer;
   },
@@ -2632,7 +2801,7 @@ export const FitGeometryToPointGroupRequest: MessageFns<FitGeometryToPointGroupR
             break;
           }
 
-          message.fitInterfaceTolerance10UseProfile = reader.double();
+          message.fitInterfaceTolerance = reader.double();
           continue;
         }
         case 7: {
@@ -2648,7 +2817,7 @@ export const FitGeometryToPointGroupRequest: MessageFns<FitGeometryToPointGroupR
             break;
           }
 
-          message.startingConditionGeometryOptional = CollectionObjectName.decode(reader, reader.uint32());
+          message.startingConditionGeometry = CollectionObjectName.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -2674,11 +2843,11 @@ export const FitGeometryToPointGroupRequest: MessageFns<FitGeometryToPointGroupR
       : undefined;
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.reportDeviations = object.reportDeviations ?? undefined;
-    message.fitInterfaceTolerance10UseProfile = object.fitInterfaceTolerance10UseProfile ?? undefined;
+    message.fitInterfaceTolerance = object.fitInterfaceTolerance ?? undefined;
     message.ignoreOutOfTolerancePoints = object.ignoreOutOfTolerancePoints ?? undefined;
-    message.startingConditionGeometryOptional =
-      (object.startingConditionGeometryOptional !== undefined && object.startingConditionGeometryOptional !== null)
-        ? CollectionObjectName.fromPartial(object.startingConditionGeometryOptional)
+    message.startingConditionGeometry =
+      (object.startingConditionGeometry !== undefined && object.startingConditionGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.startingConditionGeometry)
         : undefined;
     return message;
   },
@@ -2740,9 +2909,9 @@ function createBaseFitGeometryToPointGroupProjectedToPlaneRequest(): FitGeometry
     resultingObjectName: undefined,
     fitProfileName: undefined,
     reportDeviations: undefined,
-    fitInterfaceTolerance10UseProfile: undefined,
+    fitInterfaceTolerance: undefined,
     ignoreOutOfTolerancePoints: undefined,
-    startingConditionGeometryOptional: undefined,
+    startingConditionGeometry: undefined,
   };
 }
 
@@ -2771,14 +2940,14 @@ export const FitGeometryToPointGroupProjectedToPlaneRequest: MessageFns<
     if (message.reportDeviations !== undefined) {
       writer.uint32(48).bool(message.reportDeviations);
     }
-    if (message.fitInterfaceTolerance10UseProfile !== undefined) {
-      writer.uint32(57).double(message.fitInterfaceTolerance10UseProfile);
+    if (message.fitInterfaceTolerance !== undefined) {
+      writer.uint32(57).double(message.fitInterfaceTolerance);
     }
     if (message.ignoreOutOfTolerancePoints !== undefined) {
       writer.uint32(64).bool(message.ignoreOutOfTolerancePoints);
     }
-    if (message.startingConditionGeometryOptional !== undefined) {
-      CollectionObjectName.encode(message.startingConditionGeometryOptional, writer.uint32(74).fork()).join();
+    if (message.startingConditionGeometry !== undefined) {
+      CollectionObjectName.encode(message.startingConditionGeometry, writer.uint32(74).fork()).join();
     }
     return writer;
   },
@@ -2843,7 +3012,7 @@ export const FitGeometryToPointGroupProjectedToPlaneRequest: MessageFns<
             break;
           }
 
-          message.fitInterfaceTolerance10UseProfile = reader.double();
+          message.fitInterfaceTolerance = reader.double();
           continue;
         }
         case 8: {
@@ -2859,7 +3028,7 @@ export const FitGeometryToPointGroupProjectedToPlaneRequest: MessageFns<
             break;
           }
 
-          message.startingConditionGeometryOptional = CollectionObjectName.decode(reader, reader.uint32());
+          message.startingConditionGeometry = CollectionObjectName.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -2892,11 +3061,11 @@ export const FitGeometryToPointGroupProjectedToPlaneRequest: MessageFns<
       : undefined;
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.reportDeviations = object.reportDeviations ?? undefined;
-    message.fitInterfaceTolerance10UseProfile = object.fitInterfaceTolerance10UseProfile ?? undefined;
+    message.fitInterfaceTolerance = object.fitInterfaceTolerance ?? undefined;
     message.ignoreOutOfTolerancePoints = object.ignoreOutOfTolerancePoints ?? undefined;
-    message.startingConditionGeometryOptional =
-      (object.startingConditionGeometryOptional !== undefined && object.startingConditionGeometryOptional !== null)
-        ? CollectionObjectName.fromPartial(object.startingConditionGeometryOptional)
+    message.startingConditionGeometry =
+      (object.startingConditionGeometry !== undefined && object.startingConditionGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.startingConditionGeometry)
         : undefined;
     return message;
   },
@@ -2965,9 +3134,9 @@ function createBaseFitGeometryToPointsRequest(): FitGeometryToPointsRequest {
     resultingObjectName: undefined,
     fitProfileName: undefined,
     reportDeviations: undefined,
-    fitInterfaceTolerance10UseProfile: undefined,
+    fitInterfaceTolerance: undefined,
     ignoreOutOfTolerancePoints: undefined,
-    startingConditionGeometryOptional: undefined,
+    startingConditionGeometry: undefined,
   };
 }
 
@@ -2990,14 +3159,14 @@ export const FitGeometryToPointsRequest: MessageFns<FitGeometryToPointsRequest> 
     if (message.reportDeviations !== undefined) {
       writer.uint32(40).bool(message.reportDeviations);
     }
-    if (message.fitInterfaceTolerance10UseProfile !== undefined) {
-      writer.uint32(49).double(message.fitInterfaceTolerance10UseProfile);
+    if (message.fitInterfaceTolerance !== undefined) {
+      writer.uint32(49).double(message.fitInterfaceTolerance);
     }
     if (message.ignoreOutOfTolerancePoints !== undefined) {
       writer.uint32(56).bool(message.ignoreOutOfTolerancePoints);
     }
-    if (message.startingConditionGeometryOptional !== undefined) {
-      CollectionObjectName.encode(message.startingConditionGeometryOptional, writer.uint32(66).fork()).join();
+    if (message.startingConditionGeometry !== undefined) {
+      CollectionObjectName.encode(message.startingConditionGeometry, writer.uint32(66).fork()).join();
     }
     return writer;
   },
@@ -3057,7 +3226,7 @@ export const FitGeometryToPointsRequest: MessageFns<FitGeometryToPointsRequest> 
             break;
           }
 
-          message.fitInterfaceTolerance10UseProfile = reader.double();
+          message.fitInterfaceTolerance = reader.double();
           continue;
         }
         case 7: {
@@ -3073,7 +3242,7 @@ export const FitGeometryToPointsRequest: MessageFns<FitGeometryToPointsRequest> 
             break;
           }
 
-          message.startingConditionGeometryOptional = CollectionObjectName.decode(reader, reader.uint32());
+          message.startingConditionGeometry = CollectionObjectName.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -3097,11 +3266,11 @@ export const FitGeometryToPointsRequest: MessageFns<FitGeometryToPointsRequest> 
       : undefined;
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.reportDeviations = object.reportDeviations ?? undefined;
-    message.fitInterfaceTolerance10UseProfile = object.fitInterfaceTolerance10UseProfile ?? undefined;
+    message.fitInterfaceTolerance = object.fitInterfaceTolerance ?? undefined;
     message.ignoreOutOfTolerancePoints = object.ignoreOutOfTolerancePoints ?? undefined;
-    message.startingConditionGeometryOptional =
-      (object.startingConditionGeometryOptional !== undefined && object.startingConditionGeometryOptional !== null)
-        ? CollectionObjectName.fromPartial(object.startingConditionGeometryOptional)
+    message.startingConditionGeometry =
+      (object.startingConditionGeometry !== undefined && object.startingConditionGeometry !== null)
+        ? CollectionObjectName.fromPartial(object.startingConditionGeometry)
         : undefined;
     return message;
   },
@@ -3535,8 +3704,8 @@ export const GetConePropertiesRequest: MessageFns<GetConePropertiesRequest> = {
 
 function createBaseGetConePropertiesResult(): GetConePropertiesResult {
   return {
-    coneEndPointInWorkingCoordinates: undefined,
-    coneAxisInWorkingCoordinates: undefined,
+    coneEndPoint: undefined,
+    coneAxis: undefined,
     coneLength: undefined,
     coneThetaStart: undefined,
     coneThetaSpan: undefined,
@@ -3548,11 +3717,11 @@ function createBaseGetConePropertiesResult(): GetConePropertiesResult {
 
 export const GetConePropertiesResult: MessageFns<GetConePropertiesResult> = {
   encode(message: GetConePropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.coneEndPointInWorkingCoordinates !== undefined) {
-      Vector.encode(message.coneEndPointInWorkingCoordinates, writer.uint32(10).fork()).join();
+    if (message.coneEndPoint !== undefined) {
+      Vector.encode(message.coneEndPoint, writer.uint32(10).fork()).join();
     }
-    if (message.coneAxisInWorkingCoordinates !== undefined) {
-      Vector.encode(message.coneAxisInWorkingCoordinates, writer.uint32(18).fork()).join();
+    if (message.coneAxis !== undefined) {
+      Vector.encode(message.coneAxis, writer.uint32(18).fork()).join();
     }
     if (message.coneLength !== undefined) {
       writer.uint32(25).double(message.coneLength);
@@ -3587,7 +3756,7 @@ export const GetConePropertiesResult: MessageFns<GetConePropertiesResult> = {
             break;
           }
 
-          message.coneEndPointInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          message.coneEndPoint = Vector.decode(reader, reader.uint32());
           continue;
         }
         case 2: {
@@ -3595,7 +3764,7 @@ export const GetConePropertiesResult: MessageFns<GetConePropertiesResult> = {
             break;
           }
 
-          message.coneAxisInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          message.coneAxis = Vector.decode(reader, reader.uint32());
           continue;
         }
         case 3: {
@@ -3660,14 +3829,12 @@ export const GetConePropertiesResult: MessageFns<GetConePropertiesResult> = {
   },
   fromPartial(object: DeepPartial<GetConePropertiesResult>): GetConePropertiesResult {
     const message = createBaseGetConePropertiesResult();
-    message.coneEndPointInWorkingCoordinates =
-      (object.coneEndPointInWorkingCoordinates !== undefined && object.coneEndPointInWorkingCoordinates !== null)
-        ? Vector.fromPartial(object.coneEndPointInWorkingCoordinates)
-        : undefined;
-    message.coneAxisInWorkingCoordinates =
-      (object.coneAxisInWorkingCoordinates !== undefined && object.coneAxisInWorkingCoordinates !== null)
-        ? Vector.fromPartial(object.coneAxisInWorkingCoordinates)
-        : undefined;
+    message.coneEndPoint = (object.coneEndPoint !== undefined && object.coneEndPoint !== null)
+      ? Vector.fromPartial(object.coneEndPoint)
+      : undefined;
+    message.coneAxis = (object.coneAxis !== undefined && object.coneAxis !== null)
+      ? Vector.fromPartial(object.coneAxis)
+      : undefined;
     message.coneLength = object.coneLength ?? undefined;
     message.coneThetaStart = object.coneThetaStart ?? undefined;
     message.coneThetaSpan = object.coneThetaSpan ?? undefined;
@@ -5362,19 +5529,19 @@ export const GetMeasurementWeatherDataRequest: MessageFns<GetMeasurementWeatherD
 };
 
 function createBaseGetMeasurementWeatherDataResult(): GetMeasurementWeatherDataResult {
-  return { temperatureDegF: undefined, pressureInHg: undefined, humidityRh: undefined, execution: undefined };
+  return { temperature: undefined, pressure: undefined, humidity: undefined, execution: undefined };
 }
 
 export const GetMeasurementWeatherDataResult: MessageFns<GetMeasurementWeatherDataResult> = {
   encode(message: GetMeasurementWeatherDataResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.temperatureDegF !== undefined) {
-      writer.uint32(9).double(message.temperatureDegF);
+    if (message.temperature !== undefined) {
+      writer.uint32(9).double(message.temperature);
     }
-    if (message.pressureInHg !== undefined) {
-      writer.uint32(17).double(message.pressureInHg);
+    if (message.pressure !== undefined) {
+      writer.uint32(17).double(message.pressure);
     }
-    if (message.humidityRh !== undefined) {
-      writer.uint32(25).double(message.humidityRh);
+    if (message.humidity !== undefined) {
+      writer.uint32(25).double(message.humidity);
     }
     if (message.execution !== undefined) {
       MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
@@ -5394,7 +5561,7 @@ export const GetMeasurementWeatherDataResult: MessageFns<GetMeasurementWeatherDa
             break;
           }
 
-          message.temperatureDegF = reader.double();
+          message.temperature = reader.double();
           continue;
         }
         case 2: {
@@ -5402,7 +5569,7 @@ export const GetMeasurementWeatherDataResult: MessageFns<GetMeasurementWeatherDa
             break;
           }
 
-          message.pressureInHg = reader.double();
+          message.pressure = reader.double();
           continue;
         }
         case 3: {
@@ -5410,7 +5577,7 @@ export const GetMeasurementWeatherDataResult: MessageFns<GetMeasurementWeatherDa
             break;
           }
 
-          message.humidityRh = reader.double();
+          message.humidity = reader.double();
           continue;
         }
         case 1000: {
@@ -5435,9 +5602,9 @@ export const GetMeasurementWeatherDataResult: MessageFns<GetMeasurementWeatherDa
   },
   fromPartial(object: DeepPartial<GetMeasurementWeatherDataResult>): GetMeasurementWeatherDataResult {
     const message = createBaseGetMeasurementWeatherDataResult();
-    message.temperatureDegF = object.temperatureDegF ?? undefined;
-    message.pressureInHg = object.pressureInHg ?? undefined;
-    message.humidityRh = object.humidityRh ?? undefined;
+    message.temperature = object.temperature ?? undefined;
+    message.pressure = object.pressure ?? undefined;
+    message.humidity = object.humidity ?? undefined;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -7460,28 +7627,28 @@ export const GetSlotPropertiesRequest: MessageFns<GetSlotPropertiesRequest> = {
 
 function createBaseGetSlotPropertiesResult(): GetSlotPropertiesResult {
   return {
-    slotTransformInWorkingCoordinates: undefined,
-    centerInWorkingCoordinates: undefined,
-    normalDirectionInWorkingCoordinates: undefined,
+    slotTransform: undefined,
+    center: undefined,
+    normalDirection: undefined,
     slotLength: undefined,
     slotWidth: undefined,
     roundSlotType: undefined,
-    centerlinePt1InWorkingCoordinates: undefined,
-    centerlinePt2InWorkingCoordinates: undefined,
+    centerlinePt1: undefined,
+    centerlinePt2: undefined,
     execution: undefined,
   };
 }
 
 export const GetSlotPropertiesResult: MessageFns<GetSlotPropertiesResult> = {
   encode(message: GetSlotPropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.slotTransformInWorkingCoordinates !== undefined) {
-      Transform.encode(message.slotTransformInWorkingCoordinates, writer.uint32(10).fork()).join();
+    if (message.slotTransform !== undefined) {
+      Transform.encode(message.slotTransform, writer.uint32(10).fork()).join();
     }
-    if (message.centerInWorkingCoordinates !== undefined) {
-      Vector.encode(message.centerInWorkingCoordinates, writer.uint32(18).fork()).join();
+    if (message.center !== undefined) {
+      Vector.encode(message.center, writer.uint32(18).fork()).join();
     }
-    if (message.normalDirectionInWorkingCoordinates !== undefined) {
-      Vector.encode(message.normalDirectionInWorkingCoordinates, writer.uint32(26).fork()).join();
+    if (message.normalDirection !== undefined) {
+      Vector.encode(message.normalDirection, writer.uint32(26).fork()).join();
     }
     if (message.slotLength !== undefined) {
       writer.uint32(33).double(message.slotLength);
@@ -7492,11 +7659,11 @@ export const GetSlotPropertiesResult: MessageFns<GetSlotPropertiesResult> = {
     if (message.roundSlotType !== undefined) {
       writer.uint32(48).bool(message.roundSlotType);
     }
-    if (message.centerlinePt1InWorkingCoordinates !== undefined) {
-      Vector.encode(message.centerlinePt1InWorkingCoordinates, writer.uint32(58).fork()).join();
+    if (message.centerlinePt1 !== undefined) {
+      Vector.encode(message.centerlinePt1, writer.uint32(58).fork()).join();
     }
-    if (message.centerlinePt2InWorkingCoordinates !== undefined) {
-      Vector.encode(message.centerlinePt2InWorkingCoordinates, writer.uint32(66).fork()).join();
+    if (message.centerlinePt2 !== undefined) {
+      Vector.encode(message.centerlinePt2, writer.uint32(66).fork()).join();
     }
     if (message.execution !== undefined) {
       MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
@@ -7516,7 +7683,7 @@ export const GetSlotPropertiesResult: MessageFns<GetSlotPropertiesResult> = {
             break;
           }
 
-          message.slotTransformInWorkingCoordinates = Transform.decode(reader, reader.uint32());
+          message.slotTransform = Transform.decode(reader, reader.uint32());
           continue;
         }
         case 2: {
@@ -7524,7 +7691,7 @@ export const GetSlotPropertiesResult: MessageFns<GetSlotPropertiesResult> = {
             break;
           }
 
-          message.centerInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          message.center = Vector.decode(reader, reader.uint32());
           continue;
         }
         case 3: {
@@ -7532,7 +7699,7 @@ export const GetSlotPropertiesResult: MessageFns<GetSlotPropertiesResult> = {
             break;
           }
 
-          message.normalDirectionInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          message.normalDirection = Vector.decode(reader, reader.uint32());
           continue;
         }
         case 4: {
@@ -7564,7 +7731,7 @@ export const GetSlotPropertiesResult: MessageFns<GetSlotPropertiesResult> = {
             break;
           }
 
-          message.centerlinePt1InWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          message.centerlinePt1 = Vector.decode(reader, reader.uint32());
           continue;
         }
         case 8: {
@@ -7572,7 +7739,7 @@ export const GetSlotPropertiesResult: MessageFns<GetSlotPropertiesResult> = {
             break;
           }
 
-          message.centerlinePt2InWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          message.centerlinePt2 = Vector.decode(reader, reader.uint32());
           continue;
         }
         case 1000: {
@@ -7597,29 +7764,24 @@ export const GetSlotPropertiesResult: MessageFns<GetSlotPropertiesResult> = {
   },
   fromPartial(object: DeepPartial<GetSlotPropertiesResult>): GetSlotPropertiesResult {
     const message = createBaseGetSlotPropertiesResult();
-    message.slotTransformInWorkingCoordinates =
-      (object.slotTransformInWorkingCoordinates !== undefined && object.slotTransformInWorkingCoordinates !== null)
-        ? Transform.fromPartial(object.slotTransformInWorkingCoordinates)
-        : undefined;
-    message.centerInWorkingCoordinates =
-      (object.centerInWorkingCoordinates !== undefined && object.centerInWorkingCoordinates !== null)
-        ? Vector.fromPartial(object.centerInWorkingCoordinates)
-        : undefined;
-    message.normalDirectionInWorkingCoordinates =
-      (object.normalDirectionInWorkingCoordinates !== undefined && object.normalDirectionInWorkingCoordinates !== null)
-        ? Vector.fromPartial(object.normalDirectionInWorkingCoordinates)
-        : undefined;
+    message.slotTransform = (object.slotTransform !== undefined && object.slotTransform !== null)
+      ? Transform.fromPartial(object.slotTransform)
+      : undefined;
+    message.center = (object.center !== undefined && object.center !== null)
+      ? Vector.fromPartial(object.center)
+      : undefined;
+    message.normalDirection = (object.normalDirection !== undefined && object.normalDirection !== null)
+      ? Vector.fromPartial(object.normalDirection)
+      : undefined;
     message.slotLength = object.slotLength ?? undefined;
     message.slotWidth = object.slotWidth ?? undefined;
     message.roundSlotType = object.roundSlotType ?? undefined;
-    message.centerlinePt1InWorkingCoordinates =
-      (object.centerlinePt1InWorkingCoordinates !== undefined && object.centerlinePt1InWorkingCoordinates !== null)
-        ? Vector.fromPartial(object.centerlinePt1InWorkingCoordinates)
-        : undefined;
-    message.centerlinePt2InWorkingCoordinates =
-      (object.centerlinePt2InWorkingCoordinates !== undefined && object.centerlinePt2InWorkingCoordinates !== null)
-        ? Vector.fromPartial(object.centerlinePt2InWorkingCoordinates)
-        : undefined;
+    message.centerlinePt1 = (object.centerlinePt1 !== undefined && object.centerlinePt1 !== null)
+      ? Vector.fromPartial(object.centerlinePt1)
+      : undefined;
+    message.centerlinePt2 = (object.centerlinePt2 !== undefined && object.centerlinePt2 !== null)
+      ? Vector.fromPartial(object.centerlinePt2)
+      : undefined;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -8402,8 +8564,8 @@ function createBaseGroupToSurfaceFitRequest(): GroupToSurfaceFitRequest {
     groupToFit: undefined,
     surface: undefined,
     doConventionalFit: undefined,
-    rmsTolerance00ForNone: undefined,
-    maximumAbsoluteTolerance00ForNone: undefined,
+    rmsTolerance: undefined,
+    maximumAbsoluteTolerance: undefined,
   };
 }
 
@@ -8418,11 +8580,11 @@ export const GroupToSurfaceFitRequest: MessageFns<GroupToSurfaceFitRequest> = {
     if (message.doConventionalFit !== undefined) {
       writer.uint32(24).bool(message.doConventionalFit);
     }
-    if (message.rmsTolerance00ForNone !== undefined) {
-      writer.uint32(33).double(message.rmsTolerance00ForNone);
+    if (message.rmsTolerance !== undefined) {
+      writer.uint32(33).double(message.rmsTolerance);
     }
-    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
-      writer.uint32(41).double(message.maximumAbsoluteTolerance00ForNone);
+    if (message.maximumAbsoluteTolerance !== undefined) {
+      writer.uint32(41).double(message.maximumAbsoluteTolerance);
     }
     return writer;
   },
@@ -8463,7 +8625,7 @@ export const GroupToSurfaceFitRequest: MessageFns<GroupToSurfaceFitRequest> = {
             break;
           }
 
-          message.rmsTolerance00ForNone = reader.double();
+          message.rmsTolerance = reader.double();
           continue;
         }
         case 5: {
@@ -8471,7 +8633,7 @@ export const GroupToSurfaceFitRequest: MessageFns<GroupToSurfaceFitRequest> = {
             break;
           }
 
-          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          message.maximumAbsoluteTolerance = reader.double();
           continue;
         }
       }
@@ -8495,8 +8657,8 @@ export const GroupToSurfaceFitRequest: MessageFns<GroupToSurfaceFitRequest> = {
       ? CollectionObjectName.fromPartial(object.surface)
       : undefined;
     message.doConventionalFit = object.doConventionalFit ?? undefined;
-    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
-    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    message.rmsTolerance = object.rmsTolerance ?? undefined;
+    message.maximumAbsoluteTolerance = object.maximumAbsoluteTolerance ?? undefined;
     return message;
   },
 };
@@ -8825,11 +8987,11 @@ function createBaseMakeCircleFitProfileRequest(): MakeCircleFitProfileRequest {
   return {
     fitProfileName: undefined,
     measuredSideForRadialOffset: undefined,
-    overrideRadialOffset10UseCurrent: undefined,
+    overrideRadialOffset: undefined,
     measuredSideForPlanarOffset: undefined,
-    overridePlanarOffset10UseCurrent: undefined,
+    overridePlanarOffset: undefined,
     planarOffsetDirection: undefined,
-    lockRadius10DoNotLock: undefined,
+    lockRadius: undefined,
     circleComputationTechnique: undefined,
     reverseNormalVectorAfterFit: undefined,
     makeCardinalPoints: undefined,
@@ -8846,20 +9008,20 @@ export const MakeCircleFitProfileRequest: MessageFns<MakeCircleFitProfileRequest
     if (message.measuredSideForRadialOffset !== undefined) {
       writer.uint32(16).int32(message.measuredSideForRadialOffset);
     }
-    if (message.overrideRadialOffset10UseCurrent !== undefined) {
-      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    if (message.overrideRadialOffset !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset);
     }
     if (message.measuredSideForPlanarOffset !== undefined) {
       writer.uint32(32).int32(message.measuredSideForPlanarOffset);
     }
-    if (message.overridePlanarOffset10UseCurrent !== undefined) {
-      writer.uint32(41).double(message.overridePlanarOffset10UseCurrent);
+    if (message.overridePlanarOffset !== undefined) {
+      writer.uint32(41).double(message.overridePlanarOffset);
     }
     if (message.planarOffsetDirection !== undefined) {
       writer.uint32(48).int32(message.planarOffsetDirection);
     }
-    if (message.lockRadius10DoNotLock !== undefined) {
-      writer.uint32(57).double(message.lockRadius10DoNotLock);
+    if (message.lockRadius !== undefined) {
+      writer.uint32(57).double(message.lockRadius);
     }
     if (message.circleComputationTechnique !== undefined) {
       writer.uint32(64).int32(message.circleComputationTechnique);
@@ -8907,7 +9069,7 @@ export const MakeCircleFitProfileRequest: MessageFns<MakeCircleFitProfileRequest
             break;
           }
 
-          message.overrideRadialOffset10UseCurrent = reader.double();
+          message.overrideRadialOffset = reader.double();
           continue;
         }
         case 4: {
@@ -8923,7 +9085,7 @@ export const MakeCircleFitProfileRequest: MessageFns<MakeCircleFitProfileRequest
             break;
           }
 
-          message.overridePlanarOffset10UseCurrent = reader.double();
+          message.overridePlanarOffset = reader.double();
           continue;
         }
         case 6: {
@@ -8939,7 +9101,7 @@ export const MakeCircleFitProfileRequest: MessageFns<MakeCircleFitProfileRequest
             break;
           }
 
-          message.lockRadius10DoNotLock = reader.double();
+          message.lockRadius = reader.double();
           continue;
         }
         case 8: {
@@ -8998,11 +9160,11 @@ export const MakeCircleFitProfileRequest: MessageFns<MakeCircleFitProfileRequest
     const message = createBaseMakeCircleFitProfileRequest();
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
-    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.overrideRadialOffset = object.overrideRadialOffset ?? undefined;
     message.measuredSideForPlanarOffset = object.measuredSideForPlanarOffset ?? undefined;
-    message.overridePlanarOffset10UseCurrent = object.overridePlanarOffset10UseCurrent ?? undefined;
+    message.overridePlanarOffset = object.overridePlanarOffset ?? undefined;
     message.planarOffsetDirection = object.planarOffsetDirection ?? undefined;
-    message.lockRadius10DoNotLock = object.lockRadius10DoNotLock ?? undefined;
+    message.lockRadius = object.lockRadius ?? undefined;
     message.circleComputationTechnique = object.circleComputationTechnique ?? undefined;
     message.reverseNormalVectorAfterFit = object.reverseNormalVectorAfterFit ?? undefined;
     message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
@@ -9064,8 +9226,8 @@ function createBaseMakeConeFitProfileRequest(): MakeConeFitProfileRequest {
   return {
     fitProfileName: undefined,
     measuredSideForRadialOffset: undefined,
-    overrideRadialOffset10UseCurrent: undefined,
-    lockAngleInDegrees10DoNotLock: undefined,
+    overrideRadialOffset: undefined,
+    lockAngleInDegrees: undefined,
     useExhaustiveSearch: undefined,
     makeCardinalPoints: undefined,
     cardinalPt1Vertex: undefined,
@@ -9082,11 +9244,11 @@ export const MakeConeFitProfileRequest: MessageFns<MakeConeFitProfileRequest> = 
     if (message.measuredSideForRadialOffset !== undefined) {
       writer.uint32(16).int32(message.measuredSideForRadialOffset);
     }
-    if (message.overrideRadialOffset10UseCurrent !== undefined) {
-      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    if (message.overrideRadialOffset !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset);
     }
-    if (message.lockAngleInDegrees10DoNotLock !== undefined) {
-      writer.uint32(33).double(message.lockAngleInDegrees10DoNotLock);
+    if (message.lockAngleInDegrees !== undefined) {
+      writer.uint32(33).double(message.lockAngleInDegrees);
     }
     if (message.useExhaustiveSearch !== undefined) {
       writer.uint32(40).bool(message.useExhaustiveSearch);
@@ -9134,7 +9296,7 @@ export const MakeConeFitProfileRequest: MessageFns<MakeConeFitProfileRequest> = 
             break;
           }
 
-          message.overrideRadialOffset10UseCurrent = reader.double();
+          message.overrideRadialOffset = reader.double();
           continue;
         }
         case 4: {
@@ -9142,7 +9304,7 @@ export const MakeConeFitProfileRequest: MessageFns<MakeConeFitProfileRequest> = 
             break;
           }
 
-          message.lockAngleInDegrees10DoNotLock = reader.double();
+          message.lockAngleInDegrees = reader.double();
           continue;
         }
         case 5: {
@@ -9201,8 +9363,8 @@ export const MakeConeFitProfileRequest: MessageFns<MakeConeFitProfileRequest> = 
     const message = createBaseMakeConeFitProfileRequest();
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
-    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
-    message.lockAngleInDegrees10DoNotLock = object.lockAngleInDegrees10DoNotLock ?? undefined;
+    message.overrideRadialOffset = object.overrideRadialOffset ?? undefined;
+    message.lockAngleInDegrees = object.lockAngleInDegrees ?? undefined;
     message.useExhaustiveSearch = object.useExhaustiveSearch ?? undefined;
     message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
     message.cardinalPt1Vertex = object.cardinalPt1Vertex ?? undefined;
@@ -9264,8 +9426,8 @@ function createBaseMakeCylinderFitProfileRequest(): MakeCylinderFitProfileReques
   return {
     fitProfileName: undefined,
     measuredSideForRadialOffset: undefined,
-    overrideRadialOffset10UseCurrent: undefined,
-    lockRadius10DoNotLock: undefined,
+    overrideRadialOffset: undefined,
+    lockRadius: undefined,
     lockedRadiusFitMethod: undefined,
     constrainToNominalAxis: undefined,
     constrainToNominalOrientation: undefined,
@@ -9289,11 +9451,11 @@ export const MakeCylinderFitProfileRequest: MessageFns<MakeCylinderFitProfileReq
     if (message.measuredSideForRadialOffset !== undefined) {
       writer.uint32(16).int32(message.measuredSideForRadialOffset);
     }
-    if (message.overrideRadialOffset10UseCurrent !== undefined) {
-      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    if (message.overrideRadialOffset !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset);
     }
-    if (message.lockRadius10DoNotLock !== undefined) {
-      writer.uint32(33).double(message.lockRadius10DoNotLock);
+    if (message.lockRadius !== undefined) {
+      writer.uint32(33).double(message.lockRadius);
     }
     if (message.lockedRadiusFitMethod !== undefined) {
       writer.uint32(40).int32(message.lockedRadiusFitMethod);
@@ -9362,7 +9524,7 @@ export const MakeCylinderFitProfileRequest: MessageFns<MakeCylinderFitProfileReq
             break;
           }
 
-          message.overrideRadialOffset10UseCurrent = reader.double();
+          message.overrideRadialOffset = reader.double();
           continue;
         }
         case 4: {
@@ -9370,7 +9532,7 @@ export const MakeCylinderFitProfileRequest: MessageFns<MakeCylinderFitProfileReq
             break;
           }
 
-          message.lockRadius10DoNotLock = reader.double();
+          message.lockRadius = reader.double();
           continue;
         }
         case 5: {
@@ -9485,8 +9647,8 @@ export const MakeCylinderFitProfileRequest: MessageFns<MakeCylinderFitProfileReq
     const message = createBaseMakeCylinderFitProfileRequest();
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
-    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
-    message.lockRadius10DoNotLock = object.lockRadius10DoNotLock ?? undefined;
+    message.overrideRadialOffset = object.overrideRadialOffset ?? undefined;
+    message.lockRadius = object.lockRadius ?? undefined;
     message.lockedRadiusFitMethod = object.lockedRadiusFitMethod ?? undefined;
     message.constrainToNominalAxis = object.constrainToNominalAxis ?? undefined;
     message.constrainToNominalOrientation = object.constrainToNominalOrientation ?? undefined;
@@ -9555,9 +9717,9 @@ function createBaseMakeEllipseFitProfileRequest(): MakeEllipseFitProfileRequest 
   return {
     fitProfileName: undefined,
     measuredSideForRadialOffset: undefined,
-    overrideRadialOffset10UseCurrent: undefined,
+    overrideRadialOffset: undefined,
     measuredSideForPlanarOffset: undefined,
-    overridePlanarOffset10UseCurrent: undefined,
+    overridePlanarOffset: undefined,
     planarOffsetDirection: undefined,
     reverseNormalVectorAfterFit: undefined,
     makeCardinalPoints: undefined,
@@ -9576,14 +9738,14 @@ export const MakeEllipseFitProfileRequest: MessageFns<MakeEllipseFitProfileReque
     if (message.measuredSideForRadialOffset !== undefined) {
       writer.uint32(16).int32(message.measuredSideForRadialOffset);
     }
-    if (message.overrideRadialOffset10UseCurrent !== undefined) {
-      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    if (message.overrideRadialOffset !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset);
     }
     if (message.measuredSideForPlanarOffset !== undefined) {
       writer.uint32(32).int32(message.measuredSideForPlanarOffset);
     }
-    if (message.overridePlanarOffset10UseCurrent !== undefined) {
-      writer.uint32(41).double(message.overridePlanarOffset10UseCurrent);
+    if (message.overridePlanarOffset !== undefined) {
+      writer.uint32(41).double(message.overridePlanarOffset);
     }
     if (message.planarOffsetDirection !== undefined) {
       writer.uint32(48).int32(message.planarOffsetDirection);
@@ -9637,7 +9799,7 @@ export const MakeEllipseFitProfileRequest: MessageFns<MakeEllipseFitProfileReque
             break;
           }
 
-          message.overrideRadialOffset10UseCurrent = reader.double();
+          message.overrideRadialOffset = reader.double();
           continue;
         }
         case 4: {
@@ -9653,7 +9815,7 @@ export const MakeEllipseFitProfileRequest: MessageFns<MakeEllipseFitProfileReque
             break;
           }
 
-          message.overridePlanarOffset10UseCurrent = reader.double();
+          message.overridePlanarOffset = reader.double();
           continue;
         }
         case 6: {
@@ -9728,9 +9890,9 @@ export const MakeEllipseFitProfileRequest: MessageFns<MakeEllipseFitProfileReque
     const message = createBaseMakeEllipseFitProfileRequest();
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
-    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.overrideRadialOffset = object.overrideRadialOffset ?? undefined;
     message.measuredSideForPlanarOffset = object.measuredSideForPlanarOffset ?? undefined;
-    message.overridePlanarOffset10UseCurrent = object.overridePlanarOffset10UseCurrent ?? undefined;
+    message.overridePlanarOffset = object.overridePlanarOffset ?? undefined;
     message.planarOffsetDirection = object.planarOffsetDirection ?? undefined;
     message.reverseNormalVectorAfterFit = object.reverseNormalVectorAfterFit ?? undefined;
     message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
@@ -9955,8 +10117,8 @@ function createBaseMakeParaboloidFitProfileRequest(): MakeParaboloidFitProfileRe
   return {
     fitProfileName: undefined,
     measuredSideForRadialOffset: undefined,
-    overrideRadialOffset10UseCurrent: undefined,
-    lockFocalLength10DoNotLock: undefined,
+    overrideRadialOffset: undefined,
+    lockFocalLength: undefined,
     degreeOfFreedom: undefined,
     makeCardinalPoints: undefined,
     cardinalPt1Vertex: undefined,
@@ -9972,11 +10134,11 @@ export const MakeParaboloidFitProfileRequest: MessageFns<MakeParaboloidFitProfil
     if (message.measuredSideForRadialOffset !== undefined) {
       writer.uint32(16).int32(message.measuredSideForRadialOffset);
     }
-    if (message.overrideRadialOffset10UseCurrent !== undefined) {
-      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    if (message.overrideRadialOffset !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset);
     }
-    if (message.lockFocalLength10DoNotLock !== undefined) {
-      writer.uint32(33).double(message.lockFocalLength10DoNotLock);
+    if (message.lockFocalLength !== undefined) {
+      writer.uint32(33).double(message.lockFocalLength);
     }
     if (message.degreeOfFreedom !== undefined) {
       writer.uint32(40).int32(message.degreeOfFreedom);
@@ -10021,7 +10183,7 @@ export const MakeParaboloidFitProfileRequest: MessageFns<MakeParaboloidFitProfil
             break;
           }
 
-          message.overrideRadialOffset10UseCurrent = reader.double();
+          message.overrideRadialOffset = reader.double();
           continue;
         }
         case 4: {
@@ -10029,7 +10191,7 @@ export const MakeParaboloidFitProfileRequest: MessageFns<MakeParaboloidFitProfil
             break;
           }
 
-          message.lockFocalLength10DoNotLock = reader.double();
+          message.lockFocalLength = reader.double();
           continue;
         }
         case 5: {
@@ -10080,8 +10242,8 @@ export const MakeParaboloidFitProfileRequest: MessageFns<MakeParaboloidFitProfil
     const message = createBaseMakeParaboloidFitProfileRequest();
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
-    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
-    message.lockFocalLength10DoNotLock = object.lockFocalLength10DoNotLock ?? undefined;
+    message.overrideRadialOffset = object.overrideRadialOffset ?? undefined;
+    message.lockFocalLength = object.lockFocalLength ?? undefined;
     message.degreeOfFreedom = object.degreeOfFreedom ?? undefined;
     message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
     message.cardinalPt1Vertex = object.cardinalPt1Vertex ?? undefined;
@@ -10142,7 +10304,7 @@ function createBaseMakePlaneFitProfileRequest(): MakePlaneFitProfileRequest {
   return {
     fitProfileName: undefined,
     measuredSideForPlanarOffset: undefined,
-    overridePlanarOffset10UseCurrent: undefined,
+    overridePlanarOffset: undefined,
     planarOffsetDirection: undefined,
     reverseNormalVectorAfterFit: undefined,
     makeCardinalPoints: undefined,
@@ -10159,8 +10321,8 @@ export const MakePlaneFitProfileRequest: MessageFns<MakePlaneFitProfileRequest> 
     if (message.measuredSideForPlanarOffset !== undefined) {
       writer.uint32(16).int32(message.measuredSideForPlanarOffset);
     }
-    if (message.overridePlanarOffset10UseCurrent !== undefined) {
-      writer.uint32(25).double(message.overridePlanarOffset10UseCurrent);
+    if (message.overridePlanarOffset !== undefined) {
+      writer.uint32(25).double(message.overridePlanarOffset);
     }
     if (message.planarOffsetDirection !== undefined) {
       writer.uint32(32).int32(message.planarOffsetDirection);
@@ -10208,7 +10370,7 @@ export const MakePlaneFitProfileRequest: MessageFns<MakePlaneFitProfileRequest> 
             break;
           }
 
-          message.overridePlanarOffset10UseCurrent = reader.double();
+          message.overridePlanarOffset = reader.double();
           continue;
         }
         case 4: {
@@ -10267,7 +10429,7 @@ export const MakePlaneFitProfileRequest: MessageFns<MakePlaneFitProfileRequest> 
     const message = createBaseMakePlaneFitProfileRequest();
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.measuredSideForPlanarOffset = object.measuredSideForPlanarOffset ?? undefined;
-    message.overridePlanarOffset10UseCurrent = object.overridePlanarOffset10UseCurrent ?? undefined;
+    message.overridePlanarOffset = object.overridePlanarOffset ?? undefined;
     message.planarOffsetDirection = object.planarOffsetDirection ?? undefined;
     message.reverseNormalVectorAfterFit = object.reverseNormalVectorAfterFit ?? undefined;
     message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
@@ -10329,9 +10491,9 @@ function createBaseMakeSlotFitProfileRequest(): MakeSlotFitProfileRequest {
   return {
     fitProfileName: undefined,
     measuredSideForRadialOffset: undefined,
-    overrideRadialOffset10UseCurrent: undefined,
+    overrideRadialOffset: undefined,
     measuredSideForPlanarOffset: undefined,
-    overridePlanarOffset10UseCurrent: undefined,
+    overridePlanarOffset: undefined,
     planarOffsetDirection: undefined,
     slotType: undefined,
     slotComputationTechnique: undefined,
@@ -10352,14 +10514,14 @@ export const MakeSlotFitProfileRequest: MessageFns<MakeSlotFitProfileRequest> = 
     if (message.measuredSideForRadialOffset !== undefined) {
       writer.uint32(16).int32(message.measuredSideForRadialOffset);
     }
-    if (message.overrideRadialOffset10UseCurrent !== undefined) {
-      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    if (message.overrideRadialOffset !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset);
     }
     if (message.measuredSideForPlanarOffset !== undefined) {
       writer.uint32(32).int32(message.measuredSideForPlanarOffset);
     }
-    if (message.overridePlanarOffset10UseCurrent !== undefined) {
-      writer.uint32(41).double(message.overridePlanarOffset10UseCurrent);
+    if (message.overridePlanarOffset !== undefined) {
+      writer.uint32(41).double(message.overridePlanarOffset);
     }
     if (message.planarOffsetDirection !== undefined) {
       writer.uint32(48).int32(message.planarOffsetDirection);
@@ -10419,7 +10581,7 @@ export const MakeSlotFitProfileRequest: MessageFns<MakeSlotFitProfileRequest> = 
             break;
           }
 
-          message.overrideRadialOffset10UseCurrent = reader.double();
+          message.overrideRadialOffset = reader.double();
           continue;
         }
         case 4: {
@@ -10435,7 +10597,7 @@ export const MakeSlotFitProfileRequest: MessageFns<MakeSlotFitProfileRequest> = 
             break;
           }
 
-          message.overridePlanarOffset10UseCurrent = reader.double();
+          message.overridePlanarOffset = reader.double();
           continue;
         }
         case 6: {
@@ -10526,9 +10688,9 @@ export const MakeSlotFitProfileRequest: MessageFns<MakeSlotFitProfileRequest> = 
     const message = createBaseMakeSlotFitProfileRequest();
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
-    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
+    message.overrideRadialOffset = object.overrideRadialOffset ?? undefined;
     message.measuredSideForPlanarOffset = object.measuredSideForPlanarOffset ?? undefined;
-    message.overridePlanarOffset10UseCurrent = object.overridePlanarOffset10UseCurrent ?? undefined;
+    message.overridePlanarOffset = object.overridePlanarOffset ?? undefined;
     message.planarOffsetDirection = object.planarOffsetDirection ?? undefined;
     message.slotType = object.slotType ?? undefined;
     message.slotComputationTechnique = object.slotComputationTechnique ?? undefined;
@@ -10594,8 +10756,8 @@ function createBaseMakeSphereFitProfileRequest(): MakeSphereFitProfileRequest {
   return {
     fitProfileName: undefined,
     measuredSideForRadialOffset: undefined,
-    overrideRadialOffset10UseCurrent: undefined,
-    lockRadius10DoNotLock: undefined,
+    overrideRadialOffset: undefined,
+    lockRadius: undefined,
     makeCardinalPoints: undefined,
     cardinalPt1Center: undefined,
     computationMethod: undefined,
@@ -10610,11 +10772,11 @@ export const MakeSphereFitProfileRequest: MessageFns<MakeSphereFitProfileRequest
     if (message.measuredSideForRadialOffset !== undefined) {
       writer.uint32(16).int32(message.measuredSideForRadialOffset);
     }
-    if (message.overrideRadialOffset10UseCurrent !== undefined) {
-      writer.uint32(25).double(message.overrideRadialOffset10UseCurrent);
+    if (message.overrideRadialOffset !== undefined) {
+      writer.uint32(25).double(message.overrideRadialOffset);
     }
-    if (message.lockRadius10DoNotLock !== undefined) {
-      writer.uint32(33).double(message.lockRadius10DoNotLock);
+    if (message.lockRadius !== undefined) {
+      writer.uint32(33).double(message.lockRadius);
     }
     if (message.makeCardinalPoints !== undefined) {
       writer.uint32(40).bool(message.makeCardinalPoints);
@@ -10656,7 +10818,7 @@ export const MakeSphereFitProfileRequest: MessageFns<MakeSphereFitProfileRequest
             break;
           }
 
-          message.overrideRadialOffset10UseCurrent = reader.double();
+          message.overrideRadialOffset = reader.double();
           continue;
         }
         case 4: {
@@ -10664,7 +10826,7 @@ export const MakeSphereFitProfileRequest: MessageFns<MakeSphereFitProfileRequest
             break;
           }
 
-          message.lockRadius10DoNotLock = reader.double();
+          message.lockRadius = reader.double();
           continue;
         }
         case 5: {
@@ -10707,8 +10869,8 @@ export const MakeSphereFitProfileRequest: MessageFns<MakeSphereFitProfileRequest
     const message = createBaseMakeSphereFitProfileRequest();
     message.fitProfileName = object.fitProfileName ?? undefined;
     message.measuredSideForRadialOffset = object.measuredSideForRadialOffset ?? undefined;
-    message.overrideRadialOffset10UseCurrent = object.overrideRadialOffset10UseCurrent ?? undefined;
-    message.lockRadius10DoNotLock = object.lockRadius10DoNotLock ?? undefined;
+    message.overrideRadialOffset = object.overrideRadialOffset ?? undefined;
+    message.lockRadius = object.lockRadius ?? undefined;
     message.makeCardinalPoints = object.makeCardinalPoints ?? undefined;
     message.cardinalPt1Center = object.cardinalPt1Center ?? undefined;
     message.computationMethod = object.computationMethod ?? undefined;
@@ -11234,8 +11396,8 @@ function createBaseQueryCloudsToObjectsRequest(): QueryCloudsToObjectsRequest {
     projectionOptions: undefined,
     proximity: undefined,
     skipFactor: undefined,
-    rmsTolerance00ForNone: undefined,
-    maximumAbsoluteTolerance00ForNone: undefined,
+    rmsTolerance: undefined,
+    maximumAbsoluteTolerance: undefined,
   };
 }
 
@@ -11263,11 +11425,11 @@ export const QueryCloudsToObjectsRequest: MessageFns<QueryCloudsToObjectsRequest
     if (message.skipFactor !== undefined) {
       writer.uint32(48).int32(message.skipFactor);
     }
-    if (message.rmsTolerance00ForNone !== undefined) {
-      writer.uint32(57).double(message.rmsTolerance00ForNone);
+    if (message.rmsTolerance !== undefined) {
+      writer.uint32(57).double(message.rmsTolerance);
     }
-    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
-      writer.uint32(65).double(message.maximumAbsoluteTolerance00ForNone);
+    if (message.maximumAbsoluteTolerance !== undefined) {
+      writer.uint32(65).double(message.maximumAbsoluteTolerance);
     }
     return writer;
   },
@@ -11338,7 +11500,7 @@ export const QueryCloudsToObjectsRequest: MessageFns<QueryCloudsToObjectsRequest
             break;
           }
 
-          message.rmsTolerance00ForNone = reader.double();
+          message.rmsTolerance = reader.double();
           continue;
         }
         case 8: {
@@ -11346,7 +11508,7 @@ export const QueryCloudsToObjectsRequest: MessageFns<QueryCloudsToObjectsRequest
             break;
           }
 
-          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          message.maximumAbsoluteTolerance = reader.double();
           continue;
         }
       }
@@ -11373,8 +11535,8 @@ export const QueryCloudsToObjectsRequest: MessageFns<QueryCloudsToObjectsRequest
       : undefined;
     message.proximity = object.proximity ?? undefined;
     message.skipFactor = object.skipFactor ?? undefined;
-    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
-    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    message.rmsTolerance = object.rmsTolerance ?? undefined;
+    message.maximumAbsoluteTolerance = object.maximumAbsoluteTolerance ?? undefined;
     return message;
   },
 };
@@ -11459,8 +11621,8 @@ function createBaseQueryCloudsToSurfaceRequest(): QueryCloudsToSurfaceRequest {
     projectionOptions: undefined,
     proximity: undefined,
     skipFactor: undefined,
-    rmsTolerance00ForNone: undefined,
-    maximumAbsoluteTolerance00ForNone: undefined,
+    rmsTolerance: undefined,
+    maximumAbsoluteTolerance: undefined,
   };
 }
 
@@ -11486,11 +11648,11 @@ export const QueryCloudsToSurfaceRequest: MessageFns<QueryCloudsToSurfaceRequest
     if (message.skipFactor !== undefined) {
       writer.uint32(48).int32(message.skipFactor);
     }
-    if (message.rmsTolerance00ForNone !== undefined) {
-      writer.uint32(57).double(message.rmsTolerance00ForNone);
+    if (message.rmsTolerance !== undefined) {
+      writer.uint32(57).double(message.rmsTolerance);
     }
-    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
-      writer.uint32(65).double(message.maximumAbsoluteTolerance00ForNone);
+    if (message.maximumAbsoluteTolerance !== undefined) {
+      writer.uint32(65).double(message.maximumAbsoluteTolerance);
     }
     return writer;
   },
@@ -11558,7 +11720,7 @@ export const QueryCloudsToSurfaceRequest: MessageFns<QueryCloudsToSurfaceRequest
             break;
           }
 
-          message.rmsTolerance00ForNone = reader.double();
+          message.rmsTolerance = reader.double();
           continue;
         }
         case 8: {
@@ -11566,7 +11728,7 @@ export const QueryCloudsToSurfaceRequest: MessageFns<QueryCloudsToSurfaceRequest
             break;
           }
 
-          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          message.maximumAbsoluteTolerance = reader.double();
           continue;
         }
       }
@@ -11595,8 +11757,8 @@ export const QueryCloudsToSurfaceRequest: MessageFns<QueryCloudsToSurfaceRequest
       : undefined;
     message.proximity = object.proximity ?? undefined;
     message.skipFactor = object.skipFactor ?? undefined;
-    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
-    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    message.rmsTolerance = object.rmsTolerance ?? undefined;
+    message.maximumAbsoluteTolerance = object.maximumAbsoluteTolerance ?? undefined;
     return message;
   },
 };
@@ -11741,9 +11903,9 @@ function createBaseQueryFrameToFrameResult(): QueryFrameToFrameResult {
     x: undefined,
     y: undefined,
     z: undefined,
-    rxRoll: undefined,
-    ryPitch: undefined,
-    rzYaw: undefined,
+    rx: undefined,
+    ry: undefined,
+    rz: undefined,
     execution: undefined,
   };
 }
@@ -11759,14 +11921,14 @@ export const QueryFrameToFrameResult: MessageFns<QueryFrameToFrameResult> = {
     if (message.z !== undefined) {
       writer.uint32(25).double(message.z);
     }
-    if (message.rxRoll !== undefined) {
-      writer.uint32(33).double(message.rxRoll);
+    if (message.rx !== undefined) {
+      writer.uint32(33).double(message.rx);
     }
-    if (message.ryPitch !== undefined) {
-      writer.uint32(41).double(message.ryPitch);
+    if (message.ry !== undefined) {
+      writer.uint32(41).double(message.ry);
     }
-    if (message.rzYaw !== undefined) {
-      writer.uint32(49).double(message.rzYaw);
+    if (message.rz !== undefined) {
+      writer.uint32(49).double(message.rz);
     }
     if (message.execution !== undefined) {
       MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
@@ -11810,7 +11972,7 @@ export const QueryFrameToFrameResult: MessageFns<QueryFrameToFrameResult> = {
             break;
           }
 
-          message.rxRoll = reader.double();
+          message.rx = reader.double();
           continue;
         }
         case 5: {
@@ -11818,7 +11980,7 @@ export const QueryFrameToFrameResult: MessageFns<QueryFrameToFrameResult> = {
             break;
           }
 
-          message.ryPitch = reader.double();
+          message.ry = reader.double();
           continue;
         }
         case 6: {
@@ -11826,7 +11988,7 @@ export const QueryFrameToFrameResult: MessageFns<QueryFrameToFrameResult> = {
             break;
           }
 
-          message.rzYaw = reader.double();
+          message.rz = reader.double();
           continue;
         }
         case 1000: {
@@ -11854,9 +12016,9 @@ export const QueryFrameToFrameResult: MessageFns<QueryFrameToFrameResult> = {
     message.x = object.x ?? undefined;
     message.y = object.y ?? undefined;
     message.z = object.z ?? undefined;
-    message.rxRoll = object.rxRoll ?? undefined;
-    message.ryPitch = object.ryPitch ?? undefined;
-    message.rzYaw = object.rzYaw ?? undefined;
+    message.rx = object.rx ?? undefined;
+    message.ry = object.ry ?? undefined;
+    message.rz = object.rz ?? undefined;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -11866,27 +12028,25 @@ export const QueryFrameToFrameResult: MessageFns<QueryFrameToFrameResult> = {
 
 function createBaseQueryGroupsToObjectsRequest(): QueryGroupsToObjectsRequest {
   return {
-    groupNameListGroupsToProject: [],
-    objectNameListObjectsToProjectTo: [],
+    groupNameList: [],
+    objectNameList: [],
     resultingObjectName: undefined,
     projectionOptions: undefined,
-    rmsTolerance00ForNone: undefined,
-    maximumAbsoluteTolerance00ForNone: undefined,
+    rmsTolerance: undefined,
+    maximumAbsoluteTolerance: undefined,
     showResultsDialog: undefined,
   };
 }
 
 export const QueryGroupsToObjectsRequest: MessageFns<QueryGroupsToObjectsRequest> = {
   encode(message: QueryGroupsToObjectsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.groupNameListGroupsToProject !== undefined && message.groupNameListGroupsToProject.length !== 0) {
-      for (const v of message.groupNameListGroupsToProject) {
+    if (message.groupNameList !== undefined && message.groupNameList.length !== 0) {
+      for (const v of message.groupNameList) {
         CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
       }
     }
-    if (
-      message.objectNameListObjectsToProjectTo !== undefined && message.objectNameListObjectsToProjectTo.length !== 0
-    ) {
-      for (const v of message.objectNameListObjectsToProjectTo) {
+    if (message.objectNameList !== undefined && message.objectNameList.length !== 0) {
+      for (const v of message.objectNameList) {
         CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
       }
     }
@@ -11896,11 +12056,11 @@ export const QueryGroupsToObjectsRequest: MessageFns<QueryGroupsToObjectsRequest
     if (message.projectionOptions !== undefined) {
       ProjectionOptions.encode(message.projectionOptions, writer.uint32(34).fork()).join();
     }
-    if (message.rmsTolerance00ForNone !== undefined) {
-      writer.uint32(41).double(message.rmsTolerance00ForNone);
+    if (message.rmsTolerance !== undefined) {
+      writer.uint32(41).double(message.rmsTolerance);
     }
-    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
-      writer.uint32(49).double(message.maximumAbsoluteTolerance00ForNone);
+    if (message.maximumAbsoluteTolerance !== undefined) {
+      writer.uint32(49).double(message.maximumAbsoluteTolerance);
     }
     if (message.showResultsDialog !== undefined) {
       writer.uint32(56).bool(message.showResultsDialog);
@@ -11922,7 +12082,7 @@ export const QueryGroupsToObjectsRequest: MessageFns<QueryGroupsToObjectsRequest
 
           const el = CollectionObjectName.decode(reader, reader.uint32());
           if (el !== undefined) {
-            message.groupNameListGroupsToProject!.push(el);
+            message.groupNameList!.push(el);
           }
           continue;
         }
@@ -11933,7 +12093,7 @@ export const QueryGroupsToObjectsRequest: MessageFns<QueryGroupsToObjectsRequest
 
           const el = CollectionObjectName.decode(reader, reader.uint32());
           if (el !== undefined) {
-            message.objectNameListObjectsToProjectTo!.push(el);
+            message.objectNameList!.push(el);
           }
           continue;
         }
@@ -11958,7 +12118,7 @@ export const QueryGroupsToObjectsRequest: MessageFns<QueryGroupsToObjectsRequest
             break;
           }
 
-          message.rmsTolerance00ForNone = reader.double();
+          message.rmsTolerance = reader.double();
           continue;
         }
         case 6: {
@@ -11966,7 +12126,7 @@ export const QueryGroupsToObjectsRequest: MessageFns<QueryGroupsToObjectsRequest
             break;
           }
 
-          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          message.maximumAbsoluteTolerance = reader.double();
           continue;
         }
         case 7: {
@@ -11991,18 +12151,16 @@ export const QueryGroupsToObjectsRequest: MessageFns<QueryGroupsToObjectsRequest
   },
   fromPartial(object: DeepPartial<QueryGroupsToObjectsRequest>): QueryGroupsToObjectsRequest {
     const message = createBaseQueryGroupsToObjectsRequest();
-    message.groupNameListGroupsToProject =
-      object.groupNameListGroupsToProject?.map((e) => CollectionObjectName.fromPartial(e)) || [];
-    message.objectNameListObjectsToProjectTo =
-      object.objectNameListObjectsToProjectTo?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.groupNameList = object.groupNameList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.objectNameList = object.objectNameList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
     message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
       ? CollectionObjectName.fromPartial(object.resultingObjectName)
       : undefined;
     message.projectionOptions = (object.projectionOptions !== undefined && object.projectionOptions !== null)
       ? ProjectionOptions.fromPartial(object.projectionOptions)
       : undefined;
-    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
-    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    message.rmsTolerance = object.rmsTolerance ?? undefined;
+    message.maximumAbsoluteTolerance = object.maximumAbsoluteTolerance ?? undefined;
     message.showResultsDialog = object.showResultsDialog ?? undefined;
     return message;
   },
@@ -12630,11 +12788,11 @@ export const QueryPointsToCircleResult: MessageFns<QueryPointsToCircleResult> = 
 function createBaseQueryPointsToObjectsRequest(): QueryPointsToObjectsRequest {
   return {
     pointNames: [],
-    objectNameListObjectsToProjectTo: [],
+    objectNameList: [],
     resultingObjectName: undefined,
     projectionOptions: undefined,
-    rmsTolerance00ForNone: undefined,
-    maximumAbsoluteTolerance00ForNone: undefined,
+    rmsTolerance: undefined,
+    maximumAbsoluteTolerance: undefined,
     showResultsDialog: undefined,
   };
 }
@@ -12646,10 +12804,8 @@ export const QueryPointsToObjectsRequest: MessageFns<QueryPointsToObjectsRequest
         PointName.encode(v!, writer.uint32(10).fork()).join();
       }
     }
-    if (
-      message.objectNameListObjectsToProjectTo !== undefined && message.objectNameListObjectsToProjectTo.length !== 0
-    ) {
-      for (const v of message.objectNameListObjectsToProjectTo) {
+    if (message.objectNameList !== undefined && message.objectNameList.length !== 0) {
+      for (const v of message.objectNameList) {
         CollectionObjectName.encode(v!, writer.uint32(18).fork()).join();
       }
     }
@@ -12659,11 +12815,11 @@ export const QueryPointsToObjectsRequest: MessageFns<QueryPointsToObjectsRequest
     if (message.projectionOptions !== undefined) {
       ProjectionOptions.encode(message.projectionOptions, writer.uint32(34).fork()).join();
     }
-    if (message.rmsTolerance00ForNone !== undefined) {
-      writer.uint32(41).double(message.rmsTolerance00ForNone);
+    if (message.rmsTolerance !== undefined) {
+      writer.uint32(41).double(message.rmsTolerance);
     }
-    if (message.maximumAbsoluteTolerance00ForNone !== undefined) {
-      writer.uint32(49).double(message.maximumAbsoluteTolerance00ForNone);
+    if (message.maximumAbsoluteTolerance !== undefined) {
+      writer.uint32(49).double(message.maximumAbsoluteTolerance);
     }
     if (message.showResultsDialog !== undefined) {
       writer.uint32(56).bool(message.showResultsDialog);
@@ -12696,7 +12852,7 @@ export const QueryPointsToObjectsRequest: MessageFns<QueryPointsToObjectsRequest
 
           const el = CollectionObjectName.decode(reader, reader.uint32());
           if (el !== undefined) {
-            message.objectNameListObjectsToProjectTo!.push(el);
+            message.objectNameList!.push(el);
           }
           continue;
         }
@@ -12721,7 +12877,7 @@ export const QueryPointsToObjectsRequest: MessageFns<QueryPointsToObjectsRequest
             break;
           }
 
-          message.rmsTolerance00ForNone = reader.double();
+          message.rmsTolerance = reader.double();
           continue;
         }
         case 6: {
@@ -12729,7 +12885,7 @@ export const QueryPointsToObjectsRequest: MessageFns<QueryPointsToObjectsRequest
             break;
           }
 
-          message.maximumAbsoluteTolerance00ForNone = reader.double();
+          message.maximumAbsoluteTolerance = reader.double();
           continue;
         }
         case 7: {
@@ -12755,16 +12911,15 @@ export const QueryPointsToObjectsRequest: MessageFns<QueryPointsToObjectsRequest
   fromPartial(object: DeepPartial<QueryPointsToObjectsRequest>): QueryPointsToObjectsRequest {
     const message = createBaseQueryPointsToObjectsRequest();
     message.pointNames = object.pointNames?.map((e) => PointName.fromPartial(e)) || [];
-    message.objectNameListObjectsToProjectTo =
-      object.objectNameListObjectsToProjectTo?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.objectNameList = object.objectNameList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
     message.resultingObjectName = (object.resultingObjectName !== undefined && object.resultingObjectName !== null)
       ? CollectionObjectName.fromPartial(object.resultingObjectName)
       : undefined;
     message.projectionOptions = (object.projectionOptions !== undefined && object.projectionOptions !== null)
       ? ProjectionOptions.fromPartial(object.projectionOptions)
       : undefined;
-    message.rmsTolerance00ForNone = object.rmsTolerance00ForNone ?? undefined;
-    message.maximumAbsoluteTolerance00ForNone = object.maximumAbsoluteTolerance00ForNone ?? undefined;
+    message.rmsTolerance = object.rmsTolerance ?? undefined;
+    message.maximumAbsoluteTolerance = object.maximumAbsoluteTolerance ?? undefined;
     message.showResultsDialog = object.showResultsDialog ?? undefined;
     return message;
   },
@@ -13901,8 +14056,8 @@ export const SetCirclePropertiesResult: MessageFns<SetCirclePropertiesResult> = 
 function createBaseSetConePropertiesRequest(): SetConePropertiesRequest {
   return {
     coneName: undefined,
-    coneEndPointInWorkingCoordinates: undefined,
-    coneAxisInWorkingCoordinates: undefined,
+    coneEndPoint: undefined,
+    coneAxis: undefined,
     coneLength: undefined,
     coneThetaStart: undefined,
     coneThetaSpan: undefined,
@@ -13916,11 +14071,11 @@ export const SetConePropertiesRequest: MessageFns<SetConePropertiesRequest> = {
     if (message.coneName !== undefined) {
       CollectionObjectName.encode(message.coneName, writer.uint32(10).fork()).join();
     }
-    if (message.coneEndPointInWorkingCoordinates !== undefined) {
-      Vector.encode(message.coneEndPointInWorkingCoordinates, writer.uint32(18).fork()).join();
+    if (message.coneEndPoint !== undefined) {
+      Vector.encode(message.coneEndPoint, writer.uint32(18).fork()).join();
     }
-    if (message.coneAxisInWorkingCoordinates !== undefined) {
-      Vector.encode(message.coneAxisInWorkingCoordinates, writer.uint32(26).fork()).join();
+    if (message.coneAxis !== undefined) {
+      Vector.encode(message.coneAxis, writer.uint32(26).fork()).join();
     }
     if (message.coneLength !== undefined) {
       writer.uint32(33).double(message.coneLength);
@@ -13960,7 +14115,7 @@ export const SetConePropertiesRequest: MessageFns<SetConePropertiesRequest> = {
             break;
           }
 
-          message.coneEndPointInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          message.coneEndPoint = Vector.decode(reader, reader.uint32());
           continue;
         }
         case 3: {
@@ -13968,7 +14123,7 @@ export const SetConePropertiesRequest: MessageFns<SetConePropertiesRequest> = {
             break;
           }
 
-          message.coneAxisInWorkingCoordinates = Vector.decode(reader, reader.uint32());
+          message.coneAxis = Vector.decode(reader, reader.uint32());
           continue;
         }
         case 4: {
@@ -14028,14 +14183,12 @@ export const SetConePropertiesRequest: MessageFns<SetConePropertiesRequest> = {
     message.coneName = (object.coneName !== undefined && object.coneName !== null)
       ? CollectionObjectName.fromPartial(object.coneName)
       : undefined;
-    message.coneEndPointInWorkingCoordinates =
-      (object.coneEndPointInWorkingCoordinates !== undefined && object.coneEndPointInWorkingCoordinates !== null)
-        ? Vector.fromPartial(object.coneEndPointInWorkingCoordinates)
-        : undefined;
-    message.coneAxisInWorkingCoordinates =
-      (object.coneAxisInWorkingCoordinates !== undefined && object.coneAxisInWorkingCoordinates !== null)
-        ? Vector.fromPartial(object.coneAxisInWorkingCoordinates)
-        : undefined;
+    message.coneEndPoint = (object.coneEndPoint !== undefined && object.coneEndPoint !== null)
+      ? Vector.fromPartial(object.coneEndPoint)
+      : undefined;
+    message.coneAxis = (object.coneAxis !== undefined && object.coneAxis !== null)
+      ? Vector.fromPartial(object.coneAxis)
+      : undefined;
     message.coneLength = object.coneLength ?? undefined;
     message.coneThetaStart = object.coneThetaStart ?? undefined;
     message.coneThetaSpan = object.coneThetaSpan ?? undefined;
@@ -14703,7 +14856,7 @@ export const SetGeometryRelationshipFitProfileResult: MessageFns<SetGeometryRela
 };
 
 function createBaseSetLinePropertiesRequest(): SetLinePropertiesRequest {
-  return { lineName: undefined, beginCoordinate: undefined, endCoordinate: undefined, lengthOptional: undefined };
+  return { lineName: undefined, beginCoordinate: undefined, endCoordinate: undefined, length: undefined };
 }
 
 export const SetLinePropertiesRequest: MessageFns<SetLinePropertiesRequest> = {
@@ -14717,8 +14870,8 @@ export const SetLinePropertiesRequest: MessageFns<SetLinePropertiesRequest> = {
     if (message.endCoordinate !== undefined) {
       Vector.encode(message.endCoordinate, writer.uint32(26).fork()).join();
     }
-    if (message.lengthOptional !== undefined) {
-      writer.uint32(33).double(message.lengthOptional);
+    if (message.length !== undefined) {
+      writer.uint32(33).double(message.length);
     }
     return writer;
   },
@@ -14759,7 +14912,7 @@ export const SetLinePropertiesRequest: MessageFns<SetLinePropertiesRequest> = {
             break;
           }
 
-          message.lengthOptional = reader.double();
+          message.length = reader.double();
           continue;
         }
       }
@@ -14785,7 +14938,7 @@ export const SetLinePropertiesRequest: MessageFns<SetLinePropertiesRequest> = {
     message.endCoordinate = (object.endCoordinate !== undefined && object.endCoordinate !== null)
       ? Vector.fromPartial(object.endCoordinate)
       : undefined;
-    message.lengthOptional = object.lengthOptional ?? undefined;
+    message.length = object.length ?? undefined;
     return message;
   },
 };
@@ -15788,10 +15941,10 @@ export const SphereAxisCheckResult: MessageFns<SphereAxisCheckResult> = {
 function createBaseTemperatureCompensateAGroupRequest(): TemperatureCompensateAGroupRequest {
   return {
     originalGroup: undefined,
-    scalingOriginCoordinateFrame: undefined,
-    materialCte1DegF: undefined,
-    initialTemperatureF: undefined,
-    finalTemperatureF: undefined,
+    scalingOrigin: undefined,
+    materialCte: undefined,
+    initialTemperature: undefined,
+    finalTemperature: undefined,
     scaledGroupName: undefined,
   };
 }
@@ -15801,17 +15954,17 @@ export const TemperatureCompensateAGroupRequest: MessageFns<TemperatureCompensat
     if (message.originalGroup !== undefined) {
       CollectionObjectName.encode(message.originalGroup, writer.uint32(10).fork()).join();
     }
-    if (message.scalingOriginCoordinateFrame !== undefined) {
-      FrameName.encode(message.scalingOriginCoordinateFrame, writer.uint32(18).fork()).join();
+    if (message.scalingOrigin !== undefined) {
+      FrameName.encode(message.scalingOrigin, writer.uint32(18).fork()).join();
     }
-    if (message.materialCte1DegF !== undefined) {
-      writer.uint32(25).double(message.materialCte1DegF);
+    if (message.materialCte !== undefined) {
+      writer.uint32(25).double(message.materialCte);
     }
-    if (message.initialTemperatureF !== undefined) {
-      writer.uint32(33).double(message.initialTemperatureF);
+    if (message.initialTemperature !== undefined) {
+      writer.uint32(33).double(message.initialTemperature);
     }
-    if (message.finalTemperatureF !== undefined) {
-      writer.uint32(41).double(message.finalTemperatureF);
+    if (message.finalTemperature !== undefined) {
+      writer.uint32(41).double(message.finalTemperature);
     }
     if (message.scaledGroupName !== undefined) {
       CollectionObjectName.encode(message.scaledGroupName, writer.uint32(50).fork()).join();
@@ -15839,7 +15992,7 @@ export const TemperatureCompensateAGroupRequest: MessageFns<TemperatureCompensat
             break;
           }
 
-          message.scalingOriginCoordinateFrame = FrameName.decode(reader, reader.uint32());
+          message.scalingOrigin = FrameName.decode(reader, reader.uint32());
           continue;
         }
         case 3: {
@@ -15847,7 +16000,7 @@ export const TemperatureCompensateAGroupRequest: MessageFns<TemperatureCompensat
             break;
           }
 
-          message.materialCte1DegF = reader.double();
+          message.materialCte = reader.double();
           continue;
         }
         case 4: {
@@ -15855,7 +16008,7 @@ export const TemperatureCompensateAGroupRequest: MessageFns<TemperatureCompensat
             break;
           }
 
-          message.initialTemperatureF = reader.double();
+          message.initialTemperature = reader.double();
           continue;
         }
         case 5: {
@@ -15863,7 +16016,7 @@ export const TemperatureCompensateAGroupRequest: MessageFns<TemperatureCompensat
             break;
           }
 
-          message.finalTemperatureF = reader.double();
+          message.finalTemperature = reader.double();
           continue;
         }
         case 6: {
@@ -15891,13 +16044,12 @@ export const TemperatureCompensateAGroupRequest: MessageFns<TemperatureCompensat
     message.originalGroup = (object.originalGroup !== undefined && object.originalGroup !== null)
       ? CollectionObjectName.fromPartial(object.originalGroup)
       : undefined;
-    message.scalingOriginCoordinateFrame =
-      (object.scalingOriginCoordinateFrame !== undefined && object.scalingOriginCoordinateFrame !== null)
-        ? FrameName.fromPartial(object.scalingOriginCoordinateFrame)
-        : undefined;
-    message.materialCte1DegF = object.materialCte1DegF ?? undefined;
-    message.initialTemperatureF = object.initialTemperatureF ?? undefined;
-    message.finalTemperatureF = object.finalTemperatureF ?? undefined;
+    message.scalingOrigin = (object.scalingOrigin !== undefined && object.scalingOrigin !== null)
+      ? FrameName.fromPartial(object.scalingOrigin)
+      : undefined;
+    message.materialCte = object.materialCte ?? undefined;
+    message.initialTemperature = object.initialTemperature ?? undefined;
+    message.finalTemperature = object.finalTemperature ?? undefined;
     message.scaledGroupName = (object.scaledGroupName !== undefined && object.scaledGroupName !== null)
       ? CollectionObjectName.fromPartial(object.scaledGroupName)
       : undefined;

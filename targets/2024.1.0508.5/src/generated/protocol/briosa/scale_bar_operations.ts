@@ -42,10 +42,16 @@ export interface GetScaleBarStatsResult {
 
 export interface ScaleBarCheckRequest {
   scaleBarPointA?: PointName | undefined;
-  scaleBarPointB?: PointName | undefined;
-  currentTemperatureF?: number | undefined;
-  lengthOfBarAt68f?: number | undefined;
-  materialCtePpmF?: number | undefined;
+  scaleBarPointB?:
+    | PointName
+    | undefined;
+  /** Temperature in degrees Fahrenheit. */
+  currentTemperature?: number | undefined;
+  lengthOfBarAt68f?:
+    | number
+    | undefined;
+  /** Coefficient in parts per million per degree Fahrenheit. */
+  materialCte?: number | undefined;
   tolerance?: number | undefined;
 }
 
@@ -295,9 +301,9 @@ function createBaseScaleBarCheckRequest(): ScaleBarCheckRequest {
   return {
     scaleBarPointA: undefined,
     scaleBarPointB: undefined,
-    currentTemperatureF: undefined,
+    currentTemperature: undefined,
     lengthOfBarAt68f: undefined,
-    materialCtePpmF: undefined,
+    materialCte: undefined,
     tolerance: undefined,
   };
 }
@@ -310,14 +316,14 @@ export const ScaleBarCheckRequest: MessageFns<ScaleBarCheckRequest> = {
     if (message.scaleBarPointB !== undefined) {
       PointName.encode(message.scaleBarPointB, writer.uint32(18).fork()).join();
     }
-    if (message.currentTemperatureF !== undefined) {
-      writer.uint32(25).double(message.currentTemperatureF);
+    if (message.currentTemperature !== undefined) {
+      writer.uint32(25).double(message.currentTemperature);
     }
     if (message.lengthOfBarAt68f !== undefined) {
       writer.uint32(33).double(message.lengthOfBarAt68f);
     }
-    if (message.materialCtePpmF !== undefined) {
-      writer.uint32(41).double(message.materialCtePpmF);
+    if (message.materialCte !== undefined) {
+      writer.uint32(41).double(message.materialCte);
     }
     if (message.tolerance !== undefined) {
       writer.uint32(49).double(message.tolerance);
@@ -353,7 +359,7 @@ export const ScaleBarCheckRequest: MessageFns<ScaleBarCheckRequest> = {
             break;
           }
 
-          message.currentTemperatureF = reader.double();
+          message.currentTemperature = reader.double();
           continue;
         }
         case 4: {
@@ -369,7 +375,7 @@ export const ScaleBarCheckRequest: MessageFns<ScaleBarCheckRequest> = {
             break;
           }
 
-          message.materialCtePpmF = reader.double();
+          message.materialCte = reader.double();
           continue;
         }
         case 6: {
@@ -400,9 +406,9 @@ export const ScaleBarCheckRequest: MessageFns<ScaleBarCheckRequest> = {
     message.scaleBarPointB = (object.scaleBarPointB !== undefined && object.scaleBarPointB !== null)
       ? PointName.fromPartial(object.scaleBarPointB)
       : undefined;
-    message.currentTemperatureF = object.currentTemperatureF ?? undefined;
+    message.currentTemperature = object.currentTemperature ?? undefined;
     message.lengthOfBarAt68f = object.lengthOfBarAt68f ?? undefined;
-    message.materialCtePpmF = object.materialCtePpmF ?? undefined;
+    message.materialCte = object.materialCte ?? undefined;
     message.tolerance = object.tolerance ?? undefined;
     return message;
   },

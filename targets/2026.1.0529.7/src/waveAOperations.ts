@@ -166,21 +166,24 @@ export interface AngleBetweenLineAndPlaneInput {
   readonly selectedLine: CollectionObjectName;
   readonly selectedPlane: CollectionObjectName;
   readonly nominalAngle?: number;
-  readonly angleTolerance00ForNone?: number;
+  /** 0.0 disables this tolerance. */
+  readonly angleTolerance?: number;
 }
 
 export interface AngleBetweenTwoLinesInput {
   readonly line1: CollectionObjectName;
   readonly line2: CollectionObjectName;
   readonly nominalAngle?: number;
-  readonly angleTolerance00ForNone?: number;
+  /** 0.0 disables this tolerance. */
+  readonly angleTolerance?: number;
 }
 
 export interface AngleBetweenTwoPlanesNormalsInput {
   readonly planeA: CollectionObjectName;
   readonly planeB: CollectionObjectName;
   readonly nominalAngle?: number;
-  readonly angleTolerance00ForNone?: number;
+  /** 0.0 disables this tolerance. */
+  readonly angleTolerance?: number;
 }
 
 export interface AppendItemsToSaReportInput {
@@ -236,35 +239,44 @@ export interface AskForUserDecisionFromImageInput {
   readonly imageFile: FileReference;
   readonly imageMapXmlFile: FileReference;
   readonly windowCaption?: string;
-  readonly windowWidth0Default?: number;
-  readonly windowHeight0Default?: number;
+  /** 0 uses the default window dimension. */
+  readonly windowWidth?: number;
+  /** 0 uses the default window dimension. */
+  readonly windowHeight?: number;
 }
 
 export interface AskForUserDecisionFromStringsInput {
   readonly questionOrStatement: Iterable<string>;
   readonly font?: Font;
-  readonly button1TextEmptyToHideButton?: string;
-  readonly button2TextEmptyToHideButton?: string;
-  readonly button3TextEmptyToHideButton?: string;
+  /** An empty string hides the button. */
+  readonly button1Text?: string;
+  /** An empty string hides the button. */
+  readonly button2Text?: string;
+  /** An empty string hides the button. */
+  readonly button3Text?: string;
 }
 
 export interface AutoRangeAndSetVectorGroupColorizationAllInput {
   readonly treatIndividually?: boolean;
-  readonly colorizationOptionsUsesModeOnly?: ColorizationOptions;
+  /** MP qualifier: Uses Mode Only. */
+  readonly colorizationOptions?: ColorizationOptions;
 }
 
 export interface AutoRangeAndSetVectorGroupColorizationSelectedInput {
   readonly vectorGroupsToBeSet: Iterable<CollectionVectorGroupName>;
   readonly treatIndividually?: boolean;
-  readonly colorizationOptionsUsesModeOnly?: ColorizationOptions;
+  /** MP qualifier: Uses Mode Only. */
+  readonly colorizationOptions?: ColorizationOptions;
 }
 
 export interface BestFitTransformationGroupToGroupInput {
   readonly referenceGroup: CollectionObjectName;
   readonly correspondingGroup: CollectionObjectName;
   readonly showInterface?: boolean;
-  readonly rmsTolerance00ForNone?: number;
-  readonly maximumAbsoluteTolerance00ForNone?: number;
+  /** 0.0 disables this tolerance. */
+  readonly rmsTolerance?: number;
+  /** 0.0 disables this tolerance. */
+  readonly maximumAbsoluteTolerance?: number;
   readonly allowScale?: boolean;
   readonly allowX?: boolean;
   readonly allowY?: boolean;
@@ -274,7 +286,8 @@ export interface BestFitTransformationGroupToGroupInput {
   readonly allowRz?: boolean;
   readonly lockDegreesOfFreedom?: boolean;
   readonly generateEvent?: boolean;
-  readonly filePathForCsvTextReportRequiresShowInterfaceTrue: FileReference;
+  /** Requires Show Interface to be true. */
+  readonly filePathForCsvTextReport: FileReference;
 }
 
 export interface BestFitTransformationGroupToGroupResult {
@@ -342,7 +355,8 @@ export interface CreateChartFromVectorGroupInput {
   readonly chartType: ChartType;
   readonly dataSetToChart: DatasetType;
   readonly auxDataSetToChart: DatasetType;
-  readonly templateChartNameOptional: ChartName;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  readonly templateChartName: ChartName;
   readonly showInterface?: boolean;
 }
 
@@ -391,7 +405,8 @@ export interface DefineReportTemplateInput {
   readonly relationshipsToReport: Iterable<CollectionItemName>;
   readonly eventsToReport: Iterable<CollectionItemName>;
   readonly reportOutputOptions?: ReportOutputOptions;
-  readonly reportPageSettingsSaReportOnly?: ReportPageSettings;
+  /** MP qualifier: SA Report only. */
+  readonly reportPageSettings?: ReportPageSettings;
   readonly generateNow?: boolean;
   readonly showGeneratedReport?: boolean;
 }
@@ -494,12 +509,14 @@ export interface DirectCadAccessInput {
   readonly centerViewOnImportedObjects?: boolean;
   readonly importIntoFoldersMatchingCadFileHierarchy?: boolean;
   readonly removeEmptyFolders?: boolean;
-  readonly surfaceNormalsMode1Or2?: number;
+  /** MP qualifier: 1 or 2. */
+  readonly surfaceNormalsMode?: number;
   readonly promptOnMissingComponents?: boolean;
   readonly selectiveImport?: boolean;
   readonly surfaceCompatibilityMode?: boolean;
   readonly explodeSurfaces?: boolean;
-  readonly cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile?: string;
+  /** An empty value uses the units specified in the file. */
+  readonly cadFileUnits?: string;
   readonly buildCalloutViews?: boolean;
 }
 
@@ -553,7 +570,8 @@ export interface ExportAsciiPointSetInput {
   readonly includeSaVersionAndFrameComments?: boolean;
   readonly includeAxisComments?: boolean;
   readonly includeExportFormatInfo?: boolean;
-  readonly maximumPrecisionScientificNotation?: boolean;
+  /** MP qualifier: Scientific Notation. */
+  readonly maximumPrecision?: boolean;
   readonly decimalPrecision?: number;
   readonly append?: boolean;
 }
@@ -574,7 +592,8 @@ export interface ExportAsciiPointsInput {
   readonly includeExportFormatInfo?: boolean;
   readonly includeWeights?: boolean;
   readonly includeMeasurementDetails?: boolean;
-  readonly maximumPrecisionScientificNotation?: boolean;
+  /** MP qualifier: Scientific Notation. */
+  readonly maximumPrecision?: boolean;
   readonly decimalPrecision?: number;
   readonly append?: boolean;
 }
@@ -671,8 +690,10 @@ export interface ExportVdaFsFilePartialModelInput {
 export interface ExportVectorContainerToAsciiFileInput {
   readonly asciiFilePath: FileReference;
   readonly vectorGroupsToExport: Iterable<CollectionVectorGroupName>;
-  readonly overwriteExistingFileFalseAppend?: boolean;
-  readonly useFullPrecisionScientificNotation?: boolean;
+  /** False appends to the existing file. */
+  readonly overwriteExistingFile?: boolean;
+  /** MP qualifier: Scientific Notation. */
+  readonly useFullPrecision?: boolean;
   readonly vectorNameFormat: ExportVectorNameFormat;
   readonly includeVectorLength?: boolean;
 }
@@ -694,9 +715,11 @@ export interface FitGeometryToPointGroupInput {
   readonly resultingObjectName: CollectionObjectName;
   readonly fitProfileName?: string;
   readonly reportDeviations?: boolean;
-  readonly fitInterfaceTolerance10UseProfile?: number;
+  /** -1.0 uses the profile tolerance. */
+  readonly fitInterfaceTolerance?: number;
   readonly ignoreOutOfTolerancePoints?: boolean;
-  readonly startingConditionGeometryOptional: CollectionObjectName;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  readonly startingConditionGeometry: CollectionObjectName;
 }
 
 export interface FitGeometryToPointGroupProjectedToPlaneInput {
@@ -706,9 +729,11 @@ export interface FitGeometryToPointGroupProjectedToPlaneInput {
   readonly resultingObjectName: CollectionObjectName;
   readonly fitProfileName?: string;
   readonly reportDeviations?: boolean;
-  readonly fitInterfaceTolerance10UseProfile?: number;
+  /** -1.0 uses the profile tolerance. */
+  readonly fitInterfaceTolerance?: number;
   readonly ignoreOutOfTolerancePoints?: boolean;
-  readonly startingConditionGeometryOptional: CollectionObjectName;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  readonly startingConditionGeometry: CollectionObjectName;
 }
 
 export interface FitGeometryToPointsInput {
@@ -717,9 +742,11 @@ export interface FitGeometryToPointsInput {
   readonly resultingObjectName: CollectionObjectName;
   readonly fitProfileName?: string;
   readonly reportDeviations?: boolean;
-  readonly fitInterfaceTolerance10UseProfile?: number;
+  /** -1.0 uses the profile tolerance. */
+  readonly fitInterfaceTolerance?: number;
   readonly ignoreOutOfTolerancePoints?: boolean;
-  readonly startingConditionGeometryOptional: CollectionObjectName;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  readonly startingConditionGeometry: CollectionObjectName;
 }
 
 export interface GenerateQuickReportFromTabOrderInput {
@@ -799,8 +826,10 @@ export interface GetConePropertiesInput {
 }
 
 export interface GetConePropertiesResult {
-  readonly coneEndPointInWorkingCoordinates: Vector;
-  readonly coneAxisInWorkingCoordinates: Vector;
+  /** Expressed in working coordinates. */
+  readonly coneEndPoint: Vector;
+  /** Expressed in working coordinates. */
+  readonly coneAxis: Vector;
   readonly coneLength: number;
   readonly coneThetaStart: number;
   readonly coneThetaSpan: number;
@@ -929,10 +958,14 @@ export interface GetGeomRelationshipAutoVectorsInput {
 }
 
 export interface GetGeomRelationshipAutoVectorsResult {
-  readonly autoVectorsNominalAvnEnabled: boolean;
-  readonly autoVectorsNominalAvnName: CollectionObjectName;
-  readonly autoVectorsFitAvfEnabled: boolean;
-  readonly autoVectorsFitAvfName: CollectionObjectName;
+  /** MP qualifier: AVN. */
+  readonly autoVectorsNominalEnabled: boolean;
+  /** MP qualifier: AVN. */
+  readonly autoVectorsNominalName: CollectionObjectName;
+  /** MP qualifier: AVF. */
+  readonly autoVectorsFitEnabled: boolean;
+  /** MP qualifier: AVF. */
+  readonly autoVectorsFitName: CollectionObjectName;
   readonly pointsType: string;
 }
 
@@ -1079,9 +1112,12 @@ export interface GetMeasurementWeatherDataInput {
 }
 
 export interface GetMeasurementWeatherDataResult {
-  readonly temperatureDegF: number;
-  readonly pressureInHg: number;
-  readonly humidityRh: number;
+  /** Temperature in degrees Fahrenheit. */
+  readonly temperature: number;
+  /** Pressure in inches of mercury. */
+  readonly pressure: number;
+  /** Relative humidity in percent. */
+  readonly humidity: number;
 }
 
 export interface GetNamedDoubleListVariableInput {
@@ -1444,7 +1480,8 @@ export interface GetScaleBarStatsResult {
 }
 
 export interface GetScreenResolutionInput {
-  readonly display1Primary?: number;
+  /** -1 selects the primary display. */
+  readonly display?: number;
 }
 
 export interface GetScreenResolutionResult {
@@ -1461,14 +1498,19 @@ export interface GetSlotPropertiesInput {
 }
 
 export interface GetSlotPropertiesResult {
-  readonly slotTransformInWorkingCoordinates: Transform;
-  readonly centerInWorkingCoordinates: Vector;
-  readonly normalDirectionInWorkingCoordinates: Vector;
+  /** Expressed in working coordinates. */
+  readonly slotTransform: Transform;
+  /** Expressed in working coordinates. */
+  readonly center: Vector;
+  /** Expressed in working coordinates. */
+  readonly normalDirection: Vector;
   readonly slotLength: number;
   readonly slotWidth: number;
   readonly roundSlotType: boolean;
-  readonly centerlinePt1InWorkingCoordinates: Vector;
-  readonly centerlinePt2InWorkingCoordinates: Vector;
+  /** Expressed in working coordinates. */
+  readonly centerlinePt1: Vector;
+  /** Expressed in working coordinates. */
+  readonly centerlinePt2: Vector;
 }
 
 export interface GetSpherePropertiesInput {
@@ -1592,8 +1634,10 @@ export interface GroupToSurfaceFitInput {
   readonly groupToFit: CollectionObjectName;
   readonly surface: CollectionObjectName;
   readonly doConventionalFit?: boolean;
-  readonly rmsTolerance00ForNone?: number;
-  readonly maximumAbsoluteTolerance00ForNone?: number;
+  /** 0.0 disables this tolerance. */
+  readonly rmsTolerance?: number;
+  /** 0.0 disables this tolerance. */
+  readonly maximumAbsoluteTolerance?: number;
 }
 
 export interface GroupToSurfaceFitResult {
@@ -1607,17 +1651,20 @@ export interface HideObjectsInput {
 }
 
 export interface HighlightObjectsInput {
-  readonly objectNamesEmptyToClearAll: Iterable<CollectionObjectName>;
+  /** An empty selection clears all highlights. */
+  readonly objectNames: Iterable<CollectionObjectName>;
   readonly highLightObjects?: boolean;
 }
 
 export interface HighlightPointInput {
-  readonly pointNameEmptyToClearAll: PointName;
+  /** An empty selection clears all highlights. */
+  readonly pointName: PointName;
   readonly showPoint?: boolean;
 }
 
 export interface HighlightRelationshipsInput {
-  readonly relationshipsEmptyToClearAll: Iterable<CollectionItemName>;
+  /** An empty selection clears all highlights. */
+  readonly relationships: Iterable<CollectionItemName>;
   readonly highLightRelationships?: boolean;
 }
 
@@ -1713,7 +1760,8 @@ export interface ImportQdasCatalogFileInput {
 export interface ImportSaFileInput {
   readonly saFileName: FileReference;
   readonly allowOperatorSelections?: boolean;
-  readonly selectedCollectionsOptional: Iterable<string>;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  readonly selectedCollections: Iterable<string>;
 }
 
 export interface ImportSaWindowsPlacementInput {
@@ -1804,11 +1852,14 @@ export interface LockUnlockTrappingControlInput {
 export interface MakeCircleFitProfileInput {
   readonly fitProfileName?: string;
   readonly measuredSideForRadialOffset?: MeasuredSideForRadialOffset;
-  readonly overrideRadialOffset10UseCurrent?: number;
+  /** -1.0 uses the current offset. */
+  readonly overrideRadialOffset?: number;
   readonly measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset;
-  readonly overridePlanarOffset10UseCurrent?: number;
+  /** -1.0 uses the current offset. */
+  readonly overridePlanarOffset?: number;
   readonly planarOffsetDirection?: NormalDirection;
-  readonly lockRadius10DoNotLock?: number;
+  /** -1.0 leaves this dimension unlocked. */
+  readonly lockRadius?: number;
   readonly circleComputationTechnique?: CompTechnique;
   readonly reverseNormalVectorAfterFit?: boolean;
   readonly makeCardinalPoints?: boolean;
@@ -1819,8 +1870,10 @@ export interface MakeCircleFitProfileInput {
 export interface MakeConeFitProfileInput {
   readonly fitProfileName?: string;
   readonly measuredSideForRadialOffset?: MeasuredSideForRadialOffset;
-  readonly overrideRadialOffset10UseCurrent?: number;
-  readonly lockAngleInDegrees10DoNotLock?: number;
+  /** -1.0 uses the current offset. */
+  readonly overrideRadialOffset?: number;
+  /** -1.0 leaves this dimension unlocked. */
+  readonly lockAngleInDegrees?: number;
   readonly useExhaustiveSearch?: boolean;
   readonly makeCardinalPoints?: boolean;
   readonly cardinalPt1Vertex?: boolean;
@@ -1836,8 +1889,10 @@ export interface MakeCustomTableInput {
 export interface MakeCylinderFitProfileInput {
   readonly fitProfileName?: string;
   readonly measuredSideForRadialOffset?: MeasuredSideForRadialOffset;
-  readonly overrideRadialOffset10UseCurrent?: number;
-  readonly lockRadius10DoNotLock?: number;
+  /** -1.0 uses the current offset. */
+  readonly overrideRadialOffset?: number;
+  /** -1.0 leaves this dimension unlocked. */
+  readonly lockRadius?: number;
   readonly lockedRadiusFitMethod?: FitMethod;
   readonly constrainToNominalAxis?: boolean;
   readonly constrainToNominalOrientation?: boolean;
@@ -1855,9 +1910,11 @@ export interface MakeCylinderFitProfileInput {
 export interface MakeEllipseFitProfileInput {
   readonly fitProfileName?: string;
   readonly measuredSideForRadialOffset?: MeasuredSideForRadialOffset;
-  readonly overrideRadialOffset10UseCurrent?: number;
+  /** -1.0 uses the current offset. */
+  readonly overrideRadialOffset?: number;
   readonly measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset;
-  readonly overridePlanarOffset10UseCurrent?: number;
+  /** -1.0 uses the current offset. */
+  readonly overridePlanarOffset?: number;
   readonly planarOffsetDirection?: NormalDirection;
   readonly reverseNormalVectorAfterFit?: boolean;
   readonly makeCardinalPoints?: boolean;
@@ -1883,14 +1940,17 @@ export interface MakeLineFitProfileInput {
 
 export interface MakeNewSaReportInput {
   readonly newSaReportName: CollectionObjectName;
-  readonly saReportTemplateOptional: CollectionObjectName;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  readonly saReportTemplate: CollectionObjectName;
 }
 
 export interface MakeParaboloidFitProfileInput {
   readonly fitProfileName?: string;
   readonly measuredSideForRadialOffset?: MeasuredSideForRadialOffset;
-  readonly overrideRadialOffset10UseCurrent?: number;
-  readonly lockFocalLength10DoNotLock?: number;
+  /** -1.0 uses the current offset. */
+  readonly overrideRadialOffset?: number;
+  /** -1.0 leaves this dimension unlocked. */
+  readonly lockFocalLength?: number;
   readonly degreeOfFreedom?: DegreeOfFreedom;
   readonly makeCardinalPoints?: boolean;
   readonly cardinalPt1Vertex?: boolean;
@@ -1916,7 +1976,8 @@ export interface MakePipeRelationshipCutInput {
 export interface MakePlaneFitProfileInput {
   readonly fitProfileName?: string;
   readonly measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset;
-  readonly overridePlanarOffset10UseCurrent?: number;
+  /** -1.0 uses the current offset. */
+  readonly overridePlanarOffset?: number;
   readonly planarOffsetDirection?: NormalDirection;
   readonly reverseNormalVectorAfterFit?: boolean;
   readonly makeCardinalPoints?: boolean;
@@ -1927,9 +1988,11 @@ export interface MakePlaneFitProfileInput {
 export interface MakeSlotFitProfileInput {
   readonly fitProfileName?: string;
   readonly measuredSideForRadialOffset?: MeasuredSideForRadialOffset;
-  readonly overrideRadialOffset10UseCurrent?: number;
+  /** -1.0 uses the current offset. */
+  readonly overrideRadialOffset?: number;
   readonly measuredSideForPlanarOffset?: MeasuredSideForPlanarOffset;
-  readonly overridePlanarOffset10UseCurrent?: number;
+  /** -1.0 uses the current offset. */
+  readonly overridePlanarOffset?: number;
   readonly planarOffsetDirection?: NormalDirection;
   readonly slotType?: SlotType;
   readonly slotComputationTechnique?: CompTechnique;
@@ -1944,8 +2007,10 @@ export interface MakeSlotFitProfileInput {
 export interface MakeSphereFitProfileInput {
   readonly fitProfileName?: string;
   readonly measuredSideForRadialOffset?: MeasuredSideForRadialOffset;
-  readonly overrideRadialOffset10UseCurrent?: number;
-  readonly lockRadius10DoNotLock?: number;
+  /** -1.0 uses the current offset. */
+  readonly overrideRadialOffset?: number;
+  /** -1.0 leaves this dimension unlocked. */
+  readonly lockRadius?: number;
   readonly makeCardinalPoints?: boolean;
   readonly cardinalPt1Center?: boolean;
   readonly computationMethod?: SphereFitComputationMode;
@@ -2101,8 +2166,10 @@ export interface QueryCloudsToObjectsInput {
   readonly projectionOptions?: ProjectionOptions;
   readonly proximity?: number;
   readonly skipFactor?: number;
-  readonly rmsTolerance00ForNone?: number;
-  readonly maximumAbsoluteTolerance00ForNone?: number;
+  /** 0.0 disables this tolerance. */
+  readonly rmsTolerance?: number;
+  /** 0.0 disables this tolerance. */
+  readonly maximumAbsoluteTolerance?: number;
 }
 
 export interface QueryCloudsToObjectsResult {
@@ -2117,8 +2184,10 @@ export interface QueryCloudsToSurfaceInput {
   readonly projectionOptions?: ProjectionOptions;
   readonly proximity?: number;
   readonly skipFactor?: number;
-  readonly rmsTolerance00ForNone?: number;
-  readonly maximumAbsoluteTolerance00ForNone?: number;
+  /** 0.0 disables this tolerance. */
+  readonly rmsTolerance?: number;
+  /** 0.0 disables this tolerance. */
+  readonly maximumAbsoluteTolerance?: number;
 }
 
 export interface QueryCloudsToSurfaceResult {
@@ -2135,18 +2204,25 @@ export interface QueryFrameToFrameResult {
   readonly x: number;
   readonly y: number;
   readonly z: number;
-  readonly rxRoll: number;
-  readonly ryPitch: number;
-  readonly rzYaw: number;
+  /** MP qualifier: Roll. */
+  readonly rx: number;
+  /** MP qualifier: Pitch. */
+  readonly ry: number;
+  /** MP qualifier: Yaw. */
+  readonly rz: number;
 }
 
 export interface QueryGroupsToObjectsInput {
-  readonly groupNameListGroupsToProject: Iterable<CollectionObjectName>;
-  readonly objectNameListObjectsToProjectTo: Iterable<CollectionObjectName>;
+  /** MP qualifier: Groups to Project. */
+  readonly groupNameList: Iterable<CollectionObjectName>;
+  /** MP qualifier: Objects to Project to. */
+  readonly objectNameList: Iterable<CollectionObjectName>;
   readonly resultingObjectName: CollectionObjectName;
   readonly projectionOptions?: ProjectionOptions;
-  readonly rmsTolerance00ForNone?: number;
-  readonly maximumAbsoluteTolerance00ForNone?: number;
+  /** 0.0 disables this tolerance. */
+  readonly rmsTolerance?: number;
+  /** 0.0 disables this tolerance. */
+  readonly maximumAbsoluteTolerance?: number;
   readonly showResultsDialog?: boolean;
 }
 
@@ -2189,11 +2265,14 @@ export interface QueryPointsToCircleInput {
 
 export interface QueryPointsToObjectsInput {
   readonly pointNames: Iterable<PointName>;
-  readonly objectNameListObjectsToProjectTo: Iterable<CollectionObjectName>;
+  /** MP qualifier: Objects to Project to. */
+  readonly objectNameList: Iterable<CollectionObjectName>;
   readonly resultingObjectName: CollectionObjectName;
   readonly projectionOptions?: ProjectionOptions;
-  readonly rmsTolerance00ForNone?: number;
-  readonly maximumAbsoluteTolerance00ForNone?: number;
+  /** 0.0 disables this tolerance. */
+  readonly rmsTolerance?: number;
+  /** 0.0 disables this tolerance. */
+  readonly maximumAbsoluteTolerance?: number;
   readonly showResultsDialog?: boolean;
 }
 
@@ -2212,7 +2291,8 @@ export interface QueryPointsToSinglePointInput {
 
 export interface QuickReportInput {
   readonly itemName: CollectionObjectName;
-  readonly reportNameOptional?: string;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  readonly reportName?: string;
   readonly openReport?: boolean;
 }
 
@@ -2298,7 +2378,8 @@ export interface SaveChartToJPegFileInput {
 
 export interface SaveCurrentViewBmpJpgPngGifTiffInput {
   readonly fileToSaveTo: FileReference;
-  readonly renderScaleFactor10UsesWindowSize?: number;
+  /** 1.0 uses the window size. */
+  readonly renderScaleFactor?: number;
 }
 
 export interface SavePointOfViewInput {
@@ -2309,9 +2390,11 @@ export interface SavePointOfViewInput {
 export interface ScaleBarCheckInput {
   readonly scaleBarPointA: PointName;
   readonly scaleBarPointB: PointName;
-  readonly currentTemperatureF?: number;
+  /** Temperature in degrees Fahrenheit. */
+  readonly currentTemperature?: number;
   readonly lengthOfBarAt68F?: number;
-  readonly materialCtePpmF?: number;
+  /** Coefficient in parts per million per degree Fahrenheit. */
+  readonly materialCte?: number;
   readonly tolerance?: number;
 }
 
@@ -2335,7 +2418,8 @@ export interface SetActiveUnitsInput {
 }
 
 export interface SetAngularRepresentationInput {
-  readonly value0360False180?: boolean;
+  /** False selects the +/-180 angular representation. */
+  readonly value0360?: boolean;
 }
 
 export interface SetAutoEventCreationInput {
@@ -2379,7 +2463,8 @@ export interface SetCirclePropertiesInput {
 export interface SetCollectionNotesInput {
   readonly collection: CollectionName;
   readonly notes: Iterable<string>;
-  readonly appendFalseOverwrite?: boolean;
+  /** False overwrites existing notes. */
+  readonly append?: boolean;
 }
 
 export interface SetCollectionObjectNameVariableInput {
@@ -2394,8 +2479,10 @@ export interface SetCollectionObjectRefListVariableInput {
 
 export interface SetConePropertiesInput {
   readonly coneName: CollectionObjectName;
-  readonly coneEndPointInWorkingCoordinates: Vector;
-  readonly coneAxisInWorkingCoordinates: Vector;
+  /** Expressed in working coordinates. */
+  readonly coneEndPoint: Vector;
+  /** Expressed in working coordinates. */
+  readonly coneAxis: Vector;
   readonly coneLength?: number;
   readonly coneThetaStart?: number;
   readonly coneThetaSpan?: number;
@@ -2516,7 +2603,8 @@ export interface SetEllipsePropertiesInput {
 export interface SetFolderNotesInput {
   readonly folderPath?: string;
   readonly notes: Iterable<string>;
-  readonly appendFalseOverwrite?: boolean;
+  /** False overwrites existing notes. */
+  readonly append?: boolean;
 }
 
 export interface SetFontVariableInput {
@@ -2526,7 +2614,8 @@ export interface SetFontVariableInput {
 
 export interface SetGeomRelationshipAutoMeasureNominalFeatureInput {
   readonly relationshipName: CollectionObjectName;
-  readonly trapCloudsFalseGeometry?: boolean;
+  /** False selects geometry. */
+  readonly trapClouds?: boolean;
   readonly instrumentId: CollectionInstrumentId;
   readonly measurementMode?: string;
 }
@@ -2611,7 +2700,8 @@ export interface SetLinePropertiesInput {
   readonly lineName: CollectionObjectName;
   readonly beginCoordinate: Vector;
   readonly endCoordinate: Vector;
-  readonly lengthOptional?: number;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  readonly length?: number;
 }
 
 export interface SetLoggingStateInput {
@@ -2641,7 +2731,8 @@ export interface SetNotificationCancelOverrideInput {
 export interface SetObjectNotesInput {
   readonly object: CollectionObjectName;
   readonly notes: Iterable<string>;
-  readonly appendFalseOverwrite?: boolean;
+  /** False overwrites existing notes. */
+  readonly append?: boolean;
 }
 
 export interface SetObjectReportingFrameInput {
@@ -2744,7 +2835,8 @@ export interface SetPointNameVariableInput {
 export interface SetPointNotesInput {
   readonly point: PointName;
   readonly notes: Iterable<string>;
-  readonly appendFalseOverwrite?: boolean;
+  /** False overwrites existing notes. */
+  readonly append?: boolean;
 }
 
 export interface SetPointOfViewFromFrameInput {
@@ -2875,9 +2967,11 @@ export interface SetRelationshipToleranceVectorTypeInput {
 export interface SetRelationshipVoxelCloudDisplayInput {
   readonly relationshipName: CollectionObjectName;
   readonly enableVoxelCloudDisplay?: boolean;
-  readonly voxelSize10Autodetect?: number;
+  /** -1.0 selects automatic detection. */
+  readonly voxelSize?: number;
   readonly minPtsCountPerVoxel?: number;
-  readonly voxelRenderingDiameter10Fast?: number;
+  /** -1.0 selects fast rendering. */
+  readonly voxelRenderingDiameter?: number;
   readonly surfaceAnalysisMode?: SurfaceAnalysisMode;
   readonly colorizationOptions?: ColorizationOptions;
   readonly showColorBarInView?: boolean;
@@ -3003,7 +3097,8 @@ export interface SetTransformVariableInput {
 
 export interface SetUserInterfaceProfileInput {
   readonly profileName?: string;
-  readonly profileFileNameOptional: FileReference;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  readonly profileFileName: FileReference;
 }
 
 export interface SetVectorGroupColorizationOptionsAllInput {
@@ -3084,7 +3179,8 @@ export interface ShowHideByObjectTypeInput {
   readonly allCollections?: boolean;
   readonly specificCollection: CollectionName;
   readonly objectTypeToShowHide?: ObjectType;
-  readonly hideShowFalse?: boolean;
+  /** False shows the objects. */
+  readonly hide?: boolean;
 }
 
 export interface ShowHideCalloutViewInput {
@@ -3118,7 +3214,8 @@ export interface ShowHideInstrumentsInput {
 
 export interface ShowHidePointsInput {
   readonly pointNames: Iterable<PointName>;
-  readonly showHideFalse?: boolean;
+  /** False hides the points. */
+  readonly show?: boolean;
 }
 
 export interface ShowHideRelationshipReportInput {
@@ -3205,10 +3302,14 @@ export interface StatusDialogInput {
 
 export interface TemperatureCompensateAGroupInput {
   readonly originalGroup: CollectionObjectName;
-  readonly scalingOriginCoordinateFrame: FrameName;
-  readonly materialCte1DegF?: number;
-  readonly initialTemperatureF?: number;
-  readonly finalTemperatureF?: number;
+  /** MP qualifier: coordinate frame. */
+  readonly scalingOrigin: FrameName;
+  /** Coefficient per degree Fahrenheit. */
+  readonly materialCte?: number;
+  /** Temperature in degrees Fahrenheit. */
+  readonly initialTemperature?: number;
+  /** Temperature in degrees Fahrenheit. */
+  readonly finalTemperature?: number;
   readonly scaledGroupName: CollectionObjectName;
 }
 
@@ -3281,13 +3382,9 @@ export async function angleBetweenLineAndPlane(
         operationScalarSchemas.number,
         resolveOperationDefault(input.nominalAngle, 0, 'nominalAngle'),
       ),
-      angleTolerance00ForNone: toWireOperationValue(
+      angleTolerance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.angleTolerance00ForNone,
-          0,
-          'angleTolerance00ForNone',
-        ),
+        resolveOperationDefault(input.angleTolerance, 0, 'angleTolerance'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -3327,13 +3424,9 @@ export async function angleBetweenTwoLines(
         operationScalarSchemas.number,
         resolveOperationDefault(input.nominalAngle, 0, 'nominalAngle'),
       ),
-      angleTolerance00ForNone: toWireOperationValue(
+      angleTolerance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.angleTolerance00ForNone,
-          0,
-          'angleTolerance00ForNone',
-        ),
+        resolveOperationDefault(input.angleTolerance, 0, 'angleTolerance'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -3373,13 +3466,9 @@ export async function angleBetweenTwoPlanesNormals(
         operationScalarSchemas.number,
         resolveOperationDefault(input.nominalAngle, 0, 'nominalAngle'),
       ),
-      angleTolerance00ForNone: toWireOperationValue(
+      angleTolerance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.angleTolerance00ForNone,
-          0,
-          'angleTolerance00ForNone',
-        ),
+        resolveOperationDefault(input.angleTolerance, 0, 'angleTolerance'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -3420,20 +3509,16 @@ export async function bestFitTransformationGroupToGroup(
           operationScalarSchemas.boolean,
           resolveOperationDefault(input.showInterface, false, 'showInterface'),
         ),
-        rmsTolerance00ForNone: toWireOperationValue(
+        rmsTolerance: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.rmsTolerance00ForNone,
-            0,
-            'rmsTolerance00ForNone',
-          ),
+          resolveOperationDefault(input.rmsTolerance, 0, 'rmsTolerance'),
         ),
-        maximumAbsoluteTolerance00ForNone: toWireOperationValue(
+        maximumAbsoluteTolerance: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(
-            input.maximumAbsoluteTolerance00ForNone,
+            input.maximumAbsoluteTolerance,
             0,
-            'maximumAbsoluteTolerance00ForNone',
+            'maximumAbsoluteTolerance',
           ),
         ),
         allowScale: toWireOperationValue(
@@ -3476,11 +3561,11 @@ export async function bestFitTransformationGroupToGroup(
           operationScalarSchemas.boolean,
           resolveOperationDefault(input.generateEvent, false, 'generateEvent'),
         ),
-        filePathForCsvTextReportRequiresShowInterfaceTrue: toWireOperationValue(
+        filePathForCsvTextReport: toWireOperationValue(
           getOperationValueSchema('fileReference'),
           requireOperationInput(
-            input.filePathForCsvTextReportRequiresShowInterfaceTrue,
-            'filePathForCsvTextReportRequiresShowInterfaceTrue',
+            input.filePathForCsvTextReport,
+            'filePathForCsvTextReport',
           ),
         ),
       } as never,
@@ -3712,12 +3797,12 @@ export async function fitGeometryToPointGroup(
           'reportDeviations',
         ),
       ),
-      fitInterfaceTolerance10UseProfile: toWireOperationValue(
+      fitInterfaceTolerance: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.fitInterfaceTolerance10UseProfile,
+          input.fitInterfaceTolerance,
           -1,
-          'fitInterfaceTolerance10UseProfile',
+          'fitInterfaceTolerance',
         ),
       ),
       ignoreOutOfTolerancePoints: toWireOperationValue(
@@ -3728,11 +3813,11 @@ export async function fitGeometryToPointGroup(
           'ignoreOutOfTolerancePoints',
         ),
       ),
-      startingConditionGeometryOptional: toWireOperationValue(
+      startingConditionGeometry: toWireOperationValue(
         getOperationValueSchema('collectionObjectName'),
         requireOperationInput(
-          input.startingConditionGeometryOptional,
-          'startingConditionGeometryOptional',
+          input.startingConditionGeometry,
+          'startingConditionGeometry',
         ),
       ),
     } as never);
@@ -3793,12 +3878,12 @@ export async function fitGeometryToPointGroupProjectedToPlane(
             'reportDeviations',
           ),
         ),
-        fitInterfaceTolerance10UseProfile: toWireOperationValue(
+        fitInterfaceTolerance: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(
-            input.fitInterfaceTolerance10UseProfile,
+            input.fitInterfaceTolerance,
             -1,
-            'fitInterfaceTolerance10UseProfile',
+            'fitInterfaceTolerance',
           ),
         ),
         ignoreOutOfTolerancePoints: toWireOperationValue(
@@ -3809,11 +3894,11 @@ export async function fitGeometryToPointGroupProjectedToPlane(
             'ignoreOutOfTolerancePoints',
           ),
         ),
-        startingConditionGeometryOptional: toWireOperationValue(
+        startingConditionGeometry: toWireOperationValue(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(
-            input.startingConditionGeometryOptional,
-            'startingConditionGeometryOptional',
+            input.startingConditionGeometry,
+            'startingConditionGeometry',
           ),
         ),
       } as never,
@@ -3867,12 +3952,12 @@ export async function fitGeometryToPoints(
           'reportDeviations',
         ),
       ),
-      fitInterfaceTolerance10UseProfile: toWireOperationValue(
+      fitInterfaceTolerance: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.fitInterfaceTolerance10UseProfile,
+          input.fitInterfaceTolerance,
           -1,
-          'fitInterfaceTolerance10UseProfile',
+          'fitInterfaceTolerance',
         ),
       ),
       ignoreOutOfTolerancePoints: toWireOperationValue(
@@ -3883,11 +3968,11 @@ export async function fitGeometryToPoints(
           'ignoreOutOfTolerancePoints',
         ),
       ),
-      startingConditionGeometryOptional: toWireOperationValue(
+      startingConditionGeometry: toWireOperationValue(
         getOperationValueSchema('collectionObjectName'),
         requireOperationInput(
-          input.startingConditionGeometryOptional,
-          'startingConditionGeometryOptional',
+          input.startingConditionGeometry,
+          'startingConditionGeometry',
         ),
       ),
     } as never);
@@ -4009,16 +4094,8 @@ export async function getConeProperties(
   const mapped = mapOperationResponse(
     response as Readonly<Record<string, unknown>>,
     [
-      [
-        'coneEndPointInWorkingCoordinates',
-        getOperationValueSchema('vector'),
-        'coneEndPointInWorkingCoordinates',
-      ],
-      [
-        'coneAxisInWorkingCoordinates',
-        getOperationValueSchema('vector'),
-        'coneAxisInWorkingCoordinates',
-      ],
+      ['coneEndPoint', getOperationValueSchema('vector'), 'coneEndPoint'],
+      ['coneAxis', getOperationValueSchema('vector'), 'coneAxis'],
       ['coneLength', operationScalarSchemas.number, 'coneLength'],
       ['coneThetaStart', operationScalarSchemas.number, 'coneThetaStart'],
       ['coneThetaSpan', operationScalarSchemas.number, 'coneThetaSpan'],
@@ -4466,9 +4543,9 @@ export async function getMeasurementWeatherData(
   const mapped = mapOperationResponse(
     response as Readonly<Record<string, unknown>>,
     [
-      ['temperatureDegF', operationScalarSchemas.number, 'temperatureDegF'],
-      ['pressureInHg', operationScalarSchemas.number, 'pressureInHg'],
-      ['humidityRh', operationScalarSchemas.number, 'humidityRh'],
+      ['temperature', operationScalarSchemas.number, 'temperature'],
+      ['pressure', operationScalarSchemas.number, 'pressure'],
+      ['humidity', operationScalarSchemas.number, 'humidity'],
     ],
   );
   return mapped as GetMeasurementWeatherDataResult;
@@ -4998,34 +5075,14 @@ export async function getSlotProperties(
   const mapped = mapOperationResponse(
     response as Readonly<Record<string, unknown>>,
     [
-      [
-        'slotTransformInWorkingCoordinates',
-        getOperationValueSchema('transform'),
-        'slotTransformInWorkingCoordinates',
-      ],
-      [
-        'centerInWorkingCoordinates',
-        getOperationValueSchema('vector'),
-        'centerInWorkingCoordinates',
-      ],
-      [
-        'normalDirectionInWorkingCoordinates',
-        getOperationValueSchema('vector'),
-        'normalDirectionInWorkingCoordinates',
-      ],
+      ['slotTransform', getOperationValueSchema('transform'), 'slotTransform'],
+      ['center', getOperationValueSchema('vector'), 'center'],
+      ['normalDirection', getOperationValueSchema('vector'), 'normalDirection'],
       ['slotLength', operationScalarSchemas.number, 'slotLength'],
       ['slotWidth', operationScalarSchemas.number, 'slotWidth'],
       ['roundSlotType', operationScalarSchemas.boolean, 'roundSlotType'],
-      [
-        'centerlinePt1InWorkingCoordinates',
-        getOperationValueSchema('vector'),
-        'centerlinePt1InWorkingCoordinates',
-      ],
-      [
-        'centerlinePt2InWorkingCoordinates',
-        getOperationValueSchema('vector'),
-        'centerlinePt2InWorkingCoordinates',
-      ],
+      ['centerlinePt1', getOperationValueSchema('vector'), 'centerlinePt1'],
+      ['centerlinePt2', getOperationValueSchema('vector'), 'centerlinePt2'],
     ],
   );
   return mapped as GetSlotPropertiesResult;
@@ -5280,20 +5337,16 @@ export async function groupToSurfaceFit(
           'doConventionalFit',
         ),
       ),
-      rmsTolerance00ForNone: toWireOperationValue(
+      rmsTolerance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.rmsTolerance00ForNone,
-          0,
-          'rmsTolerance00ForNone',
-        ),
+        resolveOperationDefault(input.rmsTolerance, 0, 'rmsTolerance'),
       ),
-      maximumAbsoluteTolerance00ForNone: toWireOperationValue(
+      maximumAbsoluteTolerance: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.maximumAbsoluteTolerance00ForNone,
+          input.maximumAbsoluteTolerance,
           0,
-          'maximumAbsoluteTolerance00ForNone',
+          'maximumAbsoluteTolerance',
         ),
       ),
     } as never);
@@ -5420,12 +5473,12 @@ export async function makeCircleFitProfile(
           'measuredSideForRadialOffset',
         ),
       ),
-      overrideRadialOffset10UseCurrent: toWireOperationValue(
+      overrideRadialOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overrideRadialOffset10UseCurrent,
+          input.overrideRadialOffset,
           -1,
-          'overrideRadialOffset10UseCurrent',
+          'overrideRadialOffset',
         ),
       ),
       measuredSideForPlanarOffset: toWireOperationValue(
@@ -5436,12 +5489,12 @@ export async function makeCircleFitProfile(
           'measuredSideForPlanarOffset',
         ),
       ),
-      overridePlanarOffset10UseCurrent: toWireOperationValue(
+      overridePlanarOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overridePlanarOffset10UseCurrent,
+          input.overridePlanarOffset,
           -1,
-          'overridePlanarOffset10UseCurrent',
+          'overridePlanarOffset',
         ),
       ),
       planarOffsetDirection: toWireOperationValue(
@@ -5452,13 +5505,9 @@ export async function makeCircleFitProfile(
           'planarOffsetDirection',
         ),
       ),
-      lockRadius10DoNotLock: toWireOperationValue(
+      lockRadius: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.lockRadius10DoNotLock,
-          -1,
-          'lockRadius10DoNotLock',
-        ),
+        resolveOperationDefault(input.lockRadius, -1, 'lockRadius'),
       ),
       circleComputationTechnique: toWireOperationValue(
         getOperationValueSchema('compTechnique'),
@@ -5538,20 +5587,20 @@ export async function makeConeFitProfile(
           'measuredSideForRadialOffset',
         ),
       ),
-      overrideRadialOffset10UseCurrent: toWireOperationValue(
+      overrideRadialOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overrideRadialOffset10UseCurrent,
+          input.overrideRadialOffset,
           -1,
-          'overrideRadialOffset10UseCurrent',
+          'overrideRadialOffset',
         ),
       ),
-      lockAngleInDegrees10DoNotLock: toWireOperationValue(
+      lockAngleInDegrees: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.lockAngleInDegrees10DoNotLock,
+          input.lockAngleInDegrees,
           -1,
-          'lockAngleInDegrees10DoNotLock',
+          'lockAngleInDegrees',
         ),
       ),
       useExhaustiveSearch: toWireOperationValue(
@@ -5632,21 +5681,17 @@ export async function makeCylinderFitProfile(
           'measuredSideForRadialOffset',
         ),
       ),
-      overrideRadialOffset10UseCurrent: toWireOperationValue(
+      overrideRadialOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overrideRadialOffset10UseCurrent,
+          input.overrideRadialOffset,
           -1,
-          'overrideRadialOffset10UseCurrent',
+          'overrideRadialOffset',
         ),
       ),
-      lockRadius10DoNotLock: toWireOperationValue(
+      lockRadius: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.lockRadius10DoNotLock,
-          -1,
-          'lockRadius10DoNotLock',
-        ),
+        resolveOperationDefault(input.lockRadius, -1, 'lockRadius'),
       ),
       lockedRadiusFitMethod: toWireOperationValue(
         getOperationValueSchema('fitMethod'),
@@ -5778,12 +5823,12 @@ export async function makeEllipseFitProfile(
           'measuredSideForRadialOffset',
         ),
       ),
-      overrideRadialOffset10UseCurrent: toWireOperationValue(
+      overrideRadialOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overrideRadialOffset10UseCurrent,
+          input.overrideRadialOffset,
           -1,
-          'overrideRadialOffset10UseCurrent',
+          'overrideRadialOffset',
         ),
       ),
       measuredSideForPlanarOffset: toWireOperationValue(
@@ -5794,12 +5839,12 @@ export async function makeEllipseFitProfile(
           'measuredSideForPlanarOffset',
         ),
       ),
-      overridePlanarOffset10UseCurrent: toWireOperationValue(
+      overridePlanarOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overridePlanarOffset10UseCurrent,
+          input.overridePlanarOffset,
           -1,
-          'overridePlanarOffset10UseCurrent',
+          'overridePlanarOffset',
         ),
       ),
       planarOffsetDirection: toWireOperationValue(
@@ -5966,21 +6011,17 @@ export async function makeParaboloidFitProfile(
           'measuredSideForRadialOffset',
         ),
       ),
-      overrideRadialOffset10UseCurrent: toWireOperationValue(
+      overrideRadialOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overrideRadialOffset10UseCurrent,
+          input.overrideRadialOffset,
           -1,
-          'overrideRadialOffset10UseCurrent',
+          'overrideRadialOffset',
         ),
       ),
-      lockFocalLength10DoNotLock: toWireOperationValue(
+      lockFocalLength: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.lockFocalLength10DoNotLock,
-          -1,
-          'lockFocalLength10DoNotLock',
-        ),
+        resolveOperationDefault(input.lockFocalLength, -1, 'lockFocalLength'),
       ),
       degreeOfFreedom: toWireOperationValue(
         getOperationValueSchema('degreeOfFreedom'),
@@ -6052,12 +6093,12 @@ export async function makePlaneFitProfile(
           'measuredSideForPlanarOffset',
         ),
       ),
-      overridePlanarOffset10UseCurrent: toWireOperationValue(
+      overridePlanarOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overridePlanarOffset10UseCurrent,
+          input.overridePlanarOffset,
           -1,
-          'overridePlanarOffset10UseCurrent',
+          'overridePlanarOffset',
         ),
       ),
       planarOffsetDirection: toWireOperationValue(
@@ -6138,12 +6179,12 @@ export async function makeSlotFitProfile(
           'measuredSideForRadialOffset',
         ),
       ),
-      overrideRadialOffset10UseCurrent: toWireOperationValue(
+      overrideRadialOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overrideRadialOffset10UseCurrent,
+          input.overrideRadialOffset,
           -1,
-          'overrideRadialOffset10UseCurrent',
+          'overrideRadialOffset',
         ),
       ),
       measuredSideForPlanarOffset: toWireOperationValue(
@@ -6154,12 +6195,12 @@ export async function makeSlotFitProfile(
           'measuredSideForPlanarOffset',
         ),
       ),
-      overridePlanarOffset10UseCurrent: toWireOperationValue(
+      overridePlanarOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overridePlanarOffset10UseCurrent,
+          input.overridePlanarOffset,
           -1,
-          'overridePlanarOffset10UseCurrent',
+          'overridePlanarOffset',
         ),
       ),
       planarOffsetDirection: toWireOperationValue(
@@ -6268,21 +6309,17 @@ export async function makeSphereFitProfile(
           'measuredSideForRadialOffset',
         ),
       ),
-      overrideRadialOffset10UseCurrent: toWireOperationValue(
+      overrideRadialOffset: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.overrideRadialOffset10UseCurrent,
+          input.overrideRadialOffset,
           -1,
-          'overrideRadialOffset10UseCurrent',
+          'overrideRadialOffset',
         ),
       ),
-      lockRadius10DoNotLock: toWireOperationValue(
+      lockRadius: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.lockRadius10DoNotLock,
-          -1,
-          'lockRadius10DoNotLock',
-        ),
+        resolveOperationDefault(input.lockRadius, -1, 'lockRadius'),
       ),
       makeCardinalPoints: toWireOperationValue(
         operationScalarSchemas.boolean,
@@ -6523,20 +6560,16 @@ export async function queryCloudsToObjects(
         operationScalarSchemas.integer,
         resolveOperationDefault(input.skipFactor, 0, 'skipFactor'),
       ),
-      rmsTolerance00ForNone: toWireOperationValue(
+      rmsTolerance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.rmsTolerance00ForNone,
-          0,
-          'rmsTolerance00ForNone',
-        ),
+        resolveOperationDefault(input.rmsTolerance, 0, 'rmsTolerance'),
       ),
-      maximumAbsoluteTolerance00ForNone: toWireOperationValue(
+      maximumAbsoluteTolerance: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.maximumAbsoluteTolerance00ForNone,
+          input.maximumAbsoluteTolerance,
           0,
-          'maximumAbsoluteTolerance00ForNone',
+          'maximumAbsoluteTolerance',
         ),
       ),
     } as never);
@@ -6600,20 +6633,16 @@ export async function queryCloudsToSurface(
         operationScalarSchemas.integer,
         resolveOperationDefault(input.skipFactor, 0, 'skipFactor'),
       ),
-      rmsTolerance00ForNone: toWireOperationValue(
+      rmsTolerance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.rmsTolerance00ForNone,
-          0,
-          'rmsTolerance00ForNone',
-        ),
+        resolveOperationDefault(input.rmsTolerance, 0, 'rmsTolerance'),
       ),
-      maximumAbsoluteTolerance00ForNone: toWireOperationValue(
+      maximumAbsoluteTolerance: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.maximumAbsoluteTolerance00ForNone,
+          input.maximumAbsoluteTolerance,
           0,
-          'maximumAbsoluteTolerance00ForNone',
+          'maximumAbsoluteTolerance',
         ),
       ),
     } as never);
@@ -6676,9 +6705,9 @@ export async function queryFrameToFrame(
       ['x', operationScalarSchemas.number, 'x'],
       ['y', operationScalarSchemas.number, 'y'],
       ['z', operationScalarSchemas.number, 'z'],
-      ['rxRoll', operationScalarSchemas.number, 'rxRoll'],
-      ['ryPitch', operationScalarSchemas.number, 'ryPitch'],
-      ['rzYaw', operationScalarSchemas.number, 'rzYaw'],
+      ['rx', operationScalarSchemas.number, 'rx'],
+      ['ry', operationScalarSchemas.number, 'ry'],
+      ['rz', operationScalarSchemas.number, 'rz'],
     ],
   );
   return mapped as QueryFrameToFrameResult;
@@ -6693,19 +6722,13 @@ export async function queryGroupsToObjects(
     throw new TypeError('input is required.');
   const request =
     AnalysisOperationsProtocol.QueryGroupsToObjectsRequest.fromPartial({
-      groupNameListGroupsToProject: toWireOperationValue(
+      groupNameList: toWireOperationValue(
         repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
-        requireOperationInput(
-          input.groupNameListGroupsToProject,
-          'groupNameListGroupsToProject',
-        ),
+        requireOperationInput(input.groupNameList, 'groupNameList'),
       ),
-      objectNameListObjectsToProjectTo: toWireOperationValue(
+      objectNameList: toWireOperationValue(
         repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
-        requireOperationInput(
-          input.objectNameListObjectsToProjectTo,
-          'objectNameListObjectsToProjectTo',
-        ),
+        requireOperationInput(input.objectNameList, 'objectNameList'),
       ),
       resultingObjectName: toWireOperationValue(
         getOperationValueSchema('collectionObjectName'),
@@ -6719,20 +6742,16 @@ export async function queryGroupsToObjects(
           'projectionOptions',
         ),
       ),
-      rmsTolerance00ForNone: toWireOperationValue(
+      rmsTolerance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.rmsTolerance00ForNone,
-          0,
-          'rmsTolerance00ForNone',
-        ),
+        resolveOperationDefault(input.rmsTolerance, 0, 'rmsTolerance'),
       ),
-      maximumAbsoluteTolerance00ForNone: toWireOperationValue(
+      maximumAbsoluteTolerance: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.maximumAbsoluteTolerance00ForNone,
+          input.maximumAbsoluteTolerance,
           0,
-          'maximumAbsoluteTolerance00ForNone',
+          'maximumAbsoluteTolerance',
         ),
       ),
       showResultsDialog: toWireOperationValue(
@@ -6949,12 +6968,9 @@ export async function queryPointsToObjects(
         repeatedOperationValue(getOperationValueSchema('pointName')),
         requireOperationInput(input.pointNames, 'pointNames'),
       ),
-      objectNameListObjectsToProjectTo: toWireOperationValue(
+      objectNameList: toWireOperationValue(
         repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
-        requireOperationInput(
-          input.objectNameListObjectsToProjectTo,
-          'objectNameListObjectsToProjectTo',
-        ),
+        requireOperationInput(input.objectNameList, 'objectNameList'),
       ),
       resultingObjectName: toWireOperationValue(
         getOperationValueSchema('collectionObjectName'),
@@ -6968,20 +6984,16 @@ export async function queryPointsToObjects(
           'projectionOptions',
         ),
       ),
-      rmsTolerance00ForNone: toWireOperationValue(
+      rmsTolerance: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.rmsTolerance00ForNone,
-          0,
-          'rmsTolerance00ForNone',
-        ),
+        resolveOperationDefault(input.rmsTolerance, 0, 'rmsTolerance'),
       ),
-      maximumAbsoluteTolerance00ForNone: toWireOperationValue(
+      maximumAbsoluteTolerance: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.maximumAbsoluteTolerance00ForNone,
+          input.maximumAbsoluteTolerance,
           0,
-          'maximumAbsoluteTolerance00ForNone',
+          'maximumAbsoluteTolerance',
         ),
       ),
       showResultsDialog: toWireOperationValue(
@@ -7366,19 +7378,13 @@ export async function setConeProperties(
         getOperationValueSchema('collectionObjectName'),
         requireOperationInput(input.coneName, 'coneName'),
       ),
-      coneEndPointInWorkingCoordinates: toWireOperationValue(
+      coneEndPoint: toWireOperationValue(
         getOperationValueSchema('vector'),
-        requireOperationInput(
-          input.coneEndPointInWorkingCoordinates,
-          'coneEndPointInWorkingCoordinates',
-        ),
+        requireOperationInput(input.coneEndPoint, 'coneEndPoint'),
       ),
-      coneAxisInWorkingCoordinates: toWireOperationValue(
+      coneAxis: toWireOperationValue(
         getOperationValueSchema('vector'),
-        requireOperationInput(
-          input.coneAxisInWorkingCoordinates,
-          'coneAxisInWorkingCoordinates',
-        ),
+        requireOperationInput(input.coneAxis, 'coneAxis'),
       ),
       coneLength: toWireOperationValue(
         operationScalarSchemas.number,
@@ -7661,9 +7667,9 @@ export async function setLineProperties(
         getOperationValueSchema('vector'),
         requireOperationInput(input.endCoordinate, 'endCoordinate'),
       ),
-      lengthOptional: toWireOperationValue(
+      length: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(input.lengthOptional, 0, 'lengthOptional'),
+        resolveOperationDefault(input.length, 0, 'length'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -7995,32 +8001,25 @@ export async function temperatureCompensateAGroup(
         getOperationValueSchema('collectionObjectName'),
         requireOperationInput(input.originalGroup, 'originalGroup'),
       ),
-      scalingOriginCoordinateFrame: toWireOperationValue(
+      scalingOrigin: toWireOperationValue(
         getOperationValueSchema('frameName'),
-        requireOperationInput(
-          input.scalingOriginCoordinateFrame,
-          'scalingOriginCoordinateFrame',
-        ),
+        requireOperationInput(input.scalingOrigin, 'scalingOrigin'),
       ),
-      materialCte1DegF: toWireOperationValue(
+      materialCte: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(input.materialCte1DegF, 0, 'materialCte1DegF'),
+        resolveOperationDefault(input.materialCte, 0, 'materialCte'),
       ),
-      initialTemperatureF: toWireOperationValue(
+      initialTemperature: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
-          input.initialTemperatureF,
+          input.initialTemperature,
           0,
-          'initialTemperatureF',
+          'initialTemperature',
         ),
       ),
-      finalTemperatureF: toWireOperationValue(
+      finalTemperature: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(
-          input.finalTemperatureF,
-          0,
-          'finalTemperatureF',
-        ),
+        resolveOperationDefault(input.finalTemperature, 0, 'finalTemperature'),
       ),
       scaledGroupName: toWireOperationValue(
         getOperationValueSchema('collectionObjectName'),
@@ -8770,12 +8769,12 @@ export async function directCadAccess(
         'removeEmptyFolders',
       ),
     ),
-    surfaceNormalsMode1Or2: toWireOperationValue(
+    surfaceNormalsMode: toWireOperationValue(
       operationScalarSchemas.integer,
       resolveOperationDefault(
-        input.surfaceNormalsMode1Or2,
+        input.surfaceNormalsMode,
         1,
-        'surfaceNormalsMode1Or2',
+        'surfaceNormalsMode',
       ),
     ),
     promptOnMissingComponents: toWireOperationValue(
@@ -8802,13 +8801,9 @@ export async function directCadAccess(
       operationScalarSchemas.boolean,
       resolveOperationDefault(input.explodeSurfaces, false, 'explodeSurfaces'),
     ),
-    cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile: toWireOperationValue(
+    cadFileUnits: toWireOperationValue(
       operationScalarSchemas.string,
-      resolveOperationDefault(
-        input.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile,
-        '',
-        'cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile',
-      ),
+      resolveOperationDefault(input.cadFileUnits, '', 'cadFileUnits'),
     ),
     buildCalloutViews: toWireOperationValue(
       operationScalarSchemas.boolean,
@@ -9094,12 +9089,12 @@ export async function exportAsciiPointSet(
           'includeExportFormatInfo',
         ),
       ),
-      maximumPrecisionScientificNotation: toWireOperationValue(
+      maximumPrecision: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
-          input.maximumPrecisionScientificNotation,
+          input.maximumPrecision,
           false,
-          'maximumPrecisionScientificNotation',
+          'maximumPrecision',
         ),
       ),
       decimalPrecision: toWireOperationValue(
@@ -9235,12 +9230,12 @@ export async function exportAsciiPoints(
         'includeMeasurementDetails',
       ),
     ),
-    maximumPrecisionScientificNotation: toWireOperationValue(
+    maximumPrecision: toWireOperationValue(
       operationScalarSchemas.boolean,
       resolveOperationDefault(
-        input.maximumPrecisionScientificNotation,
+        input.maximumPrecision,
         false,
-        'maximumPrecisionScientificNotation',
+        'maximumPrecision',
       ),
     ),
     decimalPrecision: toWireOperationValue(
@@ -9844,20 +9839,20 @@ export async function exportVectorContainerToAsciiFile(
           'vectorGroupsToExport',
         ),
       ),
-      overwriteExistingFileFalseAppend: toWireOperationValue(
+      overwriteExistingFile: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
-          input.overwriteExistingFileFalseAppend,
+          input.overwriteExistingFile,
           true,
-          'overwriteExistingFileFalseAppend',
+          'overwriteExistingFile',
         ),
       ),
-      useFullPrecisionScientificNotation: toWireOperationValue(
+      useFullPrecision: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
-          input.useFullPrecisionScientificNotation,
+          input.useFullPrecision,
           false,
-          'useFullPrecisionScientificNotation',
+          'useFullPrecision',
         ),
       ),
       vectorNameFormat: toWireOperationValue(
@@ -10794,12 +10789,9 @@ export async function importSaFile(
         'allowOperatorSelections',
       ),
     ),
-    selectedCollectionsOptional: toWireOperationValue(
+    selectedCollections: toWireOperationValue(
       repeatedOperationValue(operationScalarSchemas.string),
-      requireOperationInput(
-        input.selectedCollectionsOptional,
-        'selectedCollectionsOptional',
-      ),
+      requireOperationInput(input.selectedCollections, 'selectedCollections'),
     ),
   } as never);
   const response = await invokeClientOperation(
@@ -12621,21 +12613,13 @@ export async function askForUserDecisionFromImage(
           operationScalarSchemas.string,
           resolveOperationDefault(input.windowCaption, '', 'windowCaption'),
         ),
-        windowWidth0Default: toWireOperationValue(
+        windowWidth: toWireOperationValue(
           operationScalarSchemas.integer,
-          resolveOperationDefault(
-            input.windowWidth0Default,
-            0,
-            'windowWidth0Default',
-          ),
+          resolveOperationDefault(input.windowWidth, 0, 'windowWidth'),
         ),
-        windowHeight0Default: toWireOperationValue(
+        windowHeight: toWireOperationValue(
           operationScalarSchemas.integer,
-          resolveOperationDefault(
-            input.windowHeight0Default,
-            0,
-            'windowHeight0Default',
-          ),
+          resolveOperationDefault(input.windowHeight, 0, 'windowHeight'),
         ),
       } as never,
     );
@@ -12676,29 +12660,17 @@ export async function askForUserDecisionFromStrings(
           getOperationValueSchema('font'),
           resolveOperationDefault(input.font, Font.default, 'font'),
         ),
-        button1TextEmptyToHideButton: toWireOperationValue(
+        button1Text: toWireOperationValue(
           operationScalarSchemas.string,
-          resolveOperationDefault(
-            input.button1TextEmptyToHideButton,
-            '',
-            'button1TextEmptyToHideButton',
-          ),
+          resolveOperationDefault(input.button1Text, '', 'button1Text'),
         ),
-        button2TextEmptyToHideButton: toWireOperationValue(
+        button2Text: toWireOperationValue(
           operationScalarSchemas.string,
-          resolveOperationDefault(
-            input.button2TextEmptyToHideButton,
-            '',
-            'button2TextEmptyToHideButton',
-          ),
+          resolveOperationDefault(input.button2Text, '', 'button2Text'),
         ),
-        button3TextEmptyToHideButton: toWireOperationValue(
+        button3Text: toWireOperationValue(
           operationScalarSchemas.string,
-          resolveOperationDefault(
-            input.button3TextEmptyToHideButton,
-            '',
-            'button3TextEmptyToHideButton',
-          ),
+          resolveOperationDefault(input.button3Text, '', 'button3Text'),
         ),
       } as never,
     );
@@ -12879,24 +12851,24 @@ export async function getGeomRelationshipAutoVectors(
     response as Readonly<Record<string, unknown>>,
     [
       [
-        'autoVectorsNominalAvnEnabled',
+        'autoVectorsNominalEnabled',
         operationScalarSchemas.boolean,
-        'autoVectorsNominalAvnEnabled',
+        'autoVectorsNominalEnabled',
       ],
       [
-        'autoVectorsNominalAvnName',
+        'autoVectorsNominalName',
         getOperationValueSchema('collectionObjectName'),
-        'autoVectorsNominalAvnName',
+        'autoVectorsNominalName',
       ],
       [
-        'autoVectorsFitAvfEnabled',
+        'autoVectorsFitEnabled',
         operationScalarSchemas.boolean,
-        'autoVectorsFitAvfEnabled',
+        'autoVectorsFitEnabled',
       ],
       [
-        'autoVectorsFitAvfName',
+        'autoVectorsFitName',
         getOperationValueSchema('collectionObjectName'),
-        'autoVectorsFitAvfName',
+        'autoVectorsFitName',
       ],
       ['pointsType', operationScalarSchemas.string, 'pointsType'],
     ],
@@ -13964,13 +13936,9 @@ export async function setGeomRelationshipAutoMeasureNominalFeature(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        trapCloudsFalseGeometry: toWireOperationValue(
+        trapClouds: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input.trapCloudsFalseGeometry,
-            true,
-            'trapCloudsFalseGeometry',
-          ),
+          resolveOperationDefault(input.trapClouds, true, 'trapClouds'),
         ),
         instrumentId: toWireOperationValue(
           getOperationValueSchema('collectionInstrumentId'),
@@ -15164,13 +15132,9 @@ export async function setRelationshipVoxelCloudDisplay(
             'enableVoxelCloudDisplay',
           ),
         ),
-        voxelSize10Autodetect: toWireOperationValue(
+        voxelSize: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.voxelSize10Autodetect,
-            -1,
-            'voxelSize10Autodetect',
-          ),
+          resolveOperationDefault(input.voxelSize, -1, 'voxelSize'),
         ),
         minPtsCountPerVoxel: toWireOperationValue(
           operationScalarSchemas.integer,
@@ -15180,12 +15144,12 @@ export async function setRelationshipVoxelCloudDisplay(
             'minPtsCountPerVoxel',
           ),
         ),
-        voxelRenderingDiameter10Fast: toWireOperationValue(
+        voxelRenderingDiameter: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(
-            input.voxelRenderingDiameter10Fast,
+            input.voxelRenderingDiameter,
             125,
-            'voxelRenderingDiameter10Fast',
+            'voxelRenderingDiameter',
           ),
         ),
         surfaceAnalysisMode: toWireOperationValue(
@@ -15916,12 +15880,9 @@ export async function createChartFromVectorGroup(
         getOperationValueSchema('datasetType'),
         requireOperationInput(input.auxDataSetToChart, 'auxDataSetToChart'),
       ),
-      templateChartNameOptional: toWireOperationValue(
+      templateChartName: toWireOperationValue(
         getOperationValueSchema('chartName'),
-        requireOperationInput(
-          input.templateChartNameOptional,
-          'templateChartNameOptional',
-        ),
+        requireOperationInput(input.templateChartName, 'templateChartName'),
       ),
       showInterface: toWireOperationValue(
         operationScalarSchemas.boolean,
@@ -15991,12 +15952,12 @@ export async function defineReportTemplate(
           'reportOutputOptions',
         ),
       ),
-      reportPageSettingsSaReportOnly: toWireOperationValue(
+      reportPageSettings: toWireOperationValue(
         getOperationValueSchema('reportPageSettings'),
         resolveOperationDefault(
-          input.reportPageSettingsSaReportOnly,
+          input.reportPageSettings,
           ReportPageSettings.portrait,
-          'reportPageSettingsSaReportOnly',
+          'reportPageSettings',
         ),
       ),
       generateNow: toWireOperationValue(
@@ -16535,12 +16496,9 @@ export async function makeNewSaReport(
         getOperationValueSchema('collectionObjectName'),
         requireOperationInput(input.newSaReportName, 'newSaReportName'),
       ),
-      saReportTemplateOptional: toWireOperationValue(
+      saReportTemplate: toWireOperationValue(
         getOperationValueSchema('collectionObjectName'),
-        requireOperationInput(
-          input.saReportTemplateOptional,
-          'saReportTemplateOptional',
-        ),
+        requireOperationInput(input.saReportTemplate, 'saReportTemplate'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -16878,13 +16836,9 @@ export async function quickReport(
       getOperationValueSchema('collectionObjectName'),
       requireOperationInput(input.itemName, 'itemName'),
     ),
-    reportNameOptional: toWireOperationValue(
+    reportName: toWireOperationValue(
       operationScalarSchemas.string,
-      resolveOperationDefault(
-        input.reportNameOptional,
-        '',
-        'reportNameOptional',
-      ),
+      resolveOperationDefault(input.reportName, '', 'reportName'),
     ),
     openReport: toWireOperationValue(
       operationScalarSchemas.boolean,
@@ -17080,12 +17034,12 @@ export async function saveCurrentViewBmpJpgPngGifTiff(
           getOperationValueSchema('fileReference'),
           requireOperationInput(input.fileToSaveTo, 'fileToSaveTo'),
         ),
-        renderScaleFactor10UsesWindowSize: toWireOperationValue(
+        renderScaleFactor: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(
-            input.renderScaleFactor10UsesWindowSize,
+            input.renderScaleFactor,
             1,
-            'renderScaleFactor10UsesWindowSize',
+            'renderScaleFactor',
           ),
         ),
       } as never,
@@ -17869,21 +17823,21 @@ export async function scaleBarCheck(
       getOperationValueSchema('pointName'),
       requireOperationInput(input.scaleBarPointB, 'scaleBarPointB'),
     ),
-    currentTemperatureF: toWireOperationValue(
+    currentTemperature: toWireOperationValue(
       operationScalarSchemas.number,
       resolveOperationDefault(
-        input.currentTemperatureF,
+        input.currentTemperature,
         0,
-        'currentTemperatureF',
+        'currentTemperature',
       ),
     ),
     lengthOfBarAt68f: toWireOperationValue(
       operationScalarSchemas.number,
       resolveOperationDefault(input.lengthOfBarAt68F, 0, 'lengthOfBarAt68F'),
     ),
-    materialCtePpmF: toWireOperationValue(
+    materialCte: toWireOperationValue(
       operationScalarSchemas.number,
-      resolveOperationDefault(input.materialCtePpmF, 0, 'materialCtePpmF'),
+      resolveOperationDefault(input.materialCte, 0, 'materialCte'),
     ),
     tolerance: toWireOperationValue(
       operationScalarSchemas.number,
@@ -18122,13 +18076,7 @@ export async function getAngularRepresentation(
   );
   const mapped = mapOperationResponse(
     response as Readonly<Record<string, unknown>>,
-    [
-      [
-        'value0360False180',
-        operationScalarSchemas.boolean,
-        'value0360False180',
-      ],
-    ],
+    [['value0360', operationScalarSchemas.boolean, 'value0360']],
   );
   return mapped as boolean;
 }
@@ -18441,9 +18389,9 @@ export async function getScreenResolution(
     throw new TypeError('input is required.');
   const request =
     UtilityOperationsProtocol.GetScreenResolutionRequest.fromPartial({
-      display1Primary: toWireOperationValue(
+      display: toWireOperationValue(
         operationScalarSchemas.integer,
-        resolveOperationDefault(input.display1Primary, -1, 'display1Primary'),
+        resolveOperationDefault(input.display, -1, 'display'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -18940,13 +18888,9 @@ export async function setAngularRepresentation(
     throw new TypeError('input is required.');
   const request =
     UtilityOperationsProtocol.SetAngularRepresentationRequest.fromPartial({
-      value0360False180: toWireOperationValue(
+      value0360: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(
-          input.value0360False180,
-          false,
-          'value0360False180',
-        ),
+        resolveOperationDefault(input.value0360, false, 'value0360'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -19086,13 +19030,9 @@ export async function setCollectionNotes(
         repeatedOperationValue(operationScalarSchemas.string),
         requireOperationInput(input.notes, 'notes'),
       ),
-      appendFalseOverwrite: toWireOperationValue(
+      append: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(
-          input.appendFalseOverwrite,
-          true,
-          'appendFalseOverwrite',
-        ),
+        resolveOperationDefault(input.append, true, 'append'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -19173,13 +19113,9 @@ export async function setFolderNotes(
       repeatedOperationValue(operationScalarSchemas.string),
       requireOperationInput(input.notes, 'notes'),
     ),
-    appendFalseOverwrite: toWireOperationValue(
+    append: toWireOperationValue(
       operationScalarSchemas.boolean,
-      resolveOperationDefault(
-        input.appendFalseOverwrite,
-        true,
-        'appendFalseOverwrite',
-      ),
+      resolveOperationDefault(input.append, true, 'append'),
     ),
   } as never);
   const response = await invokeClientOperation(
@@ -19317,13 +19253,9 @@ export async function setObjectNotes(
       repeatedOperationValue(operationScalarSchemas.string),
       requireOperationInput(input.notes, 'notes'),
     ),
-    appendFalseOverwrite: toWireOperationValue(
+    append: toWireOperationValue(
       operationScalarSchemas.boolean,
-      resolveOperationDefault(
-        input.appendFalseOverwrite,
-        true,
-        'appendFalseOverwrite',
-      ),
+      resolveOperationDefault(input.append, true, 'append'),
     ),
   } as never);
   const response = await invokeClientOperation(
@@ -19472,13 +19404,9 @@ export async function setPointNotes(
       repeatedOperationValue(operationScalarSchemas.string),
       requireOperationInput(input.notes, 'notes'),
     ),
-    appendFalseOverwrite: toWireOperationValue(
+    append: toWireOperationValue(
       operationScalarSchemas.boolean,
-      resolveOperationDefault(
-        input.appendFalseOverwrite,
-        true,
-        'appendFalseOverwrite',
-      ),
+      resolveOperationDefault(input.append, true, 'append'),
     ),
   } as never);
   const response = await invokeClientOperation(
@@ -19510,12 +19438,9 @@ export async function setUserInterfaceProfile(
         operationScalarSchemas.string,
         resolveOperationDefault(input.profileName, 'Default', 'profileName'),
       ),
-      profileFileNameOptional: toWireOperationValue(
+      profileFileName: toWireOperationValue(
         getOperationValueSchema('fileReference'),
-        requireOperationInput(
-          input.profileFileNameOptional,
-          'profileFileNameOptional',
-        ),
+        requireOperationInput(input.profileFileName, 'profileFileName'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -20975,12 +20900,12 @@ export async function autoRangeAndSetVectorGroupColorizationAll(
             'treatIndividually',
           ),
         ),
-        colorizationOptionsUsesModeOnly: toWireOperationValue(
+        colorizationOptions: toWireOperationValue(
           getOperationValueSchema('colorizationOptions'),
           resolveOperationDefault(
-            input.colorizationOptionsUsesModeOnly,
+            input.colorizationOptions,
             ColorizationOptions.default,
-            'colorizationOptionsUsesModeOnly',
+            'colorizationOptions',
           ),
         ),
       } as never,
@@ -21028,12 +20953,12 @@ export async function autoRangeAndSetVectorGroupColorizationSelected(
             'treatIndividually',
           ),
         ),
-        colorizationOptionsUsesModeOnly: toWireOperationValue(
+        colorizationOptions: toWireOperationValue(
           getOperationValueSchema('colorizationOptions'),
           resolveOperationDefault(
-            input.colorizationOptionsUsesModeOnly,
+            input.colorizationOptions,
             ColorizationOptions.default,
-            'colorizationOptionsUsesModeOnly',
+            'colorizationOptions',
           ),
         ),
       } as never,
@@ -21941,12 +21866,9 @@ export async function highlightObjects(
   if (typeof input !== 'object' || input === null)
     throw new TypeError('input is required.');
   const request = ViewControlProtocol.HighlightObjectsRequest.fromPartial({
-    objectNamesEmptyToClearAll: toWireOperationValue(
+    objectNames: toWireOperationValue(
       repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
-      requireOperationInput(
-        input.objectNamesEmptyToClearAll,
-        'objectNamesEmptyToClearAll',
-      ),
+      requireOperationInput(input.objectNames, 'objectNames'),
     ),
     highLightObjects: toWireOperationValue(
       operationScalarSchemas.boolean,
@@ -21981,12 +21903,9 @@ export async function highlightPoint(
   if (typeof input !== 'object' || input === null)
     throw new TypeError('input is required.');
   const request = ViewControlProtocol.HighlightPointRequest.fromPartial({
-    pointNameEmptyToClearAll: toWireOperationValue(
+    pointName: toWireOperationValue(
       getOperationValueSchema('pointName'),
-      requireOperationInput(
-        input.pointNameEmptyToClearAll,
-        'pointNameEmptyToClearAll',
-      ),
+      requireOperationInput(input.pointName, 'pointName'),
     ),
     showPoint: toWireOperationValue(
       operationScalarSchemas.boolean,
@@ -22018,12 +21937,9 @@ export async function highlightRelationships(
     throw new TypeError('input is required.');
   const request = ViewControlProtocol.HighlightRelationshipsRequest.fromPartial(
     {
-      relationshipsEmptyToClearAll: toWireOperationValue(
+      relationships: toWireOperationValue(
         repeatedOperationValue(getOperationValueSchema('collectionItemName')),
-        requireOperationInput(
-          input.relationshipsEmptyToClearAll,
-          'relationshipsEmptyToClearAll',
-        ),
+        requireOperationInput(input.relationships, 'relationships'),
       ),
       highLightRelationships: toWireOperationValue(
         operationScalarSchemas.boolean,
@@ -22781,9 +22697,9 @@ export async function showHideByObjectType(
         'objectTypeToShowHide',
       ),
     ),
-    hideShowFalse: toWireOperationValue(
+    hide: toWireOperationValue(
       operationScalarSchemas.boolean,
-      resolveOperationDefault(input.hideShowFalse, true, 'hideShowFalse'),
+      resolveOperationDefault(input.hide, true, 'hide'),
     ),
   } as never);
   const response = await invokeClientOperation(
@@ -22880,9 +22796,9 @@ export async function showHidePoints(
       repeatedOperationValue(getOperationValueSchema('pointName')),
       requireOperationInput(input.pointNames, 'pointNames'),
     ),
-    showHideFalse: toWireOperationValue(
+    show: toWireOperationValue(
       operationScalarSchemas.boolean,
-      resolveOperationDefault(input.showHideFalse, false, 'showHideFalse'),
+      resolveOperationDefault(input.show, false, 'show'),
     ),
   } as never);
   const response = await invokeClientOperation(

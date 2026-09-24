@@ -39,8 +39,11 @@ export interface AddAVectorToVectorNameRefListResult {
 }
 
 export interface AutoRangeAndSetVectorGroupColorizationAllRequest {
-  treatIndividually?: boolean | undefined;
-  colorizationOptionsUsesModeOnly?: ColorizationOptions | undefined;
+  treatIndividually?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Uses Mode Only. */
+  colorizationOptions?: ColorizationOptions | undefined;
 }
 
 export interface AutoRangeAndSetVectorGroupColorizationAllResult {
@@ -49,8 +52,11 @@ export interface AutoRangeAndSetVectorGroupColorizationAllResult {
 
 export interface AutoRangeAndSetVectorGroupColorizationSelectedRequest {
   vectorGroupsToBeSet?: CollectionVectorGroupName[] | undefined;
-  treatIndividually?: boolean | undefined;
-  colorizationOptionsUsesModeOnly?: ColorizationOptions | undefined;
+  treatIndividually?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Uses Mode Only. */
+  colorizationOptions?: ColorizationOptions | undefined;
 }
 
 export interface AutoRangeAndSetVectorGroupColorizationSelectedResult {
@@ -332,7 +338,7 @@ export const AddAVectorToVectorNameRefListResult: MessageFns<AddAVectorToVectorN
 };
 
 function createBaseAutoRangeAndSetVectorGroupColorizationAllRequest(): AutoRangeAndSetVectorGroupColorizationAllRequest {
-  return { treatIndividually: undefined, colorizationOptionsUsesModeOnly: undefined };
+  return { treatIndividually: undefined, colorizationOptions: undefined };
 }
 
 export const AutoRangeAndSetVectorGroupColorizationAllRequest: MessageFns<
@@ -345,8 +351,8 @@ export const AutoRangeAndSetVectorGroupColorizationAllRequest: MessageFns<
     if (message.treatIndividually !== undefined) {
       writer.uint32(8).bool(message.treatIndividually);
     }
-    if (message.colorizationOptionsUsesModeOnly !== undefined) {
-      ColorizationOptions.encode(message.colorizationOptionsUsesModeOnly, writer.uint32(18).fork()).join();
+    if (message.colorizationOptions !== undefined) {
+      ColorizationOptions.encode(message.colorizationOptions, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -371,7 +377,7 @@ export const AutoRangeAndSetVectorGroupColorizationAllRequest: MessageFns<
             break;
           }
 
-          message.colorizationOptionsUsesModeOnly = ColorizationOptions.decode(reader, reader.uint32());
+          message.colorizationOptions = ColorizationOptions.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -393,10 +399,9 @@ export const AutoRangeAndSetVectorGroupColorizationAllRequest: MessageFns<
   ): AutoRangeAndSetVectorGroupColorizationAllRequest {
     const message = createBaseAutoRangeAndSetVectorGroupColorizationAllRequest();
     message.treatIndividually = object.treatIndividually ?? undefined;
-    message.colorizationOptionsUsesModeOnly =
-      (object.colorizationOptionsUsesModeOnly !== undefined && object.colorizationOptionsUsesModeOnly !== null)
-        ? ColorizationOptions.fromPartial(object.colorizationOptionsUsesModeOnly)
-        : undefined;
+    message.colorizationOptions = (object.colorizationOptions !== undefined && object.colorizationOptions !== null)
+      ? ColorizationOptions.fromPartial(object.colorizationOptions)
+      : undefined;
     return message;
   },
 };
@@ -459,7 +464,7 @@ export const AutoRangeAndSetVectorGroupColorizationAllResult: MessageFns<
 };
 
 function createBaseAutoRangeAndSetVectorGroupColorizationSelectedRequest(): AutoRangeAndSetVectorGroupColorizationSelectedRequest {
-  return { vectorGroupsToBeSet: [], treatIndividually: undefined, colorizationOptionsUsesModeOnly: undefined };
+  return { vectorGroupsToBeSet: [], treatIndividually: undefined, colorizationOptions: undefined };
 }
 
 export const AutoRangeAndSetVectorGroupColorizationSelectedRequest: MessageFns<
@@ -477,8 +482,8 @@ export const AutoRangeAndSetVectorGroupColorizationSelectedRequest: MessageFns<
     if (message.treatIndividually !== undefined) {
       writer.uint32(16).bool(message.treatIndividually);
     }
-    if (message.colorizationOptionsUsesModeOnly !== undefined) {
-      ColorizationOptions.encode(message.colorizationOptionsUsesModeOnly, writer.uint32(26).fork()).join();
+    if (message.colorizationOptions !== undefined) {
+      ColorizationOptions.encode(message.colorizationOptions, writer.uint32(26).fork()).join();
     }
     return writer;
   },
@@ -514,7 +519,7 @@ export const AutoRangeAndSetVectorGroupColorizationSelectedRequest: MessageFns<
             break;
           }
 
-          message.colorizationOptionsUsesModeOnly = ColorizationOptions.decode(reader, reader.uint32());
+          message.colorizationOptions = ColorizationOptions.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -538,10 +543,9 @@ export const AutoRangeAndSetVectorGroupColorizationSelectedRequest: MessageFns<
     message.vectorGroupsToBeSet = object.vectorGroupsToBeSet?.map((e) => CollectionVectorGroupName.fromPartial(e)) ||
       [];
     message.treatIndividually = object.treatIndividually ?? undefined;
-    message.colorizationOptionsUsesModeOnly =
-      (object.colorizationOptionsUsesModeOnly !== undefined && object.colorizationOptionsUsesModeOnly !== null)
-        ? ColorizationOptions.fromPartial(object.colorizationOptionsUsesModeOnly)
-        : undefined;
+    message.colorizationOptions = (object.colorizationOptions !== undefined && object.colorizationOptions !== null)
+      ? ColorizationOptions.fromPartial(object.colorizationOptions)
+      : undefined;
     return message;
   },
 };

@@ -88,13 +88,19 @@ export interface DirectCadAccessRequest {
   dittoThreshold?: number | undefined;
   centerViewOnImportedObjects?: boolean | undefined;
   importIntoFoldersMatchingCadFileHierarchy?: boolean | undefined;
-  removeEmptyFolders?: boolean | undefined;
-  surfaceNormalsMode1Or2?: number | undefined;
+  removeEmptyFolders?:
+    | boolean
+    | undefined;
+  /** MP qualifier: 1 or 2. */
+  surfaceNormalsMode?: number | undefined;
   promptOnMissingComponents?: boolean | undefined;
   selectiveImport?: boolean | undefined;
   surfaceCompatibilityMode?: boolean | undefined;
-  explodeSurfaces?: boolean | undefined;
-  cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile?: string | undefined;
+  explodeSurfaces?:
+    | boolean
+    | undefined;
+  /** An empty value uses the units specified in the file. */
+  cadFileUnits?: string | undefined;
   buildCalloutViews?: boolean | undefined;
 }
 
@@ -155,8 +161,11 @@ export interface ExportAsciiPointSetRequest {
   includeTimestamps?: boolean | undefined;
   includeSaVersionAndFrameComments?: boolean | undefined;
   includeAxisComments?: boolean | undefined;
-  includeExportFormatInfo?: boolean | undefined;
-  maximumPrecisionScientificNotation?: boolean | undefined;
+  includeExportFormatInfo?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Scientific Notation. */
+  maximumPrecision?: boolean | undefined;
   decimalPrecision?: number | undefined;
   append?: boolean | undefined;
 }
@@ -180,8 +189,11 @@ export interface ExportAsciiPointsRequest {
   includeAxisComments?: boolean | undefined;
   includeExportFormatInfo?: boolean | undefined;
   includeWeights?: boolean | undefined;
-  includeMeasurementDetails?: boolean | undefined;
-  maximumPrecisionScientificNotation?: boolean | undefined;
+  includeMeasurementDetails?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Scientific Notation. */
+  maximumPrecision?: boolean | undefined;
   decimalPrecision?: number | undefined;
   append?: boolean | undefined;
 }
@@ -326,9 +338,15 @@ export interface ExportVdaFsFilePartialModelResult {
 
 export interface ExportVectorContainerToAsciiFileRequest {
   asciiFilePath?: FileReference | undefined;
-  vectorGroupsToExport?: CollectionVectorGroupName[] | undefined;
-  overwriteExistingFileFalseAppend?: boolean | undefined;
-  useFullPrecisionScientificNotation?: boolean | undefined;
+  vectorGroupsToExport?:
+    | CollectionVectorGroupName[]
+    | undefined;
+  /** False appends to the existing file. */
+  overwriteExistingFile?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Scientific Notation. */
+  useFullPrecision?: boolean | undefined;
   vectorNameFormat?: ExportVectorNameFormat | undefined;
   includeVectorLength?: boolean | undefined;
 }
@@ -569,8 +587,11 @@ export interface ImportQdasCatalogFileResult {
 
 export interface ImportSaFileRequest {
   saFileName?: FileReference | undefined;
-  allowOperatorSelections?: boolean | undefined;
-  selectedCollectionsOptional?: string[] | undefined;
+  allowOperatorSelections?:
+    | boolean
+    | undefined;
+  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  selectedCollections?: string[] | undefined;
 }
 
 export interface ImportSaFileResult {
@@ -1196,12 +1217,12 @@ function createBaseDirectCadAccessRequest(): DirectCadAccessRequest {
     centerViewOnImportedObjects: undefined,
     importIntoFoldersMatchingCadFileHierarchy: undefined,
     removeEmptyFolders: undefined,
-    surfaceNormalsMode1Or2: undefined,
+    surfaceNormalsMode: undefined,
     promptOnMissingComponents: undefined,
     selectiveImport: undefined,
     surfaceCompatibilityMode: undefined,
     explodeSurfaces: undefined,
-    cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile: undefined,
+    cadFileUnits: undefined,
     buildCalloutViews: undefined,
   };
 }
@@ -1277,8 +1298,8 @@ export const DirectCadAccessRequest: MessageFns<DirectCadAccessRequest> = {
     if (message.removeEmptyFolders !== undefined) {
       writer.uint32(184).bool(message.removeEmptyFolders);
     }
-    if (message.surfaceNormalsMode1Or2 !== undefined) {
-      writer.uint32(192).int32(message.surfaceNormalsMode1Or2);
+    if (message.surfaceNormalsMode !== undefined) {
+      writer.uint32(192).int32(message.surfaceNormalsMode);
     }
     if (message.promptOnMissingComponents !== undefined) {
       writer.uint32(200).bool(message.promptOnMissingComponents);
@@ -1292,8 +1313,8 @@ export const DirectCadAccessRequest: MessageFns<DirectCadAccessRequest> = {
     if (message.explodeSurfaces !== undefined) {
       writer.uint32(224).bool(message.explodeSurfaces);
     }
-    if (message.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile !== undefined) {
-      writer.uint32(234).string(message.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile);
+    if (message.cadFileUnits !== undefined) {
+      writer.uint32(234).string(message.cadFileUnits);
     }
     if (message.buildCalloutViews !== undefined) {
       writer.uint32(240).bool(message.buildCalloutViews);
@@ -1497,7 +1518,7 @@ export const DirectCadAccessRequest: MessageFns<DirectCadAccessRequest> = {
             break;
           }
 
-          message.surfaceNormalsMode1Or2 = reader.int32();
+          message.surfaceNormalsMode = reader.int32();
           continue;
         }
         case 25: {
@@ -1537,7 +1558,7 @@ export const DirectCadAccessRequest: MessageFns<DirectCadAccessRequest> = {
             break;
           }
 
-          message.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile = reader.string();
+          message.cadFileUnits = reader.string();
           continue;
         }
         case 30: {
@@ -1587,13 +1608,12 @@ export const DirectCadAccessRequest: MessageFns<DirectCadAccessRequest> = {
     message.centerViewOnImportedObjects = object.centerViewOnImportedObjects ?? undefined;
     message.importIntoFoldersMatchingCadFileHierarchy = object.importIntoFoldersMatchingCadFileHierarchy ?? undefined;
     message.removeEmptyFolders = object.removeEmptyFolders ?? undefined;
-    message.surfaceNormalsMode1Or2 = object.surfaceNormalsMode1Or2 ?? undefined;
+    message.surfaceNormalsMode = object.surfaceNormalsMode ?? undefined;
     message.promptOnMissingComponents = object.promptOnMissingComponents ?? undefined;
     message.selectiveImport = object.selectiveImport ?? undefined;
     message.surfaceCompatibilityMode = object.surfaceCompatibilityMode ?? undefined;
     message.explodeSurfaces = object.explodeSurfaces ?? undefined;
-    message.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile =
-      object.cadFileUnitsLeaveBlankToUseTheUnitsSpecifiedInTheFile ?? undefined;
+    message.cadFileUnits = object.cadFileUnits ?? undefined;
     message.buildCalloutViews = object.buildCalloutViews ?? undefined;
     return message;
   },
@@ -2213,7 +2233,7 @@ function createBaseExportAsciiPointSetRequest(): ExportAsciiPointSetRequest {
     includeSaVersionAndFrameComments: undefined,
     includeAxisComments: undefined,
     includeExportFormatInfo: undefined,
-    maximumPrecisionScientificNotation: undefined,
+    maximumPrecision: undefined,
     decimalPrecision: undefined,
     append: undefined,
   };
@@ -2251,8 +2271,8 @@ export const ExportAsciiPointSetRequest: MessageFns<ExportAsciiPointSetRequest> 
     if (message.includeExportFormatInfo !== undefined) {
       writer.uint32(80).bool(message.includeExportFormatInfo);
     }
-    if (message.maximumPrecisionScientificNotation !== undefined) {
-      writer.uint32(88).bool(message.maximumPrecisionScientificNotation);
+    if (message.maximumPrecision !== undefined) {
+      writer.uint32(88).bool(message.maximumPrecision);
     }
     if (message.decimalPrecision !== undefined) {
       writer.uint32(96).int32(message.decimalPrecision);
@@ -2355,7 +2375,7 @@ export const ExportAsciiPointSetRequest: MessageFns<ExportAsciiPointSetRequest> 
             break;
           }
 
-          message.maximumPrecisionScientificNotation = reader.bool();
+          message.maximumPrecision = reader.bool();
           continue;
         }
         case 12: {
@@ -2402,7 +2422,7 @@ export const ExportAsciiPointSetRequest: MessageFns<ExportAsciiPointSetRequest> 
     message.includeSaVersionAndFrameComments = object.includeSaVersionAndFrameComments ?? undefined;
     message.includeAxisComments = object.includeAxisComments ?? undefined;
     message.includeExportFormatInfo = object.includeExportFormatInfo ?? undefined;
-    message.maximumPrecisionScientificNotation = object.maximumPrecisionScientificNotation ?? undefined;
+    message.maximumPrecision = object.maximumPrecision ?? undefined;
     message.decimalPrecision = object.decimalPrecision ?? undefined;
     message.append = object.append ?? undefined;
     return message;
@@ -2474,7 +2494,7 @@ function createBaseExportAsciiPointsRequest(): ExportAsciiPointsRequest {
     includeExportFormatInfo: undefined,
     includeWeights: undefined,
     includeMeasurementDetails: undefined,
-    maximumPrecisionScientificNotation: undefined,
+    maximumPrecision: undefined,
     decimalPrecision: undefined,
     append: undefined,
   };
@@ -2529,8 +2549,8 @@ export const ExportAsciiPointsRequest: MessageFns<ExportAsciiPointsRequest> = {
     if (message.includeMeasurementDetails !== undefined) {
       writer.uint32(120).bool(message.includeMeasurementDetails);
     }
-    if (message.maximumPrecisionScientificNotation !== undefined) {
-      writer.uint32(128).bool(message.maximumPrecisionScientificNotation);
+    if (message.maximumPrecision !== undefined) {
+      writer.uint32(128).bool(message.maximumPrecision);
     }
     if (message.decimalPrecision !== undefined) {
       writer.uint32(136).int32(message.decimalPrecision);
@@ -2676,7 +2696,7 @@ export const ExportAsciiPointsRequest: MessageFns<ExportAsciiPointsRequest> = {
             break;
           }
 
-          message.maximumPrecisionScientificNotation = reader.bool();
+          message.maximumPrecision = reader.bool();
           continue;
         }
         case 17: {
@@ -2726,7 +2746,7 @@ export const ExportAsciiPointsRequest: MessageFns<ExportAsciiPointsRequest> = {
     message.includeExportFormatInfo = object.includeExportFormatInfo ?? undefined;
     message.includeWeights = object.includeWeights ?? undefined;
     message.includeMeasurementDetails = object.includeMeasurementDetails ?? undefined;
-    message.maximumPrecisionScientificNotation = object.maximumPrecisionScientificNotation ?? undefined;
+    message.maximumPrecision = object.maximumPrecision ?? undefined;
     message.decimalPrecision = object.decimalPrecision ?? undefined;
     message.append = object.append ?? undefined;
     return message;
@@ -4472,8 +4492,8 @@ function createBaseExportVectorContainerToAsciiFileRequest(): ExportVectorContai
   return {
     asciiFilePath: undefined,
     vectorGroupsToExport: [],
-    overwriteExistingFileFalseAppend: undefined,
-    useFullPrecisionScientificNotation: undefined,
+    overwriteExistingFile: undefined,
+    useFullPrecision: undefined,
     vectorNameFormat: undefined,
     includeVectorLength: undefined,
   };
@@ -4489,11 +4509,11 @@ export const ExportVectorContainerToAsciiFileRequest: MessageFns<ExportVectorCon
         CollectionVectorGroupName.encode(v!, writer.uint32(18).fork()).join();
       }
     }
-    if (message.overwriteExistingFileFalseAppend !== undefined) {
-      writer.uint32(24).bool(message.overwriteExistingFileFalseAppend);
+    if (message.overwriteExistingFile !== undefined) {
+      writer.uint32(24).bool(message.overwriteExistingFile);
     }
-    if (message.useFullPrecisionScientificNotation !== undefined) {
-      writer.uint32(32).bool(message.useFullPrecisionScientificNotation);
+    if (message.useFullPrecision !== undefined) {
+      writer.uint32(32).bool(message.useFullPrecision);
     }
     if (message.vectorNameFormat !== undefined) {
       writer.uint32(40).int32(message.vectorNameFormat);
@@ -4535,7 +4555,7 @@ export const ExportVectorContainerToAsciiFileRequest: MessageFns<ExportVectorCon
             break;
           }
 
-          message.overwriteExistingFileFalseAppend = reader.bool();
+          message.overwriteExistingFile = reader.bool();
           continue;
         }
         case 4: {
@@ -4543,7 +4563,7 @@ export const ExportVectorContainerToAsciiFileRequest: MessageFns<ExportVectorCon
             break;
           }
 
-          message.useFullPrecisionScientificNotation = reader.bool();
+          message.useFullPrecision = reader.bool();
           continue;
         }
         case 5: {
@@ -4581,8 +4601,8 @@ export const ExportVectorContainerToAsciiFileRequest: MessageFns<ExportVectorCon
       : undefined;
     message.vectorGroupsToExport = object.vectorGroupsToExport?.map((e) => CollectionVectorGroupName.fromPartial(e)) ||
       [];
-    message.overwriteExistingFileFalseAppend = object.overwriteExistingFileFalseAppend ?? undefined;
-    message.useFullPrecisionScientificNotation = object.useFullPrecisionScientificNotation ?? undefined;
+    message.overwriteExistingFile = object.overwriteExistingFile ?? undefined;
+    message.useFullPrecision = object.useFullPrecision ?? undefined;
     message.vectorNameFormat = object.vectorNameFormat ?? undefined;
     message.includeVectorLength = object.includeVectorLength ?? undefined;
     return message;
@@ -7443,7 +7463,7 @@ export const ImportQdasCatalogFileResult: MessageFns<ImportQdasCatalogFileResult
 };
 
 function createBaseImportSaFileRequest(): ImportSaFileRequest {
-  return { saFileName: undefined, allowOperatorSelections: undefined, selectedCollectionsOptional: [] };
+  return { saFileName: undefined, allowOperatorSelections: undefined, selectedCollections: [] };
 }
 
 export const ImportSaFileRequest: MessageFns<ImportSaFileRequest> = {
@@ -7454,8 +7474,8 @@ export const ImportSaFileRequest: MessageFns<ImportSaFileRequest> = {
     if (message.allowOperatorSelections !== undefined) {
       writer.uint32(16).bool(message.allowOperatorSelections);
     }
-    if (message.selectedCollectionsOptional !== undefined && message.selectedCollectionsOptional.length !== 0) {
-      for (const v of message.selectedCollectionsOptional) {
+    if (message.selectedCollections !== undefined && message.selectedCollections.length !== 0) {
+      for (const v of message.selectedCollections) {
         writer.uint32(26).string(v!);
       }
     }
@@ -7492,7 +7512,7 @@ export const ImportSaFileRequest: MessageFns<ImportSaFileRequest> = {
 
           const el = reader.string();
           if (el !== undefined) {
-            message.selectedCollectionsOptional!.push(el);
+            message.selectedCollections!.push(el);
           }
           continue;
         }
@@ -7514,7 +7534,7 @@ export const ImportSaFileRequest: MessageFns<ImportSaFileRequest> = {
       ? FileReference.fromPartial(object.saFileName)
       : undefined;
     message.allowOperatorSelections = object.allowOperatorSelections ?? undefined;
-    message.selectedCollectionsOptional = object.selectedCollectionsOptional?.map((e) => e) || [];
+    message.selectedCollections = object.selectedCollections?.map((e) => e) || [];
     return message;
   },
 };

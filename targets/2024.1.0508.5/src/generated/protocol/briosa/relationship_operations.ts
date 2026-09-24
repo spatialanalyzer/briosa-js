@@ -141,10 +141,20 @@ export interface GetGeomRelationshipAutoVectorsRequest {
 }
 
 export interface GetGeomRelationshipAutoVectorsResult {
-  autoVectorsNominalAvnEnabled?: boolean | undefined;
-  autoVectorsNominalAvnName?: CollectionObjectName | undefined;
-  autoVectorsFitAvfEnabled?: boolean | undefined;
-  autoVectorsFitAvfName?: CollectionObjectName | undefined;
+  /** MP qualifier: AVN. */
+  autoVectorsNominalEnabled?:
+    | boolean
+    | undefined;
+  /** MP qualifier: AVN. */
+  autoVectorsNominalName?:
+    | CollectionObjectName
+    | undefined;
+  /** MP qualifier: AVF. */
+  autoVectorsFitEnabled?:
+    | boolean
+    | undefined;
+  /** MP qualifier: AVF. */
+  autoVectorsFitName?: CollectionObjectName | undefined;
   pointsType?: string | undefined;
   execution?: MpExecutionDetails | undefined;
 }
@@ -657,10 +667,16 @@ export interface SetRelationshipToleranceVectorTypeResult {
 
 export interface SetRelationshipVoxelCloudDisplayRequest {
   relationshipName?: CollectionObjectName | undefined;
-  enableVoxelCloudDisplay?: boolean | undefined;
-  voxelSize10Autodetect?: number | undefined;
-  minPtsCountPerVoxel?: number | undefined;
-  voxelRenderingDiameter10Fast?: number | undefined;
+  enableVoxelCloudDisplay?:
+    | boolean
+    | undefined;
+  /** -1.0 selects automatic detection. */
+  voxelSize?: number | undefined;
+  minPtsCountPerVoxel?:
+    | number
+    | undefined;
+  /** -1.0 selects fast rendering. */
+  voxelRenderingDiameter?: number | undefined;
   surfaceAnalysisMode?: SurfaceAnalysisMode | undefined;
   colorizationOptions?: ColorizationOptions | undefined;
   showColorBarInView?: boolean | undefined;
@@ -1220,10 +1236,19 @@ export interface RelationshipWatchWindowTemplateRequest {
   font?: Font | undefined;
   textColor?: Color | undefined;
   backgroundColor?: Color | undefined;
-  highlightColor?: Color | undefined;
-  showDeviationXRx?: boolean | undefined;
-  showDeviationYRy?: boolean | undefined;
-  showDeviationZRz?: boolean | undefined;
+  highlightColor?:
+    | Color
+    | undefined;
+  /** MP qualifier: Rx. */
+  showDeviationX?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Ry. */
+  showDeviationY?:
+    | boolean
+    | undefined;
+  /** MP qualifier: Rz. */
+  showDeviationZ?: boolean | undefined;
   showDeviationMagnitude?: boolean | undefined;
   udpNetworkTransmitSettings?: RelationshipWatchWindowUdpSettings | undefined;
   transparentBackground?: boolean | undefined;
@@ -1758,10 +1783,10 @@ export const GetGeomRelationshipAutoVectorsRequest: MessageFns<GetGeomRelationsh
 
 function createBaseGetGeomRelationshipAutoVectorsResult(): GetGeomRelationshipAutoVectorsResult {
   return {
-    autoVectorsNominalAvnEnabled: undefined,
-    autoVectorsNominalAvnName: undefined,
-    autoVectorsFitAvfEnabled: undefined,
-    autoVectorsFitAvfName: undefined,
+    autoVectorsNominalEnabled: undefined,
+    autoVectorsNominalName: undefined,
+    autoVectorsFitEnabled: undefined,
+    autoVectorsFitName: undefined,
     pointsType: undefined,
     execution: undefined,
   };
@@ -1769,17 +1794,17 @@ function createBaseGetGeomRelationshipAutoVectorsResult(): GetGeomRelationshipAu
 
 export const GetGeomRelationshipAutoVectorsResult: MessageFns<GetGeomRelationshipAutoVectorsResult> = {
   encode(message: GetGeomRelationshipAutoVectorsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.autoVectorsNominalAvnEnabled !== undefined) {
-      writer.uint32(8).bool(message.autoVectorsNominalAvnEnabled);
+    if (message.autoVectorsNominalEnabled !== undefined) {
+      writer.uint32(8).bool(message.autoVectorsNominalEnabled);
     }
-    if (message.autoVectorsNominalAvnName !== undefined) {
-      CollectionObjectName.encode(message.autoVectorsNominalAvnName, writer.uint32(18).fork()).join();
+    if (message.autoVectorsNominalName !== undefined) {
+      CollectionObjectName.encode(message.autoVectorsNominalName, writer.uint32(18).fork()).join();
     }
-    if (message.autoVectorsFitAvfEnabled !== undefined) {
-      writer.uint32(24).bool(message.autoVectorsFitAvfEnabled);
+    if (message.autoVectorsFitEnabled !== undefined) {
+      writer.uint32(24).bool(message.autoVectorsFitEnabled);
     }
-    if (message.autoVectorsFitAvfName !== undefined) {
-      CollectionObjectName.encode(message.autoVectorsFitAvfName, writer.uint32(34).fork()).join();
+    if (message.autoVectorsFitName !== undefined) {
+      CollectionObjectName.encode(message.autoVectorsFitName, writer.uint32(34).fork()).join();
     }
     if (message.pointsType !== undefined) {
       writer.uint32(42).string(message.pointsType);
@@ -1802,7 +1827,7 @@ export const GetGeomRelationshipAutoVectorsResult: MessageFns<GetGeomRelationshi
             break;
           }
 
-          message.autoVectorsNominalAvnEnabled = reader.bool();
+          message.autoVectorsNominalEnabled = reader.bool();
           continue;
         }
         case 2: {
@@ -1810,7 +1835,7 @@ export const GetGeomRelationshipAutoVectorsResult: MessageFns<GetGeomRelationshi
             break;
           }
 
-          message.autoVectorsNominalAvnName = CollectionObjectName.decode(reader, reader.uint32());
+          message.autoVectorsNominalName = CollectionObjectName.decode(reader, reader.uint32());
           continue;
         }
         case 3: {
@@ -1818,7 +1843,7 @@ export const GetGeomRelationshipAutoVectorsResult: MessageFns<GetGeomRelationshi
             break;
           }
 
-          message.autoVectorsFitAvfEnabled = reader.bool();
+          message.autoVectorsFitEnabled = reader.bool();
           continue;
         }
         case 4: {
@@ -1826,7 +1851,7 @@ export const GetGeomRelationshipAutoVectorsResult: MessageFns<GetGeomRelationshi
             break;
           }
 
-          message.autoVectorsFitAvfName = CollectionObjectName.decode(reader, reader.uint32());
+          message.autoVectorsFitName = CollectionObjectName.decode(reader, reader.uint32());
           continue;
         }
         case 5: {
@@ -1859,16 +1884,15 @@ export const GetGeomRelationshipAutoVectorsResult: MessageFns<GetGeomRelationshi
   },
   fromPartial(object: DeepPartial<GetGeomRelationshipAutoVectorsResult>): GetGeomRelationshipAutoVectorsResult {
     const message = createBaseGetGeomRelationshipAutoVectorsResult();
-    message.autoVectorsNominalAvnEnabled = object.autoVectorsNominalAvnEnabled ?? undefined;
-    message.autoVectorsNominalAvnName =
-      (object.autoVectorsNominalAvnName !== undefined && object.autoVectorsNominalAvnName !== null)
-        ? CollectionObjectName.fromPartial(object.autoVectorsNominalAvnName)
+    message.autoVectorsNominalEnabled = object.autoVectorsNominalEnabled ?? undefined;
+    message.autoVectorsNominalName =
+      (object.autoVectorsNominalName !== undefined && object.autoVectorsNominalName !== null)
+        ? CollectionObjectName.fromPartial(object.autoVectorsNominalName)
         : undefined;
-    message.autoVectorsFitAvfEnabled = object.autoVectorsFitAvfEnabled ?? undefined;
-    message.autoVectorsFitAvfName =
-      (object.autoVectorsFitAvfName !== undefined && object.autoVectorsFitAvfName !== null)
-        ? CollectionObjectName.fromPartial(object.autoVectorsFitAvfName)
-        : undefined;
+    message.autoVectorsFitEnabled = object.autoVectorsFitEnabled ?? undefined;
+    message.autoVectorsFitName = (object.autoVectorsFitName !== undefined && object.autoVectorsFitName !== null)
+      ? CollectionObjectName.fromPartial(object.autoVectorsFitName)
+      : undefined;
     message.pointsType = object.pointsType ?? undefined;
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
@@ -8379,9 +8403,9 @@ function createBaseSetRelationshipVoxelCloudDisplayRequest(): SetRelationshipVox
   return {
     relationshipName: undefined,
     enableVoxelCloudDisplay: undefined,
-    voxelSize10Autodetect: undefined,
+    voxelSize: undefined,
     minPtsCountPerVoxel: undefined,
-    voxelRenderingDiameter10Fast: undefined,
+    voxelRenderingDiameter: undefined,
     surfaceAnalysisMode: undefined,
     colorizationOptions: undefined,
     showColorBarInView: undefined,
@@ -8396,14 +8420,14 @@ export const SetRelationshipVoxelCloudDisplayRequest: MessageFns<SetRelationship
     if (message.enableVoxelCloudDisplay !== undefined) {
       writer.uint32(16).bool(message.enableVoxelCloudDisplay);
     }
-    if (message.voxelSize10Autodetect !== undefined) {
-      writer.uint32(25).double(message.voxelSize10Autodetect);
+    if (message.voxelSize !== undefined) {
+      writer.uint32(25).double(message.voxelSize);
     }
     if (message.minPtsCountPerVoxel !== undefined) {
       writer.uint32(32).int32(message.minPtsCountPerVoxel);
     }
-    if (message.voxelRenderingDiameter10Fast !== undefined) {
-      writer.uint32(41).double(message.voxelRenderingDiameter10Fast);
+    if (message.voxelRenderingDiameter !== undefined) {
+      writer.uint32(41).double(message.voxelRenderingDiameter);
     }
     if (message.surfaceAnalysisMode !== undefined) {
       writer.uint32(48).int32(message.surfaceAnalysisMode);
@@ -8445,7 +8469,7 @@ export const SetRelationshipVoxelCloudDisplayRequest: MessageFns<SetRelationship
             break;
           }
 
-          message.voxelSize10Autodetect = reader.double();
+          message.voxelSize = reader.double();
           continue;
         }
         case 4: {
@@ -8461,7 +8485,7 @@ export const SetRelationshipVoxelCloudDisplayRequest: MessageFns<SetRelationship
             break;
           }
 
-          message.voxelRenderingDiameter10Fast = reader.double();
+          message.voxelRenderingDiameter = reader.double();
           continue;
         }
         case 6: {
@@ -8506,9 +8530,9 @@ export const SetRelationshipVoxelCloudDisplayRequest: MessageFns<SetRelationship
       ? CollectionObjectName.fromPartial(object.relationshipName)
       : undefined;
     message.enableVoxelCloudDisplay = object.enableVoxelCloudDisplay ?? undefined;
-    message.voxelSize10Autodetect = object.voxelSize10Autodetect ?? undefined;
+    message.voxelSize = object.voxelSize ?? undefined;
     message.minPtsCountPerVoxel = object.minPtsCountPerVoxel ?? undefined;
-    message.voxelRenderingDiameter10Fast = object.voxelRenderingDiameter10Fast ?? undefined;
+    message.voxelRenderingDiameter = object.voxelRenderingDiameter ?? undefined;
     message.surfaceAnalysisMode = object.surfaceAnalysisMode ?? undefined;
     message.colorizationOptions = (object.colorizationOptions !== undefined && object.colorizationOptions !== null)
       ? ColorizationOptions.fromPartial(object.colorizationOptions)
@@ -15830,9 +15854,9 @@ function createBaseRelationshipWatchWindowTemplateRequest(): RelationshipWatchWi
     textColor: undefined,
     backgroundColor: undefined,
     highlightColor: undefined,
-    showDeviationXRx: undefined,
-    showDeviationYRy: undefined,
-    showDeviationZRz: undefined,
+    showDeviationX: undefined,
+    showDeviationY: undefined,
+    showDeviationZ: undefined,
     showDeviationMagnitude: undefined,
     udpNetworkTransmitSettings: undefined,
     transparentBackground: undefined,
@@ -15863,14 +15887,14 @@ export const RelationshipWatchWindowTemplateRequest: MessageFns<RelationshipWatc
     if (message.highlightColor !== undefined) {
       Color.encode(message.highlightColor, writer.uint32(58).fork()).join();
     }
-    if (message.showDeviationXRx !== undefined) {
-      writer.uint32(64).bool(message.showDeviationXRx);
+    if (message.showDeviationX !== undefined) {
+      writer.uint32(64).bool(message.showDeviationX);
     }
-    if (message.showDeviationYRy !== undefined) {
-      writer.uint32(72).bool(message.showDeviationYRy);
+    if (message.showDeviationY !== undefined) {
+      writer.uint32(72).bool(message.showDeviationY);
     }
-    if (message.showDeviationZRz !== undefined) {
-      writer.uint32(80).bool(message.showDeviationZRz);
+    if (message.showDeviationZ !== undefined) {
+      writer.uint32(80).bool(message.showDeviationZ);
     }
     if (message.showDeviationMagnitude !== undefined) {
       writer.uint32(88).bool(message.showDeviationMagnitude);
@@ -15955,7 +15979,7 @@ export const RelationshipWatchWindowTemplateRequest: MessageFns<RelationshipWatc
             break;
           }
 
-          message.showDeviationXRx = reader.bool();
+          message.showDeviationX = reader.bool();
           continue;
         }
         case 9: {
@@ -15963,7 +15987,7 @@ export const RelationshipWatchWindowTemplateRequest: MessageFns<RelationshipWatc
             break;
           }
 
-          message.showDeviationYRy = reader.bool();
+          message.showDeviationY = reader.bool();
           continue;
         }
         case 10: {
@@ -15971,7 +15995,7 @@ export const RelationshipWatchWindowTemplateRequest: MessageFns<RelationshipWatc
             break;
           }
 
-          message.showDeviationZRz = reader.bool();
+          message.showDeviationZ = reader.bool();
           continue;
         }
         case 11: {
@@ -16036,9 +16060,9 @@ export const RelationshipWatchWindowTemplateRequest: MessageFns<RelationshipWatc
     message.highlightColor = (object.highlightColor !== undefined && object.highlightColor !== null)
       ? Color.fromPartial(object.highlightColor)
       : undefined;
-    message.showDeviationXRx = object.showDeviationXRx ?? undefined;
-    message.showDeviationYRy = object.showDeviationYRy ?? undefined;
-    message.showDeviationZRz = object.showDeviationZRz ?? undefined;
+    message.showDeviationX = object.showDeviationX ?? undefined;
+    message.showDeviationY = object.showDeviationY ?? undefined;
+    message.showDeviationZ = object.showDeviationZ ?? undefined;
     message.showDeviationMagnitude = object.showDeviationMagnitude ?? undefined;
     message.udpNetworkTransmitSettings =
       (object.udpNetworkTransmitSettings !== undefined && object.udpNetworkTransmitSettings !== null)

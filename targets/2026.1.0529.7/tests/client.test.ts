@@ -351,11 +351,11 @@ function serviceError(
 void test('records merged Wave B artifact and generated semantics', () => {
   assert.equal(
     briosaProtocolIdentity.artifactName,
-    'briosa-protocol-0.7.0-sa-2026.1.0529.7',
+    'briosa-protocol-0.8.0-sa-2026.1.0529.7',
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    '4303a3322074869b35a3f16f9e35484a7bd5c830',
+    'e986a3ba91cb501416126eb5f3ecaeb7f9d97c05',
   );
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(
@@ -444,7 +444,7 @@ void test('maps Wave B defaults, results, groups, and optional list wrappers', a
   assert.deepEqual(transport.lastOperation, {
     service: 'CloudAndMeshOperations',
     rpc: 'CloudDisplayControl',
-    request: { thinDrawIncrement: 1, pointSize: 1 },
+    request: { thin: 1, pointSize: 1 },
   });
 
   transport.operationResponse = {
@@ -778,4 +778,29 @@ void test('relationship references map the public item name and item type', asyn
   assert.equal(request.relationshipName.itemName, 'R1');
   assert.equal(request.relationshipName.itemType, 30);
   await client.stop();
+});
+
+void test('renamed tolerance input keeps explicit zero and clean result keys', async () => {
+  const transport = new FakeTransport();
+  const client = createTestClient(new FakeLauncher(), transport);
+  await client.start();
+  transport.operationResponse = { angle: 12.5 };
+  const angle = await waveAOperations.angleBetweenLineAndPlane(client, {
+    selectedLine: {
+      collectionName: 'C',
+      objectName: 'L',
+      objectType: ObjectType.line,
+    },
+    selectedPlane: {
+      collectionName: 'C',
+      objectName: 'P',
+      objectType: ObjectType.plane,
+    },
+    angleTolerance: 0,
+  });
+  assert.equal(angle, 12.5);
+  const request = transport.lastOperation?.request as Record<string, unknown>;
+  assert.equal(request.angleTolerance, 0);
+  assert.equal('angleTolerance00ForNone' in request, false);
+  await client[Symbol.asyncDispose]();
 });

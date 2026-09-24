@@ -6,12 +6,12 @@ Independent exact-target clients for the [Briosa SpatialAnalyzer bridge](https:/
 
 | SpatialAnalyzer target | Product and development guide | Client version |
 | --- | --- | --- |
-| 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.2.0 |
-| 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.2.0 |
+| 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.3.0 |
+| 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.3.0 |
 
 Choose the package for your exact SA installation. Each product pins its own
 generation artifact and retains Server 0.6.1 as a tested conformance baseline.
-The 0.2 client line selects side-by-side servers using behavioral contract 1.0. Client package versions
+The 0.3 client line selects side-by-side servers using behavioral contract 1.0. Client package versions
 are independent of the Briosa server version. See [Releasing](RELEASING.md) for
 registry publishing and validation.
 
@@ -38,3 +38,5 @@ import { createBriosaClient, getWorkingDirectory } from 'briosa';
 
 For SA 2026, replace only the target in the installation command with
 `2026.1.0529.7`. The published distribution keeps its target-qualified name.
+
+The 0.3.0 API naming changes are described in the [MP argument migration guide](docs/mp-argument-name-migration.md).

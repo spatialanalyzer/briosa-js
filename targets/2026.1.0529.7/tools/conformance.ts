@@ -6,6 +6,7 @@ import {
   BriosaOperationError,
   BriosaTransportError,
   createBriosaClient,
+  cloudDisplayControl,
   getWorkingDirectory,
   type BriosaClient,
   type BriosaStartOptions,
@@ -169,6 +170,9 @@ async function assertDefaultReady(briosa: BriosaClient): Promise<void> {
     'Default startup did not launch an owned application.',
   );
   await getWorkingDirectory(briosa);
+  // This fixture also consumes retained packages that still use the old key.
+  const display = { thin: 3, thinDrawIncrement: 3, pointSize: 2 };
+  await cloudDisplayControl(briosa, display);
 }
 
 async function assertAttachExisting(briosa: BriosaClient): Promise<void> {

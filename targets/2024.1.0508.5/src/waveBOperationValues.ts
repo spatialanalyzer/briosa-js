@@ -382,30 +382,45 @@ export interface InstrumentTypeName {
 }
 
 export interface LrFlipTestResult {
-  readonly frontRangeInches: number;
-  readonly frontAzimuthDegrees: number;
-  readonly frontElevationDegrees: number;
+  /** Length in inches. */
+  readonly frontRange: number;
+  /** Angle in degrees. */
+  readonly frontAzimuth: number;
+  /** Angle in degrees. */
+  readonly frontElevation: number;
   readonly frontQuality: number;
-  readonly backRangeInches: number;
-  readonly backAzimuthDegrees: number;
-  readonly backElevationDegrees: number;
+  /** Length in inches. */
+  readonly backRange: number;
+  /** Angle in degrees. */
+  readonly backAzimuth: number;
+  /** Angle in degrees. */
+  readonly backElevation: number;
   readonly backQuality: number;
-  readonly frontBackDifferenceRangeInches: number;
-  readonly frontBackDifferenceAzimuthDegrees: number;
-  readonly frontBackDifferenceElevationDegrees: number;
+  /** Length in inches. */
+  readonly frontBackDifferenceRange: number;
+  /** Angle in degrees. */
+  readonly frontBackDifferenceAzimuth: number;
+  /** Angle in degrees. */
+  readonly frontBackDifferenceElevation: number;
 }
 
 export interface LrLoSeparationTestResult {
-  readonly primaryLoIndex: number;
-  readonly secondaryLoIndex: number;
+  /** Indexing starts at 1. */
+  readonly primaryLo: number;
+  /** Indexing starts at 1. */
+  readonly secondaryLo: number;
   readonly primaryLoMeasurementCount: number;
-  readonly primaryLoRangeMeanInches: number;
-  readonly primaryLoRangeStandardDeviationInches: number;
+  /** Length in inches. */
+  readonly primaryLoRangeMean: number;
+  /** Length in inches. */
+  readonly primaryLoRangeStandardDeviation: number;
   readonly primaryLoQualityMean: number;
   readonly primaryLoQualityStandardDeviation: number;
   readonly secondaryLoMeasurementCount: number;
-  readonly secondaryLoRangeMeanInches: number;
-  readonly secondaryLoRangeStandardDeviationInches: number;
+  /** Length in inches. */
+  readonly secondaryLoRangeMean: number;
+  /** Length in inches. */
+  readonly secondaryLoRangeStandardDeviation: number;
   readonly secondaryLoQualityMean: number;
   readonly secondaryLoQualityStandardDeviation: number;
 }
@@ -414,8 +429,10 @@ export interface LrSnrInfo {
   readonly snr: number;
   readonly sizeOfDataArray: number;
   readonly peakValueIndex: number;
-  readonly peakValueDb: number;
-  readonly measuredRangeMeters: number;
+  /** Value in decibels. */
+  readonly peakValue: number;
+  /** Range in meters. */
+  readonly measuredRange: number;
 }
 
 export interface ObjectOriginResult {
@@ -431,9 +448,12 @@ export interface ObservationInfo {
   readonly active: boolean;
   readonly timestamp: string;
   readonly rmsError: number;
-  readonly temperatureFahrenheit: number;
-  readonly pressureInHg: number;
-  readonly relativeHumidityPercent: number;
+  /** Temperature in degrees Fahrenheit. */
+  readonly temperature: number;
+  /** Pressure in inches of mercury. */
+  readonly pressure: number;
+  /** Relative humidity in percent. */
+  readonly relativeHumidity: number;
   readonly infoData: string;
 }
 
@@ -639,10 +659,14 @@ export interface InstrumentModelResult {
 
 export interface InstrumentPositionUpdate {
   readonly xOrR: number;
-  readonly yOrThetaDegrees: number;
-  readonly zOrPhiDegrees: number;
-  readonly timeSinceUpdateSeconds: number;
-  readonly timestampApproximate: string;
+  /** Angle in degrees. */
+  readonly yOrTheta: number;
+  /** Angle in degrees. */
+  readonly zOrPhi: number;
+  /** Time in seconds. */
+  readonly timeSinceUpdate: number;
+  /** MP qualifier: Approximate. */
+  readonly timestamp: string;
 }
 
 export interface InstrumentTargetsAndModeProfiles {
@@ -651,9 +675,10 @@ export interface InstrumentTargetsAndModeProfiles {
 }
 
 export interface InstrumentWeatherSetting {
-  readonly temperatureFahrenheit: number;
-  readonly pressureMmHg: number;
-  readonly relativeHumidityPercent: number;
+  readonly temperature: number;
+  /** Pressure in millimeters of mercury. */
+  readonly pressure: number;
+  readonly relativeHumidity: number;
   readonly setAutomatically: boolean;
 }
 
@@ -698,8 +723,8 @@ export interface MakeGdtFeatureCheckAnnotationOptions {
   isSlot?: boolean;
   perUnitLengthOrArea?: boolean;
   circularArea?: boolean;
-  perUnitAreaLengthDistance?: number;
-  perUnitAreaLengthStepOverPercent?: number;
+  perUnitLengthDistance?: number;
+  perUnitLengthStepOverPercent?: number;
   perUnitAreaWidthDistance?: number;
   perUnitAreaWidthStepOverPercent?: number;
   perUnitAreaCircleDiameter?: number;
@@ -759,9 +784,9 @@ export interface RelationshipWatchWindowTemplateOptions {
   readonly textColor?: Color;
   readonly backgroundColor?: Color;
   readonly highlightColor?: Color;
-  readonly showDeviationXRx?: boolean;
-  readonly showDeviationYRy?: boolean;
-  readonly showDeviationZRz?: boolean;
+  readonly showDeviationX?: boolean;
+  readonly showDeviationY?: boolean;
+  readonly showDeviationZ?: boolean;
   readonly showDeviationMagnitude?: boolean;
   readonly udpNetworkTransmitSettings?: RelationshipWatchWindowUdpSettings;
   readonly transparentBackground?: boolean;
@@ -813,11 +838,14 @@ export interface SetMeasurementsInput {
 }
 
 export interface TrackerEdmTheodoliteUncertainties {
-  readonly thetaDispersionArcseconds: number;
+  /** Angle in arcseconds. */
+  readonly thetaDispersion: number;
   readonly thetaThreshold: number;
-  readonly phiDispersionArcseconds: number;
+  /** Angle in arcseconds. */
+  readonly phiDispersion: number;
   readonly phiThreshold: number;
-  readonly distancePpm: number;
+  /** Value in parts per million. */
+  readonly distance: number;
   readonly distanceThreshold: number;
 }
 

@@ -15,7 +15,7 @@ The package is named `@spatialanalyzer/briosa-2026.1.0529.7`, while its
 exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
-npm install briosa@npm:@spatialanalyzer/briosa-2026.1.0529.7@0.2.0
+npm install briosa@npm:@spatialanalyzer/briosa-2026.1.0529.7@0.3.0
 ```
 
 Each exact SpatialAnalyzer target has an independent package. Install the chosen

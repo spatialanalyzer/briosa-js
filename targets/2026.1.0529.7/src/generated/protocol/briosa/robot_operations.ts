@@ -344,8 +344,11 @@ export interface SetCalibrationApplianceRealValueResult {
 
 export interface SetRobotCalibrationMeasurementOffsetInToolFrameRequest {
   machineId?: CollectionMachineId | undefined;
-  calibrationName?: string | undefined;
-  measurementFrameRelativeToTool?: Transform | undefined;
+  calibrationName?:
+    | string
+    | undefined;
+  /** MP qualifier: relative to tool. */
+  measurementFrame?: Transform | undefined;
 }
 
 export interface SetRobotCalibrationMeasurementOffsetInToolFrameResult {
@@ -354,8 +357,11 @@ export interface SetRobotCalibrationMeasurementOffsetInToolFrameResult {
 
 export interface SetRobotCalibrationToolFrameRequest {
   machineId?: CollectionMachineId | undefined;
-  calibrationName?: string | undefined;
-  toolFrameRelativeToFlange?: Transform | undefined;
+  calibrationName?:
+    | string
+    | undefined;
+  /** MP qualifier: relative to flange. */
+  toolFrame?: Transform | undefined;
 }
 
 export interface SetRobotCalibrationToolFrameResult {
@@ -4077,7 +4083,7 @@ export const SetCalibrationApplianceRealValueResult: MessageFns<SetCalibrationAp
 };
 
 function createBaseSetRobotCalibrationMeasurementOffsetInToolFrameRequest(): SetRobotCalibrationMeasurementOffsetInToolFrameRequest {
-  return { machineId: undefined, calibrationName: undefined, measurementFrameRelativeToTool: undefined };
+  return { machineId: undefined, calibrationName: undefined, measurementFrame: undefined };
 }
 
 export const SetRobotCalibrationMeasurementOffsetInToolFrameRequest: MessageFns<
@@ -4093,8 +4099,8 @@ export const SetRobotCalibrationMeasurementOffsetInToolFrameRequest: MessageFns<
     if (message.calibrationName !== undefined) {
       writer.uint32(18).string(message.calibrationName);
     }
-    if (message.measurementFrameRelativeToTool !== undefined) {
-      Transform.encode(message.measurementFrameRelativeToTool, writer.uint32(26).fork()).join();
+    if (message.measurementFrame !== undefined) {
+      Transform.encode(message.measurementFrame, writer.uint32(26).fork()).join();
     }
     return writer;
   },
@@ -4127,7 +4133,7 @@ export const SetRobotCalibrationMeasurementOffsetInToolFrameRequest: MessageFns<
             break;
           }
 
-          message.measurementFrameRelativeToTool = Transform.decode(reader, reader.uint32());
+          message.measurementFrame = Transform.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -4152,10 +4158,9 @@ export const SetRobotCalibrationMeasurementOffsetInToolFrameRequest: MessageFns<
       ? CollectionMachineId.fromPartial(object.machineId)
       : undefined;
     message.calibrationName = object.calibrationName ?? undefined;
-    message.measurementFrameRelativeToTool =
-      (object.measurementFrameRelativeToTool !== undefined && object.measurementFrameRelativeToTool !== null)
-        ? Transform.fromPartial(object.measurementFrameRelativeToTool)
-        : undefined;
+    message.measurementFrame = (object.measurementFrame !== undefined && object.measurementFrame !== null)
+      ? Transform.fromPartial(object.measurementFrame)
+      : undefined;
     return message;
   },
 };
@@ -4218,7 +4223,7 @@ export const SetRobotCalibrationMeasurementOffsetInToolFrameResult: MessageFns<
 };
 
 function createBaseSetRobotCalibrationToolFrameRequest(): SetRobotCalibrationToolFrameRequest {
-  return { machineId: undefined, calibrationName: undefined, toolFrameRelativeToFlange: undefined };
+  return { machineId: undefined, calibrationName: undefined, toolFrame: undefined };
 }
 
 export const SetRobotCalibrationToolFrameRequest: MessageFns<SetRobotCalibrationToolFrameRequest> = {
@@ -4229,8 +4234,8 @@ export const SetRobotCalibrationToolFrameRequest: MessageFns<SetRobotCalibration
     if (message.calibrationName !== undefined) {
       writer.uint32(18).string(message.calibrationName);
     }
-    if (message.toolFrameRelativeToFlange !== undefined) {
-      Transform.encode(message.toolFrameRelativeToFlange, writer.uint32(26).fork()).join();
+    if (message.toolFrame !== undefined) {
+      Transform.encode(message.toolFrame, writer.uint32(26).fork()).join();
     }
     return writer;
   },
@@ -4263,7 +4268,7 @@ export const SetRobotCalibrationToolFrameRequest: MessageFns<SetRobotCalibration
             break;
           }
 
-          message.toolFrameRelativeToFlange = Transform.decode(reader, reader.uint32());
+          message.toolFrame = Transform.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -4284,10 +4289,9 @@ export const SetRobotCalibrationToolFrameRequest: MessageFns<SetRobotCalibration
       ? CollectionMachineId.fromPartial(object.machineId)
       : undefined;
     message.calibrationName = object.calibrationName ?? undefined;
-    message.toolFrameRelativeToFlange =
-      (object.toolFrameRelativeToFlange !== undefined && object.toolFrameRelativeToFlange !== null)
-        ? Transform.fromPartial(object.toolFrameRelativeToFlange)
-        : undefined;
+    message.toolFrame = (object.toolFrame !== undefined && object.toolFrame !== null)
+      ? Transform.fromPartial(object.toolFrame)
+      : undefined;
     return message;
   },
 };

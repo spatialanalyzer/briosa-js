@@ -57,9 +57,16 @@ try {
     readFileSync(join(consumer, 'node_modules/briosa/package.json'), 'utf8'),
   );
   assert.equal(installed.name, metadata.name);
-  const program = `import { createBriosaClient, getWorkingDirectory } from 'briosa';
+  const program = `import { createBriosaClient, getWorkingDirectory, angleBetweenLineAndPlane, ObjectType } from 'briosa';
 const client = createBriosaClient();
 if (typeof getWorkingDirectory !== 'function') throw new Error('Missing MP export');
+// Compile this named call against the packed declarations without executing SA.
+const namedCall = () => angleBetweenLineAndPlane(client, {
+  selectedLine: { collectionName: 'C', objectName: 'L', objectType: ObjectType.line },
+  selectedPlane: { collectionName: 'C', objectName: 'P', objectType: ObjectType.plane },
+  angleTolerance: 0,
+});
+if (typeof namedCall !== 'function') throw new Error('Missing named call');
 await client.stop();
 console.log('Verified short briosa import');
 `;

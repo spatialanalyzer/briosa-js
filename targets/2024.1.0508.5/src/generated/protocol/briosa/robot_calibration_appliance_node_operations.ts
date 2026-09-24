@@ -145,8 +145,11 @@ export interface SetCalibrationApplianceNodeDisplayRobotResult {
 }
 
 export interface SetCalibrationApplianceNodeInstrumentDwellTimeRequest {
-  calibrationApplianceNode?: CollectionObjectName | undefined;
-  measurementDwellTimeSeconds?: number | undefined;
+  calibrationApplianceNode?:
+    | CollectionObjectName
+    | undefined;
+  /** Time in seconds. */
+  measurementDwellTime?: number | undefined;
 }
 
 export interface SetCalibrationApplianceNodeInstrumentDwellTimeResult {
@@ -1856,7 +1859,7 @@ export const SetCalibrationApplianceNodeDisplayRobotResult: MessageFns<SetCalibr
   };
 
 function createBaseSetCalibrationApplianceNodeInstrumentDwellTimeRequest(): SetCalibrationApplianceNodeInstrumentDwellTimeRequest {
-  return { calibrationApplianceNode: undefined, measurementDwellTimeSeconds: undefined };
+  return { calibrationApplianceNode: undefined, measurementDwellTime: undefined };
 }
 
 export const SetCalibrationApplianceNodeInstrumentDwellTimeRequest: MessageFns<
@@ -1869,8 +1872,8 @@ export const SetCalibrationApplianceNodeInstrumentDwellTimeRequest: MessageFns<
     if (message.calibrationApplianceNode !== undefined) {
       CollectionObjectName.encode(message.calibrationApplianceNode, writer.uint32(10).fork()).join();
     }
-    if (message.measurementDwellTimeSeconds !== undefined) {
-      writer.uint32(17).double(message.measurementDwellTimeSeconds);
+    if (message.measurementDwellTime !== undefined) {
+      writer.uint32(17).double(message.measurementDwellTime);
     }
     return writer;
   },
@@ -1895,7 +1898,7 @@ export const SetCalibrationApplianceNodeInstrumentDwellTimeRequest: MessageFns<
             break;
           }
 
-          message.measurementDwellTimeSeconds = reader.double();
+          message.measurementDwellTime = reader.double();
           continue;
         }
       }
@@ -1920,7 +1923,7 @@ export const SetCalibrationApplianceNodeInstrumentDwellTimeRequest: MessageFns<
       (object.calibrationApplianceNode !== undefined && object.calibrationApplianceNode !== null)
         ? CollectionObjectName.fromPartial(object.calibrationApplianceNode)
         : undefined;
-    message.measurementDwellTimeSeconds = object.measurementDwellTimeSeconds ?? undefined;
+    message.measurementDwellTime = object.measurementDwellTime ?? undefined;
     return message;
   },
 };

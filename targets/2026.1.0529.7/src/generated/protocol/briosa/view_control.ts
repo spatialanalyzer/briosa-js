@@ -119,7 +119,8 @@ export interface HideObjectsResult {
 }
 
 export interface HighlightObjectsRequest {
-  objectNamesEmptyToClearAll?: CollectionObjectName[] | undefined;
+  /** An empty selection clears all highlights. */
+  objectNames?: CollectionObjectName[] | undefined;
   highLightObjects?: boolean | undefined;
 }
 
@@ -128,7 +129,8 @@ export interface HighlightObjectsResult {
 }
 
 export interface HighlightPointRequest {
-  pointNameEmptyToClearAll?: PointName | undefined;
+  /** An empty selection clears all highlights. */
+  pointName?: PointName | undefined;
   showPoint?: boolean | undefined;
 }
 
@@ -137,7 +139,8 @@ export interface HighlightPointResult {
 }
 
 export interface HighlightRelationshipsRequest {
-  relationshipsEmptyToClearAll?: CollectionItemName[] | undefined;
+  /** An empty selection clears all highlights. */
+  relationships?: CollectionItemName[] | undefined;
   highLightRelationships?: boolean | undefined;
 }
 
@@ -330,8 +333,11 @@ export interface SetWorkingColorAutoIncrementResult {
 export interface ShowHideByObjectTypeRequest {
   allCollections?: boolean | undefined;
   specificCollection?: CollectionName | undefined;
-  objectTypeToShowHide?: ObjectType | undefined;
-  hideShowFalse?: boolean | undefined;
+  objectTypeToShowHide?:
+    | ObjectType
+    | undefined;
+  /** False shows the objects. */
+  hide?: boolean | undefined;
 }
 
 export interface ShowHideByObjectTypeResult {
@@ -357,8 +363,11 @@ export interface ShowHideDimensionResult {
 }
 
 export interface ShowHidePointsRequest {
-  pointNames?: PointName[] | undefined;
-  showHideFalse?: boolean | undefined;
+  pointNames?:
+    | PointName[]
+    | undefined;
+  /** False hides the points. */
+  show?: boolean | undefined;
 }
 
 export interface ShowHidePointsResult {
@@ -1479,13 +1488,13 @@ export const HideObjectsResult: MessageFns<HideObjectsResult> = {
 };
 
 function createBaseHighlightObjectsRequest(): HighlightObjectsRequest {
-  return { objectNamesEmptyToClearAll: [], highLightObjects: undefined };
+  return { objectNames: [], highLightObjects: undefined };
 }
 
 export const HighlightObjectsRequest: MessageFns<HighlightObjectsRequest> = {
   encode(message: HighlightObjectsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.objectNamesEmptyToClearAll !== undefined && message.objectNamesEmptyToClearAll.length !== 0) {
-      for (const v of message.objectNamesEmptyToClearAll) {
+    if (message.objectNames !== undefined && message.objectNames.length !== 0) {
+      for (const v of message.objectNames) {
         CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
       }
     }
@@ -1509,7 +1518,7 @@ export const HighlightObjectsRequest: MessageFns<HighlightObjectsRequest> = {
 
           const el = CollectionObjectName.decode(reader, reader.uint32());
           if (el !== undefined) {
-            message.objectNamesEmptyToClearAll!.push(el);
+            message.objectNames!.push(el);
           }
           continue;
         }
@@ -1535,8 +1544,7 @@ export const HighlightObjectsRequest: MessageFns<HighlightObjectsRequest> = {
   },
   fromPartial(object: DeepPartial<HighlightObjectsRequest>): HighlightObjectsRequest {
     const message = createBaseHighlightObjectsRequest();
-    message.objectNamesEmptyToClearAll =
-      object.objectNamesEmptyToClearAll?.map((e) => CollectionObjectName.fromPartial(e)) || [];
+    message.objectNames = object.objectNames?.map((e) => CollectionObjectName.fromPartial(e)) || [];
     message.highLightObjects = object.highLightObjects ?? undefined;
     return message;
   },
@@ -1591,13 +1599,13 @@ export const HighlightObjectsResult: MessageFns<HighlightObjectsResult> = {
 };
 
 function createBaseHighlightPointRequest(): HighlightPointRequest {
-  return { pointNameEmptyToClearAll: undefined, showPoint: undefined };
+  return { pointName: undefined, showPoint: undefined };
 }
 
 export const HighlightPointRequest: MessageFns<HighlightPointRequest> = {
   encode(message: HighlightPointRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.pointNameEmptyToClearAll !== undefined) {
-      PointName.encode(message.pointNameEmptyToClearAll, writer.uint32(10).fork()).join();
+    if (message.pointName !== undefined) {
+      PointName.encode(message.pointName, writer.uint32(10).fork()).join();
     }
     if (message.showPoint !== undefined) {
       writer.uint32(16).bool(message.showPoint);
@@ -1617,7 +1625,7 @@ export const HighlightPointRequest: MessageFns<HighlightPointRequest> = {
             break;
           }
 
-          message.pointNameEmptyToClearAll = PointName.decode(reader, reader.uint32());
+          message.pointName = PointName.decode(reader, reader.uint32());
           continue;
         }
         case 2: {
@@ -1642,10 +1650,9 @@ export const HighlightPointRequest: MessageFns<HighlightPointRequest> = {
   },
   fromPartial(object: DeepPartial<HighlightPointRequest>): HighlightPointRequest {
     const message = createBaseHighlightPointRequest();
-    message.pointNameEmptyToClearAll =
-      (object.pointNameEmptyToClearAll !== undefined && object.pointNameEmptyToClearAll !== null)
-        ? PointName.fromPartial(object.pointNameEmptyToClearAll)
-        : undefined;
+    message.pointName = (object.pointName !== undefined && object.pointName !== null)
+      ? PointName.fromPartial(object.pointName)
+      : undefined;
     message.showPoint = object.showPoint ?? undefined;
     return message;
   },
@@ -1700,13 +1707,13 @@ export const HighlightPointResult: MessageFns<HighlightPointResult> = {
 };
 
 function createBaseHighlightRelationshipsRequest(): HighlightRelationshipsRequest {
-  return { relationshipsEmptyToClearAll: [], highLightRelationships: undefined };
+  return { relationships: [], highLightRelationships: undefined };
 }
 
 export const HighlightRelationshipsRequest: MessageFns<HighlightRelationshipsRequest> = {
   encode(message: HighlightRelationshipsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.relationshipsEmptyToClearAll !== undefined && message.relationshipsEmptyToClearAll.length !== 0) {
-      for (const v of message.relationshipsEmptyToClearAll) {
+    if (message.relationships !== undefined && message.relationships.length !== 0) {
+      for (const v of message.relationships) {
         CollectionItemName.encode(v!, writer.uint32(10).fork()).join();
       }
     }
@@ -1730,7 +1737,7 @@ export const HighlightRelationshipsRequest: MessageFns<HighlightRelationshipsReq
 
           const el = CollectionItemName.decode(reader, reader.uint32());
           if (el !== undefined) {
-            message.relationshipsEmptyToClearAll!.push(el);
+            message.relationships!.push(el);
           }
           continue;
         }
@@ -1756,8 +1763,7 @@ export const HighlightRelationshipsRequest: MessageFns<HighlightRelationshipsReq
   },
   fromPartial(object: DeepPartial<HighlightRelationshipsRequest>): HighlightRelationshipsRequest {
     const message = createBaseHighlightRelationshipsRequest();
-    message.relationshipsEmptyToClearAll =
-      object.relationshipsEmptyToClearAll?.map((e) => CollectionItemName.fromPartial(e)) || [];
+    message.relationships = object.relationships?.map((e) => CollectionItemName.fromPartial(e)) || [];
     message.highLightRelationships = object.highLightRelationships ?? undefined;
     return message;
   },
@@ -3991,12 +3997,7 @@ export const SetWorkingColorAutoIncrementResult: MessageFns<SetWorkingColorAutoI
 };
 
 function createBaseShowHideByObjectTypeRequest(): ShowHideByObjectTypeRequest {
-  return {
-    allCollections: undefined,
-    specificCollection: undefined,
-    objectTypeToShowHide: undefined,
-    hideShowFalse: undefined,
-  };
+  return { allCollections: undefined, specificCollection: undefined, objectTypeToShowHide: undefined, hide: undefined };
 }
 
 export const ShowHideByObjectTypeRequest: MessageFns<ShowHideByObjectTypeRequest> = {
@@ -4010,8 +4011,8 @@ export const ShowHideByObjectTypeRequest: MessageFns<ShowHideByObjectTypeRequest
     if (message.objectTypeToShowHide !== undefined) {
       writer.uint32(24).int32(message.objectTypeToShowHide);
     }
-    if (message.hideShowFalse !== undefined) {
-      writer.uint32(32).bool(message.hideShowFalse);
+    if (message.hide !== undefined) {
+      writer.uint32(32).bool(message.hide);
     }
     return writer;
   },
@@ -4052,7 +4053,7 @@ export const ShowHideByObjectTypeRequest: MessageFns<ShowHideByObjectTypeRequest
             break;
           }
 
-          message.hideShowFalse = reader.bool();
+          message.hide = reader.bool();
           continue;
         }
       }
@@ -4074,7 +4075,7 @@ export const ShowHideByObjectTypeRequest: MessageFns<ShowHideByObjectTypeRequest
       ? CollectionName.fromPartial(object.specificCollection)
       : undefined;
     message.objectTypeToShowHide = object.objectTypeToShowHide ?? undefined;
-    message.hideShowFalse = object.hideShowFalse ?? undefined;
+    message.hide = object.hide ?? undefined;
     return message;
   },
 };
@@ -4344,7 +4345,7 @@ export const ShowHideDimensionResult: MessageFns<ShowHideDimensionResult> = {
 };
 
 function createBaseShowHidePointsRequest(): ShowHidePointsRequest {
-  return { pointNames: [], showHideFalse: undefined };
+  return { pointNames: [], show: undefined };
 }
 
 export const ShowHidePointsRequest: MessageFns<ShowHidePointsRequest> = {
@@ -4354,8 +4355,8 @@ export const ShowHidePointsRequest: MessageFns<ShowHidePointsRequest> = {
         PointName.encode(v!, writer.uint32(10).fork()).join();
       }
     }
-    if (message.showHideFalse !== undefined) {
-      writer.uint32(16).bool(message.showHideFalse);
+    if (message.show !== undefined) {
+      writer.uint32(16).bool(message.show);
     }
     return writer;
   },
@@ -4383,7 +4384,7 @@ export const ShowHidePointsRequest: MessageFns<ShowHidePointsRequest> = {
             break;
           }
 
-          message.showHideFalse = reader.bool();
+          message.show = reader.bool();
           continue;
         }
       }
@@ -4401,7 +4402,7 @@ export const ShowHidePointsRequest: MessageFns<ShowHidePointsRequest> = {
   fromPartial(object: DeepPartial<ShowHidePointsRequest>): ShowHidePointsRequest {
     const message = createBaseShowHidePointsRequest();
     message.pointNames = object.pointNames?.map((e) => PointName.fromPartial(e)) || [];
-    message.showHideFalse = object.showHideFalse ?? undefined;
+    message.show = object.show ?? undefined;
     return message;
   },
 };
