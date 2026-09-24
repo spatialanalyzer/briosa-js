@@ -1,13 +1,13 @@
 {
   "schema_version": 2,
   "artifact": {
-    "name": "briosa-protocol-0.8.0-dev.1-sa-2024.1.0508.5",
-    "file_name": "briosa-protocol-0.8.0-dev.1-sa-2024.1.0508.5.zip",
-    "sha256": "d573a93e84b3d555be2acec3de0821e86e1897a2b60c438aa1686b1e51adb2ce",
-    "briosa_version": "0.8.0-dev.1",
-    "source_revision": "3306d43253a1e4e41b75b83360ad4f6f2b7f60b7",
+    "name": "briosa-protocol-0.8.0-sa-2024.1.0508.5",
+    "file_name": "briosa-protocol-0.8.0-sa-2024.1.0508.5.zip",
+    "sha256": "5606a3eda4ba04704371620672e5b8db10b616ed00c2731185f1c3a453defb22",
+    "briosa_version": "0.8.0",
+    "source_revision": "e986a3ba91cb501416126eb5f3ecaeb7f9d97c05",
     "source_repository": "https://github.com/spatialanalyzer/briosa",
-    "source_channel": "source_commit_bootstrap"
+    "source_channel": "github_release"
   },
   "protocol": {
     "generation_contract": "standard-protobuf-grpc",
