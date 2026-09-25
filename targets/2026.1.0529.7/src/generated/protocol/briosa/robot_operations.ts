@@ -169,7 +169,7 @@ export interface GetRobotMachineModelLinkParametersResult {
 }
 
 export interface GetRobotMachineParameterRequest {
-  machineId?: CollectionMachineId | undefined;
+  machineId?: CollectionInstrumentId | undefined;
   parameterName?: string | undefined;
 }
 
@@ -434,7 +434,7 @@ export interface SimulateRobotMachinePathOutputCsvFileResult {
 }
 
 export interface StartRobotMachineInterfaceRequest {
-  machineId?: CollectionMachineId | undefined;
+  machineId?: CollectionInstrumentId | undefined;
   interfaceType?: number | undefined;
   runInSimulation?: boolean | undefined;
 }
@@ -455,7 +455,7 @@ export interface StartStopRobotCalibrationTrappingResult {
 }
 
 export interface StopRobotMachineInterfaceRequest {
-  machineId?: CollectionMachineId | undefined;
+  machineId?: CollectionInstrumentId | undefined;
 }
 
 export interface StopRobotMachineInterfaceResult {
@@ -1926,7 +1926,7 @@ function createBaseGetRobotMachineParameterRequest(): GetRobotMachineParameterRe
 export const GetRobotMachineParameterRequest: MessageFns<GetRobotMachineParameterRequest> = {
   encode(message: GetRobotMachineParameterRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.machineId !== undefined) {
-      CollectionMachineId.encode(message.machineId, writer.uint32(10).fork()).join();
+      CollectionInstrumentId.encode(message.machineId, writer.uint32(26).fork()).join();
     }
     if (message.parameterName !== undefined) {
       writer.uint32(18).string(message.parameterName);
@@ -1941,12 +1941,12 @@ export const GetRobotMachineParameterRequest: MessageFns<GetRobotMachineParamete
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
+        case 3: {
+          if (tag !== 26) {
             break;
           }
 
-          message.machineId = CollectionMachineId.decode(reader, reader.uint32());
+          message.machineId = CollectionInstrumentId.decode(reader, reader.uint32());
           continue;
         }
         case 2: {
@@ -1972,7 +1972,7 @@ export const GetRobotMachineParameterRequest: MessageFns<GetRobotMachineParamete
   fromPartial(object: DeepPartial<GetRobotMachineParameterRequest>): GetRobotMachineParameterRequest {
     const message = createBaseGetRobotMachineParameterRequest();
     message.machineId = (object.machineId !== undefined && object.machineId !== null)
-      ? CollectionMachineId.fromPartial(object.machineId)
+      ? CollectionInstrumentId.fromPartial(object.machineId)
       : undefined;
     message.parameterName = object.parameterName ?? undefined;
     return message;
@@ -5186,7 +5186,7 @@ function createBaseStartRobotMachineInterfaceRequest(): StartRobotMachineInterfa
 export const StartRobotMachineInterfaceRequest: MessageFns<StartRobotMachineInterfaceRequest> = {
   encode(message: StartRobotMachineInterfaceRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.machineId !== undefined) {
-      CollectionMachineId.encode(message.machineId, writer.uint32(10).fork()).join();
+      CollectionInstrumentId.encode(message.machineId, writer.uint32(34).fork()).join();
     }
     if (message.interfaceType !== undefined) {
       writer.uint32(16).int32(message.interfaceType);
@@ -5204,12 +5204,12 @@ export const StartRobotMachineInterfaceRequest: MessageFns<StartRobotMachineInte
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
+        case 4: {
+          if (tag !== 34) {
             break;
           }
 
-          message.machineId = CollectionMachineId.decode(reader, reader.uint32());
+          message.machineId = CollectionInstrumentId.decode(reader, reader.uint32());
           continue;
         }
         case 2: {
@@ -5243,7 +5243,7 @@ export const StartRobotMachineInterfaceRequest: MessageFns<StartRobotMachineInte
   fromPartial(object: DeepPartial<StartRobotMachineInterfaceRequest>): StartRobotMachineInterfaceRequest {
     const message = createBaseStartRobotMachineInterfaceRequest();
     message.machineId = (object.machineId !== undefined && object.machineId !== null)
-      ? CollectionMachineId.fromPartial(object.machineId)
+      ? CollectionInstrumentId.fromPartial(object.machineId)
       : undefined;
     message.interfaceType = object.interfaceType ?? undefined;
     message.runInSimulation = object.runInSimulation ?? undefined;
@@ -5440,7 +5440,7 @@ function createBaseStopRobotMachineInterfaceRequest(): StopRobotMachineInterface
 export const StopRobotMachineInterfaceRequest: MessageFns<StopRobotMachineInterfaceRequest> = {
   encode(message: StopRobotMachineInterfaceRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.machineId !== undefined) {
-      CollectionMachineId.encode(message.machineId, writer.uint32(10).fork()).join();
+      CollectionInstrumentId.encode(message.machineId, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -5452,12 +5452,12 @@ export const StopRobotMachineInterfaceRequest: MessageFns<StopRobotMachineInterf
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
+        case 2: {
+          if (tag !== 18) {
             break;
           }
 
-          message.machineId = CollectionMachineId.decode(reader, reader.uint32());
+          message.machineId = CollectionInstrumentId.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -5475,7 +5475,7 @@ export const StopRobotMachineInterfaceRequest: MessageFns<StopRobotMachineInterf
   fromPartial(object: DeepPartial<StopRobotMachineInterfaceRequest>): StopRobotMachineInterfaceRequest {
     const message = createBaseStopRobotMachineInterfaceRequest();
     message.machineId = (object.machineId !== undefined && object.machineId !== null)
-      ? CollectionMachineId.fromPartial(object.machineId)
+      ? CollectionInstrumentId.fromPartial(object.machineId)
       : undefined;
     return message;
   },

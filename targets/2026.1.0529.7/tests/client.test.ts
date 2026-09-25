@@ -316,7 +316,7 @@ function matchingSnapshot(
         : SpatialAnalyzerExecutionReadinessState.SPATIAL_ANALYZER_EXECUTION_READINESS_STATE_UNVERIFIED,
       targetIsolationMode:
         TargetIsolationMode.TARGET_ISOLATION_MODE_SINGLE_TENANT,
-      compatibility: { major: 1, revision: 0 },
+      compatibility: { major: 2, revision: 0 },
       readyForMp: ready,
     },
     {
@@ -351,11 +351,11 @@ function serviceError(
 void test('records merged Wave B artifact and generated semantics', () => {
   assert.equal(
     briosaProtocolIdentity.artifactName,
-    'briosa-protocol-0.8.0-sa-2026.1.0529.7',
+    'briosa-protocol-0.9.0-dev.1-sa-2026.1.0529.7',
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    'e986a3ba91cb501416126eb5f3ecaeb7f9d97c05',
+    'd0613d6120f4f6d738a729e47c0eb775577bd8c0',
   );
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(
@@ -747,6 +747,66 @@ void test('typed MP error detaches policy and preserves unknown completion', () 
   assert.equal(mapped.replaySafety, 'unknown');
   assert.equal(mapped.completionUnknown, true);
   assert.equal(mapped.reconciliationRequired, true);
+});
+
+void test('overload preserves not-started and independent replay guidance', () => {
+  const detail = OperationError.encode({
+    operationId: 'variables.set_double_variable',
+    kind: OperationFailureKind.OPERATION_FAILURE_KIND_OVERLOADED,
+    diagnosticCode: 'worker-admission-full',
+    executionDisposition:
+      ExecutionDisposition.EXECUTION_DISPOSITION_NOT_STARTED,
+    recoveryGuidance: RecoveryGuidance.RECOVERY_GUIDANCE_NONE,
+    replayGuidance: ReplayGuidance.REPLAY_GUIDANCE_MAY_REPLAY,
+    replaySafety: ReplaySafety.REPLAY_SAFETY_UNKNOWN,
+  }).finish();
+  const mapped = mapServiceError(
+    serviceError(
+      status.RESOURCE_EXHAUSTED,
+      'briosa-operation-error-bin',
+      detail,
+    ),
+  );
+  assert.ok(mapped instanceof BriosaOperationError);
+  assert.equal(mapped.kind, 'overloaded');
+  assert.equal(mapped.executionDisposition, 'notStarted');
+  assert.equal(mapped.recoveryGuidance, 'none');
+  assert.equal(mapped.replayGuidance, 'mayReplay');
+  assert.equal(mapped.replaySafety, 'unknown');
+  assert.equal(mapped.completionUnknown, false);
+  assert.equal(mapped.reconciliationRequired, false);
+});
+
+void test('robot interface methods preserve instrument identity', async () => {
+  const transport = new FakeTransport();
+  const client = createTestClient(new FakeLauncher(), transport);
+  await client.start();
+  const machineId = { collectionName: 'Inspection', instrumentId: 7 };
+  transport.operationResponse = { parameterValue: 1.5 };
+  assert.equal(
+    await client.robotOperations.getRobotMachineParameter({
+      machineId,
+      parameterName: 'Speed',
+    }),
+    1.5,
+  );
+  assert.deepEqual(
+    (transport.lastOperation?.request as { machineId: unknown }).machineId,
+    machineId,
+  );
+  transport.operationResponse = {};
+  await client.robotOperations.startRobotMachineInterface({
+    machineId,
+    runInSimulation: true,
+  });
+  assert.deepEqual(transport.lastOperation?.request, {
+    machineId,
+    interfaceType: 0,
+    runInSimulation: true,
+  });
+  await client.robotOperations.stopRobotMachineInterface({ machineId });
+  assert.deepEqual(transport.lastOperation?.request, { machineId });
+  await client.stop();
 });
 
 void test('transport failures do not expose raw grpc-js errors', () => {
