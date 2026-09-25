@@ -1,6 +1,6 @@
 {
   "name": "@spatialanalyzer/briosa-2024.1.0508.5",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Exact-target TypeScript client for Briosa and SpatialAnalyzer 2024.1.0508.5",
   "license": "Apache-2.0",
   "repository": {

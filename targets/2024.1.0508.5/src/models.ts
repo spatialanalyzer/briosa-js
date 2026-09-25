@@ -114,7 +114,8 @@ export type OperationFailureKind =
   | 'internal'
   | 'policyDenied'
   | 'mpResultRetrievalFailure'
-  | 'sdkArgumentRejected';
+  | 'sdkArgumentRejected'
+  | 'overloaded';
 
 export type RecoveryGuidance =
   | 'unspecified'

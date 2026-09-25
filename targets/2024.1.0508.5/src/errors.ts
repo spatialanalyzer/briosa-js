@@ -351,6 +351,7 @@ const operationFailureKinds: readonly OperationFailureKind[] = [
   'policyDenied',
   'mpResultRetrievalFailure',
   'sdkArgumentRejected',
+  'overloaded',
 ];
 
 const recoveryGuidanceValues: readonly RecoveryGuidance[] = [

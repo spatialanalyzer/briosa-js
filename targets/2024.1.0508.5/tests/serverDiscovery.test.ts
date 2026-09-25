@@ -128,7 +128,7 @@ function install(
     runtimeIdentifier: 'win-x64',
     protocolPackage: 'briosa',
     spatialAnalyzerBundled: false,
-    compatibility: { major: 1, revision: 0 },
+    compatibility: { major: 2, revision: 0 },
   });
   writeFileSync(join(payload, 'manifest.json'), manifest);
   for (const name of ['Briosa.Server.exe', 'Briosa.Worker.exe'])
@@ -340,7 +340,7 @@ function snapshot() {
         protocolPackage: 'briosa',
         spatialAnalyzerTarget: identity.spatialAnalyzerTarget,
       },
-      compatibility: { major: 1, revision: 0 },
+      compatibility: { major: 2, revision: 0 },
       targetIsolationMode:
         TargetIsolationMode.TARGET_ISOLATION_MODE_SINGLE_TENANT,
     }),
@@ -360,7 +360,7 @@ void test('compatibility is independent of generation pins; selected runtime ide
     sourceRevision: 'a'.repeat(40),
     spatialAnalyzerTarget: identity.spatialAnalyzerTarget,
     runtimeIdentifier: 'win-x64',
-    contractMajor: 1,
+    contractMajor: 2,
     contractRevision: 0,
     manifestSha256: 'hash',
     scope: 'user',
@@ -371,19 +371,22 @@ void test('compatibility is independent of generation pins; selected runtime ide
     () => validateInstallation(server, installation),
     /server-installation-identity-mismatch/,
   );
-  server.compatibility!.major = 2;
+  server.compatibility!.major = 1;
   assert.throws(
     () => validateBriosaCompatibility(server, caps),
     /server-contract-incompatible/,
   );
 });
-void test('only the reviewed legacy identity may omit compatibility', () => {
+void test('missing compatibility is rejected including the legacy build', () => {
   const [server, caps] = snapshot();
   server.compatibility = undefined;
   assert.throws(() => validateBriosaCompatibility(server, caps));
   server.version!.briosaVersion = '0.6.1';
   server.version!.sourceRevision = legacySource;
-  validateBriosaCompatibility(server, caps);
+  assert.throws(
+    () => validateBriosaCompatibility(server, caps),
+    /server-contract-incompatible/,
+  );
   server.version!.sourceRevision = 'b'.repeat(40);
   assert.throws(() => validateBriosaCompatibility(server, caps));
 });
