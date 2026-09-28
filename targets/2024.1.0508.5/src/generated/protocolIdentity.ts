@@ -2,9 +2,9 @@
 // Exact protocol artifact identity used to generate this package.
 export const briosaProtocolIdentity = {
   "artifactName": "briosa-protocol-0.9.0-dev.1-sa-2024.1.0508.5",
-  "artifactSha256": "2c0c5ebc6c2b6b5f11a3dbaf3f7cd8796a572befb45a8ff6999a2d7d1c39a2e7",
+  "artifactSha256": "026d60d0576d1529d1dd86c5a833e373145445c700bf1837f7e0d5441a5dfe2e",
   "briosaVersion": "0.9.0-dev.1",
-  "sourceRevision": "d0613d6120f4f6d738a729e47c0eb775577bd8c0",
+  "sourceRevision": "89b59aa0ddd05ea868d94c4e4a4f89ee0fbcbccb",
   "compatibilityMajor": 2,
   "compatibilityRevision": 0,
   "protocolSchemaSha256": "8477fcb3885dc81711c0332c69a71e12191431dbbc50c8febdabd8bc54287fd9",

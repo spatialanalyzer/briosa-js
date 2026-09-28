@@ -537,7 +537,7 @@ void test('records merged Wave B artifact and generated semantics', () => {
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    'd0613d6120f4f6d738a729e47c0eb775577bd8c0',
+    '89b59aa0ddd05ea868d94c4e4a4f89ee0fbcbccb',
   );
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(
