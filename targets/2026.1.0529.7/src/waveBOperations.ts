@@ -3417,7 +3417,7 @@ export interface GetRobotMachineModelLinkParametersInput {
 }
 
 export interface GetRobotMachineParameterInput {
-  readonly machineId: CollectionMachineId;
+  readonly machineId: CollectionInstrumentId;
   readonly parameterName?: string;
 }
 
@@ -3534,7 +3534,7 @@ export interface SimulateRobotMachinePathOutputCsvFileInput {
 }
 
 export interface StartRobotMachineInterfaceInput {
-  readonly machineId: CollectionMachineId;
+  readonly machineId: CollectionInstrumentId;
   readonly interfaceType?: number;
   readonly runInSimulation?: boolean;
 }
@@ -3547,7 +3547,7 @@ export interface StartStopRobotCalibrationTrappingInput {
 }
 
 export interface StopRobotMachineInterfaceInput {
-  readonly machineId: CollectionMachineId;
+  readonly machineId: CollectionInstrumentId;
 }
 
 export interface GetRobotPoseForAFrameInput {
@@ -30812,7 +30812,7 @@ async function getRobotMachineParameterOperation(
   const request =
     RobotOperationsProtocol.GetRobotMachineParameterRequest.fromPartial({
       machineId: toWireOperationValue(
-        getOperationValueSchema('collectionMachineId'),
+        getOperationValueSchema('collectionInstrumentId'),
         requireOperationInput(input.machineId, 'machineId'),
       ),
       parameterName: toWireOperationValue(
@@ -31743,7 +31743,7 @@ async function startRobotMachineInterfaceOperation(
   const request =
     RobotOperationsProtocol.StartRobotMachineInterfaceRequest.fromPartial({
       machineId: toWireOperationValue(
-        getOperationValueSchema('collectionMachineId'),
+        getOperationValueSchema('collectionInstrumentId'),
         requireOperationInput(input.machineId, 'machineId'),
       ),
       interfaceType: toWireOperationValue(
@@ -31825,7 +31825,7 @@ async function stopRobotMachineInterfaceOperation(
   const request =
     RobotOperationsProtocol.StopRobotMachineInterfaceRequest.fromPartial({
       machineId: toWireOperationValue(
-        getOperationValueSchema('collectionMachineId'),
+        getOperationValueSchema('collectionInstrumentId'),
         requireOperationInput(input.machineId, 'machineId'),
       ),
     } as never);

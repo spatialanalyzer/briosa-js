@@ -4,8 +4,10 @@ import {
   BriosaCallAbortedError,
   BriosaCompatibilityError,
   BriosaOperationError,
+  BriosaStartupError,
   BriosaTransportError,
   createBriosaClient,
+  discoverInstallations,
   cloudDisplayControl,
   getWorkingDirectory,
   type BriosaClient,
@@ -48,6 +50,44 @@ async function captureError(
 }
 
 async function runScenario(scenario: string): Promise<void> {
+  if (process.env.BRIOSA_CONFORMANCE_EXPECT_INCOMPATIBLE === '1') {
+    requireCondition(
+      scenario === 'control-plane-only',
+      'Rejection must run without SDK or application startup.',
+    );
+    const executablePath = process.env.BRIOSA_SERVER_PATH;
+    requireCondition(
+      executablePath !== undefined,
+      'The conformance server path is required.',
+    );
+    const serverSelection = { executablePath, allowPrerelease: true };
+    const report = await discoverInstallations(serverSelection);
+    requireCondition(
+      report.selected === null &&
+        report.diagnosticCode === 'server-installation-incompatible',
+      'The packaged server was not rejected for contract incompatibility.',
+    );
+    const rejected = createBriosaClient();
+    try {
+      const error = await captureError(() =>
+        rejected.start({
+          serverSelection,
+          startSpatialAnalyzerSdk: false,
+          launchSpatialAnalyzer: false,
+          connectToSpatialAnalyzer: false,
+        }),
+      );
+      requireCondition(
+        error instanceof BriosaStartupError &&
+          error.diagnosticCode === 'server-installation-incompatible',
+        'Startup did not reject the incompatible server.',
+      );
+    } finally {
+      await rejected.stop();
+    }
+    return;
+  }
+
   const briosa = createBriosaClient({
     commandTimeoutMs: scenario === 'deadline' ? 250 : null,
   });

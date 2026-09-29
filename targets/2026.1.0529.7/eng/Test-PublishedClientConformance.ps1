@@ -7,6 +7,9 @@ param(
     [Parameter(Mandatory)][string]$LockPath,
     [Parameter(Mandatory)][string]$EvidencePath,
     [string]$PublishedPackageUrl,
+    [ValidatePattern('^[0-9a-f]{40}$')][string]$ClientSourceRevision,
+    [switch]$ExpectIncompatible,
+    [ValidateRange(1, 1000)][int]$RequiredContractMajor = 2,
     [string]$FixtureExecutable = 'node'
 )
 Set-StrictMode -Version Latest
@@ -42,11 +45,14 @@ try {
     $fixture = Join-Path $consumer 'conformance.ts'
     $source.Replace("from '../src/index.js'", "from 'briosa'") | Set-Content $fixture -Encoding utf8
     $arguments = @{
+        ExpectIncompatible = $ExpectIncompatible
+        RequiredContractMajor = $RequiredContractMajor
         ArtifactPath = $ArtifactPath; LockPath = $LockPath; EvidencePath = $EvidencePath
         FixturePath = $fixture
         ClientPackage = @{
             name = $expectedName; version = $ClientVersion; sha256 = $ClientPackageSha256
             publishedUrl = $PublishedPackageUrl
+            sourceRevision = $ClientSourceRevision
         }
     }
     $arguments.NodeExecutable = $FixtureExecutable

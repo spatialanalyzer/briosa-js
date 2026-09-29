@@ -21,6 +21,7 @@ foreach ($pair in @(
     @{ name = 'current'; artifact = $CurrentArtifact; lock = $CurrentLock }
 )) {
     $arguments = @{
+        ExpectIncompatible = $pair.name -eq 'legacy'
         ClientPackagePath = $packages[0].FullName
         ClientPackageSha256 = (Get-FileHash $packages[0].FullName -Algorithm SHA256).Hash.ToLowerInvariant()
         ClientVersion = $version; ArtifactPath = $pair.artifact; LockPath = $pair.lock
@@ -29,4 +30,3 @@ foreach ($pair in @(
     }
     & (Join-Path $PSScriptRoot 'Test-PublishedClientConformance.ps1') @arguments
 }
-

@@ -121,6 +121,7 @@ jobs:
           ./eng/Test-Conformance.ps1
           -ArtifactPath "artifacts/conformance/${{ steps.protocol.outputs.conformance_file_name }}"
           -EvidencePath artifacts/legacy-conformance-evidence.json
+          -ExpectIncompatible
           -NodeExecutable node
 
       - name: Test the contract-aware server from pinned source
