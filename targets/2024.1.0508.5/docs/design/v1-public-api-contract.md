@@ -98,7 +98,10 @@ Callers that depend on order await commands sequentially.
 `BriosaStartOptions.startupTimeoutMs` is one overall budget for the whole
 `start()`, whichever phases are selected. It defaults to 120000 (two minutes).
 When it expires, `start()` rejects with `BriosaStartupError` and diagnostic
-`startup-timeout`.
+`startup-timeout`, whichever phase it interrupts, including an RPC in flight.
+Aborting the `signal` passed to `start()` only stops that caller from waiting and
+rejects with `BriosaCallAbortedError`; the start continues until it completes or
+its budget expires.
 
 The default follows the server's default lifecycle bounds
 ([spatialanalyzer/briosa#298](https://github.com/spatialanalyzer/briosa/pull/298),
@@ -120,6 +123,10 @@ observation further until
 [spatialanalyzer/briosa#317](https://github.com/spatialanalyzer/briosa/issues/317)
 lands.
 
+Released 0.9 servers and the pinned protocol build `89b59aa` have no larger
+defaults: their startup bound is a fixed 10 s, and their readiness probe uses the
+quick execution budget (30 s by default), so the default covers them too.
+
 When the server's lifecycle bounds are raised, size the client budget to at
 least three times `StartupTimeout`, plus `ReadinessProbeTimeout`, plus
 `ApplicationStartupTimeout` when launching, plus 10 s, plus a margin. For
@@ -128,16 +135,30 @@ with the default 30 s application startup need at least 90 + 60 + 30 + 10 =
 190 s, or 210 s (3.5 minutes) with the 20-second margin.
 
 Lifecycle methods take only an optional `signal`. The client adds no per-call
-lifecycle deadline, and `commandTimeoutMs` applies only to MP commands. Once the
-server accepts an SDK start, connection, or recovery, it finishes that exchange
-under its own bounds even if the caller stops waiting, whether through the
-startup budget or an aborted signal. The caller then refreshes SDK state before
-deciding what to do next. For those three exchanges, a one-off deadline such as
-`AbortSignal.timeout(...)` that is shorter than the server's bound only stops the
-caller from waiting, so keep any per-call deadline at or above the server's
-worst case for that call. Server worst cases at the default bounds: start the SDK 10 s; connect or reconnect 55 s; recover 20 s; launch
-SpatialAnalyzer 30 s; close it 30 s; stop the SDK waits for any in-flight MP
-command's execution budget, then up to 10 s.
+lifecycle deadline, and `commandTimeoutMs` applies only to MP commands.
+
+What happens on the server when a caller stops waiting during an SDK start,
+connection, or recovery depends on the server build:
+
+- Builds that contain
+  [spatialanalyzer/briosa#315](https://github.com/spatialanalyzer/briosa/pull/315)
+  (briosa main from `0c7ff7a`, planned for the contract-major-3 release) finish
+  an exchange they have accepted under their own bounds, whether the caller
+  stopped waiting through the startup budget or an aborted signal.
+- Older supported builds, including every released 0.9 server and the pinned
+  protocol build `89b59aa`, cancel the exchange with the caller. A cancelled SDK
+  start, or the replacement start inside a recovery, terminates the new worker
+  and leaves the SDK stopped (`worker-startup-cancelled`). A cancelled ConnectEx
+  retires the generation, which then needs recovery (`connect-ex-cancelled`). A
+  cancelled readiness probe quarantines the generation and requires operator
+  recovery (`execution-readiness-probe-cancelled`).
+
+Either way, refresh SDK state before deciding what to do next, and keep any
+per-call deadline, such as `AbortSignal.timeout(...)`, at or above the server's
+worst case for that call. Server worst cases at the default bounds: start the
+SDK 10 s; connect or reconnect 55 s; recover 20 s; launch SpatialAnalyzer 30 s;
+close it 30 s; stop the SDK waits for any in-flight MP command's execution
+budget, then up to 10 s.
 
 ### Command and input names
 

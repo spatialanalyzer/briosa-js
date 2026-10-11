@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/require-await -- Async test doubles implement the transport contract. */
 
 // Pins the client startup budget against the server's default lifecycle bounds
-// (spatialanalyzer/briosa main 0c7ff7a; #298 and #315), and pins that lifecycle
-// calls carry no client-imposed per-call deadline.
+// (spatialanalyzer/briosa main 0c7ff7a; #298 and #315), pins that budget expiry is
+// reported as startup-timeout whichever phase it interrupts, and pins that
+// lifecycle calls carry no client-imposed per-call deadline.
 
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { BriosaClientImplementation } from '../src/client.js';
+import { BriosaCallAbortedError, BriosaStartupError } from '../src/errors.js';
 import { briosaProtocolIdentity } from '../src/generated/protocolIdentity.js';
 import {
   SpatialAnalyzerConnectionState,
@@ -86,6 +88,33 @@ void test('startup phases share one overall budget', async () => {
   }
 });
 
+for (const phase of ['snapshot', 'start-sdk', 'launch-sa', 'connect-sdk']) {
+  void test(`budget expiry during ${phase} is a startup timeout`, async () => {
+    const transport = new RecordingTransport(phase);
+    const client = createClient(transport);
+    await assert.rejects(
+      client.start({ startupTimeoutMs: 100 }),
+      (error: unknown) =>
+        error instanceof BriosaStartupError &&
+        error.diagnosticCode === 'startup-timeout',
+    );
+    assert.equal(transport.calls.at(-1)?.name, phase);
+    await client.stop();
+  });
+}
+
+void test('caller abort during startup stays an abort', async () => {
+  const transport = new RecordingTransport('connect-sdk');
+  const client = createClient(transport);
+  await assert.rejects(
+    client.start({ startupTimeoutMs: 1_000, signal: AbortSignal.timeout(50) }),
+    (error: unknown) =>
+      error instanceof BriosaCallAbortedError &&
+      !(error instanceof BriosaStartupError),
+  );
+  await client.stop();
+});
+
 void test('lifecycle calls carry no client deadline', async () => {
   const transport = new RecordingTransport();
   const client = new BriosaClientImplementation(
@@ -160,6 +189,13 @@ function createClient(
 
 class RecordingTransport implements ClientTransport {
   readonly calls: RecordedCall[] = [];
+  // The RPC that never answers. Like the gRPC transport, it then rejects with
+  // BriosaCallAbortedError once its signal aborts.
+  readonly #hangAt: string | null;
+
+  constructor(hangAt: string | null = null) {
+    this.#hangAt = hangAt;
+  }
   #sdkGeneration = 0;
   #connected = false;
   #recording = true;
@@ -167,14 +203,14 @@ class RecordingTransport implements ClientTransport {
   async getServerSnapshot(
     signal?: AbortSignal,
   ): Promise<readonly [GetServerInfoResponse, ListCapabilitiesResponse]> {
-    this.#record('snapshot', signal);
+    await this.#record('snapshot', signal);
     return snapshot(this.#connected);
   }
 
   async getApplicationState(
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerLifecycleState> {
-    this.#record('get-sa-state', signal);
+    await this.#record('get-sa-state', signal);
     return application(true);
   }
 
@@ -182,7 +218,7 @@ class RecordingTransport implements ClientTransport {
     _options: unknown,
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerLifecycleState> {
-    this.#record('launch-sa', signal);
+    await this.#record('launch-sa', signal);
     return application(true);
   }
 
@@ -190,21 +226,21 @@ class RecordingTransport implements ClientTransport {
     _expectedGeneration: number,
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerLifecycleState> {
-    this.#record('close-sa', signal);
+    await this.#record('close-sa', signal);
     return application(false);
   }
 
   async getSdkState(
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerSdkLifecycleState> {
-    this.#record('get-sdk-state', signal);
+    await this.#record('get-sdk-state', signal);
     return this.#sdkState();
   }
 
   async startSdk(
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerSdkLifecycleState> {
-    this.#record('start-sdk', signal);
+    await this.#record('start-sdk', signal);
     this.#sdkGeneration += 1;
     this.#connected = false;
     return this.#sdkState();
@@ -215,7 +251,7 @@ class RecordingTransport implements ClientTransport {
     reconnect: boolean,
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerSdkLifecycleState> {
-    this.#record(reconnect ? 'reconnect-sdk' : 'connect-sdk', signal);
+    await this.#record(reconnect ? 'reconnect-sdk' : 'connect-sdk', signal);
     this.#connected = true;
     return this.#sdkState();
   }
@@ -224,7 +260,7 @@ class RecordingTransport implements ClientTransport {
     _expectedGeneration: number,
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerSdkLifecycleState> {
-    this.#record('stop-sdk', signal);
+    await this.#record('stop-sdk', signal);
     this.#sdkGeneration = 0;
     this.#connected = false;
     return this.#sdkState();
@@ -234,7 +270,7 @@ class RecordingTransport implements ClientTransport {
     _expectedGeneration: number,
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerSdkLifecycleState> {
-    this.#record('recover-sdk', signal);
+    await this.#record('recover-sdk', signal);
     this.#sdkGeneration += 1;
     this.#connected = false;
     return this.#sdkState();
@@ -252,8 +288,15 @@ class RecordingTransport implements ClientTransport {
     this.#recording = false;
   }
 
-  #record(name: string, signal: AbortSignal | undefined): void {
+  async #record(name: string, signal: AbortSignal | undefined): Promise<void> {
     if (this.#recording) this.calls.push({ name, signal });
+    if (name !== this.#hangAt || signal === undefined) return;
+    await new Promise<never>((_resolve, reject) => {
+      const aborted = (): void =>
+        reject(new BriosaCallAbortedError(signal.reason));
+      if (signal.aborted) aborted();
+      else signal.addEventListener('abort', aborted, { once: true });
+    });
   }
 
   #sdkState(): SpatialAnalyzerSdkLifecycleState {

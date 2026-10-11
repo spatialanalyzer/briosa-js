@@ -41,8 +41,12 @@ export interface BriosaStartOptions extends BriosaLifecycleCallOptions {
    * seconds (SDK start 10 s, SpatialAnalyzer launch 30 s, Connect with readiness
    * probe and application association 60 s) plus 20 seconds for server host
    * startup, process observation, and round trips. Raise it when the server's
-   * lifecycle bounds are raised. A server that has accepted an SDK start or
-   * connection finishes it after the client stops waiting.
+   * lifecycle bounds are raised. Expiry during an in-flight RPC is reported the
+   * same way; aborting the caller's `signal` only stops that caller from waiting.
+   * A server that includes spatialanalyzer/briosa#315 finishes an SDK start or
+   * connection it has accepted after the client stops waiting; older servers,
+   * including released 0.9 builds, cancel it, which can leave the SDK stopped or
+   * faulted.
    */
   readonly startupTimeoutMs?: number;
 }
