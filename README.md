@@ -40,3 +40,7 @@ For SA 2026, replace only the target in the installation command with
 `2026.1.0529.7`. The published distribution keeps its target-qualified name.
 
 The 0.3.0 API naming changes are described in the [MP argument migration guide](docs/mp-argument-name-migration.md).
+
+Unreleased: the default `startupTimeoutMs` is 120000 (two minutes) instead of
+30000 in both products. It is sized from the server's default lifecycle bounds;
+see [startup and lifecycle time budgets](docs/design/v1-public-api-contract.md#startup-and-lifecycle-time-budgets).

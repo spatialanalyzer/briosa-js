@@ -93,6 +93,52 @@ The handle supports overlapping asynchronous calls within one JavaScript realm.
 It promises neither implicit call ordering nor SpatialAnalyzer parallelism.
 Callers that depend on order await commands sequentially.
 
+### Startup and lifecycle time budgets
+
+`BriosaStartOptions.startupTimeoutMs` is one overall budget for the whole
+`start()`, whichever phases are selected. It defaults to 120000 (two minutes).
+When it expires, `start()` rejects with `BriosaStartupError` and diagnostic
+`startup-timeout`.
+
+The default follows the server's default lifecycle bounds
+([spatialanalyzer/briosa#298](https://github.com/spatialanalyzer/briosa/pull/298),
+[#315](https://github.com/spatialanalyzer/briosa/pull/315)) for the ordinary
+start:
+
+| Startup phase                                  | Server bound (default)                                                                                                                                                                                            | Worst case until the server answers         |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| Launch the owned server and wait for discovery | none; server host startup                                                                                                                                                                                         | a few seconds                               |
+| Start the SDK                                  | `Briosa:Worker:StartupTimeout` (10 s), then 5 s cleanup on failure                                                                                                                                                | 10 s (15 s on failure)                      |
+| Launch SpatialAnalyzer                         | `Briosa:SpatialAnalyzer:ApplicationStartupTimeout` (30 s)                                                                                                                                                         | 30 s                                        |
+| Connect and prove readiness                    | ConnectEx and the application association, each under `Briosa:Worker:StartupTimeout` (10 s); the readiness probe under `Briosa:Worker:ReadinessProbeTimeout` (30 s); a 5 s liveness check; 5 s cleanup on failure | 55 s (60 s on failure)                      |
+| Total                                          |                                                                                                                                                                                                                   | 95 s to readiness, 100 s to a typed failure |
+
+Two minutes leaves 20 seconds for server host startup, process observation,
+installation discovery, and round trips. Attaching to a running SpatialAnalyzer
+skips the 30-second launch. A heavily loaded machine can slow process
+observation further until
+[spatialanalyzer/briosa#317](https://github.com/spatialanalyzer/briosa/issues/317)
+lands.
+
+When the server's lifecycle bounds are raised, size the client budget to at
+least three times `StartupTimeout`, plus `ReadinessProbeTimeout`, plus
+`ApplicationStartupTimeout` when launching, plus 10 s, plus a margin. For
+example, a server `StartupTimeout` of 30 s and `ReadinessProbeTimeout` of 60 s
+with the default 30 s application startup need at least 90 + 60 + 30 + 10 =
+190 s, or 210 s (3.5 minutes) with the 20-second margin.
+
+Lifecycle methods take only an optional `signal`. The client adds no per-call
+lifecycle deadline, and `commandTimeoutMs` applies only to MP commands. Once the
+server accepts an SDK start, connection, or recovery, it finishes that exchange
+under its own bounds even if the caller stops waiting, whether through the
+startup budget or an aborted signal. The caller then refreshes SDK state before
+deciding what to do next. For those three exchanges, a one-off deadline such as
+`AbortSignal.timeout(...)` that is shorter than the server's bound only stops the
+caller from waiting, so keep any per-call deadline at or above the server's
+worst case for that call. Server worst cases at the default bounds: start the SDK 10 s; connect or reconnect 55 s; recover 20 s; launch
+SpatialAnalyzer 30 s; close it 30 s; stop the SDK waits for any in-flight MP
+command's execution budget, then up to 10 s.
+
 ### Command and input names
 
 Public command names are derived mechanically from exact MP names:
