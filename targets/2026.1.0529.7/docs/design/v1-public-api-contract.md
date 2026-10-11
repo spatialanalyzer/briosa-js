@@ -153,12 +153,32 @@ connection, or recovery depends on the server build:
   cancelled readiness probe quarantines the generation and requires operator
   recovery (`execution-readiness-probe-cancelled`).
 
-Either way, refresh SDK state before deciding what to do next, and keep any
-per-call deadline, such as `AbortSignal.timeout(...)`, at or above the server's
-worst case for that call. Server worst cases at the default bounds: start the
-SDK 10 s; connect or reconnect 55 s; recover 20 s; launch SpatialAnalyzer 30 s;
-close it 30 s; stop the SDK waits for any in-flight MP command's execution
-budget, then up to 10 s.
+Either way, refresh SDK state before deciding what to do next.
+
+A per-call deadline, such as `AbortSignal.timeout(...)`, shorter than the
+server's worst case for that call can stop the caller waiting before the
+server's typed failure, lifecycle state, and recovery guidance arrive. Under the
+default server configuration, use at least the deadlines below. Each is the
+server's worst case to a typed answer, failure cleanup included, plus 5 s for
+scheduling, transport, and an idle process observation. Allow more on a heavily
+loaded machine.
+
+| Call                            | Server worst case to a typed answer                                                                                                                                              | Minimum per-call deadline |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| Start the SDK                   | 15 s: the 10 s startup bound, then up to 5 s of worker cleanup on failure                                                                                                        | 20 s                      |
+| Connect or reconnect            | 60 s: ConnectEx 10 s, readiness probe 30 s, application association 10 s, and liveness check 5 s, then up to 5 s of worker cleanup on failure; a process observation comes first | 65 s                      |
+| Recover the SDK                 | 25 s: heartbeat drain 5 s, cleanup of the faulted worker 5 s, and replacement start 10 s, then up to 5 s of worker cleanup on failure                                            | 30 s                      |
+| Launch SpatialAnalyzer          | 30 s: the application startup bound, after a process observation                                                                                                                 | 35 s                      |
+| Close the owned SpatialAnalyzer | 30 s: the application shutdown bound, with up to two process observations                                                                                                        | 35 s                      |
+| Stop the SDK                    | the execution budget of any in-flight MP command, then 15 s: heartbeat drain 5 s, stop exchange 5 s, and forced cleanup 5 s                                                      | that budget + 20 s        |
+
+When the server's bounds are raised, add the increase: `StartupTimeout` counts
+once for Start and Recover and twice for Connect, `ReadinessProbeTimeout` once
+for Connect, and the application startup and shutdown bounds once for Launch and
+Close. Released 0.9 servers and the pinned build `89b59aa` have the same or
+shorter worst cases, with one exception: they associate the application after
+Connect reports readiness, so Connect can also wait behind an MP command that
+another client submits in between.
 
 ### Command and input names
 
