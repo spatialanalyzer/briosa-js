@@ -93,6 +93,93 @@ The handle supports overlapping asynchronous calls within one JavaScript realm.
 It promises neither implicit call ordering nor SpatialAnalyzer parallelism.
 Callers that depend on order await commands sequentially.
 
+### Startup and lifecycle time budgets
+
+`BriosaStartOptions.startupTimeoutMs` is one overall budget for the whole
+`start()`, whichever phases are selected. It defaults to 120000 (two minutes).
+When it expires, `start()` rejects with `BriosaStartupError` and diagnostic
+`startup-timeout`, whichever phase it interrupts, including an RPC in flight.
+Aborting the `signal` passed to `start()` only stops that caller from waiting and
+rejects with `BriosaCallAbortedError`; the start continues until it completes or
+its budget expires.
+
+The default follows the server's default lifecycle bounds
+([spatialanalyzer/briosa#298](https://github.com/spatialanalyzer/briosa/pull/298),
+[#315](https://github.com/spatialanalyzer/briosa/pull/315)) for the ordinary
+start:
+
+| Startup phase                                  | Server bound (default)                                                                                                                                                                                            | Worst case until the server answers         |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| Launch the owned server and wait for discovery | none; server host startup                                                                                                                                                                                         | a few seconds                               |
+| Start the SDK                                  | `Briosa:Worker:StartupTimeout` (10 s), then 5 s cleanup on failure                                                                                                                                                | 10 s (15 s on failure)                      |
+| Launch SpatialAnalyzer                         | `Briosa:SpatialAnalyzer:ApplicationStartupTimeout` (30 s)                                                                                                                                                         | 30 s                                        |
+| Connect and prove readiness                    | ConnectEx and the application association, each under `Briosa:Worker:StartupTimeout` (10 s); the readiness probe under `Briosa:Worker:ReadinessProbeTimeout` (30 s); a 5 s liveness check; 5 s cleanup on failure | 55 s (60 s on failure)                      |
+| Total                                          |                                                                                                                                                                                                                   | 95 s to readiness, 100 s to a typed failure |
+
+Two minutes leaves 20 seconds for server host startup, process observation,
+installation discovery, and round trips. Attaching to a running SpatialAnalyzer
+skips the 30-second launch. A heavily loaded machine can slow process
+observation further until
+[spatialanalyzer/briosa#317](https://github.com/spatialanalyzer/briosa/issues/317)
+lands.
+
+Released 0.9 servers and the pinned protocol build `89b59aa` have no larger
+defaults: their startup bound is a fixed 10 s, and their readiness probe uses the
+quick execution budget (30 s by default), so the default covers them too.
+
+When the server's lifecycle bounds are raised, size the client budget to at
+least three times `StartupTimeout`, plus `ReadinessProbeTimeout`, plus
+`ApplicationStartupTimeout` when launching, plus 10 s, plus a margin. For
+example, a server `StartupTimeout` of 30 s and `ReadinessProbeTimeout` of 60 s
+with the default 30 s application startup need at least 90 + 60 + 30 + 10 =
+190 s, or 210 s (3.5 minutes) with the 20-second margin.
+
+Lifecycle methods take only an optional `signal`. The client adds no per-call
+lifecycle deadline, and `commandTimeoutMs` applies only to MP commands.
+
+What happens on the server when a caller stops waiting during an SDK start,
+connection, or recovery depends on the server build:
+
+- Builds that contain
+  [spatialanalyzer/briosa#315](https://github.com/spatialanalyzer/briosa/pull/315)
+  (briosa main from `0c7ff7a`, planned for the contract-major-3 release) finish
+  an exchange they have accepted under their own bounds, whether the caller
+  stopped waiting through the startup budget or an aborted signal.
+- Older supported builds, including every released 0.9 server and the pinned
+  protocol build `89b59aa`, cancel the exchange with the caller. A cancelled SDK
+  start, or the replacement start inside a recovery, terminates the new worker
+  and leaves the SDK stopped (`worker-startup-cancelled`). A cancelled ConnectEx
+  retires the generation, which then needs recovery (`connect-ex-cancelled`). A
+  cancelled readiness probe quarantines the generation and requires operator
+  recovery (`execution-readiness-probe-cancelled`).
+
+Either way, refresh SDK state before deciding what to do next.
+
+A per-call deadline, such as `AbortSignal.timeout(...)`, shorter than the
+server's worst case for that call can stop the caller waiting before the
+server's typed failure, lifecycle state, and recovery guidance arrive. Under the
+default server configuration, use at least the deadlines below. Each is the
+server's worst case to a typed answer, failure cleanup included, plus 5 s for
+scheduling, transport, and an idle process observation. Allow more on a heavily
+loaded machine.
+
+| Call                            | Server worst case to a typed answer                                                                                                                                              | Minimum per-call deadline |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| Start the SDK                   | 15 s: the 10 s startup bound, then up to 5 s of worker cleanup on failure                                                                                                        | 20 s                      |
+| Connect or reconnect            | 60 s: ConnectEx 10 s, readiness probe 30 s, application association 10 s, and liveness check 5 s, then up to 5 s of worker cleanup on failure; a process observation comes first | 65 s                      |
+| Recover the SDK                 | 25 s: heartbeat drain 5 s, cleanup of the faulted worker 5 s, and replacement start 10 s, then up to 5 s of worker cleanup on failure                                            | 30 s                      |
+| Launch SpatialAnalyzer          | 30 s: the application startup bound, after a process observation                                                                                                                 | 35 s                      |
+| Close the owned SpatialAnalyzer | 30 s: the application shutdown bound, with up to two process observations                                                                                                        | 35 s                      |
+| Stop the SDK                    | the execution budget of any in-flight MP command, then 15 s: heartbeat drain 5 s, stop exchange 5 s, and forced cleanup 5 s                                                      | that budget + 20 s        |
+
+When the server's bounds are raised, add the increase: `StartupTimeout` counts
+once for Start and Recover and twice for Connect, `ReadinessProbeTimeout` once
+for Connect, and the application startup and shutdown bounds once for Launch and
+Close. Released 0.9 servers and the pinned build `89b59aa` have the same or
+shorter worst cases, with one exception: they associate the application after
+Connect reports readiness, so Connect can also wait behind an MP command that
+another client submits in between.
+
 ### Command and input names
 
 Public command names are derived mechanically from exact MP names:
