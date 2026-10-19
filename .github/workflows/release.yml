@@ -1,12 +1,14 @@
 name: Release
 
 on:
-  push:
-    tags: ['v*']
   workflow_dispatch:
     inputs:
+      version:
+        description: Package version without v; must equal both targets' package versions
+        type: string
+        required: true
       publish:
-        description: Publish the validated packages to npm (select a release tag)
+        description: Publish the validated packages and create a draft GitHub Release
         type: boolean
         default: false
         required: true
@@ -27,12 +29,17 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Check tag, package versions, and main ancestry
+      - name: Check dispatch ref, version, existing tag, and package identities
         shell: pwsh
-        run: |
-          ./eng/Test-ReleaseVersion.ps1 -ReleaseTag $env:GITHUB_REF
-          git merge-base --is-ancestor HEAD origin/main
-          if ($LASTEXITCODE -ne 0) { throw 'Release commit must be merged into main.' }
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_PUBLISH: ${{ inputs.publish }}
+        run: >
+          ./eng/Test-ReleaseVersion.ps1
+          -Version $env:RELEASE_VERSION
+          -Ref $env:GITHUB_REF
+          -Commit $env:GITHUB_SHA
+          -Publish:($env:RELEASE_PUBLISH -eq 'true')
 
   build:
     needs: validate
@@ -41,7 +48,7 @@ jobs:
       upload-release-artifacts: true
 
   publish:
-    if: github.event_name == 'workflow_dispatch' && inputs.publish
+    if: inputs.publish && github.ref == 'refs/heads/main'
     needs: [validate, build]
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -65,3 +72,35 @@ jobs:
           package-manager-cache: false
       - name: Publish validated npm archive with GitHub OIDC
         run: npm publish ./dist/*.tgz --access public --provenance --ignore-scripts
+
+  release:
+    if: inputs.publish && github.ref == 'refs/heads/main'
+    needs: [validate, publish]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_VERSION: ${{ inputs.version }}
+    steps:
+      - name: Check that no release uses the tag, drafts included
+        shell: bash
+        run: |
+          tags="$(gh api "repos/$GITHUB_REPOSITORY/releases" --paginate --jq '.[].tag_name')"
+          if grep -Fxq -- "v$RELEASE_VERSION" <<< "$tags"; then
+            echo "::error::A release for v$RELEASE_VERSION already exists (it may be a draft). Complete that release instead of creating another."
+            exit 1
+          fi
+      - name: Create the draft GitHub Release
+        shell: bash
+        run: |
+          url="$(gh release create "v$RELEASE_VERSION" --draft --target "$GITHUB_SHA" --generate-notes --title "Briosa JavaScript/TypeScript $RELEASE_VERSION")"
+          {
+            echo "## Draft release v$RELEASE_VERSION"
+            echo
+            echo "Both packages were published from \`$GITHUB_SHA\` on main. Draft: $url"
+            echo
+            echo "The draft has no tag yet. The maintainer verifies both registry packages in a clean consumer, completes the notes (registry links, this run, clean-consumer results), and publishes the draft, which creates the \`v$RELEASE_VERSION\` tag at that commit."
+          } >> "$GITHUB_STEP_SUMMARY"
