@@ -44,6 +44,11 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: ./eng/Test-ReleaseVersionPolicy.ps1
 
+      - name: Check draft release policy
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: ./eng/Test-ReleaseDraftPolicy.ps1
+
       - name: Read protocol lock
         id: protocol
         shell: pwsh

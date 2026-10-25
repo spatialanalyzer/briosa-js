@@ -184,9 +184,14 @@ foreach ($file in $workflowFiles) {
             Add-Failure "release.yml: the $jobName job must not refer to refs/tags."
         }
         $needs = Get-ListValue $lines $(if ($keys.Contains('needs')) { $keys['needs'] } else { $null })
-        $requiredNeeds = if ($jobName -eq 'publish') { 'validate', 'build' } else { 'validate', 'publish' }
+        # The draft release comes before any registry write, so a refused draft never
+        # leaves published packages without a release.
+        $requiredNeeds = if ($jobName -eq 'publish') { 'validate', 'build', 'release' } else { 'validate', 'build' }
         foreach ($need in $requiredNeeds) {
             if ($needs -notcontains $need) { Add-Failure "release.yml: the $jobName job must need $need." }
+        }
+        if ($jobName -eq 'release' -and $needs -contains 'publish') {
+            Add-Failure 'release.yml: the release job must create the draft before publishing, not after it.'
         }
 
         if ($jobName -eq 'publish') {
@@ -201,13 +206,15 @@ foreach ($file in $workflowFiles) {
                 Add-Failure "release.yml: the publish job must deploy to a named registry environment, found: '$environment'."
             }
         } else {
+            # eng/Test-ReleaseDraftPolicy.ps1 covers the draft script's behavior.
             $releaseText = Get-Text $lines $job
-            $create = @($releaseText -split "`n" | Where-Object { $_ -match 'gh release create' })
-            if ($create.Count -ne 1 -or -not ($create[0].Contains('--draft') -and $create[0].Contains('--target'))) {
-                Add-Failure 'release.yml: the release job must run gh release create with --draft and --target.'
+            foreach ($fragment in 'persist-credentials: false', './eng/New-ReleaseDraft.ps1', '-Version $env:RELEASE_VERSION', '-Commit $env:GITHUB_SHA') {
+                if (-not $releaseText.Contains($fragment)) {
+                    Add-Failure "release.yml: the release job must contain '$fragment'."
+                }
             }
-            if (-not ($releaseText -match 'gh api [^\n]*/releases"? [^\n]*--paginate') -or $releaseText.Contains('releases/tags/')) {
-                Add-Failure 'release.yml: the release job must check all releases, drafts included (releases/tags/<tag> hides drafts).'
+            if ($releaseText -match 'gh release create') {
+                Add-Failure 'release.yml: the release job must leave draft creation to ./eng/New-ReleaseDraft.ps1.'
             }
         }
     }
