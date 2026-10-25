@@ -44,12 +44,13 @@ publishes the draft GitHub release.
    `publish=true`. The workflow rejects tag refs, branches other than `main`, a
    version that differs from either target's package version, wrong target
    identities, and an existing `v<version>` tag at another commit. It rebuilds and
-   validates both targets, then waits for the `npm` deployment approval.
+   validates both targets, then creates a draft GitHub release for `v<version>` at
+   the run's commit with generated notes, before any registry write. The draft
+   step fails if that tag's release is already published or a draft for it
+   belongs to another commit; a draft for the same commit is reused. The run
+   then waits for the `npm` deployment approval.
 4. The maintainer approves the deployment. Publishing downloads only artifacts from
    its own successful workflow run. No source build runs in the publishing job.
-   After both targets publish, the workflow creates a draft GitHub release for
-   `v<version>` at the run's commit with generated notes. It fails if any release,
-   drafts included, already uses that tag.
 5. Verify installation from the actual registry in a clean consumer environment
    for each target. Check package version, exact SA target, and the stable public
    namespace/import. These checks must not start SpatialAnalyzer.
@@ -65,7 +66,23 @@ maintainer does both.
 Registry versions are immutable. Publication is not atomic across the two
 products. Inspect registry state after any failed or interrupted run before
 retrying. Rerun only failed jobs when one target succeeded; a rerun of failed jobs
-reuses the same commit and version, needs the deployment approval again, and
-creates the draft release once both targets have published. Do not overwrite,
-delete, or silently skip an existing release. If a published artifact needs a
-change, review and publish a new patch version.
+reuses the same commit, version, and draft release, and needs the deployment
+approval again. Do not overwrite, delete, or silently skip an existing release. If
+a published artifact needs a change, review and publish a new patch version. A
+draft left by a run that published nothing can be deleted before dispatching again.
+
+## If the draft release is refused
+
+GitHub does not let the workflow token create a release whose commit has workflow
+files that differ from `main`, for example when a workflow change merges while the
+run waits. The draft step then fails before anything is published, and its job
+summary repeats these steps. To release the approved commit unchanged:
+
+1. Push the tag at the run's commit with your own credentials over SSH:
+   `git push git@github.com:spatialanalyzer/briosa-js.git <commit>:refs/tags/v<version>`.
+   The release tag ruleset lets organization owners create it.
+2. Use **Re-run failed jobs** on the same run. With the tag in place GitHub creates
+   no tag, so the draft and publishing continue from the same commit and packages.
+3. If the draft is still refused, create it on the Releases page from the existing
+   tag, save it as a draft, and use **Re-run failed jobs** again. The draft step
+   reuses a draft whose tag points at the run's commit.

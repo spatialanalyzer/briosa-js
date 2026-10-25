@@ -47,9 +47,34 @@ jobs:
     with:
       upload-release-artifacts: true
 
-  publish:
+  # The draft release comes before any registry write. If GitHub refuses it (the
+  # run's workflow files differ from main), nothing is published yet, and the job
+  # summary gives the maintainer's recovery for this same commit.
+  release:
     if: inputs.publish && github.ref == 'refs/heads/main'
     needs: [validate, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Create or reuse the draft GitHub Release for this commit
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: >
+          ./eng/New-ReleaseDraft.ps1
+          -Version $env:RELEASE_VERSION
+          -Commit $env:GITHUB_SHA
+          -Title "Briosa JavaScript/TypeScript $env:RELEASE_VERSION"
+
+  publish:
+    if: inputs.publish && github.ref == 'refs/heads/main'
+    needs: [validate, build, release]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: npm
@@ -72,35 +97,3 @@ jobs:
           package-manager-cache: false
       - name: Publish validated npm archive with GitHub OIDC
         run: npm publish ./dist/*.tgz --access public --provenance --ignore-scripts
-
-  release:
-    if: inputs.publish && github.ref == 'refs/heads/main'
-    needs: [validate, publish]
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: write
-    env:
-      GH_TOKEN: ${{ github.token }}
-      GH_REPO: ${{ github.repository }}
-      RELEASE_VERSION: ${{ inputs.version }}
-    steps:
-      - name: Check that no release uses the tag, drafts included
-        shell: bash
-        run: |
-          tags="$(gh api "repos/$GITHUB_REPOSITORY/releases" --paginate --jq '.[].tag_name')"
-          if grep -Fxq -- "v$RELEASE_VERSION" <<< "$tags"; then
-            echo "::error::A release for v$RELEASE_VERSION already exists (it may be a draft). Complete that release instead of creating another."
-            exit 1
-          fi
-      - name: Create the draft GitHub Release
-        shell: bash
-        run: |
-          url="$(gh release create "v$RELEASE_VERSION" --draft --target "$GITHUB_SHA" --generate-notes --title "Briosa JavaScript/TypeScript $RELEASE_VERSION")"
-          {
-            echo "## Draft release v$RELEASE_VERSION"
-            echo
-            echo "Both packages were published from \`$GITHUB_SHA\` on main. Draft: $url"
-            echo
-            echo "The draft has no tag yet. The maintainer verifies both registry packages in a clean consumer, completes the notes (registry links, this run, clean-consumer results), and publishes the draft, which creates the \`v$RELEASE_VERSION\` tag at that commit."
-          } >> "$GITHUB_STEP_SUMMARY"
