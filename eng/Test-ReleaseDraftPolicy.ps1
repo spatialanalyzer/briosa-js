@@ -161,6 +161,8 @@ try {
     }
 
     Write-Host 'Draft release creation, reuse for the same commit, rejection of other commits, and the maintainer recovery passed.'
+    # The fake's failure cases leave LASTEXITCODE at 1, which an Actions pwsh step exits with.
+    $global:LASTEXITCODE = 0
 }
 finally {
     $env:GITHUB_STEP_SUMMARY = $savedSummary
