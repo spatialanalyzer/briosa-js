@@ -34,6 +34,21 @@ jobs:
       - name: Check out client
         uses: actions/checkout@v6
 
+      - name: Check release workflow policy
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: ./eng/Test-ReleaseWorkflowPolicy.ps1
+
+      - name: Check release version policy
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: ./eng/Test-ReleaseVersionPolicy.ps1
+
+      - name: Check draft release policy
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: ./eng/Test-ReleaseDraftPolicy.ps1
+
       - name: Read protocol lock
         id: protocol
         shell: pwsh

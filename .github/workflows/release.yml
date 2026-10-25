@@ -1,12 +1,14 @@
 name: Release
 
 on:
-  push:
-    tags: ['v*']
   workflow_dispatch:
     inputs:
+      version:
+        description: Package version without v; must equal both targets' package versions
+        type: string
+        required: true
       publish:
-        description: Publish the validated packages to npm (select a release tag)
+        description: Publish the validated packages and create a draft GitHub Release
         type: boolean
         default: false
         required: true
@@ -27,12 +29,17 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Check tag, package versions, and main ancestry
+      - name: Check dispatch ref, version, existing tag, and package identities
         shell: pwsh
-        run: |
-          ./eng/Test-ReleaseVersion.ps1 -ReleaseTag $env:GITHUB_REF
-          git merge-base --is-ancestor HEAD origin/main
-          if ($LASTEXITCODE -ne 0) { throw 'Release commit must be merged into main.' }
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_PUBLISH: ${{ inputs.publish }}
+        run: >
+          ./eng/Test-ReleaseVersion.ps1
+          -Version $env:RELEASE_VERSION
+          -Ref $env:GITHUB_REF
+          -Commit $env:GITHUB_SHA
+          -Publish:($env:RELEASE_PUBLISH -eq 'true')
 
   build:
     needs: validate
@@ -40,9 +47,34 @@ jobs:
     with:
       upload-release-artifacts: true
 
-  publish:
-    if: github.event_name == 'workflow_dispatch' && inputs.publish
+  # The draft release comes before any registry write. If GitHub refuses it (the
+  # run's workflow files differ from main), nothing is published yet, and the job
+  # summary gives the maintainer's recovery for this same commit.
+  release:
+    if: inputs.publish && github.ref == 'refs/heads/main'
     needs: [validate, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Create or reuse the draft GitHub Release for this commit
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: >
+          ./eng/New-ReleaseDraft.ps1
+          -Version $env:RELEASE_VERSION
+          -Commit $env:GITHUB_SHA
+          -Title "Briosa JavaScript/TypeScript $env:RELEASE_VERSION"
+
+  publish:
+    if: inputs.publish && github.ref == 'refs/heads/main'
+    needs: [validate, build, release]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: npm
