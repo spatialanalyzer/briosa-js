@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Check out client
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Check release workflow policy
         shell: pwsh
@@ -67,26 +67,26 @@ jobs:
           "spatial_analyzer_target=$($lock.target.spatial_analyzer)" | Out-File $env:GITHUB_OUTPUT -Append
 
       - name: Check out pinned Briosa source
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           repository: spatialanalyzer/briosa
           ref: ${{ steps.protocol.outputs.source_revision }}
           path: briosa-source
 
       - name: Install Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24.21.0'
           cache: npm
           cache-dependency-path: targets/${{ matrix.sa-target }}/package-lock.json
 
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
         with:
           global-json-file: briosa-source/global.json
 
       - name: Install Buf
-        uses: bufbuild/buf-setup-action@v1.50.0
+        uses: bufbuild/buf-setup-action@a47c93e0b1648d5651a065437926377d060baa99 # v1.50.0
         with:
           version: 1.72.0
           github_token: ${{ github.token }}

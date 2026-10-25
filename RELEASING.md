@@ -71,6 +71,16 @@ approval again. Do not overwrite, delete, or silently skip an existing release. 
 a published artifact needs a change, review and publish a new patch version. A
 draft left by a run that published nothing can be deleted before dispatching again.
 
+## Workflow action pins
+
+Every remote action is pinned to a full commit SHA with a version comment.
+GitHub's Actions setting "Require actions to be pinned to a full-length commit
+SHA" is on, so a workflow that references a tag or branch fails to start.
+Dependabot proposes grouped pin updates weekly, once a release is a week old.
+Before merging one, check that each new SHA is the upstream tag's commit. Don't merge one while a release run is
+in progress: it changes workflow files on `main`, which can make GitHub refuse the
+draft release.
+
 ## If the draft release is refused
 
 GitHub does not let the workflow token create a release whose commit has workflow
