@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Check out client
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check release workflow policy
         shell: pwsh
@@ -67,21 +67,21 @@ jobs:
           "spatial_analyzer_target=$($lock.target.spatial_analyzer)" | Out-File $env:GITHUB_OUTPUT -Append
 
       - name: Check out pinned Briosa source
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: spatialanalyzer/briosa
           ref: ${{ steps.protocol.outputs.source_revision }}
           path: briosa-source
 
       - name: Install Node.js
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24.21.0'
           cache: npm
           cache-dependency-path: targets/${{ matrix.sa-target }}/package-lock.json
 
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           global-json-file: briosa-source/global.json
 
@@ -146,7 +146,7 @@ jobs:
           -SourceTarget "${{ github.workspace }}/briosa-source/targets/${{ matrix.sa-target }}"
 
       - name: Retain cross-version compatibility evidence
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: compatibility-${{ matrix.sa-target }}
           path: |
@@ -178,7 +178,7 @@ jobs:
         run: ./eng/Test-PackageCompatibility.ps1
 
       - name: Retain packaged cross-version compatibility evidence
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: packaged-compatibility-${{ matrix.sa-target }}
           path: targets/${{ matrix.sa-target }}/artifacts/*-package-evidence.json
@@ -187,7 +187,7 @@ jobs:
 
       - name: Retain validated release packages
         if: inputs.upload-release-artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: packages-${{ matrix.sa-target }}
           path: targets/${{ matrix.sa-target }}/*.tgz
