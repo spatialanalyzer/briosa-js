@@ -60,10 +60,9 @@ export interface BriosaStartOptions extends BriosaLifecycleCallOptions {
    * startup, process observation, and round trips. Raise it when the server's
    * lifecycle bounds are raised. Expiry during an in-flight RPC is reported the
    * same way; aborting the caller's `signal` only stops that caller from waiting.
-   * A server that includes spatialanalyzer/briosa#315 finishes an SDK start or
-   * connection it has accepted after the client stops waiting; older servers,
-   * including released 0.9 builds, cancel it, which can leave the SDK stopped or
-   * faulted.
+   * The server finishes an SDK start or connection it has accepted after the
+   * client stops waiting (spatialanalyzer/briosa#315), so refresh the SDK state
+   * before retrying.
    */
   readonly startupTimeoutMs?: number;
 }

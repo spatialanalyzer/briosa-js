@@ -18,7 +18,7 @@ The package is named `@spatialanalyzer/briosa-2024.1.0508.5`, while its
 exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
-npm install briosa@file:C:\path\to\spatialanalyzer-briosa-2024.1.0508.5-0.4.0.tgz
+npm install briosa@file:C:\path\to\spatialanalyzer-briosa-2024.1.0508.5-0.5.0.tgz
 ```
 
 Each exact SpatialAnalyzer target has an independent package. Install the chosen
@@ -61,15 +61,54 @@ you raise the server's `Briosa:Worker:StartupTimeout`,
 the [public API contract](docs/design/v1-public-api-contract.md#startup-and-lifecycle-time-budgets)
 shows how to size it. Lifecycle methods add no deadline of their own. If the
 budget expires while the server is starting or connecting the SDK, read the SDK
-state before retrying: a server that includes
-[spatialanalyzer/briosa#315](https://github.com/spatialanalyzer/briosa/pull/315)
-finishes that step, while released 0.9 servers cancel it, which can leave the
-SDK stopped or faulted.
+state before retrying: the server finishes a step it has accepted
+([spatialanalyzer/briosa#315](https://github.com/spatialanalyzer/briosa/pull/315)),
+so the generation may still become ready.
 
 The client retains lifecycle generations and supplies RPC guards automatically.
 Typed lifecycle failures, compatibility failures, caller cancellation,
 ambiguous MP completion, and replay guidance remain distinct. The client never
 automatically replays an MP operation.
+
+## Contract major 3
+
+Client 0.5.0 adopts behavioral contract major 3 (Server 0.10.0). The
+[contract major 3 migration guide](https://github.com/spatialanalyzer/briosa-js/blob/main/docs/contract-major-3-migration.md) lists every breaking change: the
+request defaults and argument rules that changed, the nine removed operations,
+and the admission profiles that the server applies.
+
+- **Partial success.** An MP that returns code 4 (PARTIAL SUCCESS) did its work,
+  so the call succeeds with its outputs and is never retried. Each call can
+  observe its own MP completion:
+
+  ```ts
+  const directory = await getWorkingDirectory(briosa, {
+    onMpCompletion: ({ state, mpResultCode }) => {
+      // state is 'succeeded' or 'partialSuccess'
+    },
+  });
+  ```
+
+  `constructPointFromSurveyTargetCenter`, `openSaFile`, `openTemplateFile`, and
+  `setReportOptionsForObject` report code 4 as an ordinary `mpFailure`, because
+  for them it leaves the work undone.
+
+- **Typed failures.** `BriosaOperationError` adds the kind `sdkCallFaulted`, whose
+  phase is its `executionDisposition`, and `mpExecution`, the server's MP
+  execution details, in which `partialSuccess` stays distinct. A SpatialAnalyzer
+  modal dialog surfaces as `workerWatchdogTimeout` with the diagnostic
+  `sa-modal-dialog-open` and the guidance `operatorInterventionRequired`; an
+  operator must dismiss it.
+- **Discovery.** The server snapshot reports the `admissionProfile` and an opaque
+  `policyFingerprint`, and each capability its reviewed `riskFlags`,
+  `durationClass`, `validationStatus`, and `admission`.
+  `listCapabilities({ includeDenied: true })` also lists the denied operations
+  with their denial reasons, without making them callable.
+- **Lifecycle.** After a lifecycle call whose `signal` aborted, refresh the SDK
+  or application state before acting: the server finishes a transition it has
+  accepted. Treat `sdk-lifecycle-transition-in-progress` as "refresh and retry
+  later". The lifecycle failure kinds add `callerCancelled` and
+  `callerDeadlineExceeded`.
 
 See the [Briosa documentation](https://spatialanalyzer.github.io/briosa-docs/api/javascript/)
 for the client API overview. The target-specific source and locked protocol define
@@ -83,9 +122,10 @@ canonical stores, explicit search roots, and supported local layouts. It validat
 receipts and manifests, filters the exact SA target and compatibility contract,
 and selects the highest compatible stable release. No internet access is needed.
 
-This development checkout prepares client 0.4.0 for behavioral contract **2.0**
-(major 2, revision at least 0). It is not a published compatibility claim.
-Major-1 servers and servers without contract metadata, including Server 0.6.1,
+This development checkout prepares client 0.5.0 for behavioral contract **3.0**
+(major 3, revision at least 0), which ships as Server 0.10.0. It is not a
+published compatibility claim. Contract-major-2 servers (Server 0.9.x),
+major-1 servers, and servers without contract metadata, including Server 0.6.1,
 are rejected before launch. Protocol and source pins remain exact build inputs;
 startup verifies the running server against its selected installation.
 
@@ -133,7 +173,7 @@ distinguishes tested pairs from declared forward compatibility.
 ```ts
 import { discoverInstallations } from 'briosa';
 
-const selection = { version: '0.9.0-dev.1', allowPrerelease: true };
+const selection = { version: '0.10.0-dev.1', allowPrerelease: true };
 const report = await discoverInstallations(selection); // no process launch
 await briosa.start({ serverSelection: selection });
 ```
@@ -154,7 +194,7 @@ npm ci
 npm run build
 npm test
 ./eng/Test-Conformance.ps1 `
-  -ArtifactPath C:\path\to\briosa-client-conformance-0.6.1-sa-2024.1.0508.5-win-x64.zip `
+  -ArtifactPath C:\path\to\briosa-client-conformance-0.9.2-sa-2024.1.0508.5-win-x64.zip `
   -ExpectIncompatible `
   -NodeExecutable node
 npm run lint
@@ -171,12 +211,12 @@ Neither path requires SpatialAnalyzer nor a license.
 
 ```powershell
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.9.0-dev.1-sa-2024.1.0508.5.zip `
+  --artifact C:\path\to\briosa-protocol-0.10.0-dev.1-sa-2024.1.0508.5.zip `
   --update `
   --source-channel source_commit_bootstrap
 
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.9.0-dev.1-sa-2024.1.0508.5.zip
+  --artifact C:\path\to\briosa-protocol-0.10.0-dev.1-sa-2024.1.0508.5.zip
 ```
 
 Never edit `src/generated` or `protocol.lock.json` by hand.
@@ -206,12 +246,15 @@ and [server observability guide](https://github.com/spatialanalyzer/briosa/blob/
 ## Compatibility and validation
 
 This package pins its generation artifact and tests the declared compatibility
-contract against packaged servers. The retained 0.6.1 baseline must be rejected.
-Exact SA target, runtime identity, capabilities, and readiness still gate MP calls.
+contract against packaged servers. The retained Server 0.9.2 baseline, which
+declares contract major 2, must be rejected. Exact SA target, runtime identity,
+capabilities, and readiness still gate MP calls.
 
-Portable conformance covers lifecycle, identity mismatch, denied capabilities,
-typed MP and output failure, deadlines, cancellation, watchdog recovery, SDK loss,
-and owned-process cleanup. Its harness disables Control Center auto-launch and
+Portable conformance covers lifecycle, identity mismatch, denied capabilities
+with the admission profile and denial reasons, typed MP and output failure, SDK
+call faults, MP partial success, deadlines, cancellation, a lifecycle Connect
+whose caller stopped waiting, watchdog recovery, SDK loss, and owned-process
+cleanup. Its harness disables Control Center auto-launch and
 restores the prior setting afterward. These checks use a fake SDK, without a
 SpatialAnalyzer installation or license.
 
@@ -226,7 +269,7 @@ portable results do not imply v1.0 readiness or validation on physical instrumen
 
 ### SA 2024 differences
 
-The facade implements the reviewed 996-operation SA 2024 surface. It omits later
+The facade implements the reviewed 987-operation SA 2024 surface. It omits later
 commands and the three scan operations whose SDK bindings are unavailable in
 this release. See the authoritative [compatibility record](https://github.com/spatialanalyzer/briosa/blob/v0.6.1/targets/2024.1.0508.5/docs/development/sa2024-compatibility.md)
 for the complete command and field differences.
