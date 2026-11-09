@@ -11,7 +11,10 @@ import {
   getWorkingDirectory,
   type MpCompletion,
 } from '../src/index.js';
-import { MpExecutionState } from '../src/generated/protocol/briosa/operation_outcomes.js';
+import {
+  MpExecutionState,
+  type MpExecutionDetails,
+} from '../src/generated/protocol/briosa/operation_outcomes.js';
 import {
   partialSuccess,
   startedClient,
@@ -101,42 +104,115 @@ void test('concurrent calls observe only their own completion', async () => {
   await client.stop();
 });
 
-void test('without onMpCompletion the completion details are not required', async () => {
-  const { client, transport } = await startedClient();
-  transport.respond = () => units;
-  assert.deepEqual(await getActiveUnits(client), units);
-  await client.stop();
-});
+// C1 (major3-client-consistency.md): every successful MP call is checked,
+// whether or not the caller observes it. A success carries `execution` with
+// SUCCEEDED and MP code 2, or PARTIAL_SUCCESS and MP code 4.
+const invalidCompletions: readonly (readonly [
+  string,
+  MpExecutionDetails | undefined,
+  string,
+])[] = [
+  ['no execution', undefined, 'mp-completion-missing'],
+  [
+    'no MP code',
+    {
+      state: MpExecutionState.MP_EXECUTION_STATE_SUCCEEDED,
+      outputRetrievals: [],
+    },
+    'mp-completion-invalid',
+  ],
+  [
+    'SUCCEEDED with code 4',
+    {
+      state: MpExecutionState.MP_EXECUTION_STATE_SUCCEEDED,
+      mpResultCode: 4,
+      outputRetrievals: [],
+    },
+    'mp-completion-invalid',
+  ],
+  [
+    'PARTIAL_SUCCESS with code 2',
+    {
+      state: MpExecutionState.MP_EXECUTION_STATE_PARTIAL_SUCCESS,
+      mpResultCode: 2,
+      outputRetrievals: [],
+    },
+    'mp-completion-invalid',
+  ],
+  [
+    'FAILED with code 3',
+    {
+      state: MpExecutionState.MP_EXECUTION_STATE_FAILED,
+      mpResultCode: 3,
+      outputRetrievals: [],
+    },
+    'mp-completion-invalid',
+  ],
+  [
+    'an unspecified state with code 2',
+    {
+      state: MpExecutionState.MP_EXECUTION_STATE_UNSPECIFIED,
+      mpResultCode: 2,
+      outputRetrievals: [],
+    },
+    'mp-completion-invalid',
+  ],
+];
 
-void test('a requested completion that is missing or not a success fails closed', async () => {
+for (const [name, execution, diagnosticCode] of invalidCompletions) {
+  void test(`a success with ${name} fails as a protocol error, with or without an observer`, async () => {
+    const { client, transport } = await startedClient();
+    const completions: MpCompletion[] = [];
+    const observed = {
+      onMpCompletion: (completion: MpCompletion): void => {
+        completions.push(completion);
+      },
+    };
+    const rejectsWith = (error: unknown): boolean =>
+      error instanceof BriosaProtocolError &&
+      error.diagnosticCode === diagnosticCode;
+    transport.respond = () =>
+      execution === undefined ? units : { ...units, execution };
+    for (const options of [{}, observed]) {
+      await assert.rejects(() => getActiveUnits(client, options), rejectsWith);
+      transport.workingDirectoryResults.push(
+        execution === undefined
+          ? { directory: 'C:\\Working' }
+          : { directory: 'C:\\Working', execution },
+      );
+      await assert.rejects(
+        () => getWorkingDirectory(client, options),
+        rejectsWith,
+      );
+    }
+    assert.deepEqual(completions, [], 'the observer is never called');
+    await client.stop();
+  });
+}
+
+void test('the observer reports a success whose output mapping then fails', async () => {
   const { client, transport } = await startedClient();
-  const onMpCompletion = (): void => undefined;
-  for (const [execution, diagnosticCode] of [
-    [undefined, 'mp-completion-missing'],
-    [
-      {
-        state: MpExecutionState.MP_EXECUTION_STATE_FAILED,
-        mpResultCode: 3,
-        outputRetrievals: [],
-      },
-      'mp-completion-invalid',
-    ],
-    [
-      {
-        state: MpExecutionState.MP_EXECUTION_STATE_SUCCEEDED,
-        outputRetrievals: [],
-      },
-      'mp-completion-invalid',
-    ],
-  ] as const) {
-    transport.respond = () => ({ ...units, execution });
-    await assert.rejects(
-      () => getActiveUnits(client, { onMpCompletion }),
-      (error: unknown) =>
-        error instanceof BriosaProtocolError &&
-        error.diagnosticCode === diagnosticCode,
-    );
-  }
+  const completions: MpCompletion[] = [];
+  const onMpCompletion = (completion: MpCompletion): void => {
+    completions.push(completion);
+  };
+  // The completion is checked and reported before the outputs are mapped.
+  transport.respond = () => ({ execution: partialSuccess() });
+  await assert.rejects(
+    () => getActiveUnits(client, { onMpCompletion }),
+    BriosaProtocolError,
+  );
+  transport.workingDirectoryResults.push({ execution: succeeded() });
+  await assert.rejects(
+    () => getWorkingDirectory(client, { onMpCompletion }),
+    (error: unknown) =>
+      error instanceof BriosaProtocolError &&
+      error.diagnosticCode === 'working-directory-missing',
+  );
+  assert.deepEqual(completions, [
+    { state: 'partialSuccess', mpResultCode: 4 },
+    { state: 'succeeded', mpResultCode: 2 },
+  ]);
   await client.stop();
 });
 

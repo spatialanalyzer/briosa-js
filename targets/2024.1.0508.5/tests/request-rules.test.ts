@@ -35,6 +35,10 @@ import {
   type CollectionObjectName,
   type PointName,
 } from '../src/index.js';
+import {
+  RobotActiveJointComponent,
+  RobotModelLinkType,
+} from '../src/generated/protocol/briosa/robot_operations.js';
 import { startedClient, succeeded } from './support/fakes.js';
 
 type Wire = Record<string, unknown>;
@@ -519,6 +523,16 @@ const requiredFields: readonly (readonly [
     (client, input) =>
       client.robotOperations.setRobotMachineParameter(input as never),
   ],
+  // C2 (major3-client-consistency.md): the parameter name is required too,
+  // with no '' fallback, and an explicit value is sent unchecked.
+  [
+    'set_robot_machine_parameter',
+    { machineId: machine, parameterName: '', parameterValue: 1 },
+    'parameterName',
+    '',
+    (client, input) =>
+      client.robotOperations.setRobotMachineParameter(input as never),
+  ],
   [
     'delete_measurement_observation',
     { pointName: point('P1'), observationIndex: 0 },
@@ -679,20 +693,29 @@ const modelLinkParameters = [
   'segmentCgMassKg',
 ] as const;
 
-void test('the model-link configuration and its 22 parameters are required', async () => {
-  const configuration: Record<string, unknown> = Object.fromEntries(
-    modelLinkParameters.map((name) => [
-      name,
-      /Negative|Encoder$/.test(name) ? false : 0,
-    ]),
-  );
+void test('the model-link configuration and all 25 of its members are required', async () => {
+  // R5's 22 parameters, plus the link type, active joint and segment CG, which
+  // lost their 'DH' and 'NONE' defaults and their omission (all three clients
+  // require all 25 members; the server rejects an absent segment CG).
+  const configuration: Record<string, unknown> = {
+    ...Object.fromEntries(
+      modelLinkParameters.map((name) => [
+        name,
+        /Negative|Encoder$/.test(name) ? false : 0,
+      ]),
+    ),
+    linkType: '6DOF',
+    activeJointComponent: 'Rz',
+    segmentCgInSegment: { x: 0, y: 0, z: 1 },
+  };
   const call = (client: BriosaClient, input: Wire): Promise<unknown> =>
     client.robotOperations.setRobotMachineModelLinkParameters(input as never);
   await rejectedBeforeCall(
     (client) => call(client, { machineId: machine, linkName: 'Link 1' }),
     'configuration',
   );
-  for (const name of modelLinkParameters) {
+  assert.equal(Object.keys(configuration).length, 25);
+  for (const name of Object.keys(configuration)) {
     const partial = { ...configuration };
     delete partial[name];
     await rejectedBeforeCall(
@@ -714,6 +737,12 @@ void test('the model-link configuration and its 22 parameters are required', asy
   );
   for (const name of modelLinkParameters)
     assert.equal(wire[name], configuration[name], name);
+  assert.equal(wire.linkType, RobotModelLinkType.ROBOT_MODEL_LINK_TYPE_SIX_DOF);
+  assert.equal(
+    wire.activeJointComponent,
+    RobotActiveJointComponent.ROBOT_ACTIVE_JOINT_COMPONENT_RZ,
+  );
+  assert.deepEqual(wire.segmentCgInSegment, { x: 0, y: 0, z: 1 });
 });
 
 void test('the USMN excluded groups stay optional and are sent empty when omitted', async () => {
