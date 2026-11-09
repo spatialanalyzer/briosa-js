@@ -559,11 +559,21 @@ export interface EmbeddedReportFile {
   readonly fileName: string;
 }
 
-export interface ReportOutputOptions {
-  readonly outputType: ReportOutputType;
-  readonly externalPath?: string;
-  readonly embeddedFile?: EmbeddedReportFile;
-}
+/**
+ * Where a report goes. Given options need exactly one destination: an external
+ * path or an embedded report file. Omitted options keep the server's default.
+ */
+export type ReportOutputOptions =
+  | {
+      readonly outputType: ReportOutputType;
+      readonly externalPath: string;
+      readonly embeddedFile?: never;
+    }
+  | {
+      readonly outputType: ReportOutputType;
+      readonly embeddedFile: EmbeddedReportFile;
+      readonly externalPath?: never;
+    };
 
 export interface ReportViewOptions {
   readonly viewType: ReportViewType;

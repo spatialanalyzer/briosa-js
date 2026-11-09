@@ -169,7 +169,8 @@ sent as given; the server also rejects some of them when empty.
   `pointGroups`, `pointClouds`, and `objects`;
 - `exportQdasCharacteristics` and `prepareQdasDataList` (SA 2026):
   `k0004DateTimeStamp`, which loses its fixed `'2026-07-20/16:32:22'` default;
-- `constructionOperations`: `constructCrossSectionCloud.referenceObject`;
+- `constructionOperations`: `createPointCallout.desiredCoordinateSystem`;
+  `constructCrossSectionCloud.referenceObject`;
   `constructEllipsoid.transformInWorkingCoordinates`;
   `constructFrame.transformInWorkingCoordinates`;
   `constructFrameFromTransformInWorld.transformInWorldCoordinates`;
@@ -197,6 +198,8 @@ sent as given; the server also rejects some of them when empty.
   `baselineMethod`, `scalePoint1`, `scalePoint2`,
   `notMeasuredByMovingInstrument`, and `asMeasuredByMovingInstrument`;
   `setObservationCollimationShotOptions.targetedInstrument`;
+  `locateInstrumentsUsmn.showUsmnDialog`;
+  `setTargetComputationOptions.computationMethod`;
 - `robotOperations`: `setRobotCalibrationToolFrame.toolFrame`,
   `setRobotCalibrationMeasurementOffsetInToolFrame.measurementFrame`, and
   `setRobotMachineBaseTransform.destinationTransform`;
@@ -204,12 +207,21 @@ sent as given; the server also rejects some of them when empty.
   `measurementOffsetTransform`.
 
 Where every member of an input was optional, the input itself is now required:
-`relationshipWatchWindowTemplate`, `gdtOperations.setGdtOptions`, and
+`relationshipWatchWindowTemplate`, `gdtOperations.setGdtOptions`,
+`instrumentOperations.setTargetComputationOptions`, and
 `constructPointFromCloudPointRuntimeSelect`,
 `makeCollectionItemNameRefListWildcardSelection`,
 `makeCollectionObjectNameRefListRuntimeSelect`,
 `makeCollectionObjectNameRefListWildcardSelection`, and
 `makeCollectionObjectNameRuntimeSelect` of `constructionOperations`.
+
+`ReportOutputOptions`, the `reportOutputOptions` of `defineReportTemplate` and
+`generateQuickReportFromTabOrder`, is now a union type: options you pass need
+exactly one destination, `externalPath` or `embeddedFile`. Neither or both is a
+compile error and a `TypeError` before any call. When you omit the options, the
+client sends the server's default, an embedded report named `My Report`. The
+0.4.0 client never sent the destination, and Server 0.10.0 rejects report
+options without one; 0.5.0 sends it.
 
 The weather values `temperature`, `pressure`, and `relativeHumidity` of
 `setInstrumentWeatherSetting` stay optional but lose their 0 default. When

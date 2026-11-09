@@ -1189,7 +1189,7 @@ export interface CreatePointCalloutInput {
   readonly showUy?: boolean;
   readonly showUz?: boolean;
   readonly showUMag?: boolean;
-  readonly desiredCoordinateSystem?: CoordinateSystemType;
+  readonly desiredCoordinateSystem: CoordinateSystemType;
   readonly notes?: Iterable<string>;
   readonly useDefaultPlacement?: boolean;
 }
@@ -2196,7 +2196,7 @@ export interface LocateInstrumentsUsmnInput {
   readonly nominalsGroup?: CollectionObjectName;
   readonly moveInWorkingFrame?: boolean;
   readonly autoRejectOutliersAndResolve?: boolean;
-  readonly showUsmnDialog?: ShowUsmnDialog;
+  readonly showUsmnDialog: ShowUsmnDialog;
   readonly maximumAcceptableRmsError?: number;
   readonly maximumAcceptableError?: number;
   readonly excludedGroups?: Iterable<CollectionObjectName>;
@@ -2455,7 +2455,7 @@ export interface SetRemeasureFailedChecksOnlyInput {
 }
 
 export interface SetTargetComputationOptionsInput {
-  readonly computationMethod?: TargetComputationMethod;
+  readonly computationMethod: TargetComputationMethod;
   readonly ignoreDistanceMeasurements?: boolean;
 }
 
@@ -14065,13 +14065,13 @@ async function createPointCalloutOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(input.showUMag, false, 'showUmag'),
       ),
-      desiredCoordinateSystem:
-        input.desiredCoordinateSystem == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('coordinateSystemType'),
-              input.desiredCoordinateSystem,
-            ),
+      desiredCoordinateSystem: toWireOperationValue(
+        getOperationValueSchema('coordinateSystemType'),
+        requireOperationInput(
+          input.desiredCoordinateSystem,
+          'desiredCoordinateSystem',
+        ),
+      ),
       notes: toWireOperationValue(
         repeatedOperationValue(operationScalarSchemas.string),
         resolveOperationDefault(input.notes, [], 'notes'),
@@ -19825,7 +19825,7 @@ export interface InstrumentOperations {
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   setTargetComputationOptions(
-    input?: SetTargetComputationOptionsInput,
+    input: SetTargetComputationOptionsInput,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   setTrackerEdmTheodoliteUncertainties(
@@ -23230,13 +23230,10 @@ async function locateInstrumentsUsmnOperation(
           'autoRejectOutliersAndResolve',
         ),
       ),
-      showUsmnDialog:
-        input.showUsmnDialog == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('showUsmnDialog'),
-              input.showUsmnDialog,
-            ),
+      showUsmnDialog: toWireOperationValue(
+        getOperationValueSchema('showUsmnDialog'),
+        requireOperationInput(input.showUsmnDialog, 'showUsmnDialog'),
+      ),
       maximumAcceptableRmsError: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
@@ -25258,23 +25255,22 @@ async function setRemeasureFailedChecksOnlyOperation(
 }
 async function setTargetComputationOptionsOperation(
   briosa: BriosaClient,
-  input?: SetTargetComputationOptionsInput,
+  input: SetTargetComputationOptionsInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<void> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request =
     InstrumentOperationsProtocol.SetTargetComputationOptionsRequest.fromPartial(
       {
-        computationMethod:
-          input?.computationMethod == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('targetComputationMethod'),
-                input?.computationMethod,
-              ),
+        computationMethod: toWireOperationValue(
+          getOperationValueSchema('targetComputationMethod'),
+          requireOperationInput(input.computationMethod, 'computationMethod'),
+        ),
         ignoreDistanceMeasurements: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.ignoreDistanceMeasurements,
+            input.ignoreDistanceMeasurements,
             false,
             'ignoreDistanceMeasurements',
           ),

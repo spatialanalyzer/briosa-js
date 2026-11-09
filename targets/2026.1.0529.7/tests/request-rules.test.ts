@@ -339,6 +339,7 @@ void test('the already optional plane names and nominals group stay unset when o
     client.instrumentOperations.locateInstrumentsUsmn({
       instruments: [instrument],
       outputGroup: objectName('Output'),
+      showUsmnDialog: 'No',
     }),
   );
   assert.equal(usmn.nominalsGroup, undefined);
@@ -755,6 +756,7 @@ void test('the USMN excluded groups stay optional and are sent empty when omitte
     client.instrumentOperations.locateInstrumentsUsmn({
       instruments: [instrument],
       outputGroup: objectName('Output'),
+      showUsmnDialog: 'No',
     }),
   );
   assert.deepEqual(omitted.excludedGroups, []);
@@ -762,6 +764,7 @@ void test('the USMN excluded groups stay optional and are sent empty when omitte
     client.instrumentOperations.locateInstrumentsUsmn({
       instruments: [instrument],
       outputGroup: objectName('Output'),
+      showUsmnDialog: 'No',
       excludedGroups: [objectName('Excluded')],
     }),
   );
@@ -917,6 +920,7 @@ void test('omitted callout notes and Quick Align lists are sent empty', async ()
     client.constructionOperations.createPointCallout({
       destinationCalloutView: calloutView,
       point: point('P1'),
+      desiredCoordinateSystem: 'cartesian',
     }),
   );
   assert.deepEqual(notes.notes, []);
