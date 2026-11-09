@@ -362,7 +362,7 @@ function snapshot(
         : SpatialAnalyzerExecutionReadinessState.SPATIAL_ANALYZER_EXECUTION_READINESS_STATE_UNVERIFIED,
       targetIsolationMode:
         TargetIsolationMode.TARGET_ISOLATION_MODE_SINGLE_TENANT,
-      compatibility: { major: 2, revision: 0 },
+      compatibility: { major: 3, revision: 0 },
       readyForMp: ready,
     },
     {

@@ -28,6 +28,7 @@ import {
   getWorkingDirectory,
   setRelationshipFitConstraintsScalarType,
 } from '../src/index.js';
+import * as briosaPackage from '../src/index.js';
 import * as waveAOperations from '../src/waveAOperations.js';
 import * as waveBOperations from '../src/waveBOperations.js';
 import * as publicApi from '../src/index.js';
@@ -498,7 +499,7 @@ function matchingSnapshot(
         : SpatialAnalyzerExecutionReadinessState.SPATIAL_ANALYZER_EXECUTION_READINESS_STATE_UNVERIFIED,
       targetIsolationMode:
         TargetIsolationMode.TARGET_ISOLATION_MODE_SINGLE_TENANT,
-      compatibility: { major: 2, revision: 0 },
+      compatibility: { major: 3, revision: 0 },
       readyForMp: ready,
     },
     {
@@ -530,15 +531,24 @@ function serviceError(
   });
 }
 
-void test('records merged Wave B artifact and generated semantics', () => {
+void test('records the frozen contract major 3 artifact and generated semantics', () => {
   assert.equal(
     briosaProtocolIdentity.artifactName,
-    'briosa-protocol-0.9.0-dev.1-sa-2024.1.0508.5',
+    'briosa-protocol-0.10.0-dev.1-sa-2024.1.0508.5',
+  );
+  assert.equal(
+    briosaProtocolIdentity.artifactSha256,
+    '5c18656b8148e50b428351a9f67b34d5fba5f43b25eb6ba7f0ad920390d12396',
+  );
+  assert.equal(
+    briosaProtocolIdentity.descriptorSetSha256,
+    '15f5e8370436412ed571a13f1a12249eaebcd46f8f63c6db87ee7445b4b0b359',
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    '89b59aa0ddd05ea868d94c4e4a4f89ee0fbcbccb',
+    '2960705eb3152646513dca2b5d2043cd7cfffb75',
   );
+  assert.equal(briosaProtocolIdentity.compatibilityMajor, 3);
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(
     briosaProtocolIdentity.clientGenerationContract,
@@ -561,10 +571,10 @@ void test('exports all 462 approved Wave A operations as functions', () => {
   assert.equal(operations.length + 1, 462);
 });
 
-void test('exports all 530 approved Wave B operations once', () => {
-  assert.equal(WAVE_B_OPERATIONS.length, 530);
-  assert.equal(new Set(WAVE_B_OPERATIONS).size, 530);
-  assert.equal(462 + WAVE_B_OPERATIONS.length + 3 + 1, 996);
+void test('exports all 521 approved Wave B operations once', () => {
+  assert.equal(WAVE_B_OPERATIONS.length, 521);
+  assert.equal(new Set(WAVE_B_OPERATIONS).size, 521);
+  assert.equal(462 + WAVE_B_OPERATIONS.length + 3 + 1, 987);
   const client = createTestClient(new FakeLauncher(), new FakeTransport());
   const groupedSurfaces = [
     client.constructionOperations,
@@ -578,7 +588,6 @@ void test('exports all 530 approved Wave B operations once', () => {
     filterCloudsToBsplines: 'filterCloudsToBSplines',
     getCloudRgbValues: 'getCloudRGBValues',
     getCloudRgbValuesNearPoint: 'getCloudRGBValuesNearPoint',
-    deleteCloudPointsByXyzRange: 'deleteCloudPointsByXYZRange',
     autoFilterCloudsToNominalGeometry2d: 'autoFilterCloudsToNominalGeometry2D',
     autoFilterCloudsToNominalGeometry3d: 'autoFilterCloudsToNominalGeometry3D',
     autoFilterPointsToNominalGeometry3d: 'autoFilterPointsToNominalGeometry3D',
@@ -598,6 +607,71 @@ void test('exports all 530 approved Wave B operations once', () => {
         ),
       `Missing public Wave B function: ${method}`,
     );
+  }
+});
+
+// Contract major 3 retires nine operations (briosa#320, #357 and #363); they
+// leave the public surface with their inputs and value types.
+const retiredOperations: readonly (readonly [string, string])[] = [
+  [
+    'cloud_and_mesh_operations.delete_cloud_points_by_xyz_range',
+    'deleteCloudPointsByXYZRange',
+  ],
+  ['construction_operations.mirror_objects', 'mirrorObjects'],
+  [
+    'construction_operations.construct_circles_lines_from_surfaces',
+    'constructCirclesLinesFromSurfaces',
+  ],
+  [
+    'construction_operations.add_collection_instruments_to_ref_list_wildcard_selection',
+    'addCollectionInstrumentsToRefListWildcardSelection',
+  ],
+  [
+    'construction_operations.make_callout_view_ref_list_wildcard_selection',
+    'makeCalloutViewRefListWildcardSelection',
+  ],
+  [
+    'construction_operations.set_callout_view_properties',
+    'setCalloutViewProperties',
+  ],
+  [
+    'construction_operations.construct_polygonized_surface_from_point_clouds',
+    'constructPolygonizedSurfaceFromPointClouds',
+  ],
+  [
+    'construction_operations.make_collection_vector_group_name_ref_list_runtime_select',
+    'makeCollectionVectorGroupNameRefListRuntimeSelect',
+  ],
+  [
+    'construction_operations.make_vector_name_ref_list_runtime_select',
+    'makeVectorNameRefListRuntimeSelect',
+  ],
+];
+
+void test('the nine operations retired at contract major 3 are gone', () => {
+  const client = createTestClient(new FakeLauncher(), new FakeTransport());
+  const surfaces = [
+    briosaPackage,
+    waveAOperations,
+    waveBOperations,
+    client.constructionOperations,
+    client.gdtOperations,
+    client.instrumentOperations,
+    client.robotCalibrationApplianceNodeOperations,
+    client.robotOperations,
+  ] as unknown as readonly Readonly<Record<string, unknown>>[];
+  for (const [operationId, method] of retiredOperations) {
+    assert.equal(
+      (WAVE_B_OPERATIONS as readonly string[]).includes(operationId),
+      false,
+      `Retired operation still listed: ${operationId}`,
+    );
+    for (const surface of surfaces)
+      assert.equal(
+        method in surface,
+        false,
+        `Retired method present: ${method}`,
+      );
   }
 });
 
