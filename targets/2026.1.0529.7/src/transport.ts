@@ -68,7 +68,7 @@ export interface ClientTransport {
   getWorkingDirectory(
     timeoutMs: number | null,
     signal?: AbortSignal,
-  ): Promise<string>;
+  ): Promise<GetWorkingDirectoryResult>;
   invokeOperation<TRequest, TResponse>(
     service: string,
     rpc: string,
@@ -278,11 +278,11 @@ export class GrpcClientTransport implements ClientTransport {
     return requireState(response.state, 'sdk-state-missing');
   }
 
-  async getWorkingDirectory(
+  getWorkingDirectory(
     timeoutMs: number | null,
     signal?: AbortSignal,
-  ): Promise<string> {
-    const response: GetWorkingDirectoryResult = await invokeUnary(
+  ): Promise<GetWorkingDirectoryResult> {
+    return invokeUnary(
       (callback) =>
         this.#fileOperations.getWorkingDirectory(
           {},
@@ -292,10 +292,6 @@ export class GrpcClientTransport implements ClientTransport {
         ),
       signal,
     );
-    if (response.directory === undefined) {
-      throw new BriosaProtocolError('working-directory-missing');
-    }
-    return response.directory;
   }
 
   invokeOperation<TRequest, TResponse>(

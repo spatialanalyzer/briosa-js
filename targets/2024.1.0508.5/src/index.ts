@@ -34,6 +34,8 @@ export type {
   BriosaStartOptions,
   ExecutionDisposition,
   LifecycleRecoveryGuidance,
+  MpCompletion,
+  MpCompletionState,
   MpExecutionDetails,
   MpExecutionState,
   OperationFailureKind,

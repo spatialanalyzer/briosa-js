@@ -27,6 +27,7 @@ import {
   type SpatialAnalyzerLifecycleState,
   type SpatialAnalyzerSdkLifecycleState,
 } from '../src/generated/protocol/briosa/lifecycle.js';
+import type { GetWorkingDirectoryResult } from '../src/generated/protocol/briosa/file_operations.js';
 import { normalizeStartOptions } from '../src/models.js';
 import type { OwnedServer, ServerLauncher } from '../src/serverLauncher.js';
 import type { ClientTransport } from '../src/transport.js';
@@ -276,7 +277,7 @@ class RecordingTransport implements ClientTransport {
     return this.#sdkState();
   }
 
-  async getWorkingDirectory(): Promise<string> {
+  async getWorkingDirectory(): Promise<GetWorkingDirectoryResult> {
     throw new Error('not used');
   }
 

@@ -10,12 +10,17 @@ import {
   isServiceError,
   mapServiceError,
 } from './errors.js';
+import {
+  MpExecutionState,
+  type MpExecutionDetails as WireMpExecutionDetails,
+} from './generated/protocol/briosa/operation_outcomes.js';
 import type {
   BriosaCallOptions,
   BriosaClientOptions,
   BriosaLifecycleCallOptions,
   BriosaServerSnapshot,
   BriosaStartOptions,
+  MpCompletion,
   NormalizedBriosaStartOptions,
   SpatialAnalyzerLaunchOptions,
   SpatialAnalyzerLifecycleState,
@@ -24,6 +29,7 @@ import type {
 } from './models.js';
 import {
   normalizeStartOptions,
+  validateCallOptions,
   validateClientOptions,
   validateLaunchOptions,
 } from './models.js';
@@ -323,6 +329,7 @@ export class BriosaClientImplementation implements BriosaClient {
   async [getWorkingDirectoryInternal](
     options: BriosaCallOptions = {},
   ): Promise<string> {
+    validateCallOptions(options);
     const session = await this.#withLock(() => {
       this.#ensureOpen();
       if (this.#startTask !== null) {
@@ -341,10 +348,15 @@ export class BriosaClientImplementation implements BriosaClient {
       return current;
     });
     try {
-      return await session.transport.getWorkingDirectory(
+      const response = await session.transport.getWorkingDirectory(
         this.#options.commandTimeoutMs ?? null,
         options.signal,
       );
+      reportMpCompletion(response, options.onMpCompletion);
+      if (response.directory === undefined) {
+        throw new BriosaProtocolError('working-directory-missing');
+      }
+      return response.directory;
     } catch (error) {
       throw mapTransportFailure(error, session.applicationState);
     } finally {
@@ -366,6 +378,7 @@ export class BriosaClientImplementation implements BriosaClient {
     responseCodec: OperationCodec<TResponse>,
     options: BriosaCallOptions = {},
   ): Promise<TResponse> {
+    validateCallOptions(options);
     const session = await this.#withLock(() => {
       this.#ensureOpen();
       if (this.#startTask !== null) {
@@ -384,7 +397,7 @@ export class BriosaClientImplementation implements BriosaClient {
       return current;
     });
     try {
-      return await session.transport.invokeOperation(
+      const response = await session.transport.invokeOperation(
         service,
         rpc,
         request,
@@ -393,6 +406,8 @@ export class BriosaClientImplementation implements BriosaClient {
         this.#options.commandTimeoutMs ?? null,
         options.signal,
       );
+      reportMpCompletion(response, options.onMpCompletion);
+      return response;
     } catch (error) {
       throw mapTransportFailure(error, session.applicationState);
     } finally {
@@ -781,6 +796,36 @@ function publishStartup(session: Session): void {
 function refreshCommandAdmission(session: Session): void {
   session.commandAdmissionOpen =
     session.snapshot.readyForMp && session.sdkState?.readyForMp === true;
+}
+
+// Every successful major-3 result carries its MP execution details. A partial
+// success is a success, so it is reported here and never thrown or retried.
+function reportMpCompletion(
+  response: unknown,
+  onMpCompletion: ((completion: MpCompletion) => void) | undefined,
+): void {
+  if (onMpCompletion === undefined) return;
+  const execution = (
+    response as { readonly execution?: WireMpExecutionDetails } | undefined
+  )?.execution;
+  if (execution === undefined) {
+    throw new BriosaProtocolError('mp-completion-missing');
+  }
+  const state =
+    execution.state === MpExecutionState.MP_EXECUTION_STATE_SUCCEEDED
+      ? 'succeeded'
+      : execution.state === MpExecutionState.MP_EXECUTION_STATE_PARTIAL_SUCCESS
+        ? 'partialSuccess'
+        : null;
+  const mpResultCode = execution.mpResultCode;
+  if (
+    state === null ||
+    mpResultCode === undefined ||
+    !Number.isInteger(mpResultCode)
+  ) {
+    throw new BriosaProtocolError('mp-completion-invalid');
+  }
+  onMpCompletion({ state, mpResultCode });
 }
 
 function requireGeneration(

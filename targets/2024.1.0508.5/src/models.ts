@@ -18,6 +18,23 @@ export interface BriosaLifecycleCallOptions {
 
 export interface BriosaCallOptions {
   readonly signal?: AbortSignal;
+  /**
+   * Called once with this call's MP completion when the operation succeeds,
+   * after the response arrives and before the result is returned. A partial
+   * success (MP code 4) did its work: the call returns its outputs as usual and
+   * reports `partialSuccess` here. An exception thrown by the callback rejects
+   * the call, although the operation completed.
+   */
+  readonly onMpCompletion?: (completion: MpCompletion) => void;
+}
+
+/** How a successful MP command completed. */
+export type MpCompletionState = 'succeeded' | 'partialSuccess';
+
+/** The MP completion of one successful call, with its MP result code. */
+export interface MpCompletion {
+  readonly state: MpCompletionState;
+  readonly mpResultCode: number;
 }
 
 export interface SpatialAnalyzerLaunchOptions {
@@ -279,6 +296,15 @@ export interface NormalizedBriosaStartOptions {
   readonly launchOptions: SpatialAnalyzerLaunchOptions;
   readonly startupTimeoutMs: number;
   readonly signal?: AbortSignal;
+}
+
+export function validateCallOptions(options: BriosaCallOptions): void {
+  if (
+    options.onMpCompletion !== undefined &&
+    typeof options.onMpCompletion !== 'function'
+  ) {
+    throw new TypeError('onMpCompletion must be a function.');
+  }
 }
 
 export function validateClientOptions(options: BriosaClientOptions): void {

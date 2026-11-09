@@ -57,10 +57,8 @@ export interface RecordedOperation {
   readonly responseCodec: OperationCodec<unknown>;
 }
 
-/** The response a scripted operation returns, or a function that builds it. */
-export type OperationResponder = (
-  operation: RecordedOperation,
-) => unknown | Promise<unknown>;
+/** Builds the response (or a promise of it) for one scripted operation. */
+export type OperationResponder = (operation: RecordedOperation) => unknown;
 
 export function succeeded(code = 2): MpExecutionDetails {
   return {
@@ -182,8 +180,8 @@ export class ScriptedTransport implements ClientTransport {
       service,
       rpc,
       request,
-      requestCodec: requestCodec as OperationCodec<unknown>,
-      responseCodec: responseCodec as OperationCodec<unknown>,
+      requestCodec,
+      responseCodec,
     };
     this.operations.push(operation);
     return (await this.respond(operation)) as TResponse;

@@ -64,6 +64,7 @@ import {
   ReplayGuidance,
   ReplaySafety,
 } from '../src/generated/protocol/briosa/operation_outcomes.js';
+import type { GetWorkingDirectoryResult } from '../src/generated/protocol/briosa/file_operations.js';
 import type { OwnedServer, ServerLauncher } from '../src/serverLauncher.js';
 import type { ClientTransport, OperationCodec } from '../src/transport.js';
 import {
@@ -233,9 +234,9 @@ class FakeTransport implements ClientTransport {
     return this.#sdkState();
   }
 
-  async getWorkingDirectory(): Promise<string> {
+  async getWorkingDirectory(): Promise<GetWorkingDirectoryResult> {
     this.calls.push('get-working-directory');
-    return String.raw`C:\Working`;
+    return { directory: String.raw`C:\Working` };
   }
 
   async invokeOperation<TRequest, TResponse>(
