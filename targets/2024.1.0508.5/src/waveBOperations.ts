@@ -4976,16 +4976,16 @@ export async function autoFilterCloudsToNominalGeometry2D(
                 input.cloudThinningSettings,
               ),
         filterProximitySettings2d:
-          input.filterProximitySettings2D?.surfaceInclusionProximity == null
+          input.filterProximitySettings2D == null
             ? undefined
             : toWireOperationValue(
                 getOperationValueSchema('filterProximitySettings'),
-                input.filterProximitySettings2D?.surfaceInclusionProximity,
+                input.filterProximitySettings2D,
               ),
         geometryExtractionTolerance: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(
-            input.filterProximitySettings2D?.geometryExtractionTolerance,
+            input.geometryExtractionTolerance,
             0.01,
             'geometryExtractionTolerance',
           ),
