@@ -381,6 +381,56 @@ async function fullyPopulatedResponse(
   return codec.decode(codec.encode(codec.fromPartial(value)).finish());
 }
 
+void test('the 3D Auto Filter operations send their proximity settings', async () => {
+  // SA 2024 lacked the FilterProximitySettings schema, so these threw.
+  const { client, transport } = await startedClient();
+  transport.respond = () => ({});
+  const settings = {
+    surfaceInclusionProximity: 0.5,
+    surfaceProximityMode: 'both',
+    projectToPlane: true,
+  } as const;
+  const relationships = [
+    {
+      collectionName: 'Inspection',
+      itemName: 'R1',
+      itemType: briosaPackage.ItemType.relationship,
+    },
+  ];
+  try {
+    await briosaPackage.autoFilterCloudsToNominalGeometry3D(client, {
+      autoFilterTargetRelationships: relationships,
+      clouds: [
+        {
+          collectionName: 'Inspection',
+          objectName: 'Cloud',
+          objectType: briosaPackage.ObjectType.cloud,
+        },
+      ],
+      filterProximitySettings3D: settings,
+    });
+    await briosaPackage.autoFilterPointsToNominalGeometry3D(client, {
+      autoFilterTargetRelationships: relationships,
+      points: [
+        { collectionName: 'Inspection', groupName: 'G', targetName: 'P1' },
+      ],
+      filterProximitySettings3D: settings,
+    });
+    for (const operation of transport.operations) {
+      const wire = operation.requestCodec.decode(
+        operation.requestCodec.encode(operation.request).finish(),
+      ) as { filterProximitySettings3d?: Record<string, unknown> };
+      const proximity = wire.filterProximitySettings3d;
+      assert.ok(proximity !== undefined, operation.rpc);
+      assert.equal(proximity.surfaceInclusionProximity, 0.5);
+      assert.equal(proximity.projectToPlane, true);
+    }
+    assert.equal(transport.operations.length, 2);
+  } finally {
+    await client.stop();
+  }
+});
+
 void test('every operation maps a fully populated response without error', async () => {
   const { client, transport } = await startedClient();
   transport.respond = fullyPopulatedResponse;
