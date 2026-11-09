@@ -793,29 +793,29 @@ export interface RelationshipWatchWindowTemplateOptions {
 
 export interface RobotModelLinkConfiguration {
   readonly linkType?: RobotModelLinkType;
-  readonly dhAlphaComponent?: number;
-  readonly dhAComponent?: number;
-  readonly dhDComponent?: number;
-  readonly dhThetaComponent?: number;
-  readonly dhXAxisDeflectionFactor?: number;
-  readonly dhYAxisDeflectionFactor?: number;
-  readonly dhZAxisDeflectionFactor?: number;
-  readonly sixDofXComponent?: number;
-  readonly sixDofYComponent?: number;
-  readonly sixDofZComponent?: number;
-  readonly sixDofRxComponent?: number;
-  readonly sixDofRyComponent?: number;
-  readonly sixDofRzComponent?: number;
+  readonly dhAlphaComponent: number;
+  readonly dhAComponent: number;
+  readonly dhDComponent: number;
+  readonly dhThetaComponent: number;
+  readonly dhXAxisDeflectionFactor: number;
+  readonly dhYAxisDeflectionFactor: number;
+  readonly dhZAxisDeflectionFactor: number;
+  readonly sixDofXComponent: number;
+  readonly sixDofYComponent: number;
+  readonly sixDofZComponent: number;
+  readonly sixDofRxComponent: number;
+  readonly sixDofRyComponent: number;
+  readonly sixDofRzComponent: number;
   readonly activeJointComponent?: RobotActiveJointComponent;
-  readonly encoderOffsetValue?: number;
-  readonly minimumEncoderLimit?: number;
-  readonly maximumEncoderLimit?: number;
-  readonly encoderSenseNegative?: boolean;
-  readonly includeAdditionalEncoder?: boolean;
-  readonly additionalEncoderIndexOffset?: number;
-  readonly additionalEncoderSenseNegative?: boolean;
-  readonly segmentOriginMassKg?: number;
-  readonly segmentCgMassKg?: number;
+  readonly encoderOffsetValue: number;
+  readonly minimumEncoderLimit: number;
+  readonly maximumEncoderLimit: number;
+  readonly encoderSenseNegative: boolean;
+  readonly includeAdditionalEncoder: boolean;
+  readonly additionalEncoderIndexOffset: number;
+  readonly additionalEncoderSenseNegative: boolean;
+  readonly segmentOriginMassKg: number;
+  readonly segmentCgMassKg: number;
   readonly segmentCgInSegment?: Vector;
 }
 

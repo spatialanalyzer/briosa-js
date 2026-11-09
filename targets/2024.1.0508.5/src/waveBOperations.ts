@@ -1642,16 +1642,16 @@ export interface EvaluateFeatureChecksResult {
 }
 
 export interface FeatureInspectionAutoFilterInput {
-  readonly pointNames?: Iterable<PointName>;
-  readonly groupNames?: Iterable<CollectionObjectName>;
-  readonly cloudNames?: Iterable<CollectionObjectName>;
+  readonly pointNames: Iterable<PointName>;
+  readonly groupNames: Iterable<CollectionObjectName>;
+  readonly cloudNames: Iterable<CollectionObjectName>;
   readonly surfaceOffset?: number;
   readonly edgeOffset?: number;
   readonly offsetDirection?: OffsetDirectionType;
   readonly includePointsWithinCylinderAxisProximity?: boolean;
   readonly enforceMaxPointsPerFaceInOutput?: boolean;
   readonly maxPointsPerFace?: number;
-  readonly featureCheckNameList?: Iterable<CollectionItemName>;
+  readonly featureCheckNameList: Iterable<CollectionItemName>;
   readonly includeDatums?: boolean;
   readonly createCloudForEachDatumOrCheck?: boolean;
 }
@@ -1931,7 +1931,7 @@ export interface DeleteInstrumentInput {
 
 export interface DeleteMeasurementObservationInput {
   readonly pointName: PointName;
-  readonly observationIndex?: number;
+  readonly observationIndex: number;
   readonly deletePointIfNoMeasurementsRemain?: boolean;
 }
 
@@ -2177,7 +2177,7 @@ export interface LocateInstrumentGroupToSurfaceQuickFitInput {
   readonly measuredGroup: CollectionObjectName;
   readonly surfacePointsGroup: CollectionObjectName;
   readonly surfaceToFit: CollectionObjectName;
-  readonly otherObjectsToTransform?: Iterable<CollectionObjectName>;
+  readonly otherObjectsToTransform: Iterable<CollectionObjectName>;
   readonly rmsTolerance?: number;
   readonly maximumAbsoluteTolerance?: number;
 }
@@ -2292,7 +2292,7 @@ export interface MoveInstrumentToAnotherCollectionInput {
 
 export interface MoveMeasurementObservationInput {
   readonly sourcePointName: PointName;
-  readonly observationIndex?: number;
+  readonly observationIndex: number;
   readonly deletePointIfNoMeasurementsRemain?: boolean;
   readonly destinationPointName: PointName;
   readonly forceObservationActive?: boolean;
@@ -2349,7 +2349,7 @@ export interface SendCloudToSaInput extends CloudViewerInstrumentInput {
 
 export interface SetAbsoluteInstrumentScaleFactorInput {
   readonly instrument: CollectionInstrumentId;
-  readonly scaleFactor?: number;
+  readonly scaleFactor: number;
 }
 
 export interface SetAlignmentProjectorInput {
@@ -2398,12 +2398,12 @@ export interface SetInstrumentWeatherSettingInput {
   readonly pressure?: number;
   /** Relative humidity in percent. */
   readonly relativeHumidity?: number;
-  readonly setAutomatically?: boolean;
+  readonly setAutomatically: boolean;
 }
 
 export interface SetMultiplyInstrumentScaleFactorInput {
   readonly instrument: CollectionInstrumentId;
-  readonly scaleFactor?: number;
+  readonly scaleFactor: number;
 }
 
 export interface SetObservationCollimationShotOptionsInput {
@@ -2826,8 +2826,8 @@ export interface MakeGroupToGroupRelationshipInput {
   readonly firstGroupName: CollectionObjectName;
   readonly secondGroupName: CollectionObjectName;
   readonly autoUpdateAVectorGroup?: boolean;
-  readonly tolerance?: ToleranceVectorOptions;
-  readonly constraint?: ToleranceVectorOptions;
+  readonly tolerance: ToleranceVectorOptions;
+  readonly constraint: ToleranceVectorOptions;
 }
 
 export interface MakeGroupToNominalGroupRelationshipInput {
@@ -2840,8 +2840,8 @@ export interface MakeGroupToNominalGroupRelationshipInput {
   readonly useViewZoomingWithProximity?: boolean;
   readonly ignorePointsBeyondThreshold?: boolean;
   readonly proximityThreshold?: number;
-  readonly tolerance?: ToleranceVectorOptions;
-  readonly constraint?: ToleranceVectorOptions;
+  readonly tolerance: ToleranceVectorOptions;
+  readonly constraint: ToleranceVectorOptions;
   readonly fitWeight?: number;
 }
 
@@ -2872,8 +2872,8 @@ export interface MakePointToPointRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly firstPointName: PointName;
   readonly secondPointName: PointName;
-  readonly tolerance?: ToleranceVectorOptions;
-  readonly constraint?: ToleranceVectorOptions;
+  readonly tolerance: ToleranceVectorOptions;
+  readonly constraint: ToleranceVectorOptions;
 }
 
 export interface MakePointsToObjectsRelationshipInput {
@@ -2889,8 +2889,8 @@ export interface MakePointsToPointsRelationshipInput {
   readonly nominalPoints: Iterable<PointName>;
   readonly measuredPoints: Iterable<PointName>;
   readonly autoUpdateAVectorGroup?: boolean;
-  readonly tolerance?: ToleranceVectorOptions;
-  readonly constraint?: ToleranceVectorOptions;
+  readonly tolerance: ToleranceVectorOptions;
+  readonly constraint: ToleranceVectorOptions;
 }
 
 export interface MakeVectorGroupToVectorGroupRelationshipInput {
@@ -3138,7 +3138,7 @@ export interface CreateRobotCalibrationInput {
 
 export interface DeleteRobotCalibrationInput {
   readonly machineId: CollectionMachineId;
-  readonly calibrationName?: string;
+  readonly calibrationName: string;
 }
 
 export interface DeleteRobotMachineInput {
@@ -3198,12 +3198,12 @@ export interface MoveRobotMachineToFrameInput {
 
 export interface MoveRobotMachineToJointPoseSixDofInput {
   readonly machineId: CollectionMachineId;
-  readonly joint1?: number;
-  readonly joint2?: number;
-  readonly joint3?: number;
-  readonly joint4?: number;
-  readonly joint5?: number;
-  readonly joint6?: number;
+  readonly joint1: number;
+  readonly joint2: number;
+  readonly joint3: number;
+  readonly joint4: number;
+  readonly joint5: number;
+  readonly joint6: number;
 }
 
 export interface MoveRobotMachineToNamedDestinationInput {
@@ -3264,13 +3264,13 @@ export interface SetRobotMachineBaseTransformInput {
 export interface SetRobotMachineModelLinkParametersInput {
   readonly machineId: CollectionMachineId;
   readonly linkName?: string;
-  readonly configuration?: RobotModelLinkConfiguration;
+  readonly configuration: RobotModelLinkConfiguration;
 }
 
 export interface SetRobotMachineParameterInput {
   readonly machineId: CollectionMachineId;
   readonly parameterName?: string;
-  readonly parameterValue?: number;
+  readonly parameterValue: number;
 }
 
 export interface SimulateRobotMachinePathOutputCsvFileInput {
@@ -6306,20 +6306,14 @@ export async function makeGroupToGroupRelationship(
             'autoUpdateAVectorGroup',
           ),
         ),
-        tolerance:
-          input.tolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.tolerance,
-              ),
-        constraint:
-          input.constraint == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.constraint,
-              ),
+        tolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.tolerance, 'tolerance'),
+        ),
+        constraint: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.constraint, 'constraint'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -6406,20 +6400,14 @@ export async function makeGroupToNominalGroupRelationship(
             'proximityThreshold',
           ),
         ),
-        tolerance:
-          input.tolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.tolerance,
-              ),
-        constraint:
-          input.constraint == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.constraint,
-              ),
+        tolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.tolerance, 'tolerance'),
+        ),
+        constraint: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.constraint, 'constraint'),
+        ),
         fitWeight: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(input.fitWeight, 1, 'fitWeight'),
@@ -6636,20 +6624,14 @@ export async function makePointToPointRelationship(
           getOperationValueSchema('pointName'),
           requireOperationInput(input.secondPointName, 'secondPointName'),
         ),
-        tolerance:
-          input.tolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.tolerance,
-              ),
-        constraint:
-          input.constraint == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.constraint,
-              ),
+        tolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.tolerance, 'tolerance'),
+        ),
+        constraint: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.constraint, 'constraint'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -6757,20 +6739,14 @@ export async function makePointsToPointsRelationship(
             'autoUpdateAVectorGroup',
           ),
         ),
-        tolerance:
-          input.tolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.tolerance,
-              ),
-        constraint:
-          input.constraint == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.constraint,
-              ),
+        tolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.tolerance, 'tolerance'),
+        ),
+        constraint: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.constraint, 'constraint'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -14965,7 +14941,7 @@ async function deleteCollectionsByWildcardOperation(
       {
         searchString: toWireOperationValue(
           operationScalarSchemas.string,
-          resolveOperationDefault(input.searchString, '', 'searchString'),
+          requireOperationInput(input.searchString, 'searchString'),
         ),
         caseSensitiveSearch: toWireOperationValue(
           operationScalarSchemas.boolean,
@@ -15010,7 +14986,7 @@ async function deleteFoldersByWildcardOperation(
     ConstructionOperationsProtocol.DeleteFoldersByWildcardRequest.fromPartial({
       searchString: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(input.searchString, '', 'searchString'),
+        requireOperationInput(input.searchString, 'searchString'),
       ),
       caseSensitiveSearch: toWireOperationValue(
         operationScalarSchemas.boolean,
@@ -17722,7 +17698,7 @@ export interface GdtOperations {
     callOptions?: BriosaCallOptions,
   ): Promise<EvaluateFeatureChecksResult>;
   featureInspectionAutoFilter(
-    input?: FeatureInspectionAutoFilterInput,
+    input: FeatureInspectionAutoFilterInput,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   generateFeatureCheckSummary(
@@ -18056,55 +18032,44 @@ async function evaluateFeatureChecksOperation(
 }
 async function featureInspectionAutoFilterOperation(
   briosa: BriosaClient,
-  input?: FeatureInspectionAutoFilterInput,
+  input: FeatureInspectionAutoFilterInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<void> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request =
     GdtOperationsProtocol.FeatureInspectionAutoFilterRequest.fromPartial({
-      pointNames:
-        input?.pointNames == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(getOperationValueSchema('pointName')),
-              input?.pointNames,
-            ),
-      groupNames:
-        input?.groupNames == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-              ),
-              input?.groupNames,
-            ),
-      cloudNames:
-        input?.cloudNames == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-              ),
-              input?.cloudNames,
-            ),
+      pointNames: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('pointName')),
+        requireOperationInput(input.pointNames, 'pointNames'),
+      ),
+      groupNames: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
+        requireOperationInput(input.groupNames, 'groupNames'),
+      ),
+      cloudNames: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
+        requireOperationInput(input.cloudNames, 'cloudNames'),
+      ),
       surfaceOffset: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(input?.surfaceOffset, 0.1, 'surfaceOffset'),
+        resolveOperationDefault(input.surfaceOffset, 0.1, 'surfaceOffset'),
       ),
       edgeOffset: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(input?.edgeOffset, 0.1, 'edgeOffset'),
+        resolveOperationDefault(input.edgeOffset, 0.1, 'edgeOffset'),
       ),
       offsetDirection:
-        input?.offsetDirection == null
+        input.offsetDirection == null
           ? undefined
           : toWireOperationValue(
               getOperationValueSchema('offsetDirectionType'),
-              input?.offsetDirection,
+              input.offsetDirection,
             ),
       includePointsWithinCylinderAxisProximity: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
-          input?.includePointsWithinCylinderAxisProximity,
+          input.includePointsWithinCylinderAxisProximity,
           false,
           'includePointsWithinCylinderAxisProximity',
         ),
@@ -18112,32 +18077,30 @@ async function featureInspectionAutoFilterOperation(
       enforceMaxPointsPerFaceInOutput: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
-          input?.enforceMaxPointsPerFaceInOutput,
+          input.enforceMaxPointsPerFaceInOutput,
           false,
           'enforceMaxPointsPerFaceInOutput',
         ),
       ),
       maxPointsPerFace: toWireOperationValue(
         operationScalarSchemas.integer,
-        resolveOperationDefault(input?.maxPointsPerFace, 0, 'maxPointsPerFace'),
+        resolveOperationDefault(input.maxPointsPerFace, 0, 'maxPointsPerFace'),
       ),
-      featureCheckNameList:
-        input?.featureCheckNameList == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionItemName'),
-              ),
-              input?.featureCheckNameList,
-            ),
+      featureCheckNameList: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionItemName')),
+        requireOperationInput(
+          input.featureCheckNameList,
+          'featureCheckNameList',
+        ),
+      ),
       includeDatums: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input?.includeDatums, true, 'includeDatums'),
+        resolveOperationDefault(input.includeDatums, true, 'includeDatums'),
       ),
       createCloudForEachDatumOrCheck: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
-          input?.createCloudForEachDatumOrCheck,
+          input.createCloudForEachDatumOrCheck,
           false,
           'createCloudForEachDatumOrCheck',
         ),
@@ -20615,7 +20578,7 @@ async function autoMeasurePointsOperation(
       ),
       autoStart: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input.autoStart, false, 'autoStart'),
+        resolveOperationDefault(input.autoStart, true, 'autoStart'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -20658,7 +20621,7 @@ async function autoMeasureSpecifiedGeometryOperation(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
             input.waitForComplete,
-            false,
+            true,
             'waitForComplete',
           ),
         ),
@@ -21110,7 +21073,7 @@ async function configureAndMeasureOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
           input.measureImmediately,
-          false,
+          true,
           'measureImmediately',
         ),
       ),
@@ -21548,11 +21511,7 @@ async function deleteMeasurementObservationOperation(
         ),
         observationIndex: toWireOperationValue(
           operationScalarSchemas.integer,
-          resolveOperationDefault(
-            input.observationIndex,
-            0,
-            'observationIndex',
-          ),
+          requireOperationInput(input.observationIndex, 'observationIndex'),
         ),
         deletePointIfNoMeasurementsRemain: toWireOperationValue(
           operationScalarSchemas.boolean,
@@ -23284,15 +23243,15 @@ async function locateInstrumentGroupToSurfaceQuickFitOperation(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(input.surfaceToFit, 'surfaceToFit'),
         ),
-        otherObjectsToTransform:
-          input.otherObjectsToTransform == null
-            ? undefined
-            : toWireOperationValue(
-                repeatedOperationValue(
-                  getOperationValueSchema('collectionObjectName'),
-                ),
-                input.otherObjectsToTransform,
-              ),
+        otherObjectsToTransform: toWireOperationValue(
+          repeatedOperationValue(
+            getOperationValueSchema('collectionObjectName'),
+          ),
+          requireOperationInput(
+            input.otherObjectsToTransform,
+            'otherObjectsToTransform',
+          ),
+        ),
         rmsTolerance: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(input.rmsTolerance, 0, 'rmsTolerance'),
@@ -23996,7 +23955,7 @@ async function measureExistingSinglePointOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
           input.measureImmediately,
-          false,
+          true,
           'measureImmediately',
         ),
       ),
@@ -24050,7 +24009,7 @@ async function measureExistingSinglePointAndCompareOperation(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
             input.measureImmediately,
-            false,
+            true,
             'measureImmediately',
           ),
         ),
@@ -24112,7 +24071,7 @@ async function measureExistingSinglePointManualGuideOperation(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
             input.measureImmediately,
-            false,
+            true,
             'measureImmediately',
           ),
         ),
@@ -24195,7 +24154,7 @@ async function measureSinglePointHereOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
           input.measureImmediately,
-          false,
+          true,
           'measureImmediately',
         ),
       ),
@@ -24270,7 +24229,7 @@ async function moveMeasurementObservationOperation(
       ),
       observationIndex: toWireOperationValue(
         operationScalarSchemas.integer,
-        resolveOperationDefault(input.observationIndex, 0, 'observationIndex'),
+        requireOperationInput(input.observationIndex, 'observationIndex'),
       ),
       deletePointIfNoMeasurementsRemain: toWireOperationValue(
         operationScalarSchemas.boolean,
@@ -24674,7 +24633,7 @@ async function setAbsoluteInstrumentScaleFactorOperation(
         ),
         scaleFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.scaleFactor, 0, 'scaleFactor'),
+          requireOperationInput(input.scaleFactor, 'scaleFactor'),
         ),
       } as never,
     );
@@ -25050,29 +25009,30 @@ async function setInstrumentWeatherSettingOperation(
           getOperationValueSchema('collectionInstrumentId'),
           requireOperationInput(input.instrument, 'instrument'),
         ),
-        temperature: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.temperature, 0, 'temperature'),
-        ),
-        pressure: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.pressure, 0, 'pressure'),
-        ),
-        relativeHumidity: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.relativeHumidity,
-            0,
-            'relativeHumidity',
-          ),
-        ),
+        temperature:
+          input.temperature == null
+            ? undefined
+            : toWireOperationValue(
+                operationScalarSchemas.number,
+                input.temperature,
+              ),
+        pressure:
+          input.pressure == null
+            ? undefined
+            : toWireOperationValue(
+                operationScalarSchemas.number,
+                input.pressure,
+              ),
+        relativeHumidity:
+          input.relativeHumidity == null
+            ? undefined
+            : toWireOperationValue(
+                operationScalarSchemas.number,
+                input.relativeHumidity,
+              ),
         setAutomatically: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input.setAutomatically,
-            false,
-            'setAutomatically',
-          ),
+          requireOperationInput(input.setAutomatically, 'setAutomatically'),
         ),
       } as never,
     );
@@ -25106,7 +25066,7 @@ async function setMultiplyInstrumentScaleFactorOperation(
         ),
         scaleFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.scaleFactor, 0, 'scaleFactor'),
+          requireOperationInput(input.scaleFactor, 'scaleFactor'),
         ),
       } as never,
     );
@@ -28476,7 +28436,7 @@ async function deleteRobotCalibrationOperation(
       ),
       calibrationName: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(input.calibrationName, '', 'calibrationName'),
+        requireOperationInput(input.calibrationName, 'calibrationName'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -28955,7 +28915,7 @@ async function moveRobotMachineToFrameOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
           input.acknowledgeArrival,
-          false,
+          true,
           'acknowledgeArrival',
         ),
       ),
@@ -28989,27 +28949,27 @@ async function moveRobotMachineToJointPoseSixDofOperation(
         ),
         joint1: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint1, 0, 'joint1'),
+          requireOperationInput(input.joint1, 'joint1'),
         ),
         joint2: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint2, 0, 'joint2'),
+          requireOperationInput(input.joint2, 'joint2'),
         ),
         joint3: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint3, 0, 'joint3'),
+          requireOperationInput(input.joint3, 'joint3'),
         ),
         joint4: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint4, 0, 'joint4'),
+          requireOperationInput(input.joint4, 'joint4'),
         ),
         joint5: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint5, 0, 'joint5'),
+          requireOperationInput(input.joint5, 'joint5'),
         ),
         joint6: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint6, 0, 'joint6'),
+          requireOperationInput(input.joint6, 'joint6'),
         ),
       } as never,
     );
@@ -29049,7 +29009,7 @@ async function moveRobotMachineToNamedDestinationOperation(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
             input.acknowledgeArrival,
-            false,
+            true,
             'acknowledgeArrival',
           ),
         ),
@@ -29387,6 +29347,7 @@ async function setRobotMachineModelLinkParametersOperation(
 ): Promise<void> {
   if (typeof input !== 'object' || input === null)
     throw new TypeError('input is required.');
+  requireOperationInput(input.configuration, 'configuration');
   const request =
     RobotOperationsProtocol.SetRobotMachineModelLinkParametersRequest.fromPartial(
       {
@@ -29408,105 +29369,92 @@ async function setRobotMachineModelLinkParametersOperation(
         ),
         dhAlphaComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhAlphaComponent,
-            0,
+          requireOperationInput(
+            input.configuration.dhAlphaComponent,
             'dhAlphaComponent',
           ),
         ),
         dhAComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhAComponent,
-            0,
+          requireOperationInput(
+            input.configuration.dhAComponent,
             'dhAComponent',
           ),
         ),
         dhDComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhDComponent,
-            0,
+          requireOperationInput(
+            input.configuration.dhDComponent,
             'dhDComponent',
           ),
         ),
         dhThetaComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhThetaComponent,
-            0,
+          requireOperationInput(
+            input.configuration.dhThetaComponent,
             'dhThetaComponent',
           ),
         ),
         dhXAxisDeflectionFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhXAxisDeflectionFactor,
-            0,
+          requireOperationInput(
+            input.configuration.dhXAxisDeflectionFactor,
             'dhXAxisDeflectionFactor',
           ),
         ),
         dhYAxisDeflectionFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhYAxisDeflectionFactor,
-            0,
+          requireOperationInput(
+            input.configuration.dhYAxisDeflectionFactor,
             'dhYAxisDeflectionFactor',
           ),
         ),
         dhZAxisDeflectionFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhZAxisDeflectionFactor,
-            0,
+          requireOperationInput(
+            input.configuration.dhZAxisDeflectionFactor,
             'dhZAxisDeflectionFactor',
           ),
         ),
         sixDofXComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofXComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofXComponent,
             'sixDofXComponent',
           ),
         ),
         sixDofYComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofYComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofYComponent,
             'sixDofYComponent',
           ),
         ),
         sixDofZComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofZComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofZComponent,
             'sixDofZComponent',
           ),
         ),
         sixDofRxComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofRxComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofRxComponent,
             'sixDofRxComponent',
           ),
         ),
         sixDofRyComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofRyComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofRyComponent,
             'sixDofRyComponent',
           ),
         ),
         sixDofRzComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofRzComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofRzComponent,
             'sixDofRzComponent',
           ),
         ),
@@ -29520,73 +29468,64 @@ async function setRobotMachineModelLinkParametersOperation(
         ),
         encoderOffsetValue: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.encoderOffsetValue,
-            0,
+          requireOperationInput(
+            input.configuration.encoderOffsetValue,
             'encoderOffsetValue',
           ),
         ),
         minimumEncoderLimit: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.minimumEncoderLimit,
-            0,
+          requireOperationInput(
+            input.configuration.minimumEncoderLimit,
             'minimumEncoderLimit',
           ),
         ),
         maximumEncoderLimit: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.maximumEncoderLimit,
-            0,
+          requireOperationInput(
+            input.configuration.maximumEncoderLimit,
             'maximumEncoderLimit',
           ),
         ),
         encoderSenseNegative: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input.configuration?.encoderSenseNegative,
-            false,
+          requireOperationInput(
+            input.configuration.encoderSenseNegative,
             'encoderSenseNegative',
           ),
         ),
         includeAdditionalEncoder: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input.configuration?.includeAdditionalEncoder,
-            false,
+          requireOperationInput(
+            input.configuration.includeAdditionalEncoder,
             'includeAdditionalEncoder',
           ),
         ),
         additionalEncoderIndexOffset: toWireOperationValue(
           operationScalarSchemas.integer,
-          resolveOperationDefault(
-            input.configuration?.additionalEncoderIndexOffset,
-            0,
+          requireOperationInput(
+            input.configuration.additionalEncoderIndexOffset,
             'additionalEncoderIndexOffset',
           ),
         ),
         additionalEncoderSenseNegative: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input.configuration?.additionalEncoderSenseNegative,
-            false,
+          requireOperationInput(
+            input.configuration.additionalEncoderSenseNegative,
             'additionalEncoderSenseNegative',
           ),
         ),
         segmentOriginMassKg: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.segmentOriginMassKg,
-            0,
+          requireOperationInput(
+            input.configuration.segmentOriginMassKg,
             'segmentOriginMassKg',
           ),
         ),
         segmentCgMassKg: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.segmentCgMassKg,
-            0,
+          requireOperationInput(
+            input.configuration.segmentCgMassKg,
             'segmentCgMassKg',
           ),
         ),
@@ -29632,7 +29571,7 @@ async function setRobotMachineParameterOperation(
       ),
       parameterValue: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(input.parameterValue, 0, 'parameterValue'),
+        requireOperationInput(input.parameterValue, 'parameterValue'),
       ),
     } as never);
   const response = await invokeClientOperation(

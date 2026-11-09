@@ -34,7 +34,6 @@ import {
   type BriosaClient,
   type CollectionObjectName,
   type PointName,
-  type RobotModelLinkConfiguration,
 } from '../src/index.js';
 import { startedClient, succeeded } from './support/fakes.js';
 
@@ -115,6 +114,8 @@ const flippedDefaults: readonly (readonly [
     (client, override) =>
       directCadAccess(client, {
         cadFileName: { path: 'C:\\Parts\\part.step', embeddedFile: false },
+        // Required on SA 2024, optional on SA 2026.
+        surfaceCompatibilityMode: false,
         ...override,
       }),
   ],
@@ -708,7 +709,7 @@ void test('the model-link configuration and its 22 parameters are required', asy
     call(client, {
       machineId: machine,
       linkName: 'Link 1',
-      configuration: configuration as unknown as RobotModelLinkConfiguration,
+      configuration,
     }),
   );
   for (const name of modelLinkParameters)

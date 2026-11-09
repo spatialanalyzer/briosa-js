@@ -355,8 +355,12 @@ export interface CreateChartFromVectorGroupInput {
   readonly chartType: ChartType;
   readonly dataSetToChart: DatasetType;
   readonly auxDataSetToChart: DatasetType;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
-  readonly templateChartName: ChartName;
+  /**
+   * Optional (contract major 3): left unset when omitted. An empty name is
+   * rejected, and a name that matches no chart opens a blocking
+   * SpatialAnalyzer dialog.
+   */
+  readonly templateChartName?: ChartName;
   readonly showInterface?: boolean;
 }
 
@@ -428,7 +432,7 @@ export interface DeleteEventInput {
 }
 
 export interface DeleteFolderInput {
-  readonly folderPath?: string;
+  readonly folderPath: string;
 }
 
 export interface DeleteGeneralFileInput {
@@ -441,7 +445,7 @@ export interface DeleteItemsInput {
 
 export interface DeleteIthVectorFromVectorGroupInput {
   readonly vectorGroupName: CollectionObjectName;
-  readonly vectorIndex?: number;
+  readonly vectorIndex: number;
 }
 
 export interface DeleteObjectsInput {
@@ -469,16 +473,16 @@ export interface DeleteScaleBarInput {
 }
 
 export interface DeleteVariableInput {
-  readonly name?: string;
+  readonly name: string;
 }
 
 export interface DeleteVariablesWildcardMatchInput {
-  readonly variableWildcardCriteria?: string;
+  readonly variableWildcardCriteria: string;
 }
 
 export interface DeleteVectorByNameInput {
   readonly vectorGroupName: CollectionObjectName;
-  readonly vectorName?: string;
+  readonly vectorName: string;
 }
 
 export interface DeleteVectorsInput {
@@ -718,8 +722,11 @@ export interface FitGeometryToPointGroupInput {
   /** -1.0 uses the profile tolerance. */
   readonly fitInterfaceTolerance?: number;
   readonly ignoreOutOfTolerancePoints?: boolean;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
-  readonly startingConditionGeometry: CollectionObjectName;
+  /**
+   * Optional (contract major 3): left unset when omitted, so SpatialAnalyzer
+   * fits without a starting geometry. An empty name is rejected.
+   */
+  readonly startingConditionGeometry?: CollectionObjectName;
 }
 
 export interface FitGeometryToPointGroupProjectedToPlaneInput {
@@ -732,8 +739,11 @@ export interface FitGeometryToPointGroupProjectedToPlaneInput {
   /** -1.0 uses the profile tolerance. */
   readonly fitInterfaceTolerance?: number;
   readonly ignoreOutOfTolerancePoints?: boolean;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
-  readonly startingConditionGeometry: CollectionObjectName;
+  /**
+   * Optional (contract major 3): left unset when omitted, so SpatialAnalyzer
+   * fits without a starting geometry. An empty name is rejected.
+   */
+  readonly startingConditionGeometry?: CollectionObjectName;
 }
 
 export interface FitGeometryToPointsInput {
@@ -745,8 +755,11 @@ export interface FitGeometryToPointsInput {
   /** -1.0 uses the profile tolerance. */
   readonly fitInterfaceTolerance?: number;
   readonly ignoreOutOfTolerancePoints?: boolean;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
-  readonly startingConditionGeometry: CollectionObjectName;
+  /**
+   * Optional (contract major 3): left unset when omitted, so SpatialAnalyzer
+   * fits without a starting geometry. An empty name is rejected.
+   */
+  readonly startingConditionGeometry?: CollectionObjectName;
 }
 
 export interface GenerateQuickReportFromTabOrderInput {
@@ -2308,7 +2321,7 @@ export interface RefreshCalloutViewsInSaReportInput {
 }
 
 export interface RemoveReportTagInput {
-  readonly tagName?: string;
+  readonly tagName: string;
 }
 
 export interface RenameEventInput {
@@ -2400,7 +2413,7 @@ export interface ScaleBarCheckInput {
 
 export interface ScaleObjectsInput {
   readonly objects: Iterable<CollectionObjectName>;
-  readonly scaleFactor?: number;
+  readonly scaleFactor: number;
 }
 
 export interface SetActiveCustomLanguageInput {
@@ -3097,8 +3110,8 @@ export interface SetTransformVariableInput {
 
 export interface SetUserInterfaceProfileInput {
   readonly profileName?: string;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
-  readonly profileFileName: FileReference;
+  /** Optional (contract major 3): left unset when omitted; an empty path is rejected. */
+  readonly profileFileName?: FileReference;
 }
 
 export interface SetVectorGroupColorizationOptionsAllInput {
@@ -3813,13 +3826,13 @@ export async function fitGeometryToPointGroup(
           'ignoreOutOfTolerancePoints',
         ),
       ),
-      startingConditionGeometry: toWireOperationValue(
-        getOperationValueSchema('collectionObjectName'),
-        requireOperationInput(
-          input.startingConditionGeometry,
-          'startingConditionGeometry',
-        ),
-      ),
+      startingConditionGeometry:
+        input.startingConditionGeometry == null
+          ? undefined
+          : toWireOperationValue(
+              getOperationValueSchema('collectionObjectName'),
+              input.startingConditionGeometry,
+            ),
     } as never);
   const response = await invokeClientOperation(
     briosa,
@@ -3894,13 +3907,13 @@ export async function fitGeometryToPointGroupProjectedToPlane(
             'ignoreOutOfTolerancePoints',
           ),
         ),
-        startingConditionGeometry: toWireOperationValue(
-          getOperationValueSchema('collectionObjectName'),
-          requireOperationInput(
-            input.startingConditionGeometry,
-            'startingConditionGeometry',
-          ),
-        ),
+        startingConditionGeometry:
+          input.startingConditionGeometry == null
+            ? undefined
+            : toWireOperationValue(
+                getOperationValueSchema('collectionObjectName'),
+                input.startingConditionGeometry,
+              ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -3968,13 +3981,13 @@ export async function fitGeometryToPoints(
           'ignoreOutOfTolerancePoints',
         ),
       ),
-      startingConditionGeometry: toWireOperationValue(
-        getOperationValueSchema('collectionObjectName'),
-        requireOperationInput(
-          input.startingConditionGeometry,
-          'startingConditionGeometry',
-        ),
-      ),
+      startingConditionGeometry:
+        input.startingConditionGeometry == null
+          ? undefined
+          : toWireOperationValue(
+              getOperationValueSchema('collectionObjectName'),
+              input.startingConditionGeometry,
+            ),
     } as never);
   const response = await invokeClientOperation(
     briosa,
@@ -8781,7 +8794,7 @@ export async function directCadAccess(
       operationScalarSchemas.boolean,
       resolveOperationDefault(
         input.promptOnMissingComponents,
-        true,
+        false,
         'promptOnMissingComponents',
       ),
     ),
@@ -15880,10 +15893,13 @@ export async function createChartFromVectorGroup(
         getOperationValueSchema('datasetType'),
         requireOperationInput(input.auxDataSetToChart, 'auxDataSetToChart'),
       ),
-      templateChartName: toWireOperationValue(
-        getOperationValueSchema('chartName'),
-        requireOperationInput(input.templateChartName, 'templateChartName'),
-      ),
+      templateChartName:
+        input.templateChartName == null
+          ? undefined
+          : toWireOperationValue(
+              getOperationValueSchema('chartName'),
+              input.templateChartName,
+            ),
       showInterface: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(input.showInterface, false, 'showInterface'),
@@ -16926,7 +16942,7 @@ export async function removeReportTag(
     ReportingOperationsProtocol.RemoveReportTagRequest.fromPartial({
       tagName: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(input.tagName, '', 'tagName'),
+        requireOperationInput(input.tagName, 'tagName'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -17926,7 +17942,7 @@ export async function deleteFolder(
   const request = UtilityOperationsProtocol.DeleteFolderRequest.fromPartial({
     folderPath: toWireOperationValue(
       operationScalarSchemas.string,
-      resolveOperationDefault(input.folderPath, '', 'folderPath'),
+      requireOperationInput(input.folderPath, 'folderPath'),
     ),
   } as never);
   const response = await invokeClientOperation(
@@ -18761,7 +18777,7 @@ export async function scaleObjects(
     ),
     scaleFactor: toWireOperationValue(
       operationScalarSchemas.number,
-      resolveOperationDefault(input.scaleFactor, 0, 'scaleFactor'),
+      requireOperationInput(input.scaleFactor, 'scaleFactor'),
     ),
   } as never);
   const response = await invokeClientOperation(
@@ -19438,10 +19454,13 @@ export async function setUserInterfaceProfile(
         operationScalarSchemas.string,
         resolveOperationDefault(input.profileName, 'Default', 'profileName'),
       ),
-      profileFileName: toWireOperationValue(
-        getOperationValueSchema('fileReference'),
-        requireOperationInput(input.profileFileName, 'profileFileName'),
-      ),
+      profileFileName:
+        input.profileFileName == null
+          ? undefined
+          : toWireOperationValue(
+              getOperationValueSchema('fileReference'),
+              input.profileFileName,
+            ),
     } as never);
   const response = await invokeClientOperation(
     briosa,
@@ -19741,7 +19760,7 @@ export async function deleteVariable(
   const request = VariablesProtocol.DeleteVariableRequest.fromPartial({
     name: toWireOperationValue(
       operationScalarSchemas.string,
-      resolveOperationDefault(input.name, '', 'name'),
+      requireOperationInput(input.name, 'name'),
     ),
   } as never);
   const response = await invokeClientOperation(
@@ -19771,9 +19790,8 @@ export async function deleteVariablesWildcardMatch(
     VariablesProtocol.DeleteVariablesWildcardMatchRequest.fromPartial({
       variableWildcardCriteria: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(
+        requireOperationInput(
           input.variableWildcardCriteria,
-          '',
           'variableWildcardCriteria',
         ),
       ),
@@ -20994,7 +21012,7 @@ export async function deleteIthVectorFromVectorGroup(
       ),
       vectorIndex: toWireOperationValue(
         operationScalarSchemas.integer,
-        resolveOperationDefault(input.vectorIndex, 0, 'vectorIndex'),
+        requireOperationInput(input.vectorIndex, 'vectorIndex'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -21028,7 +21046,7 @@ export async function deleteVectorByName(
       ),
       vectorName: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(input.vectorName, '', 'vectorName'),
+        requireOperationInput(input.vectorName, 'vectorName'),
       ),
     } as never);
   const response = await invokeClientOperation(

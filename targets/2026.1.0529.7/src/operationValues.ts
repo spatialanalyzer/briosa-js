@@ -632,6 +632,26 @@ const disabledScalarLimit = deepFreeze<ScalarToleranceLimit>({
   value: 0,
 });
 
+const disabledLimit = deepFreeze<ToleranceLimit>({ enabled: false, value: 0 });
+
+/**
+ * Named tolerance vector options. A relationship's tolerance and constraint
+ * are required at contract major 3; pass `noLimits` explicitly for a
+ * relationship without limits. It is never an implicit default.
+ */
+export const ToleranceVectorOptions = Object.freeze({
+  noLimits: deepFreeze<ToleranceVectorOptions>({
+    highX: disabledLimit,
+    highY: disabledLimit,
+    highZ: disabledLimit,
+    highMagnitude: disabledLimit,
+    lowX: disabledLimit,
+    lowY: disabledLimit,
+    lowZ: disabledLimit,
+    lowMagnitude: disabledLimit,
+  }),
+});
+
 export const FitConstraintScalarOptions = Object.freeze({
   default: deepFreeze<FitConstraintScalarOptions>({
     high: disabledScalarLimit,
