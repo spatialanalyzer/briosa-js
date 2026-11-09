@@ -122,10 +122,8 @@ void test('each capability carries its reviewed classification', async () => {
 
 void test('every risk flag, duration class, status and admission value maps', async () => {
   const transport = scripted();
-  const flags = Object.values(OperationRiskFlag).filter(
-    (value): value is OperationRiskFlag =>
-      typeof value === 'number' && value > 0,
-  );
+  // Wire values 1 to 11, in OperationRiskFlag declaration order.
+  const flags = Array.from({ length: 11 }, (_, index) => index + 1);
   transport.capabilities = listing([
     capability('AllFlags', { riskFlags: flags }),
     ...[1, 2, 3].map((value) =>

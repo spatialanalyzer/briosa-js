@@ -270,11 +270,63 @@ export interface SpatialAnalyzerSdkLifecycleState {
   readonly diagnosticCode: string | null;
 }
 
+/**
+ * A reviewed risk flag of an operation's classification row (#242). `unknown`
+ * is a flag from a later contract revision.
+ */
+export type OperationRiskFlag =
+  | 'unspecified'
+  | 'filesystemMetadata'
+  | 'filesystemRead'
+  | 'filesystemWrite'
+  | 'filesystemDelete'
+  | 'destructive'
+  | 'codeExecution'
+  | 'physicalMotion'
+  | 'deviceSession'
+  | 'deviceConfig'
+  | 'interactiveUi'
+  | 'externalIo'
+  | 'unknown';
+
+/** The reviewed execution-duration class, which selects the server budget. */
+export type OperationDurationClass =
+  'unspecified' | 'quick' | 'longRunning' | 'interactive' | 'unknown';
+
+/** The recorded validation gap. It is informational and never affects admission. */
+export type OperationValidationStatus =
+  | 'unspecified'
+  | 'noRecordedGap'
+  | 'fixturePending'
+  | 'atRiskUnvalidated'
+  | 'unknown';
+
+/** The active policy's static decision for an operation's reviewed row. */
+export type OperationAdmission =
+  | 'unspecified'
+  | 'admitted'
+  | 'deniedProfile'
+  | 'deniedFlag'
+  | 'deniedOverride'
+  | 'deniedExclusive'
+  | 'deniedUnreviewed'
+  | 'unknown';
+
 export interface BriosaOperationCapability {
   readonly operationId: string;
   readonly grpcService: string;
   readonly rpc: string;
   readonly fullyQualifiedMethod: string;
+  /**
+   * The reviewed risk flags as an ordered set, in the server's declaration
+   * order. Empty when no reviewed risk applies. A request option can still
+   * open operator UI or leave work running; the server decides per request.
+   */
+  readonly riskFlags: readonly OperationRiskFlag[];
+  readonly durationClass: OperationDurationClass;
+  readonly validationStatus: OperationValidationStatus;
+  /** The server's admission value, never recomputed by the client. */
+  readonly admission: OperationAdmission;
 }
 
 export interface BriosaServerSnapshot {
@@ -283,8 +335,35 @@ export interface BriosaServerSnapshot {
   readonly protocolPackage: string;
   readonly spatialAnalyzerTarget: string;
   readonly readyForMp: boolean;
+  /** The resolved named admission profile, such as `standard`. */
+  readonly admissionProfile: string;
+  /**
+   * An opaque, value-free digest of every admission input. Compare it only for
+   * equality, for example to tell whether a replacement generation runs under
+   * the same policy.
+   */
+  readonly policyFingerprint: string;
+  /** The operations the active policy admits. */
   readonly operations: readonly BriosaOperationCapability[];
   supports(fullyQualifiedMethod: string): boolean;
+}
+
+export interface BriosaCapabilityListOptions extends BriosaLifecycleCallOptions {
+  /**
+   * Also list every registered operation that the active policy denies, each
+   * with its denial reason in `admission`.
+   */
+  readonly includeDenied?: boolean;
+}
+
+/**
+ * A diagnostic capability listing. Denied entries never become callable and
+ * never change the generation's admitted set.
+ */
+export interface BriosaCapabilityListing {
+  readonly admissionProfile: string;
+  readonly policyFingerprint: string;
+  readonly operations: readonly BriosaOperationCapability[];
 }
 
 export interface NormalizedBriosaStartOptions {

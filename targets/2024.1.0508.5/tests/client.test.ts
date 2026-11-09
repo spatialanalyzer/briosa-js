@@ -350,6 +350,11 @@ class FakeTransport implements ClientTransport {
     return matchingSnapshot(this.connected && this.publishReadySnapshot);
   }
 
+  async listCapabilities(): Promise<ListCapabilitiesResponse> {
+    this.calls.push('capabilities');
+    return matchingSnapshot(this.connected && this.publishReadySnapshot)[1];
+  }
+
   async getApplicationState(): Promise<SpatialAnalyzerLifecycleState> {
     this.calls.push('get-sa-state');
     return applicationNotRunning();

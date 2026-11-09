@@ -1,16 +1,27 @@
 import type {
   GetServerInfoResponse,
   ListCapabilitiesResponse,
+  OperationCapability as WireOperationCapability,
 } from './generated/protocol/briosa/discovery.js';
+import { briosaProtocolIdentity } from './generated/protocolIdentity.js';
 import type {
   SpatialAnalyzerLifecycleState as WireApplicationState,
   SpatialAnalyzerSdkLifecycleState as WireSdkState,
 } from './generated/protocol/briosa/lifecycle.js';
-import { validateBriosaCompatibility } from './compatibility.js';
+import {
+  BriosaCompatibilityError,
+  validateBriosaCompatibility,
+} from './compatibility.js';
 import { BriosaProtocolError } from './errors.js';
 import type {
+  BriosaCapabilityListing,
+  BriosaOperationCapability,
   BriosaServerSnapshot,
   ExecutionDisposition,
+  OperationAdmission,
+  OperationDurationClass,
+  OperationRiskFlag,
+  OperationValidationStatus,
   SpatialAnalyzerApplicationState,
   SpatialAnalyzerConnectionState,
   SpatialAnalyzerExecutionReadinessState,
@@ -30,25 +41,113 @@ export function mapSnapshot(
   const version = server.version;
   if (version === undefined)
     throw new BriosaProtocolError('server-version-missing');
-  const operations = capabilities.operations ?? [];
   return {
     briosaVersion: version.briosaVersion ?? '',
     sourceRevision: version.sourceRevision ?? '',
     protocolPackage: version.protocolPackage ?? '',
     spatialAnalyzerTarget: version.spatialAnalyzerTarget ?? '',
     readyForMp: server.readyForMp ?? false,
-    operations: operations.map((operation) => ({
-      operationId: operation.operationId ?? '',
-      grpcService: operation.grpcService ?? '',
-      rpc: operation.rpc ?? '',
-      fullyQualifiedMethod: operation.fullyQualifiedMethod ?? '',
-    })),
+    admissionProfile: capabilities.admissionProfile ?? '',
+    policyFingerprint: capabilities.policyFingerprint ?? '',
+    operations: (capabilities.operations ?? []).map(mapCapability),
     supports(fullyQualifiedMethod: string): boolean {
       return this.operations.some(
         (operation) => operation.fullyQualifiedMethod === fullyQualifiedMethod,
       );
     },
   };
+}
+
+/** Maps a diagnostic listing; the generation's admitted set never changes. */
+export function mapCapabilityListing(
+  capabilities: ListCapabilitiesResponse,
+): BriosaCapabilityListing {
+  if (capabilities.protocolPackage !== briosaProtocolIdentity.protocolPackage)
+    throw new BriosaCompatibilityError('capability-protocol-package-mismatch');
+  if (
+    capabilities.spatialAnalyzerTarget !==
+    briosaProtocolIdentity.spatialAnalyzerTarget
+  )
+    throw new BriosaCompatibilityError('capability-sa-target-mismatch');
+  return {
+    admissionProfile: capabilities.admissionProfile ?? '',
+    policyFingerprint: capabilities.policyFingerprint ?? '',
+    operations: (capabilities.operations ?? []).map(mapCapability),
+  };
+}
+
+const riskFlags: readonly OperationRiskFlag[] = [
+  'unspecified',
+  'filesystemMetadata',
+  'filesystemRead',
+  'filesystemWrite',
+  'filesystemDelete',
+  'destructive',
+  'codeExecution',
+  'physicalMotion',
+  'deviceSession',
+  'deviceConfig',
+  'interactiveUi',
+  'externalIo',
+];
+const durationClasses: readonly OperationDurationClass[] = [
+  'unspecified',
+  'quick',
+  'longRunning',
+  'interactive',
+];
+const validationStatuses: readonly OperationValidationStatus[] = [
+  'unspecified',
+  'noRecordedGap',
+  'fixturePending',
+  'atRiskUnvalidated',
+];
+const admissions: readonly OperationAdmission[] = [
+  'unspecified',
+  'admitted',
+  'deniedProfile',
+  'deniedFlag',
+  'deniedOverride',
+  'deniedExclusive',
+  'deniedUnreviewed',
+];
+
+function mapCapability(
+  operation: WireOperationCapability,
+): BriosaOperationCapability {
+  return {
+    operationId: operation.operationId ?? '',
+    grpcService: operation.grpcService ?? '',
+    rpc: operation.rpc ?? '',
+    fullyQualifiedMethod: operation.fullyQualifiedMethod ?? '',
+    // An ordered set: the server's order, without repeats.
+    riskFlags: [
+      ...new Set(
+        (operation.riskFlags ?? []).map((flag) =>
+          classificationValue(riskFlags, flag),
+        ),
+      ),
+    ],
+    durationClass: classificationValue(
+      durationClasses,
+      operation.durationClass,
+    ),
+    validationStatus: classificationValue(
+      validationStatuses,
+      operation.validationStatus,
+    ),
+    admission: classificationValue(admissions, operation.admission),
+  };
+}
+
+// A classification value from a later contract revision never fails
+// discovery; it maps to the distinct unknown member.
+function classificationValue<T extends string>(
+  values: readonly T[],
+  value: number | undefined,
+): T | 'unknown' {
+  if (value === undefined) return values[0]!;
+  return values[value] ?? 'unknown';
 }
 
 export function mapApplicationState(

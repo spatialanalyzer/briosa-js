@@ -39,6 +39,10 @@ export interface ClientTransport {
   getServerSnapshot(
     signal?: AbortSignal,
   ): Promise<readonly [GetServerInfoResponse, ListCapabilitiesResponse]>;
+  listCapabilities(
+    includeDenied: boolean,
+    signal?: AbortSignal,
+  ): Promise<ListCapabilitiesResponse>;
   getApplicationState(
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerLifecycleState>;
@@ -120,12 +124,24 @@ export class GrpcClientTransport implements ClientTransport {
         this.#discovery.getServerInfo({}, new Metadata(), {}, callback),
       signal,
     );
-    const capabilities = await invokeUnary<ListCapabilitiesResponse>(
+    const capabilities = await this.listCapabilities(false, signal);
+    return [server, capabilities];
+  }
+
+  listCapabilities(
+    includeDenied: boolean,
+    signal?: AbortSignal,
+  ): Promise<ListCapabilitiesResponse> {
+    return invokeUnary<ListCapabilitiesResponse>(
       (callback) =>
-        this.#discovery.listCapabilities({}, new Metadata(), {}, callback),
+        this.#discovery.listCapabilities(
+          includeDenied ? { includeDenied: true } : {},
+          new Metadata(),
+          {},
+          callback,
+        ),
       signal,
     );
-    return [server, capabilities];
   }
 
   async getApplicationState(

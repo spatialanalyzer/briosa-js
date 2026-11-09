@@ -27,6 +27,8 @@ export {
 } from './errors.js';
 export type {
   BriosaCallOptions,
+  BriosaCapabilityListing,
+  BriosaCapabilityListOptions,
   BriosaClientOptions,
   BriosaLifecycleCallOptions,
   BriosaOperationCapability,
@@ -38,7 +40,11 @@ export type {
   MpCompletionState,
   MpExecutionDetails,
   MpExecutionState,
+  OperationAdmission,
+  OperationDurationClass,
   OperationFailureKind,
+  OperationRiskFlag,
+  OperationValidationStatus,
   OutputRetrievalDetails,
   OutputRetrievalState,
   RecoveryGuidance,

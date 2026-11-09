@@ -16,6 +16,8 @@ import {
 } from './generated/protocol/briosa/operation_outcomes.js';
 import type {
   BriosaCallOptions,
+  BriosaCapabilityListing,
+  BriosaCapabilityListOptions,
   BriosaClientOptions,
   BriosaLifecycleCallOptions,
   BriosaServerSnapshot,
@@ -35,6 +37,7 @@ import {
 } from './models.js';
 import {
   mapApplicationState,
+  mapCapabilityListing,
   mapSdkState,
   mapSnapshot,
 } from './protocolMapping.js';
@@ -90,6 +93,14 @@ export interface BriosaClient {
   getServerSnapshot(
     options?: BriosaLifecycleCallOptions,
   ): Promise<BriosaServerSnapshot>;
+  /**
+   * A diagnostic capability listing. With `includeDenied`, it also reports
+   * every denied operation with its denial reason. It never changes which
+   * operations the generation admits.
+   */
+  listCapabilities(
+    options?: BriosaCapabilityListOptions,
+  ): Promise<BriosaCapabilityListing>;
   getSpatialAnalyzerState(
     options?: BriosaLifecycleCallOptions,
   ): Promise<SpatialAnalyzerLifecycleState>;
@@ -194,6 +205,29 @@ export class BriosaClientImplementation implements BriosaClient {
         );
         updateSnapshot(session, snapshot);
         return snapshot;
+      } catch (error) {
+        throw mapTransportFailure(error, session.applicationState);
+      }
+    });
+  }
+
+  listCapabilities(
+    options: BriosaCapabilityListOptions = {},
+  ): Promise<BriosaCapabilityListing> {
+    if (
+      options.includeDenied !== undefined &&
+      typeof options.includeDenied !== 'boolean'
+    ) {
+      return Promise.reject(new TypeError('includeDenied must be a boolean.'));
+    }
+    return this.#runLifecycle(async (session) => {
+      try {
+        return mapCapabilityListing(
+          await session.transport.listCapabilities(
+            options.includeDenied === true,
+            options.signal,
+          ),
+        );
       } catch (error) {
         throw mapTransportFailure(error, session.applicationState);
       }

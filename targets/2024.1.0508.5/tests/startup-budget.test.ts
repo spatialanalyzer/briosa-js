@@ -208,6 +208,14 @@ class RecordingTransport implements ClientTransport {
     return snapshot(this.#connected);
   }
 
+  async listCapabilities(
+    _includeDenied: boolean,
+    signal?: AbortSignal,
+  ): Promise<ListCapabilitiesResponse> {
+    await this.#record('capabilities', signal);
+    return snapshot(this.#connected)[1];
+  }
+
   async getApplicationState(
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerLifecycleState> {
