@@ -2,8 +2,10 @@
 // required in the public API, with no fill-in. Each row is a request field
 // that the server at the 0.10.0-dev.1 checkpoint passes through a Required*
 // mapper or rejects with an explicit check when it is absent; the audit that
-// found them is recorded in the PR. Each row is required in the public type,
-// omitting it fails in the client before any call, and a given value is sent.
+// found them is recorded in the PR. The FilterProximitySettings rows also
+// cover the members the maintainer made required on 2026-11-09. Each row is
+// required in the public type, omitting it fails in the client before any
+// call, and a given value is sent.
 
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
@@ -364,8 +366,11 @@ const targetOnly: Readonly<Record<string, readonly Row[]>> = {
 };
 
 // The settings of the three Auto Filter operations go through
-// RequiredProximity, which also rejects an unspecified proximity mode.
-const proximityModes: readonly Row[] = (
+// RequiredProximity, which rejects an unspecified proximity mode. Its six
+// distances and two Booleans are read without a presence check, so an omitted
+// one would reach SA as 0 or false: the maintainer made all eleven members
+// required, with no client default (2026-11-09).
+const proximitySettings: readonly Row[] = (
   [
     [
       'autoFilterCloudsToNominalGeometry2D',
@@ -386,21 +391,29 @@ const proximityModes: readonly Row[] = (
 ).flatMap(([operation, settings, wire]) =>
   (
     [
+      'surfaceInclusionProximity',
+      'edgeExclusionProximity',
+      'planarInclusionProximity',
+      'planarExclusionProximity',
+      'radialInclusionProximity',
+      'geometryExtractionTolerance',
       'surfaceProximityMode',
       'planarProximityMode',
       'radialProximityMode',
+      'projectToPlane',
+      'assertPlaneBoundaries',
     ] as const
-  ).map((mode): Row => [
+  ).map((member): Row => [
     operation,
-    `input.${settings}.${mode}`,
-    `${wire}.${mode}`,
+    `input.${settings}.${member}`,
+    `${wire}.${member}`,
   ]),
 );
 
 const rows: readonly Row[] = [
   ...bothTargets,
   ...(targetOnly[briosaProtocolIdentity.spatialAnalyzerTarget] ?? []),
-  ...proximityModes,
+  ...proximitySettings,
 ];
 
 function at(value: unknown, path: readonly string[]): unknown {
