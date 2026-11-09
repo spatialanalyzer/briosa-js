@@ -78,8 +78,9 @@ request defaults and argument rules that changed, the nine removed operations,
 and the admission profiles that the server applies.
 
 - **Partial success.** An MP that returns code 4 (PARTIAL SUCCESS) did its work,
-  so the call succeeds with its outputs and is never retried. Each call can
-  observe its own MP completion:
+  so the call succeeds with its outputs and is never retried. The client checks
+  every success's MP completion, observed or not, and each call can observe its
+  own:
 
   ```ts
   const directory = await getWorkingDirectory(briosa, {

@@ -20,10 +20,14 @@ export interface BriosaCallOptions {
   readonly signal?: AbortSignal;
   /**
    * Called once with this call's MP completion when the operation succeeds,
-   * after the response arrives and before the result is returned. A partial
-   * success (MP code 4) did its work: the call returns its outputs as usual and
-   * reports `partialSuccess` here. An exception thrown by the callback rejects
-   * the call, although the operation completed.
+   * after the client has checked the completion and before it maps the outputs,
+   * so the callback sees the completion even if output mapping then fails. A
+   * partial success (MP code 4) did its work: the call returns its outputs as
+   * usual and reports `partialSuccess` here. The client checks every success,
+   * observed or not (`mp-completion-missing` or `mp-completion-invalid` when the
+   * completion breaks the contract), so a callback never changes how a
+   * completion is judged. An exception thrown by the callback rejects the call,
+   * although the operation completed.
    */
   readonly onMpCompletion?: (completion: MpCompletion) => void;
 }
@@ -31,7 +35,10 @@ export interface BriosaCallOptions {
 /** How a successful MP command completed. */
 export type MpCompletionState = 'succeeded' | 'partialSuccess';
 
-/** The MP completion of one successful call, with its MP result code. */
+/**
+ * The MP completion of one successful call, with its MP result code: 2 for
+ * `succeeded`, 4 for `partialSuccess`.
+ */
 export interface MpCompletion {
   readonly state: MpCompletionState;
   readonly mpResultCode: number;

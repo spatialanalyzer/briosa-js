@@ -655,7 +655,7 @@ export interface ExportQdasCharacteristicsInput {
   readonly k0006BatchNumber?: string;
   readonly k0014PartId?: string;
   readonly k0053OrderNumber?: string;
-  readonly k0004DateTimeStamp?: string;
+  readonly k0004DateTimeStamp: string;
   readonly k0008OperatorIdentifier?: number;
   readonly k0010MachineIdentifier?: number;
   readonly k0012GageIdentifier?: number;
@@ -2163,7 +2163,7 @@ export interface PrepareQdasDataListInput {
   readonly k0006BatchNumber?: string;
   readonly k0014PartId?: string;
   readonly k0053OrderNumber?: string;
-  readonly k0004DateTimeStamp?: string;
+  readonly k0004DateTimeStamp: string;
   readonly k0008OperatorIdentifier?: number;
   readonly k0010MachineIdentifier?: number;
   readonly k0012GageIdentifier?: number;
@@ -9580,11 +9580,7 @@ export async function exportQdasCharacteristics(
       ),
       k0004DateTimeStamp: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(
-          input.k0004DateTimeStamp,
-          '2026-07-20/16:32:22',
-          'k0004DateTimeStamp',
-        ),
+        requireOperationInput(input.k0004DateTimeStamp, 'k0004DateTimeStamp'),
       ),
       k0008OperatorIdentifier: toWireOperationValue(
         operationScalarSchemas.integer,
@@ -11468,11 +11464,7 @@ export async function prepareQdasDataList(
       ),
       k0004DateTimeStamp: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(
-          input.k0004DateTimeStamp,
-          '2026-07-20/16:32:22',
-          'k0004DateTimeStamp',
-        ),
+        requireOperationInput(input.k0004DateTimeStamp, 'k0004DateTimeStamp'),
       ),
       k0008OperatorIdentifier: toWireOperationValue(
         operationScalarSchemas.integer,

@@ -832,34 +832,43 @@ function refreshCommandAdmission(session: Session): void {
     session.snapshot.readyForMp && session.sdkState?.readyForMp === true;
 }
 
-// Every successful major-3 result carries its MP execution details. A partial
-// success is a success, so it is reported here and never thrown or retried.
+// Every successful major-3 result carries its MP execution details, and every
+// success is checked, whether or not the caller observes it (C1): SUCCEEDED
+// with MP code 2, or PARTIAL_SUCCESS with MP code 4. Anything else breaks the
+// protocol contract. A partial success is a success, so it is reported here and
+// never thrown or retried. The observer runs after this check and before the
+// outputs are mapped, so it sees the completion even if mapping then fails.
 function reportMpCompletion(
   response: unknown,
   onMpCompletion: ((completion: MpCompletion) => void) | undefined,
 ): void {
-  if (onMpCompletion === undefined) return;
   const execution = (
     response as { readonly execution?: WireMpExecutionDetails } | undefined
   )?.execution;
   if (execution === undefined) {
     throw new BriosaProtocolError('mp-completion-missing');
   }
-  const state =
-    execution.state === MpExecutionState.MP_EXECUTION_STATE_SUCCEEDED
-      ? 'succeeded'
-      : execution.state === MpExecutionState.MP_EXECUTION_STATE_PARTIAL_SUCCESS
-        ? 'partialSuccess'
-        : null;
-  const mpResultCode = execution.mpResultCode;
-  if (
-    state === null ||
-    mpResultCode === undefined ||
-    !Number.isInteger(mpResultCode)
-  ) {
+  const completion = mpCompletion(execution);
+  if (completion === null) {
     throw new BriosaProtocolError('mp-completion-invalid');
   }
-  onMpCompletion({ state, mpResultCode });
+  onMpCompletion?.(completion);
+}
+
+function mpCompletion(execution: WireMpExecutionDetails): MpCompletion | null {
+  if (
+    execution.state === MpExecutionState.MP_EXECUTION_STATE_SUCCEEDED &&
+    execution.mpResultCode === 2
+  ) {
+    return { state: 'succeeded', mpResultCode: 2 };
+  }
+  if (
+    execution.state === MpExecutionState.MP_EXECUTION_STATE_PARTIAL_SUCCESS &&
+    execution.mpResultCode === 4
+  ) {
+    return { state: 'partialSuccess', mpResultCode: 4 };
+  }
+  return null;
 }
 
 function requireGeneration(

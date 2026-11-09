@@ -60,6 +60,7 @@ import {
 } from '../src/generated/protocol/briosa/lifecycle.js';
 import {
   ExecutionDisposition,
+  MpExecutionState,
   OperationError,
   OperationFailureKind,
   RecoveryGuidance,
@@ -326,6 +327,12 @@ void test('logging startup controls map to validated server arguments', async ()
   await client.stop();
 });
 
+const mpSuccess = {
+  state: MpExecutionState.MP_EXECUTION_STATE_SUCCEEDED,
+  mpResultCode: 2,
+  outputRetrievals: [],
+};
+
 class FakeTransport implements ClientTransport {
   readonly calls: string[] = [];
   readonly connectGenerations: number[] = [];
@@ -423,7 +430,7 @@ class FakeTransport implements ClientTransport {
 
   async getWorkingDirectory(): Promise<GetWorkingDirectoryResult> {
     this.calls.push('get-working-directory');
-    return { directory: String.raw`C:\Working` };
+    return { directory: String.raw`C:\Working`, execution: mpSuccess };
   }
 
   async invokeOperation<TRequest, TResponse>(
@@ -437,7 +444,12 @@ class FakeTransport implements ClientTransport {
     void _responseCodec;
     this.calls.push(`operation:${service}/${rpc}`);
     this.lastOperation = { service, rpc, request };
-    return this.operationResponse as TResponse;
+    // Every scripted response is a success, so it carries valid execution
+    // details unless the test sets its own (C1 checks every success).
+    return {
+      execution: mpSuccess,
+      ...(this.operationResponse as object),
+    } as TResponse;
   }
 
   close(): void {
@@ -752,15 +764,31 @@ void test('maps Wave B defaults, results, groups, and optional list wrappers', a
         targetName: 'P1',
       },
     ],
+    // The server requires all three lists and the offset direction (C3).
+    groups: [
+      {
+        collectionName: 'Points',
+        objectName: 'Measured',
+        objectType: ObjectType.pointGroup,
+      },
+    ],
+    clouds: [
+      {
+        collectionName: 'Clouds',
+        objectName: 'Cloud 1',
+        objectType: ObjectType.cloud,
+      },
+    ],
+    offsetDirection: 'both',
   });
   const filterRequest = transport.lastOperation?.request as {
     points?: { values: readonly { targetName: string }[] };
-    groups?: unknown;
-    clouds?: unknown;
+    groups?: { values: readonly { objectName: string }[] };
+    clouds?: { values: readonly { objectName: string }[] };
   };
   assert.equal(filterRequest.points?.values[0]?.targetName, 'P1');
-  assert.equal(filterRequest.groups, undefined);
-  assert.equal(filterRequest.clouds, undefined);
+  assert.equal(filterRequest.groups?.values[0]?.objectName, 'Measured');
+  assert.equal(filterRequest.clouds?.values[0]?.objectName, 'Cloud 1');
 
   await client[Symbol.asyncDispose]();
 });

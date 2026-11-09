@@ -314,9 +314,12 @@ export interface FilterProximitySettings {
   readonly planarExclusionProximity?: number;
   readonly radialInclusionProximity?: number;
   readonly geometryExtractionTolerance?: number;
-  readonly surfaceProximityMode?: OffsetDirectionType;
-  readonly planarProximityMode?: OffsetDirectionType;
-  readonly radialProximityMode?: OffsetDirectionType;
+  /** Required: the server rejects an unspecified proximity mode. */
+  readonly surfaceProximityMode: OffsetDirectionType;
+  /** Required: the server rejects an unspecified proximity mode. */
+  readonly planarProximityMode: OffsetDirectionType;
+  /** Required: the server rejects an unspecified proximity mode. */
+  readonly radialProximityMode: OffsetDirectionType;
   readonly projectToPlane?: boolean;
   readonly assertPlaneBoundaries?: boolean;
 }
@@ -696,11 +699,11 @@ export interface LrInstrumentInput {
 
 export interface MakeGdtDatumAnnotationOptions {
   datumName: string;
-  objects?: readonly CollectionObjectName[];
-  geometryRelationships?: readonly CollectionItemName[];
+  objects: readonly CollectionObjectName[];
+  geometryRelationships: readonly CollectionItemName[];
   surfaceFaces?: SurfaceFaceList;
-  auxiliaryObject?: CollectionObjectName;
-  auxiliaryGeometryRelationship?: CollectionItemName;
+  auxiliaryObject: CollectionObjectName;
+  auxiliaryGeometryRelationship: CollectionItemName;
   isSlot?: boolean;
   forceSurfaceFeature?: boolean;
 }
@@ -708,8 +711,8 @@ export interface MakeGdtDatumAnnotationOptions {
 export interface MakeGdtFeatureCheckAnnotationOptions {
   featureAnnotationName: string;
   featureType?: GdtFeatureType;
-  objects?: readonly CollectionObjectName[];
-  geometryRelationships?: readonly CollectionItemName[];
+  objects: readonly CollectionObjectName[];
+  geometryRelationships: readonly CollectionItemName[];
   surfaceFaces?: SurfaceFaceList;
   decomposeMultipleFeatures?: boolean;
   autoCreateDiameterChecks?: boolean;
@@ -726,8 +729,8 @@ export interface MakeGdtFeatureCheckAnnotationOptions {
   perUnitAreaWidthStepOverPercent?: number;
   perUnitAreaCircleDiameter?: number;
   perUnitAreaDiameterStepOver?: number;
-  auxiliaryObject?: CollectionObjectName;
-  auxiliaryGeometryRelationship?: CollectionItemName;
+  auxiliaryObject: CollectionObjectName;
+  auxiliaryGeometryRelationship: CollectionItemName;
   useNominalForDimensionTolerance?: boolean;
   useReferenceObjectForNominal?: boolean;
   nominalDimensionTolerance?: number;
@@ -786,13 +789,13 @@ export interface RelationshipWatchWindowTemplateOptions {
   readonly showDeviationY?: boolean;
   readonly showDeviationZ?: boolean;
   readonly showDeviationMagnitude?: boolean;
-  readonly udpNetworkTransmitSettings?: RelationshipWatchWindowUdpSettings;
+  readonly udpNetworkTransmitSettings: RelationshipWatchWindowUdpSettings;
   readonly transparentBackground?: boolean;
   readonly hideUnits?: boolean;
 }
 
 export interface RobotModelLinkConfiguration {
-  readonly linkType?: RobotModelLinkType;
+  readonly linkType: RobotModelLinkType;
   readonly dhAlphaComponent: number;
   readonly dhAComponent: number;
   readonly dhDComponent: number;
@@ -806,7 +809,7 @@ export interface RobotModelLinkConfiguration {
   readonly sixDofRxComponent: number;
   readonly sixDofRyComponent: number;
   readonly sixDofRzComponent: number;
-  readonly activeJointComponent?: RobotActiveJointComponent;
+  readonly activeJointComponent: RobotActiveJointComponent;
   readonly encoderOffsetValue: number;
   readonly minimumEncoderLimit: number;
   readonly maximumEncoderLimit: number;
@@ -816,11 +819,11 @@ export interface RobotModelLinkConfiguration {
   readonly additionalEncoderSenseNegative: boolean;
   readonly segmentOriginMassKg: number;
   readonly segmentCgMassKg: number;
-  readonly segmentCgInSegment?: Vector;
+  readonly segmentCgInSegment: Vector;
 }
 
 export interface RobotModelLinkParameters {
-  readonly configuration: Required<RobotModelLinkConfiguration>;
+  readonly configuration: RobotModelLinkConfiguration;
   readonly encoderValue: number;
 }
 

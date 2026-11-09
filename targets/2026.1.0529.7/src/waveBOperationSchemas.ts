@@ -498,15 +498,15 @@ export function registerWaveBOperationValueSchemas(
       geometryExtractionTolerance: { schema: scalars.number, optional: true },
       surfaceProximityMode: {
         schema: get('offsetDirectionType'),
-        optional: true,
+        optional: false,
       },
       planarProximityMode: {
         schema: get('offsetDirectionType'),
-        optional: true,
+        optional: false,
       },
       radialProximityMode: {
         schema: get('offsetDirectionType'),
-        optional: true,
+        optional: false,
       },
       projectToPlane: { schema: scalars.boolean, optional: true },
       assertPlaneBoundaries: { schema: scalars.boolean, optional: true },

@@ -107,11 +107,13 @@ Now required, with no default. Omitting one is a TypeScript compile error and a
 - `instrumentOperations.setInstrumentWeatherSetting`: `setAutomatically`;
 - `scaleObjects`, `instrumentOperations.setAbsoluteInstrumentScaleFactor`, and
   `instrumentOperations.setMultiplyInstrumentScaleFactor`: `scaleFactor`;
-- `robotOperations.setRobotMachineParameter`: `parameterValue`;
-- `robotOperations.setRobotMachineModelLinkParameters`: `configuration`, and in
-  `RobotModelLinkConfiguration` the 22 parameters from `dhAlphaComponent`
-  through `segmentCgMassKg`. The link type, active joint component, and
-  `segmentCgInSegment` keep their behavior;
+- `robotOperations.setRobotMachineParameter`: `parameterValue` and
+  `parameterName`. An explicit name, even an empty one, is sent unchanged;
+- `robotOperations.setRobotMachineModelLinkParameters`: `configuration`, and all
+  25 members of `RobotModelLinkConfiguration`: the 22 parameters from
+  `dhAlphaComponent` through `segmentCgMassKg`, `linkType` (no longer `'DH'` by
+  default), `activeJointComponent` (no longer `'NONE'`), and
+  `segmentCgInSegment`;
 - `instrumentOperations.deleteMeasurementObservation` and
   `instrumentOperations.moveMeasurementObservation`: `observationIndex`;
   `deleteIthVectorFromVectorGroup`: `vectorIndex`;
@@ -127,6 +129,87 @@ Now required, with no default. Omitting one is a TypeScript compile error and a
   `otherObjectsToTransform`;
 - `gdtOperations.featureInspectionAutoFilter`: `pointNames`, `groupNames`,
   `cloudNames`, and `featureCheckNameList`, so the input itself is required.
+
+### Inputs the server requires
+
+Every input that Server 0.10.0 requires is now required in the public types too,
+and the client fills none of them in: no identity transform, no default settings
+value, and no empty list. The server rejects each of these before dispatch when
+it is absent, so a call that omitted one never succeeded. Omitting one is now a
+TypeScript compile error and a `TypeError` before any call. Lists among them are
+sent as given; the server also rejects some of them when empty.
+
+- `autoFilterCloudsToNominalGeometry2D`: `filterProximitySettings2D`;
+  `autoFilterCloudsToNominalGeometry3D` and
+  `autoFilterPointsToNominalGeometry3D`: `filterProximitySettings3D`. In
+  `FilterProximitySettings`, `surfaceProximityMode`, `planarProximityMode`, and
+  `radialProximityMode` are required, because the server rejects an unspecified
+  mode;
+- `autoFilterPointsGroupsCloudsToSurfaceFaces`: `points`, `groups`, `clouds`, and
+  `offsetDirection`;
+- `createPointsToObjectsMap`: `points` and `groups`;
+- `doRelationshipFit` and `moveCollectionsByMinimizingRelationships`:
+  `motionToAllow`;
+- `extractGeometryFromPointClouds` (SA 2026): `geometryType` and
+  `boundingPoints`;
+- `makeDynamicCircleRelationship`, `makeDynamicEllipseRelationship`,
+  `makeDynamicLineRelationship`, `makeDynamicPlaneRelationship`, and
+  `makeDynamicPointRelationship`: `constructionMode`, and for the point also
+  `thirdReferenceGeometry`;
+- `makeFrameToFrameRelationship`: `orientationTolerance` and
+  `positionTolerance`;
+- `makeGroupsToObjectsRelationship`, `makePointCloudsToObjectsRelationship`, and
+  `makePointsToObjectsRelationship`: `projectionOptions`;
+- `relationshipWatchWindowTemplate`: the input, `watchWindowTemplateName`, and
+  `options` with `options.udpNetworkTransmitSettings`;
+- `setObjectToObjectDirectionRelationshipTolerances`:
+  `angleBetweenVectorsTolerances` and `mutualPerpendicularLengthTolerances`;
+- `setPointsToPointsRelationshipAssociatedData`: `nominalPoints` and
+  `actualPoints`; `setRelationshipAssociatedData`: `individualPoints`,
+  `pointGroups`, `pointClouds`, and `objects`;
+- `exportQdasCharacteristics` and `prepareQdasDataList` (SA 2026):
+  `k0004DateTimeStamp`, which loses its fixed `'2026-07-20/16:32:22'` default;
+- `constructionOperations`: `constructCrossSectionCloud.referenceObject`;
+  `constructEllipsoid.transformInWorkingCoordinates`;
+  `constructFrame.transformInWorkingCoordinates`;
+  `constructFrameFromTransformInWorld.transformInWorldCoordinates`;
+  `constructPointFromCloudPointRuntimeSelect.constructedPointName`;
+  `constructPointsFromSurfacesOnUvGrid.edgePointMode`;
+  `constructPointsShiftedInWorkingFrame.shiftVector`;
+  `constructPointsSubsetWithGreatestSpacing.groupForSubset`;
+  `getGradientAtProjectedPointOnSurfaceEdge.edgeOffsetDirection`;
+  `makeCollectionItemNameRefListWildcardSelection.itemType`; and `objectType` of
+  `makeCollectionObjectNameRefListByType`,
+  `makeCollectionObjectNameRefListByTypeAndColor`,
+  `makeCollectionObjectNameRefListRuntimeSelect`,
+  `makeCollectionObjectNameRefListWildcardSelection`, and
+  `makeCollectionObjectNameRuntimeSelect`;
+- `gdtOperations`: `enableDisableDatumAlignmentForFeatureCheck.alignment`;
+  `featureInspectionAutoFilter.offsetDirection`; `objects`,
+  `geometryRelationships`, `auxiliaryObject`, and
+  `auxiliaryGeometryRelationship` of `makeGdtDatumAnnotation` and
+  `makeGdtFeatureCheckAnnotation`; `setGdtOptions.distanceBetweenMode` and
+  `evaluationMethod`;
+- `instrumentOperations`:
+  `autoCorrespondWithProximityTrigger.deviationVectorGroupName` (an empty name
+  still means none); `buildTarget.tolerance`;
+  `calculateTcpFixtureUncertainties.tcpInWorking`; `collimation.tiltMode`,
+  `baselineMethod`, `scalePoint1`, `scalePoint2`,
+  `notMeasuredByMovingInstrument`, and `asMeasuredByMovingInstrument`;
+  `setObservationCollimationShotOptions.targetedInstrument`;
+- `robotOperations`: `setRobotCalibrationToolFrame.toolFrame`,
+  `setRobotCalibrationMeasurementOffsetInToolFrame.measurementFrame`, and
+  `setRobotMachineBaseTransform.destinationTransform`;
+- `robotCalibrationApplianceNodeOperations.setCalibrationApplianceNodeMeasurementOffsetTransform`:
+  `measurementOffsetTransform`.
+
+Where every member of an input was optional, the input itself is now required:
+`relationshipWatchWindowTemplate`, `gdtOperations.setGdtOptions`, and
+`constructPointFromCloudPointRuntimeSelect`,
+`makeCollectionItemNameRefListWildcardSelection`,
+`makeCollectionObjectNameRefListRuntimeSelect`,
+`makeCollectionObjectNameRefListWildcardSelection`, and
+`makeCollectionObjectNameRuntimeSelect` of `constructionOperations`.
 
 The weather values `temperature`, `pressure`, and `relativeHumidity` of
 `setInstrumentWeatherSetting` stay optional but lose their 0 default. When
@@ -178,8 +261,14 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
   });
   ```
 
-  The callback runs once, after the response arrives and before the result is
-  returned; an exception it throws rejects the call. For four operations the
+  The client checks every success, whether or not a callback is passed: a
+  success needs execution details with `succeeded` and MP code 2, or
+  `partialSuccess` and MP code 4. Anything else fails with
+  `BriosaProtocolError` (`mp-completion-missing` or `mp-completion-invalid`),
+  because the server always reports the code. The callback runs once, after that
+  check and before the outputs are mapped, so it reports the completion even if
+  output mapping then fails; an exception it throws rejects the call. For four
+  operations the
   target documentation says code 4 leaves the work undone, so the server reports
   it as an ordinary `mpFailure` with code 4: `constructPointFromSurveyTargetCenter`,
   `openSaFile`, `openTemplateFile`, and `setReportOptionsForObject`.

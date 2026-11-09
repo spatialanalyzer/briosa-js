@@ -242,12 +242,16 @@ export interface BriosaCallOptions {
 ```
 
 `onMpCompletion` is a per-call control like the signal, not a callback form of
-the operation. From contract major 3 it is called once with the call's MP
-completion, `{ state: 'succeeded' | 'partialSuccess', mpResultCode }`, after a
-successful response arrives and before the result is returned. A partial
-success (MP code 4) did its work, so the operation still resolves with its
-outputs and is never retried. An exception thrown by the callback rejects the
-call although the operation completed.
+the operation. From contract major 3 the client checks the MP completion of
+every successful call, whether or not a callback is passed: the success must
+carry execution details with `succeeded` and MP code 2, or `partialSuccess` and
+MP code 4, and anything else rejects the call with `BriosaProtocolError`
+(`mp-completion-missing` or `mp-completion-invalid`). The callback is then
+called once with the completion, `{ state: 'succeeded' | 'partialSuccess',
+mpResultCode }`, before the outputs are mapped, so it reports the completion
+even if output mapping fails. A partial success (MP code 4) did its work, so the
+operation still resolves with its outputs and is never retried. An exception
+thrown by the callback rejects the call although the operation completed.
 
 The primary command surface does not expose gRPC metadata, channel
 credentials, channel options, call handles, generated call options, or other

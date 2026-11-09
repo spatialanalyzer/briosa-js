@@ -81,7 +81,7 @@ export class ScriptedTransport implements ClientTransport {
   readonly capabilityRequests: boolean[] = [];
   readonly workingDirectoryResults: GetWorkingDirectoryResult[] = [];
   workingDirectoryCalls = 0;
-  respond: OperationResponder = () => ({});
+  respond: OperationResponder = () => ({ execution: succeeded() });
   capabilities: ListCapabilitiesResponse = defaultCapabilities();
   deniedCapabilities: ListCapabilitiesResponse | null = null;
   #sdkGeneration = 0;
@@ -166,7 +166,9 @@ export class ScriptedTransport implements ClientTransport {
   async getWorkingDirectory(): Promise<GetWorkingDirectoryResult> {
     this.workingDirectoryCalls += 1;
     const result = this.workingDirectoryResults.shift();
-    return result ?? { directory: String.raw`C:\Working` };
+    return (
+      result ?? { directory: String.raw`C:\Working`, execution: succeeded() }
+    );
   }
 
   async invokeOperation<TRequest, TResponse>(

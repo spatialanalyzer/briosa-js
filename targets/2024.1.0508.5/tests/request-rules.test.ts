@@ -792,6 +792,8 @@ void test('the quick-fit other objects are required and an explicit list is sent
 
 void test('the four Feature Inspection Auto Filter lists are required', async () => {
   const lists = {
+    // Required too (C3), but not one of the four lists.
+    offsetDirection: 'both',
     pointNames: [point('P1')],
     groupNames: [objectName('Group')],
     cloudNames: [objectName('Cloud', ObjectType.cloud)],
@@ -806,7 +808,9 @@ void test('the four Feature Inspection Auto Filter lists are required', async ()
   const call = (client: BriosaClient, input: unknown): Promise<unknown> =>
     client.gdtOperations.featureInspectionAutoFilter(input as never);
   await rejectedBeforeCall((client) => call(client, undefined), 'input');
-  for (const name of Object.keys(lists)) {
+  for (const name of Object.keys(lists).filter(
+    (key) => key !== 'offsetDirection',
+  )) {
     const partial: Wire = { ...lists };
     delete partial[name];
     await rejectedBeforeCall((client) => call(client, partial), name);
