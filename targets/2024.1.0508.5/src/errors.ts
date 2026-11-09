@@ -6,11 +6,17 @@ import {
   SpatialAnalyzerSdkLifecycleError,
   type SpatialAnalyzerSdkLifecycleFailureKind as WireSdkFailureKind,
 } from './generated/protocol/briosa/lifecycle.js';
-import { OperationError } from './generated/protocol/briosa/operation_outcomes.js';
+import {
+  OperationError,
+  type MpExecutionDetails as WireMpExecutionDetails,
+} from './generated/protocol/briosa/operation_outcomes.js';
 import type {
   ExecutionDisposition,
   LifecycleRecoveryGuidance,
+  MpExecutionDetails,
+  MpExecutionState,
   OperationFailureKind,
+  OutputRetrievalState,
   RecoveryGuidance,
   ReplayGuidance,
   ReplaySafety,
@@ -97,7 +103,11 @@ export class BriosaSpatialAnalyzerSdkError extends BriosaError {
   }
 }
 
-/** A valid typed MP failure with detached, value-free operation policy. */
+/**
+ * A valid typed MP failure with detached, value-free operation policy.
+ * `mpExecution` carries the MP execution details when the server reported
+ * them, and is null otherwise.
+ */
 export class BriosaOperationError extends BriosaError {
   constructor(
     readonly operationId: string,
@@ -107,6 +117,7 @@ export class BriosaOperationError extends BriosaError {
     readonly recoveryGuidance: RecoveryGuidance,
     readonly replayGuidance: ReplayGuidance,
     readonly replaySafety: ReplaySafety,
+    readonly mpExecution: MpExecutionDetails | null = null,
   ) {
     super(`Briosa operation failed (${diagnosticCode}).`);
     this.name = 'BriosaOperationError';
@@ -153,6 +164,8 @@ export function mapServiceError(
       'sdkNotStopped',
       'timeout',
       'internal',
+      'callerCancelled',
+      'callerDeadlineExceeded',
     ];
     return new BriosaSpatialAnalyzerError(
       requireEnum(kinds, applicationDetail.kind),
@@ -219,6 +232,9 @@ export function mapServiceError(
       requireEnum(recoveryGuidanceValues, detail.recoveryGuidance),
       requireEnum(replayGuidanceValues, detail.replayGuidance),
       requireEnum(replaySafetyValues, detail.replaySafety),
+      detail.mpExecution === undefined
+        ? null
+        : mapMpExecution(detail.mpExecution),
     );
   } catch {
     return new BriosaTransportError('typed-error-malformed');
@@ -277,8 +293,25 @@ function mapSdkFailureKind(
     'sdkConnectionFailed',
     'reconnectNotRequired',
     'sdkRecoveryRequired',
+    'callerCancelled',
+    'callerDeadlineExceeded',
   ];
   return requireEnum(values, value);
+}
+
+/** Maps value-free MP execution details; an unknown state fails closed. */
+export function mapMpExecution(
+  execution: WireMpExecutionDetails,
+): MpExecutionDetails {
+  return {
+    state: requireEnum(mpExecutionStates, execution.state),
+    mpResultCode: execution.mpResultCode ?? null,
+    outputRetrievals: (execution.outputRetrievals ?? []).map((retrieval) => ({
+      fieldName: retrieval.fieldName ?? '',
+      state: requireEnum(outputRetrievalStates, retrieval.state),
+      diagnosticCode: retrieval.diagnosticCode ?? null,
+    })),
+  };
 }
 
 function mapRecoveryGuidance(
@@ -352,6 +385,24 @@ const operationFailureKinds: readonly OperationFailureKind[] = [
   'mpResultRetrievalFailure',
   'sdkArgumentRejected',
   'overloaded',
+  'sdkCallFaulted',
+];
+
+const mpExecutionStates: readonly MpExecutionState[] = [
+  'unspecified',
+  'succeeded',
+  'executeStepRejected',
+  'failed',
+  'resultUnavailable',
+  'argumentRejected',
+  'partialSuccess',
+];
+
+const outputRetrievalStates: readonly OutputRetrievalState[] = [
+  'unspecified',
+  'retrieved',
+  'notAttempted',
+  'failed',
 ];
 
 const recoveryGuidanceValues: readonly RecoveryGuidance[] = [

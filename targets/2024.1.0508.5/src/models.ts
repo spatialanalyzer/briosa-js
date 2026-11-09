@@ -130,7 +130,40 @@ export type OperationFailureKind =
   | 'policyDenied'
   | 'mpResultRetrievalFailure'
   | 'sdkArgumentRejected'
-  | 'overloaded';
+  | 'overloaded'
+  | 'sdkCallFaulted';
+
+/** What the MP command itself did, as the server reports it. */
+export type MpExecutionState =
+  | 'unspecified'
+  | 'succeeded'
+  | 'executeStepRejected'
+  | 'failed'
+  | 'resultUnavailable'
+  | 'argumentRejected'
+  | 'partialSuccess';
+
+/** What happened when the server requested one result-only MP argument. */
+export type OutputRetrievalState =
+  'unspecified' | 'retrieved' | 'notAttempted' | 'failed';
+
+export interface OutputRetrievalDetails {
+  /** The protocol result field name. */
+  readonly fieldName: string;
+  readonly state: OutputRetrievalState;
+  readonly diagnosticCode: string | null;
+}
+
+/**
+ * Value-free MP execution details that accompany a typed MP failure. A
+ * `partialSuccess` state means SpatialAnalyzer returned MP code 4: the command
+ * did its work but not its full intended effect.
+ */
+export interface MpExecutionDetails {
+  readonly state: MpExecutionState;
+  readonly mpResultCode: number | null;
+  readonly outputRetrievals: readonly OutputRetrievalDetails[];
+}
 
 export type RecoveryGuidance =
   | 'unspecified'
@@ -154,7 +187,9 @@ export type SpatialAnalyzerLifecycleFailureKind =
   | 'notOwned'
   | 'sdkNotStopped'
   | 'timeout'
-  | 'internal';
+  | 'internal'
+  | 'callerCancelled'
+  | 'callerDeadlineExceeded';
 
 export type SpatialAnalyzerSdkLifecycleFailureKind =
   | 'unspecified'
@@ -175,7 +210,9 @@ export type SpatialAnalyzerSdkLifecycleFailureKind =
   | 'sdkAlreadyConnected'
   | 'sdkConnectionFailed'
   | 'reconnectNotRequired'
-  | 'sdkRecoveryRequired';
+  | 'sdkRecoveryRequired'
+  | 'callerCancelled'
+  | 'callerDeadlineExceeded';
 
 export type LifecycleRecoveryGuidance =
   | 'unspecified'
