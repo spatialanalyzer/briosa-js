@@ -121,15 +121,24 @@ function valueOf(
   }
   const name = typeName(nonNullable);
   if (name === 'Buffer' || name === 'Uint8Array') return Buffer.from([1]);
-  if (
-    checker.isArrayType(nonNullable) ||
-    checker.isTupleType(nonNullable) ||
-    name === 'Iterable'
-  ) {
+  if (checker.isTupleType(nonNullable)) {
+    return checker
+      .getTypeArguments(nonNullable as ts.TypeReference)
+      .map((item) => valueOf(item, mode, owner, property, depth + 1));
+  }
+  if (checker.isArrayType(nonNullable) || name === 'Iterable') {
     const [item] = checker.getTypeArguments(nonNullable as ts.TypeReference);
     assert.ok(item !== undefined, `Untyped collection at ${owner}.${property}`);
-    // A Transform carries exactly 16 values.
-    const length = owner === 'Transform' && property === 'values' ? 16 : 1;
+    // The domain fixes two lengths: a Transform carries 16 values, and a
+    // DoubleVector6 six.
+    const length =
+      property !== 'values'
+        ? 1
+        : owner === 'Transform'
+          ? 16
+          : owner === 'DoubleVector6'
+            ? 6
+            : 1;
     return Array.from({ length }, () =>
       valueOf(item, mode, owner, property, depth + 1),
     );

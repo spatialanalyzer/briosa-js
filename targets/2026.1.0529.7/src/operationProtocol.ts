@@ -962,6 +962,7 @@ export function toWireOperationValue(
       return { values };
     }
     case 'message': {
+      if (schema.name === 'DoubleVector6') return toWireDoubleVector6(value);
       if (typeof value !== 'object' || value === null || Array.isArray(value)) {
         throw new TypeError(`${schema.name} must be an object.`);
       }
@@ -1065,6 +1066,7 @@ function fromWireOperationValue(
       return values.map((item) => fromWireOperationValue(schema.item, item));
     }
     case 'message': {
+      if (schema.name === 'DoubleVector6') return fromWireDoubleVector6(value);
       if (typeof value !== 'object' || value === null || Array.isArray(value)) {
         throw new BriosaProtocolError('operation-output-shape-drift');
       }
@@ -1088,6 +1090,34 @@ function fromWireOperationValue(
       return result;
     }
   }
+}
+
+// The public DoubleVector6 is a tuple of exactly six numbers; the protocol
+// carries it as a message with one repeated field.
+function toWireDoubleVector6(value: unknown): unknown {
+  if (!Array.isArray(value))
+    throw new TypeError('DoubleVector6 must be an array of six numbers.');
+  if (value.length !== 6)
+    throw new RangeError('DoubleVector6 must contain exactly 6 values.');
+  return {
+    values: value.map((item: unknown) =>
+      toWireOperationValue(operationScalarSchemas.number, item),
+    ),
+  };
+}
+
+function fromWireDoubleVector6(value: unknown): readonly number[] {
+  if (typeof value !== 'object' || value === null || Array.isArray(value))
+    throw new BriosaProtocolError('operation-output-shape-drift');
+  const values = (value as Readonly<Record<string, unknown>>).values;
+  if (!Array.isArray(values))
+    throw new BriosaProtocolError('operation-output-shape-drift');
+  if (values.length !== 6)
+    throw new BriosaProtocolError('invalid-domain-value');
+  return values.map(
+    (item: unknown) =>
+      fromWireOperationValue(operationScalarSchemas.number, item) as number,
+  );
 }
 
 function validateScalar(

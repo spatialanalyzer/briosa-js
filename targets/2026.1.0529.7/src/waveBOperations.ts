@@ -19287,14 +19287,13 @@ async function makeGdtDatumAnnotationOperation(
               ),
               options.geometryRelationships,
             ),
-      surfaceFaces: toWireOperationValue(
-        getOperationValueSchema('surfaceFaceList'),
-        resolveOperationDefault(
-          options.surfaceFaces,
-          {} as SurfaceFaceList,
-          'surfaceFaces',
-        ),
-      ),
+      surfaceFaces:
+        options.surfaceFaces == null
+          ? undefined
+          : toWireOperationValue(
+              getOperationValueSchema('surfaceFaceList'),
+              options.surfaceFaces,
+            ),
       auxiliaryObject:
         options.auxiliaryObject == null
           ? undefined
@@ -19377,14 +19376,13 @@ async function makeGdtFeatureCheckAnnotationOperation(
               ),
               options.geometryRelationships,
             ),
-      surfaceFaces: toWireOperationValue(
-        getOperationValueSchema('surfaceFaceList'),
-        resolveOperationDefault(
-          options.surfaceFaces,
-          {} as SurfaceFaceList,
-          'surfaceFaces',
-        ),
-      ),
+      surfaceFaces:
+        options.surfaceFaces == null
+          ? undefined
+          : toWireOperationValue(
+              getOperationValueSchema('surfaceFaceList'),
+              options.surfaceFaces,
+            ),
       decomposeMultipleFeatures: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(

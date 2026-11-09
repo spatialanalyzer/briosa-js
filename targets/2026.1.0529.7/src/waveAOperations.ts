@@ -2449,10 +2449,10 @@ export interface SetAutomaticRelationshipConstructionStateInput {
 }
 
 export interface SetBackgroundColorInput {
-  readonly solidColorName?: Color;
-  readonly gradientStartColorName?: Color;
-  readonly gradientEndColorName?: Color;
-  readonly highlightColor?: Color;
+  readonly solidColorName: Color;
+  readonly gradientStartColorName: Color;
+  readonly gradientEndColorName: Color;
+  readonly highlightColor: Color;
 }
 
 export interface SetBooleanInDataShareFileInput {
@@ -2511,8 +2511,8 @@ export interface SetCustomTableCellColorInput {
   readonly tableName: CollectionObjectName;
   readonly row?: number;
   readonly column?: number;
-  readonly foregroundColorName?: Color;
-  readonly backgroundColorName?: Color;
+  readonly foregroundColorName: Color;
+  readonly backgroundColorName: Color;
 }
 
 export interface SetCustomTableCellDoubleInput {
@@ -2761,7 +2761,7 @@ export interface SetObjectToObjectDirectionRelationshipFitConstraintsInput {
 
 export interface SetObjectsColorInput {
   readonly objectsToChange: Iterable<CollectionObjectName>;
-  readonly newWorkingColorName?: Color;
+  readonly newWorkingColorName: Color;
   readonly autoIncrement?: boolean;
 }
 
@@ -3162,7 +3162,7 @@ export interface SetWorkingColorAutoIncrementInput {
 }
 
 export interface SetWorkingColorInput {
-  readonly newWorkingColorName?: Color;
+  readonly newWorkingColorName: Color;
 }
 
 export interface SetWorkingFrameInput {
@@ -20103,7 +20103,7 @@ export async function getRelationshipRefListVariable(
   briosa: BriosaClient,
   input: GetRelationshipRefListVariableInput,
   options: BriosaCallOptions = {},
-): Promise<readonly CollectionObjectName[]> {
+): Promise<readonly CollectionItemName[]> {
   if (typeof input !== 'object' || input === null)
     throw new TypeError('input is required.');
   const request =
@@ -20132,14 +20132,14 @@ export async function getRelationshipRefListVariable(
       ],
     ],
   );
-  return mapped as readonly CollectionObjectName[];
+  return mapped as readonly CollectionItemName[];
 }
 
 export async function getReportItemsReferenceListVariable(
   briosa: BriosaClient,
   input: GetReportItemsReferenceListVariableInput,
   options: BriosaCallOptions = {},
-): Promise<readonly CollectionObjectName[]> {
+): Promise<readonly CollectionItemName[]> {
   if (typeof input !== 'object' || input === null)
     throw new TypeError('input is required.');
   const request =
@@ -20168,7 +20168,7 @@ export async function getReportItemsReferenceListVariable(
       ],
     ],
   );
-  return mapped as readonly CollectionObjectName[];
+  return mapped as readonly CollectionItemName[];
 }
 
 export async function getStringRefListVariable(

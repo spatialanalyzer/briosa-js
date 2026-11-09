@@ -478,6 +478,24 @@ export function registerWaveBOperationValueSchemas(
         optional: false,
       },
       showFeatureSummary: { schema: scalars.boolean, optional: false },
+      showPointDetails: { schema: scalars.boolean, optional: false },
+      showLowerTierTables: { schema: scalars.boolean, optional: false },
+    },
+  });
+  register('filterProximitySettings', {
+    kind: 'message',
+    name: 'FilterProximitySettings',
+    fields: {
+      surfaceInclusionProximity: { schema: scalars.number, optional: true },
+      edgeExclusionProximity: { schema: scalars.number, optional: true },
+      planarInclusionProximity: { schema: scalars.number, optional: true },
+      planarExclusionProximity: { schema: scalars.number, optional: true },
+      radialInclusionProximity: { schema: scalars.number, optional: true },
+      geometryExtractionTolerance: { schema: scalars.number, optional: true },
+      surfaceProximityMode: {
+        schema: get('offsetDirectionType'),
+        optional: true,
+      },
       planarProximityMode: {
         schema: get('offsetDirectionType'),
         optional: true,
