@@ -431,6 +431,61 @@ void test('the 3D Auto Filter operations send their proximity settings', async (
   }
 });
 
+void test('the 2D Auto Filter operation sends its settings and its own tolerance', async () => {
+  // The facade sent surfaceInclusionProximity where the settings message
+  // belongs, and filled the top-level tolerance from the settings.
+  const { client, transport } = await startedClient();
+  transport.respond = () => ({});
+  const base = {
+    autoFilterTargetRelationships: [
+      {
+        collectionName: 'Inspection',
+        itemName: 'R1',
+        itemType: briosaPackage.ItemType.relationship,
+      },
+    ],
+    clouds: [
+      {
+        collectionName: 'Inspection',
+        objectName: 'Cloud',
+        objectType: briosaPackage.ObjectType.cloud,
+      },
+    ],
+  };
+  const wire = (): {
+    filterProximitySettings2d?: Record<string, unknown>;
+    geometryExtractionTolerance?: number;
+  } => {
+    const { request, requestCodec } = transport.lastOperation;
+    return requestCodec.decode(requestCodec.encode(request).finish()) as never;
+  };
+  try {
+    await briosaPackage.autoFilterCloudsToNominalGeometry2D(client, {
+      ...base,
+      filterProximitySettings2D: {
+        surfaceInclusionProximity: 0.5,
+        geometryExtractionTolerance: 0.3,
+        planarProximityMode: 'positiveOnly',
+      },
+      geometryExtractionTolerance: 0.02,
+    });
+    const sent = wire();
+    const settings = sent.filterProximitySettings2d;
+    assert.ok(settings !== undefined);
+    assert.equal(settings.surfaceInclusionProximity, 0.5);
+    assert.equal(settings.geometryExtractionTolerance, 0.3);
+    assert.equal(sent.geometryExtractionTolerance, 0.02);
+
+    // The reviewed default of the 2D-only tolerance is 0.01.
+    await briosaPackage.autoFilterCloudsToNominalGeometry2D(client, base);
+    const defaulted = wire();
+    assert.equal(defaulted.filterProximitySettings2d, undefined);
+    assert.equal(defaulted.geometryExtractionTolerance, 0.01);
+  } finally {
+    await client.stop();
+  }
+});
+
 void test('every operation maps a fully populated response without error', async () => {
   const { client, transport } = await startedClient();
   transport.respond = fullyPopulatedResponse;
