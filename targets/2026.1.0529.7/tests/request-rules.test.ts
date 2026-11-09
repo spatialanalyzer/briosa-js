@@ -13,17 +13,21 @@ import {
   GeometryType,
   ItemType,
   ObjectType,
+  ReportOutputType,
+  ReportViewType,
   ToleranceVectorOptions,
   createChartFromVectorGroup,
   deleteFolder,
   deleteIthVectorFromVectorGroup,
   deleteVariable,
   deleteVariablesWildcardMatch,
+  defineReportTemplate,
   deleteVectorByName,
   directCadAccess,
   fitGeometryToPointGroup,
   fitGeometryToPointGroupProjectedToPlane,
   fitGeometryToPoints,
+  generateQuickReportFromTabOrder,
   makeGroupToGroupRelationship,
   makeGroupToNominalGroupRelationship,
   makePointToPointRelationship,
@@ -34,6 +38,7 @@ import {
   type BriosaClient,
   type CollectionObjectName,
   type PointName,
+  type ReportOutputOptions,
 } from '../src/index.js';
 import {
   RobotActiveJointComponent,
@@ -819,6 +824,93 @@ void test('the four Feature Inspection Auto Filter lists are required', async ()
   assert.equal((wire.pointNames as unknown[]).length, 1);
   assert.equal((wire.featureCheckNameList as unknown[]).length, 1);
 });
+
+// C3: given report output options need exactly one destination, which travels
+// in the `destination` oneof. Omitted options keep the server's own default.
+const reportCalls: readonly (readonly [
+  string,
+  (client: BriosaClient, options?: ReportOutputOptions) => Promise<unknown>,
+])[] = [
+  [
+    'define_report_template',
+    (client, options) =>
+      defineReportTemplate(client, {
+        reportTemplateName: objectName('Template'),
+        title: ['Title'],
+        graphicalViewOptions: {
+          viewType: ReportViewType.currentView,
+          collectionName: '',
+          calloutName: '',
+        },
+        itemsToReport: [],
+        relationshipsToReport: [],
+        eventsToReport: [],
+        ...(options === undefined ? {} : { reportOutputOptions: options }),
+      }),
+  ],
+  [
+    'generate_quick_report_from_tab_order',
+    (client, options) =>
+      generateQuickReportFromTabOrder(
+        client,
+        options === undefined ? {} : { reportOutputOptions: options },
+      ),
+  ],
+];
+
+for (const [operation, call] of reportCalls) {
+  void test(`${operation} sends exactly one report destination`, async () => {
+    const destination = async (
+      options?: ReportOutputOptions,
+    ): Promise<unknown> =>
+      (
+        (await sent((client) => call(client, options)))
+          .reportOutputOptions as Wire
+      ).destination;
+    assert.deepEqual(
+      await destination({
+        outputType: ReportOutputType.pdf,
+        externalPath: 'C:/Reports/out.pdf',
+      }),
+      { $case: 'externalPath', value: 'C:/Reports/out.pdf' },
+    );
+    const embedded = (await destination({
+      outputType: ReportOutputType.saReport,
+      embeddedFile: { collectionName: 'Inspection', fileName: 'Report 1' },
+    })) as { $case: string; value: { fileName?: string } };
+    assert.equal(embedded.$case, 'embeddedFile');
+    assert.equal(embedded.value.fileName, 'Report 1');
+    const defaulted = (await destination()) as {
+      $case: string;
+      value: { fileName?: string };
+    };
+    assert.equal(defaulted.$case, 'embeddedFile');
+    assert.equal(defaulted.value.fileName, 'My Report');
+
+    // Exactly one destination, in the types and before any call.
+    // @ts-expect-error -- given options need a destination
+    const neither: ReportOutputOptions = { outputType: ReportOutputType.pdf };
+    // @ts-expect-error -- and only one
+    const both: ReportOutputOptions = {
+      outputType: ReportOutputType.pdf,
+      externalPath: 'C:/Reports/out.pdf',
+      embeddedFile: { collectionName: 'Inspection', fileName: 'Report 1' },
+    };
+    const { client, transport } = await startedClient();
+    try {
+      for (const options of [neither, both])
+        await assert.rejects(
+          () => call(client, options),
+          (error: unknown) =>
+            error instanceof TypeError &&
+            /exactly one destination/.test(error.message),
+        );
+      assert.equal(transport.operations.length, 0, 'no call is made');
+    } finally {
+      await client.stop();
+    }
+  });
+}
 
 void test('omitted callout notes and Quick Align lists are sent empty', async () => {
   const notes = await sent((client) =>

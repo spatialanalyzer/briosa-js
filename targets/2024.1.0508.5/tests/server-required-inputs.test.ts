@@ -24,6 +24,23 @@ import {
 type Row = readonly [string, string, string];
 
 const bothTargets: readonly Row[] = [
+  // Found by the second server pass: an absent value that a `Has… ? … : throw`
+  // rejects, or that becomes UNSPECIFIED and a later check rejects.
+  [
+    'constructionOperations.createPointCallout',
+    'input.desiredCoordinateSystem',
+    'desiredCoordinateSystem',
+  ],
+  [
+    'instrumentOperations.locateInstrumentsUsmn',
+    'input.showUsmnDialog',
+    'showUsmnDialog',
+  ],
+  [
+    'instrumentOperations.setTargetComputationOptions',
+    'input.computationMethod',
+    'computationMethod',
+  ],
   [
     'autoFilterCloudsToNominalGeometry2D',
     'input.filterProximitySettings2D',
