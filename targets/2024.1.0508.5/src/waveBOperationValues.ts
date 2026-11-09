@@ -303,21 +303,24 @@ export interface FeatureCheckReportingOptions {
   readonly showLowerTierTables: boolean;
 }
 
+/**
+ * The Auto Filter proximity settings. Every member is required, with no
+ * default: the server rejects an unspecified proximity mode and sends every
+ * distance and Boolean to SpatialAnalyzer as given. The distances are in the
+ * SA job's length units.
+ */
 export interface FilterProximitySettings {
-  readonly surfaceInclusionProximity?: number;
-  readonly edgeExclusionProximity?: number;
-  readonly planarInclusionProximity?: number;
-  readonly planarExclusionProximity?: number;
-  readonly radialInclusionProximity?: number;
-  readonly geometryExtractionTolerance?: number;
-  /** Required: the server rejects an unspecified proximity mode. */
+  readonly surfaceInclusionProximity: number;
+  readonly edgeExclusionProximity: number;
+  readonly planarInclusionProximity: number;
+  readonly planarExclusionProximity: number;
+  readonly radialInclusionProximity: number;
+  readonly geometryExtractionTolerance: number;
   readonly surfaceProximityMode: OffsetDirectionType;
-  /** Required: the server rejects an unspecified proximity mode. */
   readonly planarProximityMode: OffsetDirectionType;
-  /** Required: the server rejects an unspecified proximity mode. */
   readonly radialProximityMode: OffsetDirectionType;
-  readonly projectToPlane?: boolean;
-  readonly assertPlaneBoundaries?: boolean;
+  readonly projectToPlane: boolean;
+  readonly assertPlaneBoundaries: boolean;
 }
 
 export interface FitDofOptions {

@@ -141,10 +141,8 @@ sent as given; the server also rejects some of them when empty.
 
 - `autoFilterCloudsToNominalGeometry2D`: `filterProximitySettings2D`;
   `autoFilterCloudsToNominalGeometry3D` and
-  `autoFilterPointsToNominalGeometry3D`: `filterProximitySettings3D`. In
-  `FilterProximitySettings`, `surfaceProximityMode`, `planarProximityMode`, and
-  `radialProximityMode` are required, because the server rejects an unspecified
-  mode;
+  `autoFilterPointsToNominalGeometry3D`: `filterProximitySettings3D`, with every
+  member of `FilterProximitySettings` (below);
 - `autoFilterPointsGroupsCloudsToSurfaceFaces`: `points`, `groups`, `clouds`, and
   `offsetDirection`;
 - `createPointsToObjectsMap`: `points` and `groups`;
@@ -222,6 +220,28 @@ compile error and a `TypeError` before any call. When you omit the options, the
 client sends the server's default, an embedded report named `My Report`. The
 0.4.0 client never sent the destination, and Server 0.10.0 rejects report
 options without one; 0.5.0 sends it.
+
+All eleven members of `FilterProximitySettings` are required, with no
+defaults. The server rejects an unspecified proximity mode, and it passes the
+six distances and two Booleans to SpatialAnalyzer as given, so an omitted one
+would reach SA as 0 or false. The distances are in the job's length units, so
+choose them for your job. These values are only an example:
+
+```ts
+const filterProximitySettings3D = {
+  surfaceInclusionProximity: 0.1,
+  edgeExclusionProximity: 0.1,
+  planarInclusionProximity: 0.5,
+  planarExclusionProximity: 0.1,
+  radialInclusionProximity: 0.1,
+  geometryExtractionTolerance: 0.01,
+  surfaceProximityMode: 'both',
+  planarProximityMode: 'both',
+  radialProximityMode: 'both',
+  projectToPlane: true,
+  assertPlaneBoundaries: false,
+} as const;
+```
 
 The weather values `temperature`, `pressure`, and `relativeHumidity` of
 `setInstrumentWeatherSetting` stay optional but lose their 0 default. When

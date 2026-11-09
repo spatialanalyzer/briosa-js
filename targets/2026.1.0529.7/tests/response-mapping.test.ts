@@ -183,10 +183,16 @@ void test('the 3D Auto Filter operations send their proximity settings', async (
   const { client, transport } = await startedClient();
   const settings = {
     surfaceInclusionProximity: 0.5,
+    edgeExclusionProximity: 0.1,
+    planarInclusionProximity: 0.5,
+    planarExclusionProximity: 0.1,
+    radialInclusionProximity: 0.1,
+    geometryExtractionTolerance: 0.01,
     surfaceProximityMode: 'both',
     planarProximityMode: 'positiveOnly',
     radialProximityMode: 'negativeOnly',
     projectToPlane: true,
+    assertPlaneBoundaries: false,
   } as const;
   const relationships = [
     {
@@ -255,10 +261,19 @@ void test('the 2D Auto Filter operation sends its settings and its own tolerance
       },
     ],
   };
-  const modes = {
+  // Every member is required; the values are only an example.
+  const proximity = {
+    surfaceInclusionProximity: 0.1,
+    edgeExclusionProximity: 0.1,
+    planarInclusionProximity: 0.5,
+    planarExclusionProximity: 0.1,
+    radialInclusionProximity: 0.1,
+    geometryExtractionTolerance: 0.01,
     surfaceProximityMode: 'both',
     planarProximityMode: 'positiveOnly',
     radialProximityMode: 'negativeOnly',
+    projectToPlane: true,
+    assertPlaneBoundaries: false,
   } as const;
   const wire = (): {
     filterProximitySettings2d?: Record<string, unknown>;
@@ -271,7 +286,7 @@ void test('the 2D Auto Filter operation sends its settings and its own tolerance
     await briosaPackage.autoFilterCloudsToNominalGeometry2D(client, {
       ...base,
       filterProximitySettings2D: {
-        ...modes,
+        ...proximity,
         surfaceInclusionProximity: 0.5,
         geometryExtractionTolerance: 0.3,
       },
@@ -287,7 +302,7 @@ void test('the 2D Auto Filter operation sends its settings and its own tolerance
     // The reviewed default of the 2D-only tolerance is 0.01.
     await briosaPackage.autoFilterCloudsToNominalGeometry2D(client, {
       ...base,
-      filterProximitySettings2D: modes,
+      filterProximitySettings2D: proximity,
     });
     const defaulted = wire();
     assert.ok(defaulted.filterProximitySettings2d !== undefined);

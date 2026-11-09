@@ -486,12 +486,12 @@ export function registerWaveBOperationValueSchemas(
     kind: 'message',
     name: 'FilterProximitySettings',
     fields: {
-      surfaceInclusionProximity: { schema: scalars.number, optional: true },
-      edgeExclusionProximity: { schema: scalars.number, optional: true },
-      planarInclusionProximity: { schema: scalars.number, optional: true },
-      planarExclusionProximity: { schema: scalars.number, optional: true },
-      radialInclusionProximity: { schema: scalars.number, optional: true },
-      geometryExtractionTolerance: { schema: scalars.number, optional: true },
+      surfaceInclusionProximity: { schema: scalars.number, optional: false },
+      edgeExclusionProximity: { schema: scalars.number, optional: false },
+      planarInclusionProximity: { schema: scalars.number, optional: false },
+      planarExclusionProximity: { schema: scalars.number, optional: false },
+      radialInclusionProximity: { schema: scalars.number, optional: false },
+      geometryExtractionTolerance: { schema: scalars.number, optional: false },
       surfaceProximityMode: {
         schema: get('offsetDirectionType'),
         optional: false,
@@ -504,8 +504,8 @@ export function registerWaveBOperationValueSchemas(
         schema: get('offsetDirectionType'),
         optional: false,
       },
-      projectToPlane: { schema: scalars.boolean, optional: true },
-      assertPlaneBoundaries: { schema: scalars.boolean, optional: true },
+      projectToPlane: { schema: scalars.boolean, optional: false },
+      assertPlaneBoundaries: { schema: scalars.boolean, optional: false },
     },
   });
   register('fitDofOptions', {
