@@ -370,21 +370,6 @@ export interface DeleteCloudPointsByRadialDistanceFromPointsResult {
   execution?: MpExecutionDetails | undefined;
 }
 
-export interface DeleteCloudPointsByXYZRangeRequest {
-  cloudNames?: CollectionObjectName[] | undefined;
-  xMin?: number | undefined;
-  xMax?: number | undefined;
-  yMin?: number | undefined;
-  yMax?: number | undefined;
-  zMin?: number | undefined;
-  zMax?: number | undefined;
-  deleteInside?: boolean | undefined;
-}
-
-export interface DeleteCloudPointsByXYZRangeResult {
-  execution?: MpExecutionDetails | undefined;
-}
-
 export interface GenerateGeneralMeshRequest {
   outputMeshName?: CollectionObjectName | undefined;
   cloudsToMesh?: CollectionObjectName[] | undefined;
@@ -4455,198 +4440,6 @@ export const DeleteCloudPointsByRadialDistanceFromPointsResult: MessageFns<
   },
 };
 
-function createBaseDeleteCloudPointsByXYZRangeRequest(): DeleteCloudPointsByXYZRangeRequest {
-  return {
-    cloudNames: [],
-    xMin: undefined,
-    xMax: undefined,
-    yMin: undefined,
-    yMax: undefined,
-    zMin: undefined,
-    zMax: undefined,
-    deleteInside: undefined,
-  };
-}
-
-export const DeleteCloudPointsByXYZRangeRequest: MessageFns<DeleteCloudPointsByXYZRangeRequest> = {
-  encode(message: DeleteCloudPointsByXYZRangeRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.cloudNames !== undefined && message.cloudNames.length !== 0) {
-      for (const v of message.cloudNames) {
-        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.xMin !== undefined) {
-      writer.uint32(17).double(message.xMin);
-    }
-    if (message.xMax !== undefined) {
-      writer.uint32(25).double(message.xMax);
-    }
-    if (message.yMin !== undefined) {
-      writer.uint32(33).double(message.yMin);
-    }
-    if (message.yMax !== undefined) {
-      writer.uint32(41).double(message.yMax);
-    }
-    if (message.zMin !== undefined) {
-      writer.uint32(49).double(message.zMin);
-    }
-    if (message.zMax !== undefined) {
-      writer.uint32(57).double(message.zMax);
-    }
-    if (message.deleteInside !== undefined) {
-      writer.uint32(64).bool(message.deleteInside);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): DeleteCloudPointsByXYZRangeRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteCloudPointsByXYZRangeRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = CollectionObjectName.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.cloudNames!.push(el);
-          }
-          continue;
-        }
-        case 2: {
-          if (tag !== 17) {
-            break;
-          }
-
-          message.xMin = reader.double();
-          continue;
-        }
-        case 3: {
-          if (tag !== 25) {
-            break;
-          }
-
-          message.xMax = reader.double();
-          continue;
-        }
-        case 4: {
-          if (tag !== 33) {
-            break;
-          }
-
-          message.yMin = reader.double();
-          continue;
-        }
-        case 5: {
-          if (tag !== 41) {
-            break;
-          }
-
-          message.yMax = reader.double();
-          continue;
-        }
-        case 6: {
-          if (tag !== 49) {
-            break;
-          }
-
-          message.zMin = reader.double();
-          continue;
-        }
-        case 7: {
-          if (tag !== 57) {
-            break;
-          }
-
-          message.zMax = reader.double();
-          continue;
-        }
-        case 8: {
-          if (tag !== 64) {
-            break;
-          }
-
-          message.deleteInside = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<DeleteCloudPointsByXYZRangeRequest>): DeleteCloudPointsByXYZRangeRequest {
-    return DeleteCloudPointsByXYZRangeRequest.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<DeleteCloudPointsByXYZRangeRequest>): DeleteCloudPointsByXYZRangeRequest {
-    const message = createBaseDeleteCloudPointsByXYZRangeRequest();
-    message.cloudNames = object.cloudNames?.map((e) => CollectionObjectName.fromPartial(e)) || [];
-    message.xMin = object.xMin ?? undefined;
-    message.xMax = object.xMax ?? undefined;
-    message.yMin = object.yMin ?? undefined;
-    message.yMax = object.yMax ?? undefined;
-    message.zMin = object.zMin ?? undefined;
-    message.zMax = object.zMax ?? undefined;
-    message.deleteInside = object.deleteInside ?? undefined;
-    return message;
-  },
-};
-
-function createBaseDeleteCloudPointsByXYZRangeResult(): DeleteCloudPointsByXYZRangeResult {
-  return { execution: undefined };
-}
-
-export const DeleteCloudPointsByXYZRangeResult: MessageFns<DeleteCloudPointsByXYZRangeResult> = {
-  encode(message: DeleteCloudPointsByXYZRangeResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.execution !== undefined) {
-      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): DeleteCloudPointsByXYZRangeResult {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteCloudPointsByXYZRangeResult();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1000: {
-          if (tag !== 8002) {
-            break;
-          }
-
-          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<DeleteCloudPointsByXYZRangeResult>): DeleteCloudPointsByXYZRangeResult {
-    return DeleteCloudPointsByXYZRangeResult.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<DeleteCloudPointsByXYZRangeResult>): DeleteCloudPointsByXYZRangeResult {
-    const message = createBaseDeleteCloudPointsByXYZRangeResult();
-    message.execution = (object.execution !== undefined && object.execution !== null)
-      ? MpExecutionDetails.fromPartial(object.execution)
-      : undefined;
-    return message;
-  },
-};
-
 function createBaseGenerateGeneralMeshRequest(): GenerateGeneralMeshRequest {
   return {
     outputMeshName: undefined,
@@ -5493,19 +5286,6 @@ export const CloudAndMeshOperationsService = {
     responseDeserialize: (value: Buffer): DeleteCloudPointsByRadialDistanceFromPointsResult =>
       DeleteCloudPointsByRadialDistanceFromPointsResult.decode(value),
   },
-  deleteCloudPointsByXyzRange: {
-    path: "/briosa.CloudAndMeshOperations/DeleteCloudPointsByXYZRange" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: DeleteCloudPointsByXYZRangeRequest): Buffer =>
-      Buffer.from(DeleteCloudPointsByXYZRangeRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): DeleteCloudPointsByXYZRangeRequest =>
-      DeleteCloudPointsByXYZRangeRequest.decode(value),
-    responseSerialize: (value: DeleteCloudPointsByXYZRangeResult): Buffer =>
-      Buffer.from(DeleteCloudPointsByXYZRangeResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): DeleteCloudPointsByXYZRangeResult =>
-      DeleteCloudPointsByXYZRangeResult.decode(value),
-  },
   generateGeneralMesh: {
     path: "/briosa.CloudAndMeshOperations/GenerateGeneralMesh" as const,
     requestStream: false as const,
@@ -5596,7 +5376,6 @@ export interface CloudAndMeshOperationsServer extends UntypedServiceImplementati
     DeleteCloudPointsByRadialDistanceFromPointsRequest,
     DeleteCloudPointsByRadialDistanceFromPointsResult
   >;
-  deleteCloudPointsByXyzRange: handleUnaryCall<DeleteCloudPointsByXYZRangeRequest, DeleteCloudPointsByXYZRangeResult>;
   generateGeneralMesh: handleUnaryCall<GenerateGeneralMeshRequest, GenerateGeneralMeshResult>;
   consolidateMesh: handleUnaryCall<ConsolidateMeshRequest, ConsolidateMeshResult>;
   meshVolume: handleUnaryCall<MeshVolumeRequest, MeshVolumeResult>;
@@ -5948,21 +5727,6 @@ export interface CloudAndMeshOperationsClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: DeleteCloudPointsByRadialDistanceFromPointsResult) => void,
-  ): ClientUnaryCall;
-  deleteCloudPointsByXyzRange(
-    request: DeleteCloudPointsByXYZRangeRequest,
-    callback: (error: ServiceError | null, response: DeleteCloudPointsByXYZRangeResult) => void,
-  ): ClientUnaryCall;
-  deleteCloudPointsByXyzRange(
-    request: DeleteCloudPointsByXYZRangeRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: DeleteCloudPointsByXYZRangeResult) => void,
-  ): ClientUnaryCall;
-  deleteCloudPointsByXyzRange(
-    request: DeleteCloudPointsByXYZRangeRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: DeleteCloudPointsByXYZRangeResult) => void,
   ): ClientUnaryCall;
   generateGeneralMesh(
     request: GenerateGeneralMeshRequest,

@@ -90,7 +90,13 @@ export interface CreateRobotCalibrationResult {
 }
 
 export interface DeleteRobotCalibrationRequest {
-  machineId?: CollectionMachineId | undefined;
+  machineId?:
+    | CollectionMachineId
+    | undefined;
+  /**
+   * Required and not empty (major 3): an omitted, empty or whitespace-only value is
+   * rejected before dispatch.
+   */
   calibrationName?: string | undefined;
 }
 
@@ -237,7 +243,13 @@ export interface MoveRobotMachineToFrameResult {
 }
 
 export interface MoveRobotMachineToJointPoseSixDofRequest {
-  machineId?: CollectionMachineId | undefined;
+  machineId?:
+    | CollectionMachineId
+    | undefined;
+  /**
+   * Every joint is required (major 3): an omitted joint is rejected before dispatch
+   * instead of being sent as 0.
+   */
   joint1?: number | undefined;
   joint2?: number | undefined;
   joint3?: number | undefined;
@@ -382,7 +394,14 @@ export interface SetRobotMachineBaseTransformResult {
 export interface SetRobotMachineModelLinkParametersRequest {
   machineId?: CollectionMachineId | undefined;
   linkName?: string | undefined;
-  linkType?: RobotModelLinkType | undefined;
+  linkType?:
+    | RobotModelLinkType
+    | undefined;
+  /**
+   * The scalar parameters from dh_alpha_component through segment_cg_mass_kg are
+   * required (major 3): a request that omits one is rejected before dispatch instead
+   * of overwriting it with 0 or false.
+   */
   dhAlphaComponent?: number | undefined;
   dhAComponent?: number | undefined;
   dhDComponent?: number | undefined;
@@ -415,7 +434,10 @@ export interface SetRobotMachineModelLinkParametersResult {
 
 export interface SetRobotMachineParameterRequest {
   machineId?: CollectionMachineId | undefined;
-  parameterName?: string | undefined;
+  parameterName?:
+    | string
+    | undefined;
+  /** Required (major 3): an omitted value is rejected before dispatch instead of being sent as 0. */
   parameterValue?: number | undefined;
 }
 

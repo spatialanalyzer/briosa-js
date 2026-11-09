@@ -47,13 +47,6 @@ export enum BSplinePointSortMode {
   UNRECOGNIZED = -1,
 }
 
-export enum CircleLineMode {
-  CIRCLE_LINE_MODE_UNSPECIFIED = 0,
-  CIRCLE_LINE_MODE_CIRCLE = 1,
-  CIRCLE_LINE_MODE_LINE = 2,
-  UNRECOGNIZED = -1,
-}
-
 export enum FrameConstructionMethod {
   FRAME_CONSTRUCTION_METHOD_UNSPECIFIED = 0,
   FRAME_CONSTRUCTION_METHOD_ORIGIN_X_XY = 1,
@@ -123,25 +116,10 @@ export enum EdgePointMode {
   UNRECOGNIZED = -1,
 }
 
-export enum MeshOrientationType {
-  MESH_ORIENTATION_TYPE_UNSPECIFIED = 0,
-  MESH_ORIENTATION_TYPE_USE_CURRENT_POINT_OF_VIEW = 1,
-  MESH_ORIENTATION_TYPE_USE_CURRENT_WORKING_FRAME = 2,
-  UNRECOGNIZED = -1,
-}
-
 export enum SurfaceDissectionMode {
   SURFACE_DISSECTION_MODE_UNSPECIFIED = 0,
   SURFACE_DISSECTION_MODE_ENTIRE_SOLID = 1,
   SURFACE_DISSECTION_MODE_SELECT_FACES = 2,
-  UNRECOGNIZED = -1,
-}
-
-export enum MirrorFramePlane {
-  MIRROR_FRAME_PLANE_UNSPECIFIED = 0,
-  MIRROR_FRAME_PLANE_XY = 1,
-  MIRROR_FRAME_PLANE_XZ = 2,
-  MIRROR_FRAME_PLANE_YZ = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -369,15 +347,6 @@ export interface SetDefaultCalloutViewPropertiesResult {
   execution?: MpExecutionDetails | undefined;
 }
 
-export interface SetCalloutViewPropertiesRequest {
-  calloutViews?: CollectionItemName[] | undefined;
-  properties?: CalloutViewProperties | undefined;
-}
-
-export interface SetCalloutViewPropertiesResult {
-  execution?: MpExecutionDetails | undefined;
-}
-
 export interface DeleteCalloutViewRequest {
   calloutView?: CollectionItemName | undefined;
 }
@@ -554,20 +523,6 @@ export interface CalloutViewProperties {
   font?: Font | undefined;
 }
 
-export interface MakeCalloutViewRefListWildcardSelectionRequest {
-  /** default "*" */
-  collectionWildcardCriteria?:
-    | string
-    | undefined;
-  /** default "*" */
-  calloutViewWildcardCriteria?: string | undefined;
-}
-
-export interface MakeCalloutViewRefListWildcardSelectionResult {
-  calloutViews?: CollectionItemName[] | undefined;
-  execution?: MpExecutionDetails | undefined;
-}
-
 export interface ConstructCircleRequest {
   circleName?: CollectionObjectName | undefined;
   circleCenter?: Vector | undefined;
@@ -576,22 +531,6 @@ export interface ConstructCircleRequest {
 }
 
 export interface ConstructCircleResult {
-  execution?: MpExecutionDetails | undefined;
-}
-
-export interface ConstructCirclesLinesFromSurfacesRequest {
-  surfaces?: CollectionObjectName[] | undefined;
-  minimumDiameter?: number | undefined;
-  maximumDiameter?: number | undefined;
-  tolerance?: number | undefined;
-  singleSurface?: boolean | undefined;
-  circleLineMode?: CircleLineMode | undefined;
-  destinationCollectionName?: CollectionName | undefined;
-  baseName?: string | undefined;
-}
-
-export interface ConstructCirclesLinesFromSurfacesResult {
-  geometryObjects?: CollectionObjectName[] | undefined;
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -622,6 +561,10 @@ export interface DeleteCollectionResult {
 }
 
 export interface DeleteCollectionsByWildcardRequest {
+  /**
+   * Required and not empty (major 3): an omitted, empty or whitespace-only value is
+   * rejected before dispatch.
+   */
   searchString?: string | undefined;
   caseSensitiveSearch?: boolean | undefined;
   allowDeletingAllCollections?: boolean | undefined;
@@ -694,6 +637,10 @@ export interface ConstructFoldersResult {
 }
 
 export interface DeleteFoldersByWildcardRequest {
+  /**
+   * Required and not empty (major 3): an omitted, empty or whitespace-only value is
+   * rejected before dispatch.
+   */
   searchString?: string | undefined;
   caseSensitiveSearch?: boolean | undefined;
   allowDeletingAllFolders?: boolean | undefined;
@@ -1105,17 +1052,6 @@ export interface SetCollectionInstrumentRefListVariableResult {
   execution?: MpExecutionDetails | undefined;
 }
 
-export interface AddCollectionInstrumentsToRefListWildcardSelectionRequest {
-  collectionInstrumentRefList?: CollectionInstrumentId[] | undefined;
-  collectionWildcardCriteria?: string | undefined;
-  instrumentWildcardCriteria?: string | undefined;
-}
-
-export interface AddCollectionInstrumentsToRefListWildcardSelectionResult {
-  collectionInstrumentRefList?: CollectionInstrumentId[] | undefined;
-  execution?: MpExecutionDetails | undefined;
-}
-
 export interface MakeCollectionInstrumentRefListRuntimeSelectRequest {
   userPrompt?: string | undefined;
 }
@@ -1389,7 +1325,13 @@ export interface ConstructPlaneNormalToObjectThroughPointResult {
 
 export interface ConstructPlanesBoundingPointGroupRequest {
   referencePlaneName?: CollectionObjectName | undefined;
-  groupToBound?: CollectionObjectName | undefined;
+  groupToBound?:
+    | CollectionObjectName
+    | undefined;
+  /**
+   * Optional (major 3): when a plane name is absent, SpatialAnalyzer uses its default
+   * name. An empty name is rejected.
+   */
   resultingHighPlaneName?: CollectionObjectName | undefined;
   resultingLowPlaneName?: CollectionObjectName | undefined;
   overrideTargetPointOffsets?: boolean | undefined;
@@ -2147,17 +2089,6 @@ export interface CreateHiddenPointResult {
   execution?: MpExecutionDetails | undefined;
 }
 
-export interface ConstructPolygonizedSurfaceFromPointCloudsRequest {
-  pointCloudList?: CollectionObjectName[] | undefined;
-  meshOrientation?: MeshOrientationType | undefined;
-  gridResolution?: number | undefined;
-  polygonizedSurfaceName?: CollectionObjectName | undefined;
-}
-
-export interface ConstructPolygonizedSurfaceFromPointCloudsResult {
-  execution?: MpExecutionDetails | undefined;
-}
-
 export interface ConstructScaleBarRequest {
   scaleBarName?: CollectionItemName | undefined;
   beginTarget?: PointName | undefined;
@@ -2424,40 +2355,11 @@ export interface MakeVectorNameRefListFromVectorGroupResult {
   execution?: MpExecutionDetails | undefined;
 }
 
-export interface MakeVectorNameRefListRuntimeSelectRequest {
-  userPrompt?: string | undefined;
-}
-
-export interface MakeVectorNameRefListRuntimeSelectResult {
-  resultantVectorNameList?: VectorName[] | undefined;
-  execution?: MpExecutionDetails | undefined;
-}
-
-export interface MakeCollectionVectorGroupNameRefListRuntimeSelectRequest {
-  userPrompt?: string | undefined;
-}
-
-export interface MakeCollectionVectorGroupNameRefListRuntimeSelectResult {
-  resultantCollectionVectorGroupNameReferenceList?: CollectionVectorGroupName[] | undefined;
-  execution?: MpExecutionDetails | undefined;
-}
-
 export interface MakeVectorNamesUniqueInVectorGroupRequest {
   vectorGroupName?: CollectionObjectName | undefined;
 }
 
 export interface MakeVectorNamesUniqueInVectorGroupResult {
-  execution?: MpExecutionDetails | undefined;
-}
-
-export interface MirrorObjectsRequest {
-  objects?: CollectionObjectName[] | undefined;
-  frameName?: CollectionObjectName | undefined;
-  framePlaneToMirrorAround?: MirrorFramePlane | undefined;
-  copy?: boolean | undefined;
-}
-
-export interface MirrorObjectsResult {
   execution?: MpExecutionDetails | undefined;
 }
 
@@ -5026,119 +4928,6 @@ export const SetDefaultCalloutViewPropertiesResult: MessageFns<SetDefaultCallout
   },
 };
 
-function createBaseSetCalloutViewPropertiesRequest(): SetCalloutViewPropertiesRequest {
-  return { calloutViews: [], properties: undefined };
-}
-
-export const SetCalloutViewPropertiesRequest: MessageFns<SetCalloutViewPropertiesRequest> = {
-  encode(message: SetCalloutViewPropertiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.calloutViews !== undefined && message.calloutViews.length !== 0) {
-      for (const v of message.calloutViews) {
-        CollectionItemName.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.properties !== undefined) {
-      CalloutViewProperties.encode(message.properties, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): SetCalloutViewPropertiesRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSetCalloutViewPropertiesRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = CollectionItemName.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.calloutViews!.push(el);
-          }
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.properties = CalloutViewProperties.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<SetCalloutViewPropertiesRequest>): SetCalloutViewPropertiesRequest {
-    return SetCalloutViewPropertiesRequest.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<SetCalloutViewPropertiesRequest>): SetCalloutViewPropertiesRequest {
-    const message = createBaseSetCalloutViewPropertiesRequest();
-    message.calloutViews = object.calloutViews?.map((e) => CollectionItemName.fromPartial(e)) || [];
-    message.properties = (object.properties !== undefined && object.properties !== null)
-      ? CalloutViewProperties.fromPartial(object.properties)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseSetCalloutViewPropertiesResult(): SetCalloutViewPropertiesResult {
-  return { execution: undefined };
-}
-
-export const SetCalloutViewPropertiesResult: MessageFns<SetCalloutViewPropertiesResult> = {
-  encode(message: SetCalloutViewPropertiesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.execution !== undefined) {
-      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): SetCalloutViewPropertiesResult {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSetCalloutViewPropertiesResult();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1000: {
-          if (tag !== 8002) {
-            break;
-          }
-
-          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<SetCalloutViewPropertiesResult>): SetCalloutViewPropertiesResult {
-    return SetCalloutViewPropertiesResult.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<SetCalloutViewPropertiesResult>): SetCalloutViewPropertiesResult {
-    const message = createBaseSetCalloutViewPropertiesResult();
-    message.execution = (object.execution !== undefined && object.execution !== null)
-      ? MpExecutionDetails.fromPartial(object.execution)
-      : undefined;
-    return message;
-  },
-};
-
 function createBaseDeleteCalloutViewRequest(): DeleteCalloutViewRequest {
   return { calloutView: undefined };
 }
@@ -7415,146 +7204,6 @@ export const CalloutViewProperties: MessageFns<CalloutViewProperties> = {
   },
 };
 
-function createBaseMakeCalloutViewRefListWildcardSelectionRequest(): MakeCalloutViewRefListWildcardSelectionRequest {
-  return { collectionWildcardCriteria: undefined, calloutViewWildcardCriteria: undefined };
-}
-
-export const MakeCalloutViewRefListWildcardSelectionRequest: MessageFns<
-  MakeCalloutViewRefListWildcardSelectionRequest
-> = {
-  encode(
-    message: MakeCalloutViewRefListWildcardSelectionRequest,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
-    if (message.collectionWildcardCriteria !== undefined) {
-      writer.uint32(10).string(message.collectionWildcardCriteria);
-    }
-    if (message.calloutViewWildcardCriteria !== undefined) {
-      writer.uint32(18).string(message.calloutViewWildcardCriteria);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): MakeCalloutViewRefListWildcardSelectionRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMakeCalloutViewRefListWildcardSelectionRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.collectionWildcardCriteria = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.calloutViewWildcardCriteria = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<MakeCalloutViewRefListWildcardSelectionRequest>,
-  ): MakeCalloutViewRefListWildcardSelectionRequest {
-    return MakeCalloutViewRefListWildcardSelectionRequest.fromPartial(base ?? {});
-  },
-  fromPartial(
-    object: DeepPartial<MakeCalloutViewRefListWildcardSelectionRequest>,
-  ): MakeCalloutViewRefListWildcardSelectionRequest {
-    const message = createBaseMakeCalloutViewRefListWildcardSelectionRequest();
-    message.collectionWildcardCriteria = object.collectionWildcardCriteria ?? undefined;
-    message.calloutViewWildcardCriteria = object.calloutViewWildcardCriteria ?? undefined;
-    return message;
-  },
-};
-
-function createBaseMakeCalloutViewRefListWildcardSelectionResult(): MakeCalloutViewRefListWildcardSelectionResult {
-  return { calloutViews: [], execution: undefined };
-}
-
-export const MakeCalloutViewRefListWildcardSelectionResult: MessageFns<MakeCalloutViewRefListWildcardSelectionResult> =
-  {
-    encode(
-      message: MakeCalloutViewRefListWildcardSelectionResult,
-      writer: BinaryWriter = new BinaryWriter(),
-    ): BinaryWriter {
-      if (message.calloutViews !== undefined && message.calloutViews.length !== 0) {
-        for (const v of message.calloutViews) {
-          CollectionItemName.encode(v!, writer.uint32(10).fork()).join();
-        }
-      }
-      if (message.execution !== undefined) {
-        MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
-      }
-      return writer;
-    },
-
-    decode(input: BinaryReader | Uint8Array, length?: number): MakeCalloutViewRefListWildcardSelectionResult {
-      const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-      const end = length === undefined ? reader.len : reader.pos + length;
-      const message = createBaseMakeCalloutViewRefListWildcardSelectionResult();
-      while (reader.pos < end) {
-        const tag = reader.uint32();
-        switch (tag >>> 3) {
-          case 1: {
-            if (tag !== 10) {
-              break;
-            }
-
-            const el = CollectionItemName.decode(reader, reader.uint32());
-            if (el !== undefined) {
-              message.calloutViews!.push(el);
-            }
-            continue;
-          }
-          case 1000: {
-            if (tag !== 8002) {
-              break;
-            }
-
-            message.execution = MpExecutionDetails.decode(reader, reader.uint32());
-            continue;
-          }
-        }
-        if ((tag & 7) === 4 || tag === 0) {
-          break;
-        }
-        reader.skip(tag & 7);
-      }
-      return message;
-    },
-
-    create(
-      base?: DeepPartial<MakeCalloutViewRefListWildcardSelectionResult>,
-    ): MakeCalloutViewRefListWildcardSelectionResult {
-      return MakeCalloutViewRefListWildcardSelectionResult.fromPartial(base ?? {});
-    },
-    fromPartial(
-      object: DeepPartial<MakeCalloutViewRefListWildcardSelectionResult>,
-    ): MakeCalloutViewRefListWildcardSelectionResult {
-      const message = createBaseMakeCalloutViewRefListWildcardSelectionResult();
-      message.calloutViews = object.calloutViews?.map((e) => CollectionItemName.fromPartial(e)) || [];
-      message.execution = (object.execution !== undefined && object.execution !== null)
-        ? MpExecutionDetails.fromPartial(object.execution)
-        : undefined;
-      return message;
-    },
-  };
-
 function createBaseConstructCircleRequest(): ConstructCircleRequest {
   return { circleName: undefined, circleCenter: undefined, circleNormal: undefined, circleRadius: undefined };
 }
@@ -7684,218 +7333,6 @@ export const ConstructCircleResult: MessageFns<ConstructCircleResult> = {
   },
   fromPartial(object: DeepPartial<ConstructCircleResult>): ConstructCircleResult {
     const message = createBaseConstructCircleResult();
-    message.execution = (object.execution !== undefined && object.execution !== null)
-      ? MpExecutionDetails.fromPartial(object.execution)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseConstructCirclesLinesFromSurfacesRequest(): ConstructCirclesLinesFromSurfacesRequest {
-  return {
-    surfaces: [],
-    minimumDiameter: undefined,
-    maximumDiameter: undefined,
-    tolerance: undefined,
-    singleSurface: undefined,
-    circleLineMode: undefined,
-    destinationCollectionName: undefined,
-    baseName: undefined,
-  };
-}
-
-export const ConstructCirclesLinesFromSurfacesRequest: MessageFns<ConstructCirclesLinesFromSurfacesRequest> = {
-  encode(message: ConstructCirclesLinesFromSurfacesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.surfaces !== undefined && message.surfaces.length !== 0) {
-      for (const v of message.surfaces) {
-        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.minimumDiameter !== undefined) {
-      writer.uint32(17).double(message.minimumDiameter);
-    }
-    if (message.maximumDiameter !== undefined) {
-      writer.uint32(25).double(message.maximumDiameter);
-    }
-    if (message.tolerance !== undefined) {
-      writer.uint32(33).double(message.tolerance);
-    }
-    if (message.singleSurface !== undefined) {
-      writer.uint32(40).bool(message.singleSurface);
-    }
-    if (message.circleLineMode !== undefined) {
-      writer.uint32(48).int32(message.circleLineMode);
-    }
-    if (message.destinationCollectionName !== undefined) {
-      CollectionName.encode(message.destinationCollectionName, writer.uint32(58).fork()).join();
-    }
-    if (message.baseName !== undefined) {
-      writer.uint32(66).string(message.baseName);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ConstructCirclesLinesFromSurfacesRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseConstructCirclesLinesFromSurfacesRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = CollectionObjectName.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.surfaces!.push(el);
-          }
-          continue;
-        }
-        case 2: {
-          if (tag !== 17) {
-            break;
-          }
-
-          message.minimumDiameter = reader.double();
-          continue;
-        }
-        case 3: {
-          if (tag !== 25) {
-            break;
-          }
-
-          message.maximumDiameter = reader.double();
-          continue;
-        }
-        case 4: {
-          if (tag !== 33) {
-            break;
-          }
-
-          message.tolerance = reader.double();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.singleSurface = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.circleLineMode = reader.int32() as any;
-          continue;
-        }
-        case 7: {
-          if (tag !== 58) {
-            break;
-          }
-
-          message.destinationCollectionName = CollectionName.decode(reader, reader.uint32());
-          continue;
-        }
-        case 8: {
-          if (tag !== 66) {
-            break;
-          }
-
-          message.baseName = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<ConstructCirclesLinesFromSurfacesRequest>): ConstructCirclesLinesFromSurfacesRequest {
-    return ConstructCirclesLinesFromSurfacesRequest.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<ConstructCirclesLinesFromSurfacesRequest>): ConstructCirclesLinesFromSurfacesRequest {
-    const message = createBaseConstructCirclesLinesFromSurfacesRequest();
-    message.surfaces = object.surfaces?.map((e) => CollectionObjectName.fromPartial(e)) || [];
-    message.minimumDiameter = object.minimumDiameter ?? undefined;
-    message.maximumDiameter = object.maximumDiameter ?? undefined;
-    message.tolerance = object.tolerance ?? undefined;
-    message.singleSurface = object.singleSurface ?? undefined;
-    message.circleLineMode = object.circleLineMode ?? undefined;
-    message.destinationCollectionName =
-      (object.destinationCollectionName !== undefined && object.destinationCollectionName !== null)
-        ? CollectionName.fromPartial(object.destinationCollectionName)
-        : undefined;
-    message.baseName = object.baseName ?? undefined;
-    return message;
-  },
-};
-
-function createBaseConstructCirclesLinesFromSurfacesResult(): ConstructCirclesLinesFromSurfacesResult {
-  return { geometryObjects: [], execution: undefined };
-}
-
-export const ConstructCirclesLinesFromSurfacesResult: MessageFns<ConstructCirclesLinesFromSurfacesResult> = {
-  encode(message: ConstructCirclesLinesFromSurfacesResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.geometryObjects !== undefined && message.geometryObjects.length !== 0) {
-      for (const v of message.geometryObjects) {
-        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.execution !== undefined) {
-      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ConstructCirclesLinesFromSurfacesResult {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseConstructCirclesLinesFromSurfacesResult();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = CollectionObjectName.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.geometryObjects!.push(el);
-          }
-          continue;
-        }
-        case 1000: {
-          if (tag !== 8002) {
-            break;
-          }
-
-          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<ConstructCirclesLinesFromSurfacesResult>): ConstructCirclesLinesFromSurfacesResult {
-    return ConstructCirclesLinesFromSurfacesResult.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<ConstructCirclesLinesFromSurfacesResult>): ConstructCirclesLinesFromSurfacesResult {
-    const message = createBaseConstructCirclesLinesFromSurfacesResult();
-    message.geometryObjects = object.geometryObjects?.map((e) => CollectionObjectName.fromPartial(e)) || [];
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -14655,170 +14092,6 @@ export const SetCollectionInstrumentRefListVariableResult: MessageFns<SetCollect
     object: DeepPartial<SetCollectionInstrumentRefListVariableResult>,
   ): SetCollectionInstrumentRefListVariableResult {
     const message = createBaseSetCollectionInstrumentRefListVariableResult();
-    message.execution = (object.execution !== undefined && object.execution !== null)
-      ? MpExecutionDetails.fromPartial(object.execution)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseAddCollectionInstrumentsToRefListWildcardSelectionRequest(): AddCollectionInstrumentsToRefListWildcardSelectionRequest {
-  return {
-    collectionInstrumentRefList: [],
-    collectionWildcardCriteria: undefined,
-    instrumentWildcardCriteria: undefined,
-  };
-}
-
-export const AddCollectionInstrumentsToRefListWildcardSelectionRequest: MessageFns<
-  AddCollectionInstrumentsToRefListWildcardSelectionRequest
-> = {
-  encode(
-    message: AddCollectionInstrumentsToRefListWildcardSelectionRequest,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
-    if (message.collectionInstrumentRefList !== undefined && message.collectionInstrumentRefList.length !== 0) {
-      for (const v of message.collectionInstrumentRefList) {
-        CollectionInstrumentId.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.collectionWildcardCriteria !== undefined) {
-      writer.uint32(18).string(message.collectionWildcardCriteria);
-    }
-    if (message.instrumentWildcardCriteria !== undefined) {
-      writer.uint32(26).string(message.instrumentWildcardCriteria);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): AddCollectionInstrumentsToRefListWildcardSelectionRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAddCollectionInstrumentsToRefListWildcardSelectionRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = CollectionInstrumentId.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.collectionInstrumentRefList!.push(el);
-          }
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.collectionWildcardCriteria = reader.string();
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          message.instrumentWildcardCriteria = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<AddCollectionInstrumentsToRefListWildcardSelectionRequest>,
-  ): AddCollectionInstrumentsToRefListWildcardSelectionRequest {
-    return AddCollectionInstrumentsToRefListWildcardSelectionRequest.fromPartial(base ?? {});
-  },
-  fromPartial(
-    object: DeepPartial<AddCollectionInstrumentsToRefListWildcardSelectionRequest>,
-  ): AddCollectionInstrumentsToRefListWildcardSelectionRequest {
-    const message = createBaseAddCollectionInstrumentsToRefListWildcardSelectionRequest();
-    message.collectionInstrumentRefList =
-      object.collectionInstrumentRefList?.map((e) => CollectionInstrumentId.fromPartial(e)) || [];
-    message.collectionWildcardCriteria = object.collectionWildcardCriteria ?? undefined;
-    message.instrumentWildcardCriteria = object.instrumentWildcardCriteria ?? undefined;
-    return message;
-  },
-};
-
-function createBaseAddCollectionInstrumentsToRefListWildcardSelectionResult(): AddCollectionInstrumentsToRefListWildcardSelectionResult {
-  return { collectionInstrumentRefList: [], execution: undefined };
-}
-
-export const AddCollectionInstrumentsToRefListWildcardSelectionResult: MessageFns<
-  AddCollectionInstrumentsToRefListWildcardSelectionResult
-> = {
-  encode(
-    message: AddCollectionInstrumentsToRefListWildcardSelectionResult,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
-    if (message.collectionInstrumentRefList !== undefined && message.collectionInstrumentRefList.length !== 0) {
-      for (const v of message.collectionInstrumentRefList) {
-        CollectionInstrumentId.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.execution !== undefined) {
-      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): AddCollectionInstrumentsToRefListWildcardSelectionResult {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAddCollectionInstrumentsToRefListWildcardSelectionResult();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = CollectionInstrumentId.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.collectionInstrumentRefList!.push(el);
-          }
-          continue;
-        }
-        case 1000: {
-          if (tag !== 8002) {
-            break;
-          }
-
-          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<AddCollectionInstrumentsToRefListWildcardSelectionResult>,
-  ): AddCollectionInstrumentsToRefListWildcardSelectionResult {
-    return AddCollectionInstrumentsToRefListWildcardSelectionResult.fromPartial(base ?? {});
-  },
-  fromPartial(
-    object: DeepPartial<AddCollectionInstrumentsToRefListWildcardSelectionResult>,
-  ): AddCollectionInstrumentsToRefListWildcardSelectionResult {
-    const message = createBaseAddCollectionInstrumentsToRefListWildcardSelectionResult();
-    message.collectionInstrumentRefList =
-      object.collectionInstrumentRefList?.map((e) => CollectionInstrumentId.fromPartial(e)) || [];
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -28506,167 +27779,6 @@ export const CreateHiddenPointResult: MessageFns<CreateHiddenPointResult> = {
   },
 };
 
-function createBaseConstructPolygonizedSurfaceFromPointCloudsRequest(): ConstructPolygonizedSurfaceFromPointCloudsRequest {
-  return {
-    pointCloudList: [],
-    meshOrientation: undefined,
-    gridResolution: undefined,
-    polygonizedSurfaceName: undefined,
-  };
-}
-
-export const ConstructPolygonizedSurfaceFromPointCloudsRequest: MessageFns<
-  ConstructPolygonizedSurfaceFromPointCloudsRequest
-> = {
-  encode(
-    message: ConstructPolygonizedSurfaceFromPointCloudsRequest,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
-    if (message.pointCloudList !== undefined && message.pointCloudList.length !== 0) {
-      for (const v of message.pointCloudList) {
-        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.meshOrientation !== undefined) {
-      writer.uint32(16).int32(message.meshOrientation);
-    }
-    if (message.gridResolution !== undefined) {
-      writer.uint32(25).double(message.gridResolution);
-    }
-    if (message.polygonizedSurfaceName !== undefined) {
-      CollectionObjectName.encode(message.polygonizedSurfaceName, writer.uint32(34).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ConstructPolygonizedSurfaceFromPointCloudsRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseConstructPolygonizedSurfaceFromPointCloudsRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = CollectionObjectName.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.pointCloudList!.push(el);
-          }
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.meshOrientation = reader.int32() as any;
-          continue;
-        }
-        case 3: {
-          if (tag !== 25) {
-            break;
-          }
-
-          message.gridResolution = reader.double();
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.polygonizedSurfaceName = CollectionObjectName.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<ConstructPolygonizedSurfaceFromPointCloudsRequest>,
-  ): ConstructPolygonizedSurfaceFromPointCloudsRequest {
-    return ConstructPolygonizedSurfaceFromPointCloudsRequest.fromPartial(base ?? {});
-  },
-  fromPartial(
-    object: DeepPartial<ConstructPolygonizedSurfaceFromPointCloudsRequest>,
-  ): ConstructPolygonizedSurfaceFromPointCloudsRequest {
-    const message = createBaseConstructPolygonizedSurfaceFromPointCloudsRequest();
-    message.pointCloudList = object.pointCloudList?.map((e) => CollectionObjectName.fromPartial(e)) || [];
-    message.meshOrientation = object.meshOrientation ?? undefined;
-    message.gridResolution = object.gridResolution ?? undefined;
-    message.polygonizedSurfaceName =
-      (object.polygonizedSurfaceName !== undefined && object.polygonizedSurfaceName !== null)
-        ? CollectionObjectName.fromPartial(object.polygonizedSurfaceName)
-        : undefined;
-    return message;
-  },
-};
-
-function createBaseConstructPolygonizedSurfaceFromPointCloudsResult(): ConstructPolygonizedSurfaceFromPointCloudsResult {
-  return { execution: undefined };
-}
-
-export const ConstructPolygonizedSurfaceFromPointCloudsResult: MessageFns<
-  ConstructPolygonizedSurfaceFromPointCloudsResult
-> = {
-  encode(
-    message: ConstructPolygonizedSurfaceFromPointCloudsResult,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
-    if (message.execution !== undefined) {
-      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ConstructPolygonizedSurfaceFromPointCloudsResult {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseConstructPolygonizedSurfaceFromPointCloudsResult();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1000: {
-          if (tag !== 8002) {
-            break;
-          }
-
-          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<ConstructPolygonizedSurfaceFromPointCloudsResult>,
-  ): ConstructPolygonizedSurfaceFromPointCloudsResult {
-    return ConstructPolygonizedSurfaceFromPointCloudsResult.fromPartial(base ?? {});
-  },
-  fromPartial(
-    object: DeepPartial<ConstructPolygonizedSurfaceFromPointCloudsResult>,
-  ): ConstructPolygonizedSurfaceFromPointCloudsResult {
-    const message = createBaseConstructPolygonizedSurfaceFromPointCloudsResult();
-    message.execution = (object.execution !== undefined && object.execution !== null)
-      ? MpExecutionDetails.fromPartial(object.execution)
-      : undefined;
-    return message;
-  },
-};
-
 function createBaseConstructScaleBarRequest(): ConstructScaleBarRequest {
   return {
     scaleBarName: undefined,
@@ -32193,253 +31305,6 @@ export const MakeVectorNameRefListFromVectorGroupResult: MessageFns<MakeVectorNa
   },
 };
 
-function createBaseMakeVectorNameRefListRuntimeSelectRequest(): MakeVectorNameRefListRuntimeSelectRequest {
-  return { userPrompt: undefined };
-}
-
-export const MakeVectorNameRefListRuntimeSelectRequest: MessageFns<MakeVectorNameRefListRuntimeSelectRequest> = {
-  encode(message: MakeVectorNameRefListRuntimeSelectRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.userPrompt !== undefined) {
-      writer.uint32(10).string(message.userPrompt);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): MakeVectorNameRefListRuntimeSelectRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMakeVectorNameRefListRuntimeSelectRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.userPrompt = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<MakeVectorNameRefListRuntimeSelectRequest>): MakeVectorNameRefListRuntimeSelectRequest {
-    return MakeVectorNameRefListRuntimeSelectRequest.fromPartial(base ?? {});
-  },
-  fromPartial(
-    object: DeepPartial<MakeVectorNameRefListRuntimeSelectRequest>,
-  ): MakeVectorNameRefListRuntimeSelectRequest {
-    const message = createBaseMakeVectorNameRefListRuntimeSelectRequest();
-    message.userPrompt = object.userPrompt ?? undefined;
-    return message;
-  },
-};
-
-function createBaseMakeVectorNameRefListRuntimeSelectResult(): MakeVectorNameRefListRuntimeSelectResult {
-  return { resultantVectorNameList: [], execution: undefined };
-}
-
-export const MakeVectorNameRefListRuntimeSelectResult: MessageFns<MakeVectorNameRefListRuntimeSelectResult> = {
-  encode(message: MakeVectorNameRefListRuntimeSelectResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.resultantVectorNameList !== undefined && message.resultantVectorNameList.length !== 0) {
-      for (const v of message.resultantVectorNameList) {
-        VectorName.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.execution !== undefined) {
-      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): MakeVectorNameRefListRuntimeSelectResult {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMakeVectorNameRefListRuntimeSelectResult();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = VectorName.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.resultantVectorNameList!.push(el);
-          }
-          continue;
-        }
-        case 1000: {
-          if (tag !== 8002) {
-            break;
-          }
-
-          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<MakeVectorNameRefListRuntimeSelectResult>): MakeVectorNameRefListRuntimeSelectResult {
-    return MakeVectorNameRefListRuntimeSelectResult.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<MakeVectorNameRefListRuntimeSelectResult>): MakeVectorNameRefListRuntimeSelectResult {
-    const message = createBaseMakeVectorNameRefListRuntimeSelectResult();
-    message.resultantVectorNameList = object.resultantVectorNameList?.map((e) => VectorName.fromPartial(e)) || [];
-    message.execution = (object.execution !== undefined && object.execution !== null)
-      ? MpExecutionDetails.fromPartial(object.execution)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseMakeCollectionVectorGroupNameRefListRuntimeSelectRequest(): MakeCollectionVectorGroupNameRefListRuntimeSelectRequest {
-  return { userPrompt: undefined };
-}
-
-export const MakeCollectionVectorGroupNameRefListRuntimeSelectRequest: MessageFns<
-  MakeCollectionVectorGroupNameRefListRuntimeSelectRequest
-> = {
-  encode(
-    message: MakeCollectionVectorGroupNameRefListRuntimeSelectRequest,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
-    if (message.userPrompt !== undefined) {
-      writer.uint32(10).string(message.userPrompt);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): MakeCollectionVectorGroupNameRefListRuntimeSelectRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMakeCollectionVectorGroupNameRefListRuntimeSelectRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.userPrompt = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<MakeCollectionVectorGroupNameRefListRuntimeSelectRequest>,
-  ): MakeCollectionVectorGroupNameRefListRuntimeSelectRequest {
-    return MakeCollectionVectorGroupNameRefListRuntimeSelectRequest.fromPartial(base ?? {});
-  },
-  fromPartial(
-    object: DeepPartial<MakeCollectionVectorGroupNameRefListRuntimeSelectRequest>,
-  ): MakeCollectionVectorGroupNameRefListRuntimeSelectRequest {
-    const message = createBaseMakeCollectionVectorGroupNameRefListRuntimeSelectRequest();
-    message.userPrompt = object.userPrompt ?? undefined;
-    return message;
-  },
-};
-
-function createBaseMakeCollectionVectorGroupNameRefListRuntimeSelectResult(): MakeCollectionVectorGroupNameRefListRuntimeSelectResult {
-  return { resultantCollectionVectorGroupNameReferenceList: [], execution: undefined };
-}
-
-export const MakeCollectionVectorGroupNameRefListRuntimeSelectResult: MessageFns<
-  MakeCollectionVectorGroupNameRefListRuntimeSelectResult
-> = {
-  encode(
-    message: MakeCollectionVectorGroupNameRefListRuntimeSelectResult,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
-    if (
-      message.resultantCollectionVectorGroupNameReferenceList !== undefined &&
-      message.resultantCollectionVectorGroupNameReferenceList.length !== 0
-    ) {
-      for (const v of message.resultantCollectionVectorGroupNameReferenceList) {
-        CollectionVectorGroupName.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.execution !== undefined) {
-      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): MakeCollectionVectorGroupNameRefListRuntimeSelectResult {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMakeCollectionVectorGroupNameRefListRuntimeSelectResult();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = CollectionVectorGroupName.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.resultantCollectionVectorGroupNameReferenceList!.push(el);
-          }
-          continue;
-        }
-        case 1000: {
-          if (tag !== 8002) {
-            break;
-          }
-
-          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<MakeCollectionVectorGroupNameRefListRuntimeSelectResult>,
-  ): MakeCollectionVectorGroupNameRefListRuntimeSelectResult {
-    return MakeCollectionVectorGroupNameRefListRuntimeSelectResult.fromPartial(base ?? {});
-  },
-  fromPartial(
-    object: DeepPartial<MakeCollectionVectorGroupNameRefListRuntimeSelectResult>,
-  ): MakeCollectionVectorGroupNameRefListRuntimeSelectResult {
-    const message = createBaseMakeCollectionVectorGroupNameRefListRuntimeSelectResult();
-    message.resultantCollectionVectorGroupNameReferenceList =
-      object.resultantCollectionVectorGroupNameReferenceList?.map((e) => CollectionVectorGroupName.fromPartial(e)) ||
-      [];
-    message.execution = (object.execution !== undefined && object.execution !== null)
-      ? MpExecutionDetails.fromPartial(object.execution)
-      : undefined;
-    return message;
-  },
-};
-
 function createBaseMakeVectorNamesUniqueInVectorGroupRequest(): MakeVectorNamesUniqueInVectorGroupRequest {
   return { vectorGroupName: undefined };
 }
@@ -32531,143 +31396,6 @@ export const MakeVectorNamesUniqueInVectorGroupResult: MessageFns<MakeVectorName
   },
   fromPartial(object: DeepPartial<MakeVectorNamesUniqueInVectorGroupResult>): MakeVectorNamesUniqueInVectorGroupResult {
     const message = createBaseMakeVectorNamesUniqueInVectorGroupResult();
-    message.execution = (object.execution !== undefined && object.execution !== null)
-      ? MpExecutionDetails.fromPartial(object.execution)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseMirrorObjectsRequest(): MirrorObjectsRequest {
-  return { objects: [], frameName: undefined, framePlaneToMirrorAround: undefined, copy: undefined };
-}
-
-export const MirrorObjectsRequest: MessageFns<MirrorObjectsRequest> = {
-  encode(message: MirrorObjectsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.objects !== undefined && message.objects.length !== 0) {
-      for (const v of message.objects) {
-        CollectionObjectName.encode(v!, writer.uint32(10).fork()).join();
-      }
-    }
-    if (message.frameName !== undefined) {
-      CollectionObjectName.encode(message.frameName, writer.uint32(18).fork()).join();
-    }
-    if (message.framePlaneToMirrorAround !== undefined) {
-      writer.uint32(24).int32(message.framePlaneToMirrorAround);
-    }
-    if (message.copy !== undefined) {
-      writer.uint32(32).bool(message.copy);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): MirrorObjectsRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMirrorObjectsRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const el = CollectionObjectName.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.objects!.push(el);
-          }
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.frameName = CollectionObjectName.decode(reader, reader.uint32());
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.framePlaneToMirrorAround = reader.int32() as any;
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.copy = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<MirrorObjectsRequest>): MirrorObjectsRequest {
-    return MirrorObjectsRequest.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<MirrorObjectsRequest>): MirrorObjectsRequest {
-    const message = createBaseMirrorObjectsRequest();
-    message.objects = object.objects?.map((e) => CollectionObjectName.fromPartial(e)) || [];
-    message.frameName = (object.frameName !== undefined && object.frameName !== null)
-      ? CollectionObjectName.fromPartial(object.frameName)
-      : undefined;
-    message.framePlaneToMirrorAround = object.framePlaneToMirrorAround ?? undefined;
-    message.copy = object.copy ?? undefined;
-    return message;
-  },
-};
-
-function createBaseMirrorObjectsResult(): MirrorObjectsResult {
-  return { execution: undefined };
-}
-
-export const MirrorObjectsResult: MessageFns<MirrorObjectsResult> = {
-  encode(message: MirrorObjectsResult, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.execution !== undefined) {
-      MpExecutionDetails.encode(message.execution, writer.uint32(8002).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): MirrorObjectsResult {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMirrorObjectsResult();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1000: {
-          if (tag !== 8002) {
-            break;
-          }
-
-          message.execution = MpExecutionDetails.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<MirrorObjectsResult>): MirrorObjectsResult {
-    return MirrorObjectsResult.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<MirrorObjectsResult>): MirrorObjectsResult {
-    const message = createBaseMirrorObjectsResult();
     message.execution = (object.execution !== undefined && object.execution !== null)
       ? MpExecutionDetails.fromPartial(object.execution)
       : undefined;
@@ -34318,19 +33046,6 @@ export const ConstructionOperationsService = {
       Buffer.from(GetActiveCollectionNameResult.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetActiveCollectionNameResult => GetActiveCollectionNameResult.decode(value),
   },
-  addCollectionInstrumentsToRefListWildcardSelection: {
-    path: "/briosa.ConstructionOperations/AddCollectionInstrumentsToRefListWildcardSelection" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: AddCollectionInstrumentsToRefListWildcardSelectionRequest): Buffer =>
-      Buffer.from(AddCollectionInstrumentsToRefListWildcardSelectionRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): AddCollectionInstrumentsToRefListWildcardSelectionRequest =>
-      AddCollectionInstrumentsToRefListWildcardSelectionRequest.decode(value),
-    responseSerialize: (value: AddCollectionInstrumentsToRefListWildcardSelectionResult): Buffer =>
-      Buffer.from(AddCollectionInstrumentsToRefListWildcardSelectionResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): AddCollectionInstrumentsToRefListWildcardSelectionResult =>
-      AddCollectionInstrumentsToRefListWildcardSelectionResult.decode(value),
-  },
   addSurfaceToMeshOffsetAlongReferenceDirection: {
     path: "/briosa.ConstructionOperations/AddSurfaceToMeshOffsetAlongReferenceDirection" as const,
     requestStream: false as const,
@@ -34519,19 +33234,6 @@ export const ConstructionOperationsService = {
       Buffer.from(ConstructCirclesFromSurfaceFacesRuntimeSelectResult.encode(value).finish()),
     responseDeserialize: (value: Buffer): ConstructCirclesFromSurfaceFacesRuntimeSelectResult =>
       ConstructCirclesFromSurfaceFacesRuntimeSelectResult.decode(value),
-  },
-  constructCirclesLinesFromSurfaces: {
-    path: "/briosa.ConstructionOperations/ConstructCirclesLinesFromSurfaces" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: ConstructCirclesLinesFromSurfacesRequest): Buffer =>
-      Buffer.from(ConstructCirclesLinesFromSurfacesRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): ConstructCirclesLinesFromSurfacesRequest =>
-      ConstructCirclesLinesFromSurfacesRequest.decode(value),
-    responseSerialize: (value: ConstructCirclesLinesFromSurfacesResult): Buffer =>
-      Buffer.from(ConstructCirclesLinesFromSurfacesResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): ConstructCirclesLinesFromSurfacesResult =>
-      ConstructCirclesLinesFromSurfacesResult.decode(value),
   },
   constructCollection: {
     path: "/briosa.ConstructionOperations/ConstructCollection" as const,
@@ -35644,19 +34346,6 @@ export const ConstructionOperationsService = {
     responseDeserialize: (value: Buffer): ConstructPointsWildcardSelectionResult =>
       ConstructPointsWildcardSelectionResult.decode(value),
   },
-  constructPolygonizedSurfaceFromPointClouds: {
-    path: "/briosa.ConstructionOperations/ConstructPolygonizedSurfaceFromPointClouds" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: ConstructPolygonizedSurfaceFromPointCloudsRequest): Buffer =>
-      Buffer.from(ConstructPolygonizedSurfaceFromPointCloudsRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): ConstructPolygonizedSurfaceFromPointCloudsRequest =>
-      ConstructPolygonizedSurfaceFromPointCloudsRequest.decode(value),
-    responseSerialize: (value: ConstructPolygonizedSurfaceFromPointCloudsResult): Buffer =>
-      Buffer.from(ConstructPolygonizedSurfaceFromPointCloudsResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): ConstructPolygonizedSurfaceFromPointCloudsResult =>
-      ConstructPolygonizedSurfaceFromPointCloudsResult.decode(value),
-  },
   constructScaleBar: {
     path: "/briosa.ConstructionOperations/ConstructScaleBar" as const,
     requestStream: false as const,
@@ -36416,19 +35105,6 @@ export const ConstructionOperationsService = {
       Buffer.from(InvertTransformResult.encode(value).finish()),
     responseDeserialize: (value: Buffer): InvertTransformResult => InvertTransformResult.decode(value),
   },
-  makeCalloutViewRefListWildcardSelection: {
-    path: "/briosa.ConstructionOperations/MakeCalloutViewRefListWildcardSelection" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: MakeCalloutViewRefListWildcardSelectionRequest): Buffer =>
-      Buffer.from(MakeCalloutViewRefListWildcardSelectionRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): MakeCalloutViewRefListWildcardSelectionRequest =>
-      MakeCalloutViewRefListWildcardSelectionRequest.decode(value),
-    responseSerialize: (value: MakeCalloutViewRefListWildcardSelectionResult): Buffer =>
-      Buffer.from(MakeCalloutViewRefListWildcardSelectionResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): MakeCalloutViewRefListWildcardSelectionResult =>
-      MakeCalloutViewRefListWildcardSelectionResult.decode(value),
-  },
   makeCollectionInstrumentIdRuntimeSelect: {
     path: "/briosa.ConstructionOperations/MakeCollectionInstrumentIdRuntimeSelect" as const,
     requestStream: false as const,
@@ -36571,19 +35247,6 @@ export const ConstructionOperationsService = {
       Buffer.from(MakeCollectionObjectNameRuntimeSelectResult.encode(value).finish()),
     responseDeserialize: (value: Buffer): MakeCollectionObjectNameRuntimeSelectResult =>
       MakeCollectionObjectNameRuntimeSelectResult.decode(value),
-  },
-  makeCollectionVectorGroupNameRefListRuntimeSelect: {
-    path: "/briosa.ConstructionOperations/MakeCollectionVectorGroupNameRefListRuntimeSelect" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: MakeCollectionVectorGroupNameRefListRuntimeSelectRequest): Buffer =>
-      Buffer.from(MakeCollectionVectorGroupNameRefListRuntimeSelectRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): MakeCollectionVectorGroupNameRefListRuntimeSelectRequest =>
-      MakeCollectionVectorGroupNameRefListRuntimeSelectRequest.decode(value),
-    responseSerialize: (value: MakeCollectionVectorGroupNameRefListRuntimeSelectResult): Buffer =>
-      Buffer.from(MakeCollectionVectorGroupNameRefListRuntimeSelectResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): MakeCollectionVectorGroupNameRefListRuntimeSelectResult =>
-      MakeCollectionVectorGroupNameRefListRuntimeSelectResult.decode(value),
   },
   makeEventRefListWildcardSelection: {
     path: "/briosa.ConstructionOperations/MakeEventRefListWildcardSelection" as const,
@@ -36778,19 +35441,6 @@ export const ConstructionOperationsService = {
     responseDeserialize: (value: Buffer): MakeVectorNameRefListFromVectorGroupResult =>
       MakeVectorNameRefListFromVectorGroupResult.decode(value),
   },
-  makeVectorNameRefListRuntimeSelect: {
-    path: "/briosa.ConstructionOperations/MakeVectorNameRefListRuntimeSelect" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: MakeVectorNameRefListRuntimeSelectRequest): Buffer =>
-      Buffer.from(MakeVectorNameRefListRuntimeSelectRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): MakeVectorNameRefListRuntimeSelectRequest =>
-      MakeVectorNameRefListRuntimeSelectRequest.decode(value),
-    responseSerialize: (value: MakeVectorNameRefListRuntimeSelectResult): Buffer =>
-      Buffer.from(MakeVectorNameRefListRuntimeSelectResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): MakeVectorNameRefListRuntimeSelectResult =>
-      MakeVectorNameRefListRuntimeSelectResult.decode(value),
-  },
   makeVectorNamesUniqueInVectorGroup: {
     path: "/briosa.ConstructionOperations/MakeVectorNamesUniqueInVectorGroup" as const,
     requestStream: false as const,
@@ -36803,15 +35453,6 @@ export const ConstructionOperationsService = {
       Buffer.from(MakeVectorNamesUniqueInVectorGroupResult.encode(value).finish()),
     responseDeserialize: (value: Buffer): MakeVectorNamesUniqueInVectorGroupResult =>
       MakeVectorNamesUniqueInVectorGroupResult.decode(value),
-  },
-  mirrorObjects: {
-    path: "/briosa.ConstructionOperations/MirrorObjects" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: MirrorObjectsRequest): Buffer => Buffer.from(MirrorObjectsRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): MirrorObjectsRequest => MirrorObjectsRequest.decode(value),
-    responseSerialize: (value: MirrorObjectsResult): Buffer => Buffer.from(MirrorObjectsResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): MirrorObjectsResult => MirrorObjectsResult.decode(value),
   },
   moveObjectsPointToPointDelta: {
     path: "/briosa.ConstructionOperations/MoveObjectsPointToPointDelta" as const,
@@ -36900,19 +35541,6 @@ export const ConstructionOperationsService = {
       Buffer.from(RenamePointsWithNamePatternResult.encode(value).finish()),
     responseDeserialize: (value: Buffer): RenamePointsWithNamePatternResult =>
       RenamePointsWithNamePatternResult.decode(value),
-  },
-  setCalloutViewProperties: {
-    path: "/briosa.ConstructionOperations/SetCalloutViewProperties" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: SetCalloutViewPropertiesRequest): Buffer =>
-      Buffer.from(SetCalloutViewPropertiesRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): SetCalloutViewPropertiesRequest =>
-      SetCalloutViewPropertiesRequest.decode(value),
-    responseSerialize: (value: SetCalloutViewPropertiesResult): Buffer =>
-      Buffer.from(SetCalloutViewPropertiesResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer): SetCalloutViewPropertiesResult =>
-      SetCalloutViewPropertiesResult.decode(value),
   },
   setCollectionInstrumentRefListVariable: {
     path: "/briosa.ConstructionOperations/SetCollectionInstrumentRefListVariable" as const,
@@ -37006,10 +35634,6 @@ export const ConstructionOperationsService = {
 export interface ConstructionOperationsServer extends UntypedServiceImplementation {
   /** Executes the "Get Active Collection Name" MP command. */
   getActiveCollectionName: handleUnaryCall<GetActiveCollectionNameRequest, GetActiveCollectionNameResult>;
-  addCollectionInstrumentsToRefListWildcardSelection: handleUnaryCall<
-    AddCollectionInstrumentsToRefListWildcardSelectionRequest,
-    AddCollectionInstrumentsToRefListWildcardSelectionResult
-  >;
   addSurfaceToMeshOffsetAlongReferenceDirection: handleUnaryCall<
     AddSurfaceToMeshOffsetAlongReferenceDirectionRequest,
     AddSurfaceToMeshOffsetAlongReferenceDirectionResult
@@ -37051,10 +35675,6 @@ export interface ConstructionOperationsServer extends UntypedServiceImplementati
   constructCirclesFromSurfaceFacesRuntimeSelect: handleUnaryCall<
     ConstructCirclesFromSurfaceFacesRuntimeSelectRequest,
     ConstructCirclesFromSurfaceFacesRuntimeSelectResult
-  >;
-  constructCirclesLinesFromSurfaces: handleUnaryCall<
-    ConstructCirclesLinesFromSurfacesRequest,
-    ConstructCirclesLinesFromSurfacesResult
   >;
   constructCollection: handleUnaryCall<ConstructCollectionRequest, ConstructCollectionResult>;
   constructCone: handleUnaryCall<ConstructConeRequest, ConstructConeResult>;
@@ -37344,10 +35964,6 @@ export interface ConstructionOperationsServer extends UntypedServiceImplementati
     ConstructPointsWildcardSelectionRequest,
     ConstructPointsWildcardSelectionResult
   >;
-  constructPolygonizedSurfaceFromPointClouds: handleUnaryCall<
-    ConstructPolygonizedSurfaceFromPointCloudsRequest,
-    ConstructPolygonizedSurfaceFromPointCloudsResult
-  >;
   constructScaleBar: handleUnaryCall<ConstructScaleBarRequest, ConstructScaleBarResult>;
   constructSphere: handleUnaryCall<ConstructSphereRequest, ConstructSphereResult>;
   constructSpheresFromSurfaceFacesRuntimeSelect: handleUnaryCall<
@@ -37529,10 +36145,6 @@ export interface ConstructionOperationsServer extends UntypedServiceImplementati
     GetWorkingTransformOfObjectFixedXyzResult
   >;
   invertTransform: handleUnaryCall<InvertTransformRequest, InvertTransformResult>;
-  makeCalloutViewRefListWildcardSelection: handleUnaryCall<
-    MakeCalloutViewRefListWildcardSelectionRequest,
-    MakeCalloutViewRefListWildcardSelectionResult
-  >;
   makeCollectionInstrumentIdRuntimeSelect: handleUnaryCall<
     MakeCollectionInstrumentIdRuntimeSelectRequest,
     MakeCollectionInstrumentIdRuntimeSelectResult
@@ -37576,10 +36188,6 @@ export interface ConstructionOperationsServer extends UntypedServiceImplementati
   makeCollectionObjectNameRuntimeSelect: handleUnaryCall<
     MakeCollectionObjectNameRuntimeSelectRequest,
     MakeCollectionObjectNameRuntimeSelectResult
-  >;
-  makeCollectionVectorGroupNameRefListRuntimeSelect: handleUnaryCall<
-    MakeCollectionVectorGroupNameRefListRuntimeSelectRequest,
-    MakeCollectionVectorGroupNameRefListRuntimeSelectResult
   >;
   makeEventRefListWildcardSelection: handleUnaryCall<
     MakeEventRefListWildcardSelectionRequest,
@@ -37632,15 +36240,10 @@ export interface ConstructionOperationsServer extends UntypedServiceImplementati
     MakeVectorNameRefListFromVectorGroupRequest,
     MakeVectorNameRefListFromVectorGroupResult
   >;
-  makeVectorNameRefListRuntimeSelect: handleUnaryCall<
-    MakeVectorNameRefListRuntimeSelectRequest,
-    MakeVectorNameRefListRuntimeSelectResult
-  >;
   makeVectorNamesUniqueInVectorGroup: handleUnaryCall<
     MakeVectorNamesUniqueInVectorGroupRequest,
     MakeVectorNamesUniqueInVectorGroupResult
   >;
-  mirrorObjects: handleUnaryCall<MirrorObjectsRequest, MirrorObjectsResult>;
   moveObjectsPointToPointDelta: handleUnaryCall<
     MoveObjectsPointToPointDeltaRequest,
     MoveObjectsPointToPointDeltaResult
@@ -37652,7 +36255,6 @@ export interface ConstructionOperationsServer extends UntypedServiceImplementati
   renameObject: handleUnaryCall<RenameObjectRequest, RenameObjectResult>;
   renamePoint: handleUnaryCall<RenamePointRequest, RenamePointResult>;
   renamePointsWithNamePattern: handleUnaryCall<RenamePointsWithNamePatternRequest, RenamePointsWithNamePatternResult>;
-  setCalloutViewProperties: handleUnaryCall<SetCalloutViewPropertiesRequest, SetCalloutViewPropertiesResult>;
   setCollectionInstrumentRefListVariable: handleUnaryCall<
     SetCollectionInstrumentRefListVariableRequest,
     SetCollectionInstrumentRefListVariableResult
@@ -37697,21 +36299,6 @@ export interface ConstructionOperationsClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetActiveCollectionNameResult) => void,
   ): ClientUnaryCall;
-  addCollectionInstrumentsToRefListWildcardSelection(
-    request: AddCollectionInstrumentsToRefListWildcardSelectionRequest,
-    callback: (error: ServiceError | null, response: AddCollectionInstrumentsToRefListWildcardSelectionResult) => void,
-  ): ClientUnaryCall;
-  addCollectionInstrumentsToRefListWildcardSelection(
-    request: AddCollectionInstrumentsToRefListWildcardSelectionRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: AddCollectionInstrumentsToRefListWildcardSelectionResult) => void,
-  ): ClientUnaryCall;
-  addCollectionInstrumentsToRefListWildcardSelection(
-    request: AddCollectionInstrumentsToRefListWildcardSelectionRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: AddCollectionInstrumentsToRefListWildcardSelectionResult) => void,
-  ): ClientUnaryCall;
   addSurfaceToMeshOffsetAlongReferenceDirection(
     request: AddSurfaceToMeshOffsetAlongReferenceDirectionRequest,
     callback: (error: ServiceError | null, response: AddSurfaceToMeshOffsetAlongReferenceDirectionResult) => void,
@@ -37936,21 +36523,6 @@ export interface ConstructionOperationsClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: ConstructCirclesFromSurfaceFacesRuntimeSelectResult) => void,
-  ): ClientUnaryCall;
-  constructCirclesLinesFromSurfaces(
-    request: ConstructCirclesLinesFromSurfacesRequest,
-    callback: (error: ServiceError | null, response: ConstructCirclesLinesFromSurfacesResult) => void,
-  ): ClientUnaryCall;
-  constructCirclesLinesFromSurfaces(
-    request: ConstructCirclesLinesFromSurfacesRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: ConstructCirclesLinesFromSurfacesResult) => void,
-  ): ClientUnaryCall;
-  constructCirclesLinesFromSurfaces(
-    request: ConstructCirclesLinesFromSurfacesRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: ConstructCirclesLinesFromSurfacesResult) => void,
   ): ClientUnaryCall;
   constructCollection(
     request: ConstructCollectionRequest,
@@ -39365,21 +37937,6 @@ export interface ConstructionOperationsClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: ConstructPointsWildcardSelectionResult) => void,
   ): ClientUnaryCall;
-  constructPolygonizedSurfaceFromPointClouds(
-    request: ConstructPolygonizedSurfaceFromPointCloudsRequest,
-    callback: (error: ServiceError | null, response: ConstructPolygonizedSurfaceFromPointCloudsResult) => void,
-  ): ClientUnaryCall;
-  constructPolygonizedSurfaceFromPointClouds(
-    request: ConstructPolygonizedSurfaceFromPointCloudsRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: ConstructPolygonizedSurfaceFromPointCloudsResult) => void,
-  ): ClientUnaryCall;
-  constructPolygonizedSurfaceFromPointClouds(
-    request: ConstructPolygonizedSurfaceFromPointCloudsRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: ConstructPolygonizedSurfaceFromPointCloudsResult) => void,
-  ): ClientUnaryCall;
   constructScaleBar(
     request: ConstructScaleBarRequest,
     callback: (error: ServiceError | null, response: ConstructScaleBarResult) => void,
@@ -40322,21 +38879,6 @@ export interface ConstructionOperationsClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: InvertTransformResult) => void,
   ): ClientUnaryCall;
-  makeCalloutViewRefListWildcardSelection(
-    request: MakeCalloutViewRefListWildcardSelectionRequest,
-    callback: (error: ServiceError | null, response: MakeCalloutViewRefListWildcardSelectionResult) => void,
-  ): ClientUnaryCall;
-  makeCalloutViewRefListWildcardSelection(
-    request: MakeCalloutViewRefListWildcardSelectionRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: MakeCalloutViewRefListWildcardSelectionResult) => void,
-  ): ClientUnaryCall;
-  makeCalloutViewRefListWildcardSelection(
-    request: MakeCalloutViewRefListWildcardSelectionRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: MakeCalloutViewRefListWildcardSelectionResult) => void,
-  ): ClientUnaryCall;
   makeCollectionInstrumentIdRuntimeSelect(
     request: MakeCollectionInstrumentIdRuntimeSelectRequest,
     callback: (error: ServiceError | null, response: MakeCollectionInstrumentIdRuntimeSelectResult) => void,
@@ -40510,21 +39052,6 @@ export interface ConstructionOperationsClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: MakeCollectionObjectNameRuntimeSelectResult) => void,
-  ): ClientUnaryCall;
-  makeCollectionVectorGroupNameRefListRuntimeSelect(
-    request: MakeCollectionVectorGroupNameRefListRuntimeSelectRequest,
-    callback: (error: ServiceError | null, response: MakeCollectionVectorGroupNameRefListRuntimeSelectResult) => void,
-  ): ClientUnaryCall;
-  makeCollectionVectorGroupNameRefListRuntimeSelect(
-    request: MakeCollectionVectorGroupNameRefListRuntimeSelectRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: MakeCollectionVectorGroupNameRefListRuntimeSelectResult) => void,
-  ): ClientUnaryCall;
-  makeCollectionVectorGroupNameRefListRuntimeSelect(
-    request: MakeCollectionVectorGroupNameRefListRuntimeSelectRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: MakeCollectionVectorGroupNameRefListRuntimeSelectResult) => void,
   ): ClientUnaryCall;
   makeEventRefListWildcardSelection(
     request: MakeEventRefListWildcardSelectionRequest,
@@ -40751,21 +39278,6 @@ export interface ConstructionOperationsClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: MakeVectorNameRefListFromVectorGroupResult) => void,
   ): ClientUnaryCall;
-  makeVectorNameRefListRuntimeSelect(
-    request: MakeVectorNameRefListRuntimeSelectRequest,
-    callback: (error: ServiceError | null, response: MakeVectorNameRefListRuntimeSelectResult) => void,
-  ): ClientUnaryCall;
-  makeVectorNameRefListRuntimeSelect(
-    request: MakeVectorNameRefListRuntimeSelectRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: MakeVectorNameRefListRuntimeSelectResult) => void,
-  ): ClientUnaryCall;
-  makeVectorNameRefListRuntimeSelect(
-    request: MakeVectorNameRefListRuntimeSelectRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: MakeVectorNameRefListRuntimeSelectResult) => void,
-  ): ClientUnaryCall;
   makeVectorNamesUniqueInVectorGroup(
     request: MakeVectorNamesUniqueInVectorGroupRequest,
     callback: (error: ServiceError | null, response: MakeVectorNamesUniqueInVectorGroupResult) => void,
@@ -40780,21 +39292,6 @@ export interface ConstructionOperationsClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: MakeVectorNamesUniqueInVectorGroupResult) => void,
-  ): ClientUnaryCall;
-  mirrorObjects(
-    request: MirrorObjectsRequest,
-    callback: (error: ServiceError | null, response: MirrorObjectsResult) => void,
-  ): ClientUnaryCall;
-  mirrorObjects(
-    request: MirrorObjectsRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: MirrorObjectsResult) => void,
-  ): ClientUnaryCall;
-  mirrorObjects(
-    request: MirrorObjectsRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: MirrorObjectsResult) => void,
   ): ClientUnaryCall;
   moveObjectsPointToPointDelta(
     request: MoveObjectsPointToPointDeltaRequest,
@@ -40915,21 +39412,6 @@ export interface ConstructionOperationsClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: RenamePointsWithNamePatternResult) => void,
-  ): ClientUnaryCall;
-  setCalloutViewProperties(
-    request: SetCalloutViewPropertiesRequest,
-    callback: (error: ServiceError | null, response: SetCalloutViewPropertiesResult) => void,
-  ): ClientUnaryCall;
-  setCalloutViewProperties(
-    request: SetCalloutViewPropertiesRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: SetCalloutViewPropertiesResult) => void,
-  ): ClientUnaryCall;
-  setCalloutViewProperties(
-    request: SetCalloutViewPropertiesRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: SetCalloutViewPropertiesResult) => void,
   ): ClientUnaryCall;
   setCollectionInstrumentRefListVariable(
     request: SetCollectionInstrumentRefListVariableRequest,

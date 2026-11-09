@@ -24,8 +24,6 @@ export type BSplinePointSortMode =
   | 'closest_neighbors_from_first_selection'
   | 'closest_neighbors_in_curve_direction';
 
-export type CircleLineMode = 'circle' | 'line';
-
 export type CloudBoxType =
   | 'worldAxisAlignedBox'
   | 'workAxisAlignedBox'
@@ -167,11 +165,6 @@ export type InspectionFilter = 'ALL' | 'CHECKS' | 'DATUMS';
 
 export type InstrumentPositionReportingFrame =
   'Instrument Base' | 'World' | 'Working';
-
-export type MeshOrientationType =
-  'Use Current Point of View' | 'Use Current Working Frame';
-
-export type MirrorFramePlane = 'xy' | 'xz' | 'yz';
 
 export type OffsetDirectionType = 'both' | 'positiveOnly' | 'negativeOnly';
 

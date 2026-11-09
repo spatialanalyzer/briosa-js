@@ -463,7 +463,10 @@ export interface DeleteInstrumentResult {
 }
 
 export interface DeleteMeasurementObservationRequest {
-  pointName?: PointName | undefined;
+  pointName?:
+    | PointName
+    | undefined;
+  /** Required (major 3): an omitted value is rejected before dispatch instead of being sent as 0. */
   observationIndex?: number | undefined;
   deletePointIfNoMeasurementsRemain?: boolean | undefined;
 }
@@ -1077,7 +1080,13 @@ export interface LocateInstrumentRefTieInResult {
 }
 
 export interface LocateInstrumentsUsmnRequest {
-  instruments?: CollectionInstrumentId[] | undefined;
+  instruments?:
+    | CollectionInstrumentId[]
+    | undefined;
+  /**
+   * Optional (major 3): omitted when absent. An empty object name is sent blank,
+   * which SpatialAnalyzer documents as no nominals group.
+   */
   nominalsGroup?: CollectionObjectName | undefined;
   outputGroup?: CollectionObjectName | undefined;
   moveInWorkingFrame?: boolean | undefined;
@@ -1358,7 +1367,10 @@ export interface MeasureExistingSinglePointAndCompareResult {
 export interface MeasureExistingSinglePointManualGuideRequest {
   instrument?: CollectionInstrumentId | undefined;
   existingTargetId?: PointName | undefined;
-  groupNameForNewPoint?: CollectionObjectName | undefined;
+  groupNameForNewPoint?:
+    | CollectionObjectName
+    | undefined;
+  /** Defaults to true (major 3), as for the other measure operations. */
   measureImmediately?: boolean | undefined;
   htmlPromptFile?: FileReference | undefined;
 }
@@ -1420,7 +1432,10 @@ export interface MoveInstrumentToAnotherCollectionResult {
 }
 
 export interface MoveMeasurementObservationRequest {
-  sourcePointName?: PointName | undefined;
+  sourcePointName?:
+    | PointName
+    | undefined;
+  /** Required (major 3): an omitted value is rejected before dispatch instead of being sent as 0. */
   observationIndex?: number | undefined;
   deletePointIfNoMeasurementsRemain?: boolean | undefined;
   destinationPointName?: PointName | undefined;
@@ -1595,7 +1610,10 @@ export interface SendCloudToSaResult {
 }
 
 export interface SetAbsoluteInstrumentScaleFactorRequest {
-  instrument?: CollectionInstrumentId | undefined;
+  instrument?:
+    | CollectionInstrumentId
+    | undefined;
+  /** Required (major 3): an omitted value is rejected before dispatch instead of being sent as 0. */
   scaleFactor?: number | undefined;
 }
 
@@ -1712,7 +1730,12 @@ export interface SetInstrumentWeatherSettingRequest {
   instrument?:
     | CollectionInstrumentId
     | undefined;
-  /** Temperature in degrees Fahrenheit. */
+  /**
+   * Temperature, pressure and relative humidity are required (major 3) when
+   * set_automatically is false. When it is true SpatialAnalyzer ignores them, and an
+   * omitted value is sent as 0.
+   * Temperature in degrees Fahrenheit.
+   */
   temperature?:
     | number
     | undefined;
@@ -1721,7 +1744,10 @@ export interface SetInstrumentWeatherSettingRequest {
     | number
     | undefined;
   /** Relative humidity in percent. */
-  relativeHumidity?: number | undefined;
+  relativeHumidity?:
+    | number
+    | undefined;
+  /** Required (major 3). */
   setAutomatically?: boolean | undefined;
 }
 
@@ -1791,7 +1817,10 @@ export interface SetLadarFeatureMeasSphereResult {
 }
 
 export interface SetMultiplyInstrumentScaleFactorRequest {
-  instrument?: CollectionInstrumentId | undefined;
+  instrument?:
+    | CollectionInstrumentId
+    | undefined;
+  /** Required (major 3): an omitted value is rejected before dispatch instead of being sent as 0. */
   scaleFactor?: number | undefined;
 }
 

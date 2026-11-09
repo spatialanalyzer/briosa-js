@@ -41,10 +41,6 @@ export function registerWaveBOperationValueSchemas(
       'closest_neighbors_in_curve_direction',
     ],
   });
-  register('circleLineMode', {
-    kind: 'enum',
-    values: [null, 'circle', 'line'],
-  });
   register('cloudBoxType', {
     kind: 'enum',
     values: [
@@ -250,14 +246,6 @@ export function registerWaveBOperationValueSchemas(
   register('instrumentPositionReportingFrame', {
     kind: 'enum',
     values: [null, 'Instrument Base', 'World', 'Working'],
-  });
-  register('meshOrientationType', {
-    kind: 'enum',
-    values: [null, 'Use Current Point of View', 'Use Current Working Frame'],
-  });
-  register('mirrorFramePlane', {
-    kind: 'enum',
-    values: [null, 'xy', 'xz', 'yz'],
   });
   register('offsetDirectionType', {
     kind: 'enum',

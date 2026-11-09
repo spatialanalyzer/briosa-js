@@ -24,7 +24,6 @@ import * as RobotOperationsProtocol from './generated/protocol/briosa/robot_oper
 type AxisIdentifier = Values.AxisIdentifier;
 type BSplineFitOptions = Values.BSplineFitOptions;
 type CalloutViewProperties = Values.CalloutViewProperties;
-type CircleLineMode = Values.CircleLineMode;
 type CloudBoxType = Values.CloudBoxType;
 type CloudThinningOptions = Values.CloudThinningOptions;
 type CloudToCadAlignmentResult = Values.CloudToCadAlignmentResult;
@@ -72,8 +71,6 @@ type ItemType = BaseValues.ItemType;
 type LrFlipTestResult = Values.LrFlipTestResult;
 type LrLoSeparationTestResult = Values.LrLoSeparationTestResult;
 type LrSnrInfo = Values.LrSnrInfo;
-type MeshOrientationType = Values.MeshOrientationType;
-type MirrorFramePlane = Values.MirrorFramePlane;
 type ObjectOriginResult = Values.ObjectOriginResult;
 type ObjectType = BaseValues.ObjectType;
 type ObservationInfo = Values.ObservationInfo;
@@ -378,17 +375,6 @@ export interface DeleteCloudPointsByRadialDistanceFromPointsInput {
   readonly deleteInside?: boolean;
 }
 
-export interface DeleteCloudPointsByXYZRangeInput {
-  readonly cloudNames: Iterable<CollectionObjectName>;
-  readonly xMin?: number;
-  readonly xMax?: number;
-  readonly yMin?: number;
-  readonly yMax?: number;
-  readonly zMin?: number;
-  readonly zMax?: number;
-  readonly deleteInside?: boolean;
-}
-
 export interface GenerateGeneralMeshInput {
   readonly outputMeshName: CollectionObjectName;
   readonly cloudsToMesh: Iterable<CollectionObjectName>;
@@ -492,17 +478,6 @@ export interface ConstructCircleInput {
   readonly circleCenter: Vector;
   readonly circleNormal: Vector;
   readonly circleRadius: number;
-}
-
-export interface ConstructCirclesLinesFromSurfacesInput {
-  readonly surfaces: Iterable<CollectionObjectName>;
-  readonly circleLineMode: CircleLineMode;
-  readonly minimumDiameter?: number;
-  readonly maximumDiameter?: number;
-  readonly tolerance?: number;
-  readonly singleSurface?: boolean;
-  readonly destinationCollectionName?: CollectionName;
-  readonly baseName?: string;
 }
 
 export interface ConstructCollectionInput {
@@ -1461,10 +1436,6 @@ export interface MakeCollectionObjectNameRuntimeSelectInput {
   readonly objectType?: ObjectType;
 }
 
-export interface MakeCollectionVectorGroupNameRefListRuntimeSelectInput {
-  readonly userPrompt?: string;
-}
-
 export interface MakeEventRefListWildcardSelectionInput {
   readonly collectionWildcardCriteria?: string;
   readonly eventWildcardCriteria?: string;
@@ -1524,19 +1495,8 @@ export interface MakeVectorNameRefListFromVectorGroupInput {
   readonly vectorGroupName: CollectionObjectName;
 }
 
-export interface MakeVectorNameRefListRuntimeSelectInput {
-  readonly userPrompt?: string;
-}
-
 export interface MakeVectorNamesUniqueInVectorGroupInput {
   readonly vectorGroupName: CollectionObjectName;
-}
-
-export interface MirrorObjectsInput {
-  readonly objects: Iterable<CollectionObjectName>;
-  readonly frameName: CollectionObjectName;
-  readonly framePlaneToMirrorAround: MirrorFramePlane;
-  readonly copy?: boolean;
 }
 
 export interface MoveObjectsPointToPointDeltaInput {
@@ -1617,12 +1577,6 @@ export interface TransformPointsByDeltaAboutWorkingFrameInput {
   readonly deltaInWorkingCoordinates: Vector;
 }
 
-export interface AddCollectionInstrumentsToRefListWildcardSelectionInput {
-  readonly collectionInstrumentRefList: Iterable<CollectionInstrumentId>;
-  readonly collectionWildcardCriteria?: string;
-  readonly instrumentWildcardCriteria?: string;
-}
-
 export interface AverageSetOfGroupsInput {
   readonly groupNames: Iterable<CollectionObjectName>;
   readonly resultingGroupName: CollectionObjectName;
@@ -1666,11 +1620,6 @@ export interface GetGradientAtProjectedPointOnSurfaceEdgeInput {
   readonly generateOutputVectorLines?: boolean;
 }
 
-export interface MakeCalloutViewRefListWildcardSelectionInput {
-  readonly collectionWildcardCriteria?: string;
-  readonly calloutViewWildcardCriteria?: string;
-}
-
 export interface MakeCollectionObjectNameEnsureUniqueInput {
   readonly collectionObjectName: CollectionObjectName;
   readonly useNumberSuffix?: boolean;
@@ -1693,18 +1642,6 @@ export interface MakeRelationshipRefListWildcardSelectionInput {
 export interface SetDefaultCalloutViewPropertiesInput {
   readonly defaultCalloutViewName?: string;
   readonly properties?: CalloutViewProperties;
-}
-
-export interface SetCalloutViewPropertiesInput {
-  readonly calloutViews: Iterable<CollectionItemName>;
-  readonly properties?: CalloutViewProperties;
-}
-
-export interface ConstructPolygonizedSurfaceFromPointCloudsInput {
-  readonly pointCloudList: Iterable<CollectionObjectName>;
-  readonly meshOrientation: MeshOrientationType;
-  readonly polygonizedSurfaceName: CollectionObjectName;
-  readonly gridResolution?: number;
 }
 
 export interface ConstructScaleBarInput {
@@ -4820,66 +4757,6 @@ export async function deleteCloudPointsByRadialDistanceFromPoints(
     [],
   ) as void;
 }
-export async function deleteCloudPointsByXYZRange(
-  briosa: BriosaClient,
-  input: DeleteCloudPointsByXYZRangeInput,
-  options: BriosaCallOptions = {},
-): Promise<void> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    CloudAndMeshOperationsProtocol.DeleteCloudPointsByXYZRangeRequest.fromPartial(
-      {
-        cloudNames: toWireOperationValue(
-          repeatedOperationValue(
-            getOperationValueSchema('collectionObjectName'),
-          ),
-          requireOperationInput(input.cloudNames, 'cloudNames'),
-        ),
-        xMin:
-          input.xMin == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.xMin),
-        xMax:
-          input.xMax == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.xMax),
-        yMin:
-          input.yMin == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.yMin),
-        yMax:
-          input.yMax == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.yMax),
-        zMin:
-          input.zMin == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.zMin),
-        zMax:
-          input.zMax == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.zMax),
-        deleteInside: toWireOperationValue(
-          operationScalarSchemas.boolean,
-          resolveOperationDefault(input.deleteInside, false, 'deleteInside'),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'CloudAndMeshOperations',
-    'DeleteCloudPointsByXYZRange',
-    request,
-    CloudAndMeshOperationsProtocol.DeleteCloudPointsByXYZRangeRequest,
-    CloudAndMeshOperationsProtocol.DeleteCloudPointsByXYZRangeResult,
-    options,
-  );
-  return mapOperationResponse(
-    response as Readonly<Record<string, unknown>>,
-    [],
-  ) as void;
-}
 export async function generateGeneralMesh(
   briosa: BriosaClient,
   input: GenerateGeneralMeshInput,
@@ -5239,49 +5116,6 @@ export async function deletePointsWildcardSelection(
     request,
     ConstructionOperationsProtocol.DeletePointsWildcardSelectionRequest,
     ConstructionOperationsProtocol.DeletePointsWildcardSelectionResult,
-    options,
-  );
-  return mapOperationResponse(
-    response as Readonly<Record<string, unknown>>,
-    [],
-  ) as void;
-}
-export async function mirrorObjects(
-  briosa: BriosaClient,
-  input: MirrorObjectsInput,
-  options: BriosaCallOptions = {},
-): Promise<void> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.MirrorObjectsRequest.fromPartial({
-      objects: toWireOperationValue(
-        repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
-        requireOperationInput(input.objects, 'objects'),
-      ),
-      frameName: toWireOperationValue(
-        getOperationValueSchema('collectionObjectName'),
-        requireOperationInput(input.frameName, 'frameName'),
-      ),
-      framePlaneToMirrorAround: toWireOperationValue(
-        getOperationValueSchema('mirrorFramePlane'),
-        requireOperationInput(
-          input.framePlaneToMirrorAround,
-          'framePlaneToMirrorAround',
-        ),
-      ),
-      copy: toWireOperationValue(
-        operationScalarSchemas.boolean,
-        resolveOperationDefault(input.copy, true, 'copy'),
-      ),
-    } as never);
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'MirrorObjects',
-    request,
-    ConstructionOperationsProtocol.MirrorObjectsRequest,
-    ConstructionOperationsProtocol.MirrorObjectsResult,
     options,
   );
   return mapOperationResponse(
@@ -8520,10 +8354,6 @@ export interface ConstructionOperations {
   constructCirclesFromSurfaceFacesRuntimeSelect(
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
-  constructCirclesLinesFromSurfaces(
-    input: ConstructCirclesLinesFromSurfacesInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly CollectionObjectName[]>;
   constructCollection(
     input: ConstructCollectionInput,
     callOptions?: BriosaCallOptions,
@@ -9110,10 +8940,6 @@ export interface ConstructionOperations {
     input?: MakeCollectionObjectNameRuntimeSelectInput,
     callOptions?: BriosaCallOptions,
   ): Promise<CollectionObjectName>;
-  makeCollectionVectorGroupNameRefListRuntimeSelect(
-    input?: MakeCollectionVectorGroupNameRefListRuntimeSelectInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly CollectionVectorGroupName[]>;
   makeEventRefListWildcardSelection(
     input?: MakeEventRefListWildcardSelectionInput,
     callOptions?: BriosaCallOptions,
@@ -9162,10 +8988,6 @@ export interface ConstructionOperations {
     input: MakeVectorNameRefListFromVectorGroupInput,
     callOptions?: BriosaCallOptions,
   ): Promise<readonly VectorName[]>;
-  makeVectorNameRefListRuntimeSelect(
-    input?: MakeVectorNameRefListRuntimeSelectInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly VectorName[]>;
   makeVectorNamesUniqueInVectorGroup(
     input: MakeVectorNamesUniqueInVectorGroupInput,
     callOptions?: BriosaCallOptions,
@@ -9198,10 +9020,6 @@ export interface ConstructionOperations {
     input: TransformPointsByDeltaAboutWorkingFrameInput,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
-  addCollectionInstrumentsToRefListWildcardSelection(
-    input: AddCollectionInstrumentsToRefListWildcardSelectionInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly CollectionInstrumentId[]>;
   averageSetOfGroups(
     input: AverageSetOfGroupsInput,
     callOptions?: BriosaCallOptions,
@@ -9222,10 +9040,6 @@ export interface ConstructionOperations {
     input: GetGradientAtProjectedPointOnSurfaceEdgeInput,
     callOptions?: BriosaCallOptions,
   ): Promise<ProjectedPointGradient>;
-  makeCalloutViewRefListWildcardSelection(
-    input?: MakeCalloutViewRefListWildcardSelectionInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly CollectionItemName[]>;
   makeCollectionObjectNameEnsureUnique(
     input: MakeCollectionObjectNameEnsureUniqueInput,
     callOptions?: BriosaCallOptions,
@@ -9244,14 +9058,6 @@ export interface ConstructionOperations {
   ): Promise<readonly CollectionItemName[]>;
   setDefaultCalloutViewProperties(
     input?: SetDefaultCalloutViewPropertiesInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<void>;
-  setCalloutViewProperties(
-    input: SetCalloutViewPropertiesInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<void>;
-  constructPolygonizedSurfaceFromPointClouds(
-    input: ConstructPolygonizedSurfaceFromPointCloudsInput,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   constructScaleBar(
@@ -9868,75 +9674,6 @@ async function constructCirclesFromSurfaceFacesRuntimeSelectOperation(
     response as Readonly<Record<string, unknown>>,
     [],
   ) as void;
-}
-async function constructCirclesLinesFromSurfacesOperation(
-  briosa: BriosaClient,
-  input: ConstructCirclesLinesFromSurfacesInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly CollectionObjectName[]> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.ConstructCirclesLinesFromSurfacesRequest.fromPartial(
-      {
-        surfaces: toWireOperationValue(
-          repeatedOperationValue(
-            getOperationValueSchema('collectionObjectName'),
-          ),
-          requireOperationInput(input.surfaces, 'surfaces'),
-        ),
-        minimumDiameter: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.minimumDiameter, 0, 'minimumDiameter'),
-        ),
-        maximumDiameter: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.maximumDiameter, 0, 'maximumDiameter'),
-        ),
-        tolerance: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.tolerance, 0.02, 'tolerance'),
-        ),
-        singleSurface: toWireOperationValue(
-          operationScalarSchemas.boolean,
-          resolveOperationDefault(input.singleSurface, false, 'singleSurface'),
-        ),
-        circleLineMode: toWireOperationValue(
-          getOperationValueSchema('circleLineMode'),
-          requireOperationInput(input.circleLineMode, 'circleLineMode'),
-        ),
-        destinationCollectionName:
-          input.destinationCollectionName == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('collectionName'),
-                input.destinationCollectionName,
-              ),
-        baseName: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input.baseName,
-            'Geometry Object',
-            'baseName',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'ConstructCirclesLinesFromSurfaces',
-    request,
-    ConstructionOperationsProtocol.ConstructCirclesLinesFromSurfacesRequest,
-    ConstructionOperationsProtocol.ConstructCirclesLinesFromSurfacesResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'geometryObjects',
-      repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
-    ],
-  ]) as readonly CollectionObjectName[];
 }
 async function constructCollectionOperation(
   briosa: BriosaClient,
@@ -16699,38 +16436,6 @@ async function makeCollectionObjectNameRuntimeSelectOperation(
     ],
   ]) as CollectionObjectName;
 }
-async function makeCollectionVectorGroupNameRefListRuntimeSelectOperation(
-  briosa: BriosaClient,
-  input?: MakeCollectionVectorGroupNameRefListRuntimeSelectInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly CollectionVectorGroupName[]> {
-  const request =
-    ConstructionOperationsProtocol.MakeCollectionVectorGroupNameRefListRuntimeSelectRequest.fromPartial(
-      {
-        userPrompt: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(input?.userPrompt, '', 'userPrompt'),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'MakeCollectionVectorGroupNameRefListRuntimeSelect',
-    request,
-    ConstructionOperationsProtocol.MakeCollectionVectorGroupNameRefListRuntimeSelectRequest,
-    ConstructionOperationsProtocol.MakeCollectionVectorGroupNameRefListRuntimeSelectResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'resultantCollectionVectorGroupNameReferenceList',
-      repeatedOperationValue(
-        getOperationValueSchema('collectionVectorGroupName'),
-      ),
-    ],
-  ]) as readonly CollectionVectorGroupName[];
-}
 async function makeEventRefListWildcardSelectionOperation(
   briosa: BriosaClient,
   input?: MakeEventRefListWildcardSelectionInput,
@@ -17166,40 +16871,6 @@ async function makeVectorNameRefListFromVectorGroupOperation(
     ],
   ]) as readonly VectorName[];
 }
-async function makeVectorNameRefListRuntimeSelectOperation(
-  briosa: BriosaClient,
-  input?: MakeVectorNameRefListRuntimeSelectInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly VectorName[]> {
-  const request =
-    ConstructionOperationsProtocol.MakeVectorNameRefListRuntimeSelectRequest.fromPartial(
-      {
-        userPrompt: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input?.userPrompt,
-            ' Select Vectors (ENTER when done) ',
-            'userPrompt',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'MakeVectorNameRefListRuntimeSelect',
-    request,
-    ConstructionOperationsProtocol.MakeVectorNameRefListRuntimeSelectRequest,
-    ConstructionOperationsProtocol.MakeVectorNameRefListRuntimeSelectResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'resultantVectorNameList',
-      repeatedOperationValue(getOperationValueSchema('vectorName')),
-    ],
-  ]) as readonly VectorName[];
-}
 async function makeVectorNamesUniqueInVectorGroupOperation(
   briosa: BriosaClient,
   input: MakeVectorNamesUniqueInVectorGroupInput,
@@ -17498,59 +17169,6 @@ async function transformPointsByDeltaAboutWorkingFrameOperation(
     [],
   ) as void;
 }
-async function addCollectionInstrumentsToRefListWildcardSelectionOperation(
-  briosa: BriosaClient,
-  input: AddCollectionInstrumentsToRefListWildcardSelectionInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly CollectionInstrumentId[]> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.AddCollectionInstrumentsToRefListWildcardSelectionRequest.fromPartial(
-      {
-        collectionInstrumentRefList: toWireOperationValue(
-          repeatedOperationValue(
-            getOperationValueSchema('collectionInstrumentId'),
-          ),
-          requireOperationInput(
-            input.collectionInstrumentRefList,
-            'collectionInstrumentRefList',
-          ),
-        ),
-        collectionWildcardCriteria: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input.collectionWildcardCriteria,
-            '*',
-            'collectionWildcardCriteria',
-          ),
-        ),
-        instrumentWildcardCriteria: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input.instrumentWildcardCriteria,
-            '*',
-            'instrumentWildcardCriteria',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'AddCollectionInstrumentsToRefListWildcardSelection',
-    request,
-    ConstructionOperationsProtocol.AddCollectionInstrumentsToRefListWildcardSelectionRequest,
-    ConstructionOperationsProtocol.AddCollectionInstrumentsToRefListWildcardSelectionResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'collectionInstrumentRefList',
-      repeatedOperationValue(getOperationValueSchema('collectionInstrumentId')),
-    ],
-  ]) as readonly CollectionInstrumentId[];
-}
 async function averageSetOfGroupsOperation(
   briosa: BriosaClient,
   input: AverageSetOfGroupsInput,
@@ -17816,48 +17434,6 @@ async function getGradientAtProjectedPointOnSurfaceEdgeOperation(
     ],
   ]) as ProjectedPointGradient;
 }
-async function makeCalloutViewRefListWildcardSelectionOperation(
-  briosa: BriosaClient,
-  input?: MakeCalloutViewRefListWildcardSelectionInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly CollectionItemName[]> {
-  const request =
-    ConstructionOperationsProtocol.MakeCalloutViewRefListWildcardSelectionRequest.fromPartial(
-      {
-        collectionWildcardCriteria: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input?.collectionWildcardCriteria,
-            '*',
-            'collectionWildcardCriteria',
-          ),
-        ),
-        calloutViewWildcardCriteria: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input?.calloutViewWildcardCriteria,
-            '*',
-            'calloutViewWildcardCriteria',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'MakeCalloutViewRefListWildcardSelection',
-    request,
-    ConstructionOperationsProtocol.MakeCalloutViewRefListWildcardSelectionRequest,
-    ConstructionOperationsProtocol.MakeCalloutViewRefListWildcardSelectionResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'calloutViews',
-      repeatedOperationValue(getOperationValueSchema('collectionItemName')),
-    ],
-  ]) as readonly CollectionItemName[];
-}
 async function makeCollectionObjectNameEnsureUniqueOperation(
   briosa: BriosaClient,
   input: MakeCollectionObjectNameEnsureUniqueInput,
@@ -18046,88 +17622,6 @@ async function setDefaultCalloutViewPropertiesOperation(
     [],
   ) as void;
 }
-async function setCalloutViewPropertiesOperation(
-  briosa: BriosaClient,
-  input: SetCalloutViewPropertiesInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<void> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.SetCalloutViewPropertiesRequest.fromPartial({
-      calloutViews: toWireOperationValue(
-        repeatedOperationValue(getOperationValueSchema('collectionItemName')),
-        requireOperationInput(input.calloutViews, 'calloutViews'),
-      ),
-      properties:
-        input.properties == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('calloutViewProperties'),
-              input.properties,
-            ),
-    } as never);
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'SetCalloutViewProperties',
-    request,
-    ConstructionOperationsProtocol.SetCalloutViewPropertiesRequest,
-    ConstructionOperationsProtocol.SetCalloutViewPropertiesResult,
-    callOptions,
-  );
-  return mapOperationResponse(
-    response as Readonly<Record<string, unknown>>,
-    [],
-  ) as void;
-}
-async function constructPolygonizedSurfaceFromPointCloudsOperation(
-  briosa: BriosaClient,
-  input: ConstructPolygonizedSurfaceFromPointCloudsInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<void> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.ConstructPolygonizedSurfaceFromPointCloudsRequest.fromPartial(
-      {
-        pointCloudList: toWireOperationValue(
-          repeatedOperationValue(
-            getOperationValueSchema('collectionObjectName'),
-          ),
-          requireOperationInput(input.pointCloudList, 'pointCloudList'),
-        ),
-        meshOrientation: toWireOperationValue(
-          getOperationValueSchema('meshOrientationType'),
-          requireOperationInput(input.meshOrientation, 'meshOrientation'),
-        ),
-        gridResolution: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.gridResolution, 0, 'gridResolution'),
-        ),
-        polygonizedSurfaceName: toWireOperationValue(
-          getOperationValueSchema('collectionObjectName'),
-          requireOperationInput(
-            input.polygonizedSurfaceName,
-            'polygonizedSurfaceName',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'ConstructPolygonizedSurfaceFromPointClouds',
-    request,
-    ConstructionOperationsProtocol.ConstructPolygonizedSurfaceFromPointCloudsRequest,
-    ConstructionOperationsProtocol.ConstructPolygonizedSurfaceFromPointCloudsResult,
-    callOptions,
-  );
-  return mapOperationResponse(
-    response as Readonly<Record<string, unknown>>,
-    [],
-  ) as void;
-}
 async function constructScaleBarOperation(
   briosa: BriosaClient,
   input: ConstructScaleBarInput,
@@ -18255,8 +17749,6 @@ export function createConstructionOperations(
         briosa,
         callOptions,
       ),
-    constructCirclesLinesFromSurfaces: (input, callOptions) =>
-      constructCirclesLinesFromSurfacesOperation(briosa, input, callOptions),
     constructCollection: (input, callOptions) =>
       constructCollectionOperation(briosa, input, callOptions),
     constructCone: (input, callOptions) =>
@@ -18861,12 +18353,6 @@ export function createConstructionOperations(
         input,
         callOptions,
       ),
-    makeCollectionVectorGroupNameRefListRuntimeSelect: (input, callOptions) =>
-      makeCollectionVectorGroupNameRefListRuntimeSelectOperation(
-        briosa,
-        input,
-        callOptions,
-      ),
     makeEventRefListWildcardSelection: (input, callOptions) =>
       makeEventRefListWildcardSelectionOperation(briosa, input, callOptions),
     makePictureNameRefListRuntimeSelect: (input, callOptions) =>
@@ -18899,8 +18385,6 @@ export function createConstructionOperations(
       makeTransformFromDoublesFixedXyzOperation(briosa, input, callOptions),
     makeVectorNameRefListFromVectorGroup: (input, callOptions) =>
       makeVectorNameRefListFromVectorGroupOperation(briosa, input, callOptions),
-    makeVectorNameRefListRuntimeSelect: (input, callOptions) =>
-      makeVectorNameRefListRuntimeSelectOperation(briosa, input, callOptions),
     makeVectorNamesUniqueInVectorGroup: (input, callOptions) =>
       makeVectorNamesUniqueInVectorGroupOperation(briosa, input, callOptions),
     renameCalloutView: (input, callOptions) =>
@@ -18925,12 +18409,6 @@ export function createConstructionOperations(
         input,
         callOptions,
       ),
-    addCollectionInstrumentsToRefListWildcardSelection: (input, callOptions) =>
-      addCollectionInstrumentsToRefListWildcardSelectionOperation(
-        briosa,
-        input,
-        callOptions,
-      ),
     averageSetOfGroups: (input, callOptions) =>
       averageSetOfGroupsOperation(briosa, input, callOptions),
     constructGeometryFromSurfaces: (input, callOptions) =>
@@ -18941,12 +18419,6 @@ export function createConstructionOperations(
       getGradientAtProjectedPointOnSurfaceOperation(briosa, input, callOptions),
     getGradientAtProjectedPointOnSurfaceEdge: (input, callOptions) =>
       getGradientAtProjectedPointOnSurfaceEdgeOperation(
-        briosa,
-        input,
-        callOptions,
-      ),
-    makeCalloutViewRefListWildcardSelection: (input, callOptions) =>
-      makeCalloutViewRefListWildcardSelectionOperation(
         briosa,
         input,
         callOptions,
@@ -18965,14 +18437,6 @@ export function createConstructionOperations(
       ),
     setDefaultCalloutViewProperties: (input, callOptions) =>
       setDefaultCalloutViewPropertiesOperation(briosa, input, callOptions),
-    setCalloutViewProperties: (input, callOptions) =>
-      setCalloutViewPropertiesOperation(briosa, input, callOptions),
-    constructPolygonizedSurfaceFromPointClouds: (input, callOptions) =>
-      constructPolygonizedSurfaceFromPointCloudsOperation(
-        briosa,
-        input,
-        callOptions,
-      ),
     constructScaleBar: (input, callOptions) =>
       constructScaleBarOperation(briosa, input, callOptions),
   };
@@ -32078,7 +31542,6 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'cloud_and_mesh_operations.get_cloud_rgb_values_near_point',
   'cloud_and_mesh_operations.subdivide_cloud_by_point_spacing',
   'cloud_and_mesh_operations.delete_cloud_points_by_radial_distance_from_points',
-  'cloud_and_mesh_operations.delete_cloud_points_by_xyz_range',
   'cloud_and_mesh_operations.generate_general_mesh',
   'cloud_and_mesh_operations.consolidate_mesh',
   'cloud_and_mesh_operations.mesh_volume',
@@ -32097,7 +31560,6 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'construction_operations.construct_boundary_points_from_cloud',
   'construction_operations.construct_circle',
   'construction_operations.construct_circles_from_surface_faces_runtime_select',
-  'construction_operations.construct_circles_lines_from_surfaces',
   'construction_operations.construct_collection',
   'construction_operations.construct_cone',
   'construction_operations.construct_cones_from_surface_faces_runtime_select',
@@ -32251,7 +31713,6 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'construction_operations.make_collection_object_name_ref_list_runtime_select',
   'construction_operations.make_collection_object_name_ref_list_wildcard_selection',
   'construction_operations.make_collection_object_name_runtime_select',
-  'construction_operations.make_collection_vector_group_name_ref_list_runtime_select',
   'construction_operations.make_event_ref_list_wildcard_selection',
   'construction_operations.make_picture_name_ref_list_runtime_select',
   'construction_operations.make_point_name_ref_list_from_group',
@@ -32264,9 +31725,7 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'construction_operations.make_transform_from_doubles_euler_parameters',
   'construction_operations.make_transform_from_doubles_fixed_xyz',
   'construction_operations.make_vector_name_ref_list_from_vector_group',
-  'construction_operations.make_vector_name_ref_list_runtime_select',
   'construction_operations.make_vector_names_unique_in_vector_group',
-  'construction_operations.mirror_objects',
   'construction_operations.move_objects_point_to_point_delta',
   'construction_operations.move_objects_to_a_collection',
   'construction_operations.rename_callout_view',
@@ -32281,21 +31740,17 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'construction_operations.set_point_position_in_working_coordinates',
   'construction_operations.shift_plane',
   'construction_operations.transform_points_by_delta_about_working_frame',
-  'construction_operations.add_collection_instruments_to_ref_list_wildcard_selection',
   'construction_operations.average_set_of_groups',
   'construction_operations.construct_geometry_from_surfaces',
   'construction_operations.construct_objects_from_surface_faces_runtime_select',
   'construction_operations.construct_point_at_object_origin',
   'construction_operations.get_gradient_at_projected_point_on_surface',
   'construction_operations.get_gradient_at_projected_point_on_surface_edge',
-  'construction_operations.make_callout_view_ref_list_wildcard_selection',
   'construction_operations.make_collection_object_name_ensure_unique',
   'construction_operations.make_point_name_ensure_unique',
   'construction_operations.make_relationship_ref_list_runtime_select',
   'construction_operations.make_relationship_ref_list_wildcard_selection',
   'construction_operations.set_default_callout_view_properties',
-  'construction_operations.set_callout_view_properties',
-  'construction_operations.construct_polygonized_surface_from_point_clouds',
   'construction_operations.construct_scale_bar',
   'gdt_operations.datum_alignment',
   'gdt_operations.delete_feature_checks',

@@ -47,6 +47,10 @@ export interface ClearNamedDoubleListVariableResult {
 }
 
 export interface DeleteVariableRequest {
+  /**
+   * Required and not empty (major 3): an omitted, empty or whitespace-only value is
+   * rejected before dispatch.
+   */
   name?: string | undefined;
 }
 
@@ -55,6 +59,10 @@ export interface DeleteVariableResult {
 }
 
 export interface DeleteVariablesWildcardMatchRequest {
+  /**
+   * Required and not empty (major 3): an omitted, empty or whitespace-only value is
+   * rejected before dispatch.
+   */
   variableWildcardCriteria?: string | undefined;
 }
 
