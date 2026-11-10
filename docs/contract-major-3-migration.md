@@ -340,3 +340,22 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
   reports them as a state conflict and never retries.
 - MP calls made after a manual SDK connection need the server snapshot to report
   readiness too: call `getServerSnapshot()` once the SDK state is ready.
+
+## Call options on every operation
+
+Every operation takes the optional trailing `BriosaCallOptions` argument, so
+each call can be cancelled with its `signal` and observed with `onMpCompletion`.
+Eleven `gdtOperations` methods took none in 0.4.0 and now take it:
+`deleteFeatureChecks`, `makeAnnotationRefListFromCollection`,
+`makeAnnotationRefListWildcardSelection`, `makeDatumRefListFromCollection`,
+`makeFeatureCheckRefListFromCollection`,
+`makeFeatureCheckReferenceListWildcardSelection`, `makeFeatureChecks`,
+`makeGdtDatumAnnotation`, `makeGdtFeatureCheckAnnotation`,
+`makeSurfaceFaceListFromSurface`, and `makeSurfaceFaceListRuntimeSelect`. The
+argument is optional, so existing calls are unchanged:
+
+```ts
+await briosa.gdtOperations.makeFeatureChecks(collection, {
+  signal: AbortSignal.timeout(30_000),
+});
+```
