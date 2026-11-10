@@ -9,7 +9,7 @@ param(
     [string]$PublishedPackageUrl,
     [ValidatePattern('^[0-9a-f]{40}$')][string]$ClientSourceRevision,
     [switch]$ExpectIncompatible,
-    [ValidateRange(1, 1000)][int]$RequiredContractMajor = 2,
+    [ValidateRange(1, 1000)][int]$RequiredContractMajor = 3,
     [string]$FixtureExecutable = 'node'
 )
 Set-StrictMode -Version Latest

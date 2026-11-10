@@ -13,7 +13,7 @@ param(
 
     [switch]$ExpectIncompatible,
 
-    [ValidateRange(1, 1000)][int]$RequiredContractMajor = 2,
+    [ValidateRange(1, 1000)][int]$RequiredContractMajor = 3,
 
     [string]$NodeExecutable = "node"
 )

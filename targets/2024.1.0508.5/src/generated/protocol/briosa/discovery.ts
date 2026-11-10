@@ -87,6 +87,81 @@ export enum ConnectedSpatialAnalyzerVersionState {
   UNRECOGNIZED = -1,
 }
 
+/**
+ * The closed risk vocabulary decided on #242. A profile admits an operation
+ * when it admits every flag on the operation's reviewed row.
+ */
+export enum OperationRiskFlag {
+  OPERATION_RISK_FLAG_UNSPECIFIED = 0,
+  /** OPERATION_RISK_FLAG_FILESYSTEM_METADATA - Reads paths or existence, never file content. */
+  OPERATION_RISK_FLAG_FILESYSTEM_METADATA = 1,
+  /** OPERATION_RISK_FLAG_FILESYSTEM_READ - Reads caller-named file content. */
+  OPERATION_RISK_FLAG_FILESYSTEM_READ = 2,
+  /** OPERATION_RISK_FLAG_FILESYSTEM_WRITE - Creates or overwrites caller-named files. */
+  OPERATION_RISK_FLAG_FILESYSTEM_WRITE = 3,
+  /** OPERATION_RISK_FLAG_FILESYSTEM_DELETE - Deletes files. */
+  OPERATION_RISK_FLAG_FILESYSTEM_DELETE = 4,
+  /** OPERATION_RISK_FLAG_DESTRUCTIVE - Removes SA objects, or discards or replaces unsaved job state. */
+  OPERATION_RISK_FLAG_DESTRUCTIVE = 5,
+  /** OPERATION_RISK_FLAG_CODE_EXECUTION - Runs or stops MP code. */
+  OPERATION_RISK_FLAG_CODE_EXECUTION = 6,
+  /** OPERATION_RISK_FLAG_PHYSICAL_MOTION - Can move hardware such as a tracker head, robot, or projector. */
+  OPERATION_RISK_FLAG_PHYSICAL_MOTION = 7,
+  /** OPERATION_RISK_FLAG_DEVICE_SESSION - Requires or controls a live instrument, robot, or appliance session. */
+  OPERATION_RISK_FLAG_DEVICE_SESSION = 8,
+  /** OPERATION_RISK_FLAG_DEVICE_CONFIG - Changes configuration that a live device session consumes. */
+  OPERATION_RISK_FLAG_DEVICE_CONFIG = 9,
+  /** OPERATION_RISK_FLAG_INTERACTIVE_UI - Blocks on operator input or opens operator UI. */
+  OPERATION_RISK_FLAG_INTERACTIVE_UI = 10,
+  /** OPERATION_RISK_FLAG_EXTERNAL_IO - Talks to systems other than SpatialAnalyzer, such as OPC DA or an appliance IP address. */
+  OPERATION_RISK_FLAG_EXTERNAL_IO = 11,
+  UNRECOGNIZED = -1,
+}
+
+/** The reviewed execution-duration class of an operation. Unspecified means unreviewed. */
+export enum OperationDurationClass {
+  OPERATION_DURATION_CLASS_UNSPECIFIED = 0,
+  /** OPERATION_DURATION_CLASS_QUICK - Completes within the default execution watchdog. */
+  OPERATION_DURATION_CLASS_QUICK = 1,
+  /** OPERATION_DURATION_CLASS_LONG_RUNNING - Device actions, sessions, motion, and heavy document operations. */
+  OPERATION_DURATION_CLASS_LONG_RUNNING = 2,
+  /** OPERATION_DURATION_CLASS_INTERACTIVE - Waits for an unbounded amount of operator time. */
+  OPERATION_DURATION_CLASS_INTERACTIVE = 3,
+  UNRECOGNIZED = -1,
+}
+
+/** The recorded validation gap of an operation. Unspecified means unreviewed. */
+export enum OperationValidationStatus {
+  OPERATION_VALIDATION_STATUS_UNSPECIFIED = 0,
+  /** OPERATION_VALIDATION_STATUS_NO_RECORDED_GAP - No validation gap is recorded. */
+  OPERATION_VALIDATION_STATUS_NO_RECORDED_GAP = 1,
+  /** OPERATION_VALIDATION_STATUS_FIXTURE_PENDING - A licensed fixture is still needed to validate the operation. */
+  OPERATION_VALIDATION_STATUS_FIXTURE_PENDING = 2,
+  /** OPERATION_VALIDATION_STATUS_AT_RISK_UNVALIDATED - At risk: no runtime validation exists for the exact target. */
+  OPERATION_VALIDATION_STATUS_AT_RISK_UNVALIDATED = 3,
+  UNRECOGNIZED = -1,
+}
+
+/** The active policy's static decision for an operation's reviewed row. */
+export enum OperationAdmission {
+  OPERATION_ADMISSION_UNSPECIFIED = 0,
+  OPERATION_ADMISSION_ADMITTED = 1,
+  /**
+   * OPERATION_ADMISSION_DENIED_PROFILE - The profile, widened by flags set to allow, does not admit every risk flag,
+   * or the read-only effect filter excludes the operation.
+   */
+  OPERATION_ADMISSION_DENIED_PROFILE = 2,
+  /** OPERATION_ADMISSION_DENIED_FLAG - A risk flag of the operation is set to deny. */
+  OPERATION_ADMISSION_DENIED_FLAG = 3,
+  /** OPERATION_ADMISSION_DENIED_OVERRIDE - A per-operation override is set to deny. */
+  OPERATION_ADMISSION_DENIED_OVERRIDE = 4,
+  /** OPERATION_ADMISSION_DENIED_EXCLUSIVE - An exclusive workflow, which no setting admits in the current isolation mode. */
+  OPERATION_ADMISSION_DENIED_EXCLUSIVE = 5,
+  /** OPERATION_ADMISSION_DENIED_UNREVIEWED - The operation's classification metadata is not reviewed. */
+  OPERATION_ADMISSION_DENIED_UNREVIEWED = 6,
+  UNRECOGNIZED = -1,
+}
+
 /** Classifies an operation's dependency on SpatialAnalyzer application-global state. */
 export enum OperationExecutionScope {
   OPERATION_EXECUTION_SCOPE_UNSPECIFIED = 0,
@@ -146,12 +221,37 @@ export interface RuntimeIdentityEvidence {
 }
 
 export interface ListCapabilitiesRequest {
+  /**
+   * False, the default, lists only the operations the active policy admits.
+   * True also lists every registered operation the policy denies, each with
+   * its denial reason in OperationCapability.admission.
+   */
+  includeDenied?: boolean | undefined;
 }
 
 export interface ListCapabilitiesResponse {
   spatialAnalyzerTarget?: string | undefined;
-  protocolPackage?: string | undefined;
-  operations?: OperationCapability[] | undefined;
+  protocolPackage?:
+    | string
+    | undefined;
+  /** Ordered by operation_id. */
+  operations?:
+    | OperationCapability[]
+    | undefined;
+  /** The resolved named admission profile: read-only, standard, device, or full. */
+  admissionProfile?:
+    | string
+    | undefined;
+  /**
+   * A value-free "sha256:<hex>" digest over every admission input: the policy
+   * semantics version, the resolved profile and its definition, the isolation
+   * mode, flag settings, per-operation overrides, and for every registered
+   * operation its descriptor metadata (MP step, effect, replay safety, execution
+   * scope, author risk flags), reviewed classification, and request options. It
+   * changes whenever an admission input changes, equal values mean equal static
+   * admission decisions, and it never reveals a configured value.
+   */
+  policyFingerprint?: string | undefined;
 }
 
 export interface OperationCapability {
@@ -161,7 +261,32 @@ export interface OperationCapability {
   fullyQualifiedMethod?: string | undefined;
   effect?: OperationEffect | undefined;
   replaySafety?: ReplaySafety | undefined;
-  executionScope?: OperationExecutionScope | undefined;
+  executionScope?:
+    | OperationExecutionScope
+    | undefined;
+  /**
+   * The reviewed risk flags of the operation's classification row, in the
+   * declaration order of OperationRiskFlag. Empty when no risk applies. A
+   * request option can add interactive_ui at call time; discovery reports the
+   * reviewed row only.
+   */
+  riskFlags?:
+    | OperationRiskFlag[]
+    | undefined;
+  /** The reviewed duration class, which selects the server execution budget. */
+  durationClass?:
+    | OperationDurationClass
+    | undefined;
+  /** The recorded validation gap. It is informational and never affects admission. */
+  validationStatus?:
+    | OperationValidationStatus
+    | undefined;
+  /**
+   * Whether the active policy admits the operation's reviewed row, and if not,
+   * which precedence step denied it. Denied values appear only when the request
+   * set include_denied.
+   */
+  admission?: OperationAdmission | undefined;
 }
 
 function createBaseGetServerInfoRequest(): GetServerInfoRequest {
@@ -519,11 +644,14 @@ export const RuntimeIdentityEvidence: MessageFns<RuntimeIdentityEvidence> = {
 };
 
 function createBaseListCapabilitiesRequest(): ListCapabilitiesRequest {
-  return {};
+  return { includeDenied: false };
 }
 
 export const ListCapabilitiesRequest: MessageFns<ListCapabilitiesRequest> = {
-  encode(_: ListCapabilitiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(message: ListCapabilitiesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.includeDenied !== undefined && message.includeDenied !== false) {
+      writer.uint32(8).bool(message.includeDenied);
+    }
     return writer;
   },
 
@@ -534,6 +662,14 @@ export const ListCapabilitiesRequest: MessageFns<ListCapabilitiesRequest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.includeDenied = reader.bool();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -546,14 +682,21 @@ export const ListCapabilitiesRequest: MessageFns<ListCapabilitiesRequest> = {
   create(base?: DeepPartial<ListCapabilitiesRequest>): ListCapabilitiesRequest {
     return ListCapabilitiesRequest.fromPartial(base ?? {});
   },
-  fromPartial(_: DeepPartial<ListCapabilitiesRequest>): ListCapabilitiesRequest {
+  fromPartial(object: DeepPartial<ListCapabilitiesRequest>): ListCapabilitiesRequest {
     const message = createBaseListCapabilitiesRequest();
+    message.includeDenied = object.includeDenied ?? false;
     return message;
   },
 };
 
 function createBaseListCapabilitiesResponse(): ListCapabilitiesResponse {
-  return { spatialAnalyzerTarget: "", protocolPackage: "", operations: [] };
+  return {
+    spatialAnalyzerTarget: "",
+    protocolPackage: "",
+    operations: [],
+    admissionProfile: "",
+    policyFingerprint: "",
+  };
 }
 
 export const ListCapabilitiesResponse: MessageFns<ListCapabilitiesResponse> = {
@@ -568,6 +711,12 @@ export const ListCapabilitiesResponse: MessageFns<ListCapabilitiesResponse> = {
       for (const v of message.operations) {
         OperationCapability.encode(v!, writer.uint32(42).fork()).join();
       }
+    }
+    if (message.admissionProfile !== undefined && message.admissionProfile !== "") {
+      writer.uint32(50).string(message.admissionProfile);
+    }
+    if (message.policyFingerprint !== undefined && message.policyFingerprint !== "") {
+      writer.uint32(58).string(message.policyFingerprint);
     }
     return writer;
   },
@@ -606,6 +755,22 @@ export const ListCapabilitiesResponse: MessageFns<ListCapabilitiesResponse> = {
           }
           continue;
         }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.admissionProfile = reader.string();
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.policyFingerprint = reader.string();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -623,6 +788,8 @@ export const ListCapabilitiesResponse: MessageFns<ListCapabilitiesResponse> = {
     message.spatialAnalyzerTarget = object.spatialAnalyzerTarget ?? "";
     message.protocolPackage = object.protocolPackage ?? "";
     message.operations = object.operations?.map((e) => OperationCapability.fromPartial(e)) || [];
+    message.admissionProfile = object.admissionProfile ?? "";
+    message.policyFingerprint = object.policyFingerprint ?? "";
     return message;
   },
 };
@@ -636,6 +803,10 @@ function createBaseOperationCapability(): OperationCapability {
     effect: 0,
     replaySafety: 0,
     executionScope: 0,
+    riskFlags: [],
+    durationClass: 0,
+    validationStatus: 0,
+    admission: 0,
   };
 }
 
@@ -661,6 +832,22 @@ export const OperationCapability: MessageFns<OperationCapability> = {
     }
     if (message.executionScope !== undefined && message.executionScope !== 0) {
       writer.uint32(56).int32(message.executionScope);
+    }
+    if (message.riskFlags !== undefined && message.riskFlags.length !== 0) {
+      writer.uint32(66).fork();
+      for (const v of message.riskFlags) {
+        writer.int32(v);
+      }
+      writer.join();
+    }
+    if (message.durationClass !== undefined && message.durationClass !== 0) {
+      writer.uint32(72).int32(message.durationClass);
+    }
+    if (message.validationStatus !== undefined && message.validationStatus !== 0) {
+      writer.uint32(80).int32(message.validationStatus);
+    }
+    if (message.admission !== undefined && message.admission !== 0) {
+      writer.uint32(88).int32(message.admission);
     }
     return writer;
   },
@@ -728,6 +915,48 @@ export const OperationCapability: MessageFns<OperationCapability> = {
           message.executionScope = reader.int32() as any;
           continue;
         }
+        case 8: {
+          if (tag === 64) {
+            message.riskFlags!.push(reader.int32() as any);
+
+            continue;
+          }
+
+          if (tag === 66) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.riskFlags!.push(reader.int32() as any);
+            }
+
+            continue;
+          }
+
+          break;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.durationClass = reader.int32() as any;
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.validationStatus = reader.int32() as any;
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.admission = reader.int32() as any;
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -749,6 +978,10 @@ export const OperationCapability: MessageFns<OperationCapability> = {
     message.effect = object.effect ?? 0;
     message.replaySafety = object.replaySafety ?? 0;
     message.executionScope = object.executionScope ?? 0;
+    message.riskFlags = object.riskFlags?.map((e) => e) || [];
+    message.durationClass = object.durationClass ?? 0;
+    message.validationStatus = object.validationStatus ?? 0;
+    message.admission = object.admission ?? 0;
     return message;
   },
 };
@@ -767,7 +1000,10 @@ export const DiscoveryServiceService = {
       Buffer.from(GetServerInfoResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetServerInfoResponse => GetServerInfoResponse.decode(value),
   },
-  /** Lists only implemented operations enabled by the active runtime policy. */
+  /**
+   * Lists implemented operations enabled by the active runtime policy, with
+   * their reviewed classification. include_denied also lists denied operations.
+   */
   listCapabilities: {
     path: "/briosa.DiscoveryService/ListCapabilities" as const,
     requestStream: false as const,
@@ -784,7 +1020,10 @@ export const DiscoveryServiceService = {
 export interface DiscoveryServiceServer extends UntypedServiceImplementation {
   /** Returns build coordinates and a safe current runtime summary. */
   getServerInfo: handleUnaryCall<GetServerInfoRequest, GetServerInfoResponse>;
-  /** Lists only implemented operations enabled by the active runtime policy. */
+  /**
+   * Lists implemented operations enabled by the active runtime policy, with
+   * their reviewed classification. include_denied also lists denied operations.
+   */
   listCapabilities: handleUnaryCall<ListCapabilitiesRequest, ListCapabilitiesResponse>;
 }
 
@@ -805,7 +1044,10 @@ export interface DiscoveryServiceClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetServerInfoResponse) => void,
   ): ClientUnaryCall;
-  /** Lists only implemented operations enabled by the active runtime policy. */
+  /**
+   * Lists implemented operations enabled by the active runtime policy, with
+   * their reviewed classification. include_denied also lists denied operations.
+   */
   listCapabilities(
     request: ListCapabilitiesRequest,
     callback: (error: ServiceError | null, response: ListCapabilitiesResponse) => void,

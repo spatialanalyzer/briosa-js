@@ -18,6 +18,30 @@ export interface BriosaLifecycleCallOptions {
 
 export interface BriosaCallOptions {
   readonly signal?: AbortSignal;
+  /**
+   * Called once with this call's MP completion when the operation succeeds,
+   * after the client has checked the completion and before it maps the outputs,
+   * so the callback sees the completion even if output mapping then fails. A
+   * partial success (MP code 4) did its work: the call returns its outputs as
+   * usual and reports `partialSuccess` here. The client checks every success,
+   * observed or not (`mp-completion-missing` or `mp-completion-invalid` when the
+   * completion breaks the contract), so a callback never changes how a
+   * completion is judged. An exception thrown by the callback rejects the call,
+   * although the operation completed.
+   */
+  readonly onMpCompletion?: (completion: MpCompletion) => void;
+}
+
+/** How a successful MP command completed. */
+export type MpCompletionState = 'succeeded' | 'partialSuccess';
+
+/**
+ * The MP completion of one successful call, with its MP result code: 2 for
+ * `succeeded`, 4 for `partialSuccess`.
+ */
+export interface MpCompletion {
+  readonly state: MpCompletionState;
+  readonly mpResultCode: number;
 }
 
 export interface SpatialAnalyzerLaunchOptions {
@@ -43,10 +67,9 @@ export interface BriosaStartOptions extends BriosaLifecycleCallOptions {
    * startup, process observation, and round trips. Raise it when the server's
    * lifecycle bounds are raised. Expiry during an in-flight RPC is reported the
    * same way; aborting the caller's `signal` only stops that caller from waiting.
-   * A server that includes spatialanalyzer/briosa#315 finishes an SDK start or
-   * connection it has accepted after the client stops waiting; older servers,
-   * including released 0.9 builds, cancel it, which can leave the SDK stopped or
-   * faulted.
+   * The server finishes an SDK start or connection it has accepted after the
+   * client stops waiting (spatialanalyzer/briosa#315), so refresh the SDK state
+   * before retrying.
    */
   readonly startupTimeoutMs?: number;
 }
@@ -130,7 +153,40 @@ export type OperationFailureKind =
   | 'policyDenied'
   | 'mpResultRetrievalFailure'
   | 'sdkArgumentRejected'
-  | 'overloaded';
+  | 'overloaded'
+  | 'sdkCallFaulted';
+
+/** What the MP command itself did, as the server reports it. */
+export type MpExecutionState =
+  | 'unspecified'
+  | 'succeeded'
+  | 'executeStepRejected'
+  | 'failed'
+  | 'resultUnavailable'
+  | 'argumentRejected'
+  | 'partialSuccess';
+
+/** What happened when the server requested one result-only MP argument. */
+export type OutputRetrievalState =
+  'unspecified' | 'retrieved' | 'notAttempted' | 'failed';
+
+export interface OutputRetrievalDetails {
+  /** The protocol result field name. */
+  readonly fieldName: string;
+  readonly state: OutputRetrievalState;
+  readonly diagnosticCode: string | null;
+}
+
+/**
+ * Value-free MP execution details that accompany a typed MP failure. A
+ * `partialSuccess` state means SpatialAnalyzer returned MP code 4: the command
+ * did its work but not its full intended effect.
+ */
+export interface MpExecutionDetails {
+  readonly state: MpExecutionState;
+  readonly mpResultCode: number | null;
+  readonly outputRetrievals: readonly OutputRetrievalDetails[];
+}
 
 export type RecoveryGuidance =
   | 'unspecified'
@@ -154,7 +210,9 @@ export type SpatialAnalyzerLifecycleFailureKind =
   | 'notOwned'
   | 'sdkNotStopped'
   | 'timeout'
-  | 'internal';
+  | 'internal'
+  | 'callerCancelled'
+  | 'callerDeadlineExceeded';
 
 export type SpatialAnalyzerSdkLifecycleFailureKind =
   | 'unspecified'
@@ -175,7 +233,9 @@ export type SpatialAnalyzerSdkLifecycleFailureKind =
   | 'sdkAlreadyConnected'
   | 'sdkConnectionFailed'
   | 'reconnectNotRequired'
-  | 'sdkRecoveryRequired';
+  | 'sdkRecoveryRequired'
+  | 'callerCancelled'
+  | 'callerDeadlineExceeded';
 
 export type LifecycleRecoveryGuidance =
   | 'unspecified'
@@ -216,11 +276,63 @@ export interface SpatialAnalyzerSdkLifecycleState {
   readonly diagnosticCode: string | null;
 }
 
+/**
+ * A reviewed risk flag of an operation's classification row (#242). `unknown`
+ * is a flag from a later contract revision.
+ */
+export type OperationRiskFlag =
+  | 'unspecified'
+  | 'filesystemMetadata'
+  | 'filesystemRead'
+  | 'filesystemWrite'
+  | 'filesystemDelete'
+  | 'destructive'
+  | 'codeExecution'
+  | 'physicalMotion'
+  | 'deviceSession'
+  | 'deviceConfig'
+  | 'interactiveUi'
+  | 'externalIo'
+  | 'unknown';
+
+/** The reviewed execution-duration class, which selects the server budget. */
+export type OperationDurationClass =
+  'unspecified' | 'quick' | 'longRunning' | 'interactive' | 'unknown';
+
+/** The recorded validation gap. It is informational and never affects admission. */
+export type OperationValidationStatus =
+  | 'unspecified'
+  | 'noRecordedGap'
+  | 'fixturePending'
+  | 'atRiskUnvalidated'
+  | 'unknown';
+
+/** The active policy's static decision for an operation's reviewed row. */
+export type OperationAdmission =
+  | 'unspecified'
+  | 'admitted'
+  | 'deniedProfile'
+  | 'deniedFlag'
+  | 'deniedOverride'
+  | 'deniedExclusive'
+  | 'deniedUnreviewed'
+  | 'unknown';
+
 export interface BriosaOperationCapability {
   readonly operationId: string;
   readonly grpcService: string;
   readonly rpc: string;
   readonly fullyQualifiedMethod: string;
+  /**
+   * The reviewed risk flags as an ordered set, in the server's declaration
+   * order. Empty when no reviewed risk applies. A request option can still
+   * open operator UI or leave work running; the server decides per request.
+   */
+  readonly riskFlags: readonly OperationRiskFlag[];
+  readonly durationClass: OperationDurationClass;
+  readonly validationStatus: OperationValidationStatus;
+  /** The server's admission value, never recomputed by the client. */
+  readonly admission: OperationAdmission;
 }
 
 export interface BriosaServerSnapshot {
@@ -229,8 +341,35 @@ export interface BriosaServerSnapshot {
   readonly protocolPackage: string;
   readonly spatialAnalyzerTarget: string;
   readonly readyForMp: boolean;
+  /** The resolved named admission profile, such as `standard`. */
+  readonly admissionProfile: string;
+  /**
+   * An opaque, value-free digest of every admission input. Compare it only for
+   * equality, for example to tell whether a replacement generation runs under
+   * the same policy.
+   */
+  readonly policyFingerprint: string;
+  /** The operations the active policy admits. */
   readonly operations: readonly BriosaOperationCapability[];
   supports(fullyQualifiedMethod: string): boolean;
+}
+
+export interface BriosaCapabilityListOptions extends BriosaLifecycleCallOptions {
+  /**
+   * Also list every registered operation that the active policy denies, each
+   * with its denial reason in `admission`.
+   */
+  readonly includeDenied?: boolean;
+}
+
+/**
+ * A diagnostic capability listing. Denied entries never become callable and
+ * never change the generation's admitted set.
+ */
+export interface BriosaCapabilityListing {
+  readonly admissionProfile: string;
+  readonly policyFingerprint: string;
+  readonly operations: readonly BriosaOperationCapability[];
 }
 
 export interface NormalizedBriosaStartOptions {
@@ -242,6 +381,15 @@ export interface NormalizedBriosaStartOptions {
   readonly launchOptions: SpatialAnalyzerLaunchOptions;
   readonly startupTimeoutMs: number;
   readonly signal?: AbortSignal;
+}
+
+export function validateCallOptions(options: BriosaCallOptions): void {
+  if (
+    options.onMpCompletion !== undefined &&
+    typeof options.onMpCompletion !== 'function'
+  ) {
+    throw new TypeError('onMpCompletion must be a function.');
+  }
 }
 
 export function validateClientOptions(options: BriosaClientOptions): void {

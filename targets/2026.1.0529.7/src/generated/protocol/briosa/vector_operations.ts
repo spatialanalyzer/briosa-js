@@ -64,7 +64,10 @@ export interface AutoRangeAndSetVectorGroupColorizationSelectedResult {
 }
 
 export interface DeleteIthVectorFromVectorGroupRequest {
-  vectorGroupName?: CollectionObjectName | undefined;
+  vectorGroupName?:
+    | CollectionObjectName
+    | undefined;
+  /** Required (major 3): an omitted value is rejected before dispatch instead of being sent as 0. */
   vectorIndex?: number | undefined;
 }
 
@@ -73,7 +76,13 @@ export interface DeleteIthVectorFromVectorGroupResult {
 }
 
 export interface DeleteVectorByNameRequest {
-  vectorGroupName?: CollectionObjectName | undefined;
+  vectorGroupName?:
+    | CollectionObjectName
+    | undefined;
+  /**
+   * Required and not empty (major 3): an omitted, empty or whitespace-only value is
+   * rejected before dispatch.
+   */
   vectorName?: string | undefined;
 }
 

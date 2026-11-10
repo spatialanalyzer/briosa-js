@@ -44,6 +44,10 @@ export interface CloseAllWatchWindowsResult {
 }
 
 export interface DeleteFolderRequest {
+  /**
+   * Required and not empty (major 3): an omitted, empty or whitespace-only value is
+   * rejected before dispatch.
+   */
   folderPath?: string | undefined;
 }
 
@@ -280,7 +284,10 @@ export interface MoveObjectsDragGraphicallyResult {
 }
 
 export interface ScaleObjectsRequest {
-  objects?: CollectionObjectName[] | undefined;
+  objects?:
+    | CollectionObjectName[]
+    | undefined;
+  /** Required (major 3): an omitted value is rejected before dispatch instead of being sent as 0. */
   scaleFactor?: number | undefined;
 }
 
@@ -465,7 +472,7 @@ export interface SetUserInterfaceProfileRequest {
   profileName?:
     | string
     | undefined;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  /** Optional (major 3): omitted when absent; an empty path is rejected. */
   profileFileName?: FileReference | undefined;
 }
 

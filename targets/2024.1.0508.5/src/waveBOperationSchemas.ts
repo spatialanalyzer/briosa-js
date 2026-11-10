@@ -41,10 +41,6 @@ export function registerWaveBOperationValueSchemas(
       'closest_neighbors_in_curve_direction',
     ],
   });
-  register('circleLineMode', {
-    kind: 'enum',
-    values: [null, 'circle', 'line'],
-  });
   register('cloudBoxType', {
     kind: 'enum',
     values: [
@@ -250,14 +246,6 @@ export function registerWaveBOperationValueSchemas(
   register('instrumentPositionReportingFrame', {
     kind: 'enum',
     values: [null, 'Instrument Base', 'World', 'Working'],
-  });
-  register('meshOrientationType', {
-    kind: 'enum',
-    values: [null, 'Use Current Point of View', 'Use Current Working Frame'],
-  });
-  register('mirrorFramePlane', {
-    kind: 'enum',
-    values: [null, 'xy', 'xz', 'yz'],
   });
   register('offsetDirectionType', {
     kind: 'enum',
@@ -490,16 +478,34 @@ export function registerWaveBOperationValueSchemas(
         optional: false,
       },
       showFeatureSummary: { schema: scalars.boolean, optional: false },
+      showPointDetails: { schema: scalars.boolean, optional: false },
+      showLowerTierTables: { schema: scalars.boolean, optional: false },
+    },
+  });
+  register('filterProximitySettings', {
+    kind: 'message',
+    name: 'FilterProximitySettings',
+    fields: {
+      surfaceInclusionProximity: { schema: scalars.number, optional: false },
+      edgeExclusionProximity: { schema: scalars.number, optional: false },
+      planarInclusionProximity: { schema: scalars.number, optional: false },
+      planarExclusionProximity: { schema: scalars.number, optional: false },
+      radialInclusionProximity: { schema: scalars.number, optional: false },
+      geometryExtractionTolerance: { schema: scalars.number, optional: false },
+      surfaceProximityMode: {
+        schema: get('offsetDirectionType'),
+        optional: false,
+      },
       planarProximityMode: {
         schema: get('offsetDirectionType'),
-        optional: true,
+        optional: false,
       },
       radialProximityMode: {
         schema: get('offsetDirectionType'),
-        optional: true,
+        optional: false,
       },
-      projectToPlane: { schema: scalars.boolean, optional: true },
-      assertPlaneBoundaries: { schema: scalars.boolean, optional: true },
+      projectToPlane: { schema: scalars.boolean, optional: false },
+      assertPlaneBoundaries: { schema: scalars.boolean, optional: false },
     },
   });
   register('fitDofOptions', {

@@ -92,6 +92,17 @@ export enum SpatialAnalyzerLifecycleFailureKind {
   SPATIAL_ANALYZER_LIFECYCLE_FAILURE_KIND_SDK_NOT_STOPPED = 7,
   SPATIAL_ANALYZER_LIFECYCLE_FAILURE_KIND_TIMEOUT = 8,
   SPATIAL_ANALYZER_LIFECYCLE_FAILURE_KIND_INTERNAL = 9,
+  /**
+   * SPATIAL_ANALYZER_LIFECYCLE_FAILURE_KIND_CALLER_CANCELLED - The caller cancelled while it waited (gRPC CANCELLED). The diagnostic code
+   * tells a request withdrawn before acceptance, which changed nothing, from an
+   * accepted one that continues detached; after the latter, refresh state.
+   */
+  SPATIAL_ANALYZER_LIFECYCLE_FAILURE_KIND_CALLER_CANCELLED = 10,
+  /**
+   * SPATIAL_ANALYZER_LIFECYCLE_FAILURE_KIND_CALLER_DEADLINE_EXCEEDED - As CALLER_CANCELLED, but the caller's gRPC deadline ended the wait (gRPC
+   * DEADLINE_EXCEEDED).
+   */
+  SPATIAL_ANALYZER_LIFECYCLE_FAILURE_KIND_CALLER_DEADLINE_EXCEEDED = 11,
   UNRECOGNIZED = -1,
 }
 
@@ -115,6 +126,17 @@ export enum SpatialAnalyzerSdkLifecycleFailureKind {
   SPATIAL_ANALYZER_SDK_LIFECYCLE_FAILURE_KIND_SDK_CONNECTION_FAILED = 16,
   SPATIAL_ANALYZER_SDK_LIFECYCLE_FAILURE_KIND_RECONNECT_NOT_REQUIRED = 17,
   SPATIAL_ANALYZER_SDK_LIFECYCLE_FAILURE_KIND_SDK_RECOVERY_REQUIRED = 18,
+  /**
+   * SPATIAL_ANALYZER_SDK_LIFECYCLE_FAILURE_KIND_CALLER_CANCELLED - The caller cancelled while it waited (gRPC CANCELLED). The diagnostic code
+   * tells a request withdrawn before acceptance, which changed nothing, from an
+   * accepted one that continues detached; after the latter, refresh state.
+   */
+  SPATIAL_ANALYZER_SDK_LIFECYCLE_FAILURE_KIND_CALLER_CANCELLED = 19,
+  /**
+   * SPATIAL_ANALYZER_SDK_LIFECYCLE_FAILURE_KIND_CALLER_DEADLINE_EXCEEDED - As CALLER_CANCELLED, but the caller's gRPC deadline ended the wait (gRPC
+   * DEADLINE_EXCEEDED).
+   */
+  SPATIAL_ANALYZER_SDK_LIFECYCLE_FAILURE_KIND_CALLER_DEADLINE_EXCEEDED = 20,
   UNRECOGNIZED = -1,
 }
 

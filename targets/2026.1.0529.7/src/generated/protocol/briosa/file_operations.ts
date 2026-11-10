@@ -341,7 +341,7 @@ export interface ExportVectorContainerToAsciiFileRequest {
   vectorGroupsToExport?:
     | CollectionVectorGroupName[]
     | undefined;
-  /** False appends to the existing file. */
+  /** False fails if the file already exists; it does not append. */
   overwriteExistingFile?:
     | boolean
     | undefined;

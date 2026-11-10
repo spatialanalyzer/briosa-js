@@ -175,7 +175,10 @@ export interface FitGeometryToPointGroupRequest {
   ignoreOutOfTolerancePoints?:
     | boolean
     | undefined;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  /**
+   * Optional (major 3): omitted when absent, so SpatialAnalyzer fits without a starting
+   * geometry; an empty name is rejected.
+   */
   startingConditionGeometry?: CollectionObjectName | undefined;
 }
 
@@ -197,7 +200,10 @@ export interface FitGeometryToPointGroupProjectedToPlaneRequest {
   ignoreOutOfTolerancePoints?:
     | boolean
     | undefined;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  /**
+   * Optional (major 3): omitted when absent, so SpatialAnalyzer fits without a starting
+   * geometry; an empty name is rejected.
+   */
   startingConditionGeometry?: CollectionObjectName | undefined;
 }
 
@@ -218,7 +224,10 @@ export interface FitGeometryToPointsRequest {
   ignoreOutOfTolerancePoints?:
     | boolean
     | undefined;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  /**
+   * Optional (major 3): omitted when absent, so SpatialAnalyzer fits without a starting
+   * geometry; an empty name is rejected.
+   */
   startingConditionGeometry?: CollectionObjectName | undefined;
 }
 

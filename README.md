@@ -6,14 +6,15 @@ Independent exact-target clients for the [Briosa SpatialAnalyzer bridge](https:/
 
 | SpatialAnalyzer target | Product and development guide | Client version |
 | --- | --- | --- |
-| 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.3.0 |
-| 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.3.0 |
+| 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.5.0 |
+| 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.5.0 |
 
 Choose the package for your exact SA installation. Each product pins its own
-generation artifact and retains Server 0.6.1 as a tested conformance baseline.
-The 0.3 client line selects side-by-side servers using behavioral contract 1.0. Client package versions
-are independent of the Briosa server version. See [Releasing](RELEASING.md) for
-registry publishing and validation.
+generation artifact and retains Server 0.9.2 as a conformance baseline that it
+must reject. The 0.5 client line selects side-by-side servers using behavioral
+contract 3.0 (Server 0.10.0); the 0.4 line selects contract 2.0 servers. Client
+package versions are independent of the Briosa server version. See
+[Releasing](RELEASING.md) for registry publishing and validation.
 
 Package names include the SA target; application namespaces/imports remain stable.
 See each product guide for installation and examples. Run development commands
@@ -29,7 +30,7 @@ promotion.
 Select one target through an npm alias:
 
 ```sh
-npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.1.1
+npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.0
 ```
 
 ```ts
@@ -39,8 +40,13 @@ import { createBriosaClient, getWorkingDirectory } from 'briosa';
 For SA 2026, replace only the target in the installation command with
 `2026.1.0529.7`. The published distribution keeps its target-qualified name.
 
-The 0.3.0 API naming changes are described in the [MP argument migration guide](docs/mp-argument-name-migration.md).
+Client 0.5.0 adopts behavioral contract major 3. Its breaking changes, including
+the request defaults and argument rules that changed, the removed operations,
+partial success, and the new discovery fields, are described in the
+[contract major 3 migration guide](docs/contract-major-3-migration.md). The
+0.3.0 API naming changes are described in the
+[MP argument migration guide](docs/mp-argument-name-migration.md).
 
-Unreleased: the default `startupTimeoutMs` is 120000 (two minutes) instead of
-30000 in both products. It is sized from the server's default lifecycle bounds;
-see [startup and lifecycle time budgets](docs/design/v1-public-api-contract.md#startup-and-lifecycle-time-budgets).
+The default `startupTimeoutMs` is 120000 (two minutes) instead of 30000 in both
+products. It is sized from the server's default lifecycle bounds; see
+[startup and lifecycle time budgets](docs/design/v1-public-api-contract.md#startup-and-lifecycle-time-budgets).

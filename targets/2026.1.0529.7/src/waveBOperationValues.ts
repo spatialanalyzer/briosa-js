@@ -24,8 +24,6 @@ export type BSplinePointSortMode =
   | 'closest_neighbors_from_first_selection'
   | 'closest_neighbors_in_curve_direction';
 
-export type CircleLineMode = 'circle' | 'line';
-
 export type CloudBoxType =
   | 'worldAxisAlignedBox'
   | 'workAxisAlignedBox'
@@ -168,11 +166,6 @@ export type InspectionFilter = 'ALL' | 'CHECKS' | 'DATUMS';
 export type InstrumentPositionReportingFrame =
   'Instrument Base' | 'World' | 'Working';
 
-export type MeshOrientationType =
-  'Use Current Point of View' | 'Use Current Working Frame';
-
-export type MirrorFramePlane = 'xy' | 'xz' | 'yz';
-
 export type OffsetDirectionType = 'both' | 'positiveOnly' | 'negativeOnly';
 
 export type PointOutputType = 'points' | 'cloudPoints';
@@ -314,18 +307,24 @@ export interface FeatureCheckReportingOptions {
   readonly showLowerTierTables: boolean;
 }
 
+/**
+ * The Auto Filter proximity settings. Every member is required, with no
+ * default: the server rejects an unspecified proximity mode and sends every
+ * distance and Boolean to SpatialAnalyzer as given. The distances are in the
+ * SA job's length units.
+ */
 export interface FilterProximitySettings {
-  readonly surfaceInclusionProximity?: number;
-  readonly edgeExclusionProximity?: number;
-  readonly planarInclusionProximity?: number;
-  readonly planarExclusionProximity?: number;
-  readonly radialInclusionProximity?: number;
-  readonly geometryExtractionTolerance?: number;
-  readonly surfaceProximityMode?: OffsetDirectionType;
-  readonly planarProximityMode?: OffsetDirectionType;
-  readonly radialProximityMode?: OffsetDirectionType;
-  readonly projectToPlane?: boolean;
-  readonly assertPlaneBoundaries?: boolean;
+  readonly surfaceInclusionProximity: number;
+  readonly edgeExclusionProximity: number;
+  readonly planarInclusionProximity: number;
+  readonly planarExclusionProximity: number;
+  readonly radialInclusionProximity: number;
+  readonly geometryExtractionTolerance: number;
+  readonly surfaceProximityMode: OffsetDirectionType;
+  readonly planarProximityMode: OffsetDirectionType;
+  readonly radialProximityMode: OffsetDirectionType;
+  readonly projectToPlane: boolean;
+  readonly assertPlaneBoundaries: boolean;
 }
 
 export interface FitDofOptions {
@@ -703,11 +702,11 @@ export interface LrInstrumentInput {
 
 export interface MakeGdtDatumAnnotationOptions {
   datumName: string;
-  objects?: readonly CollectionObjectName[];
-  geometryRelationships?: readonly CollectionItemName[];
+  objects: readonly CollectionObjectName[];
+  geometryRelationships: readonly CollectionItemName[];
   surfaceFaces?: SurfaceFaceList;
-  auxiliaryObject?: CollectionObjectName;
-  auxiliaryGeometryRelationship?: CollectionItemName;
+  auxiliaryObject: CollectionObjectName;
+  auxiliaryGeometryRelationship: CollectionItemName;
   isSlot?: boolean;
   forceSurfaceFeature?: boolean;
 }
@@ -715,8 +714,8 @@ export interface MakeGdtDatumAnnotationOptions {
 export interface MakeGdtFeatureCheckAnnotationOptions {
   featureAnnotationName: string;
   featureType?: GdtFeatureType;
-  objects?: readonly CollectionObjectName[];
-  geometryRelationships?: readonly CollectionItemName[];
+  objects: readonly CollectionObjectName[];
+  geometryRelationships: readonly CollectionItemName[];
   surfaceFaces?: SurfaceFaceList;
   decomposeMultipleFeatures?: boolean;
   autoCreateDiameterChecks?: boolean;
@@ -733,8 +732,8 @@ export interface MakeGdtFeatureCheckAnnotationOptions {
   perUnitAreaWidthStepOverPercent?: number;
   perUnitAreaCircleDiameter?: number;
   perUnitAreaDiameterStepOver?: number;
-  auxiliaryObject?: CollectionObjectName;
-  auxiliaryGeometryRelationship?: CollectionItemName;
+  auxiliaryObject: CollectionObjectName;
+  auxiliaryGeometryRelationship: CollectionItemName;
   useNominalForDimensionTolerance?: boolean;
   useReferenceObjectForNominal?: boolean;
   nominalDimensionTolerance?: number;
@@ -793,41 +792,41 @@ export interface RelationshipWatchWindowTemplateOptions {
   readonly showDeviationY?: boolean;
   readonly showDeviationZ?: boolean;
   readonly showDeviationMagnitude?: boolean;
-  readonly udpNetworkTransmitSettings?: RelationshipWatchWindowUdpSettings;
+  readonly udpNetworkTransmitSettings: RelationshipWatchWindowUdpSettings;
   readonly transparentBackground?: boolean;
   readonly hideUnits?: boolean;
 }
 
 export interface RobotModelLinkConfiguration {
-  readonly linkType?: RobotModelLinkType;
-  readonly dhAlphaComponent?: number;
-  readonly dhAComponent?: number;
-  readonly dhDComponent?: number;
-  readonly dhThetaComponent?: number;
-  readonly dhXAxisDeflectionFactor?: number;
-  readonly dhYAxisDeflectionFactor?: number;
-  readonly dhZAxisDeflectionFactor?: number;
-  readonly sixDofXComponent?: number;
-  readonly sixDofYComponent?: number;
-  readonly sixDofZComponent?: number;
-  readonly sixDofRxComponent?: number;
-  readonly sixDofRyComponent?: number;
-  readonly sixDofRzComponent?: number;
-  readonly activeJointComponent?: RobotActiveJointComponent;
-  readonly encoderOffsetValue?: number;
-  readonly minimumEncoderLimit?: number;
-  readonly maximumEncoderLimit?: number;
-  readonly encoderSenseNegative?: boolean;
-  readonly includeAdditionalEncoder?: boolean;
-  readonly additionalEncoderIndexOffset?: number;
-  readonly additionalEncoderSenseNegative?: boolean;
-  readonly segmentOriginMassKg?: number;
-  readonly segmentCgMassKg?: number;
-  readonly segmentCgInSegment?: Vector;
+  readonly linkType: RobotModelLinkType;
+  readonly dhAlphaComponent: number;
+  readonly dhAComponent: number;
+  readonly dhDComponent: number;
+  readonly dhThetaComponent: number;
+  readonly dhXAxisDeflectionFactor: number;
+  readonly dhYAxisDeflectionFactor: number;
+  readonly dhZAxisDeflectionFactor: number;
+  readonly sixDofXComponent: number;
+  readonly sixDofYComponent: number;
+  readonly sixDofZComponent: number;
+  readonly sixDofRxComponent: number;
+  readonly sixDofRyComponent: number;
+  readonly sixDofRzComponent: number;
+  readonly activeJointComponent: RobotActiveJointComponent;
+  readonly encoderOffsetValue: number;
+  readonly minimumEncoderLimit: number;
+  readonly maximumEncoderLimit: number;
+  readonly encoderSenseNegative: boolean;
+  readonly includeAdditionalEncoder: boolean;
+  readonly additionalEncoderIndexOffset: number;
+  readonly additionalEncoderSenseNegative: boolean;
+  readonly segmentOriginMassKg: number;
+  readonly segmentCgMassKg: number;
+  readonly segmentCgInSegment: Vector;
 }
 
 export interface RobotModelLinkParameters {
-  readonly configuration: Required<RobotModelLinkConfiguration>;
+  readonly configuration: RobotModelLinkConfiguration;
   readonly encoderValue: number;
 }
 

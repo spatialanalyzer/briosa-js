@@ -24,7 +24,6 @@ import * as RobotOperationsProtocol from './generated/protocol/briosa/robot_oper
 type AxisIdentifier = Values.AxisIdentifier;
 type BSplineFitOptions = Values.BSplineFitOptions;
 type CalloutViewProperties = Values.CalloutViewProperties;
-type CircleLineMode = Values.CircleLineMode;
 type CloudBoxType = Values.CloudBoxType;
 type CloudThinningOptions = Values.CloudThinningOptions;
 type CloudToCadAlignmentResult = Values.CloudToCadAlignmentResult;
@@ -72,8 +71,6 @@ type ItemType = BaseValues.ItemType;
 type LrFlipTestResult = Values.LrFlipTestResult;
 type LrLoSeparationTestResult = Values.LrLoSeparationTestResult;
 type LrSnrInfo = Values.LrSnrInfo;
-type MeshOrientationType = Values.MeshOrientationType;
-type MirrorFramePlane = Values.MirrorFramePlane;
 type ObjectOriginResult = Values.ObjectOriginResult;
 type ObjectType = BaseValues.ObjectType;
 type ObservationInfo = Values.ObservationInfo;
@@ -378,17 +375,6 @@ export interface DeleteCloudPointsByRadialDistanceFromPointsInput {
   readonly deleteInside?: boolean;
 }
 
-export interface DeleteCloudPointsByXYZRangeInput {
-  readonly cloudNames: Iterable<CollectionObjectName>;
-  readonly xMin?: number;
-  readonly xMax?: number;
-  readonly yMin?: number;
-  readonly yMax?: number;
-  readonly zMin?: number;
-  readonly zMax?: number;
-  readonly deleteInside?: boolean;
-}
-
 export interface GenerateGeneralMeshInput {
   readonly outputMeshName: CollectionObjectName;
   readonly cloudsToMesh: Iterable<CollectionObjectName>;
@@ -494,17 +480,6 @@ export interface ConstructCircleInput {
   readonly circleRadius: number;
 }
 
-export interface ConstructCirclesLinesFromSurfacesInput {
-  readonly surfaces: Iterable<CollectionObjectName>;
-  readonly circleLineMode: CircleLineMode;
-  readonly minimumDiameter?: number;
-  readonly maximumDiameter?: number;
-  readonly tolerance?: number;
-  readonly singleSurface?: boolean;
-  readonly destinationCollectionName?: CollectionName;
-  readonly baseName?: string;
-}
-
 export interface ConstructCollectionInput {
   readonly collectionName: CollectionName;
   readonly folderPath?: string;
@@ -532,7 +507,7 @@ export interface ConstructCrossSectionCloudInput {
   readonly limitCrossSectionExtent?: boolean;
   readonly radiusLimit?: number;
   readonly projectToReferenceSurface?: boolean;
-  readonly referenceObject?: CollectionObjectName;
+  readonly referenceObject: CollectionObjectName;
   readonly cloudThinningSettings?: CloudThinningOptions;
   readonly updateExistingCloud?: boolean;
 }
@@ -579,7 +554,7 @@ export interface ConstructEllipsoidInput {
   readonly zAxisRadius?: number;
   readonly magnification?: number;
   readonly uncertaintyEllipsoid?: boolean;
-  readonly transformInWorkingCoordinates?: Transform;
+  readonly transformInWorkingCoordinates: Transform;
   readonly ellipseColor?: Color;
 }
 
@@ -589,7 +564,7 @@ export interface ConstructFoldersInput {
 
 export interface ConstructFrameInput {
   readonly newFrameName: CollectionObjectName;
-  readonly transformInWorkingCoordinates?: Transform;
+  readonly transformInWorkingCoordinates: Transform;
 }
 
 export interface ConstructFrameAtPointWithWorkingZAndClockedAxisInput {
@@ -623,7 +598,7 @@ export interface ConstructFrameFromPointMeasurementProbingFramesInput {
 
 export interface ConstructFrameFromTransformInWorldInput {
   readonly newFrameName: CollectionObjectName;
-  readonly transformInWorldCoordinates?: Transform;
+  readonly transformInWorldCoordinates: Transform;
 }
 
 export interface ConstructFrameKnownOriginObjectDirectionObjectDirectionInput {
@@ -873,7 +848,7 @@ export interface ConstructPointFitToPointsInput {
 export interface ConstructPointFromCloudPointRuntimeSelectInput {
   readonly selectionPrompt?: string;
   readonly constructPoint?: boolean;
-  readonly constructedPointName?: PointName;
+  readonly constructedPointName: PointName;
 }
 
 export interface ConstructPointFromSurveyTargetCenterInput {
@@ -994,7 +969,7 @@ export interface ConstructPointsFromSurfacesOnUvGridInput {
   readonly makeEachLineSeparateGroup?: boolean;
   readonly numberOfUGrids?: number;
   readonly numberOfVGrids?: number;
-  readonly edgePointMode?: EdgePointMode;
+  readonly edgePointMode: EdgePointMode;
 }
 
 export interface ConstructPointsLayoutOnGridInput {
@@ -1040,7 +1015,7 @@ export interface ConstructPointsOnSurfacesByClickingInput {
 export interface ConstructPointsShiftedInWorkingFrameInput {
   readonly originalPoints: Iterable<PointName>;
   readonly groupForNewPoints: CollectionObjectName;
-  readonly shiftVector?: Vector;
+  readonly shiftVector: Vector;
 }
 
 export interface ConstructPointsSpacedAtDistanceOnCurvesInput {
@@ -1053,7 +1028,7 @@ export interface ConstructPointsSpacedAtDistanceOnCurvesInput {
 export interface ConstructPointsSubsetWithGreatestSpacingInput {
   readonly pointsToSubsample: Iterable<PointName>;
   readonly subsetSize?: number;
-  readonly groupForSubset?: CollectionObjectName;
+  readonly groupForSubset: CollectionObjectName;
 }
 
 export interface ConstructPointsWildcardSelectionInput {
@@ -1287,7 +1262,7 @@ export interface CreatePointCalloutInput {
   readonly showUy?: boolean;
   readonly showUz?: boolean;
   readonly showUMag?: boolean;
-  readonly desiredCoordinateSystem?: CoordinateSystemType;
+  readonly desiredCoordinateSystem: CoordinateSystemType;
   readonly notes?: Iterable<string>;
   readonly useDefaultPlacement?: boolean;
 }
@@ -1427,7 +1402,7 @@ export interface MakeCollectionInstrumentRefListRuntimeSelectInput {
 export interface MakeCollectionItemNameRefListWildcardSelectionInput {
   readonly collectionWildcardCriteria?: string;
   readonly itemWildcardCriteria?: string;
-  readonly itemType?: ItemType;
+  readonly itemType: ItemType;
 }
 
 export interface MakeCollectionNameRuntimeSelectInput {
@@ -1436,33 +1411,29 @@ export interface MakeCollectionNameRuntimeSelectInput {
 
 export interface MakeCollectionObjectNameRefListByTypeInput {
   readonly collection: string;
-  readonly objectType?: ObjectType;
+  readonly objectType: ObjectType;
 }
 
 export interface MakeCollectionObjectNameRefListByTypeAndColorInput {
   readonly collection: string;
-  readonly objectType?: ObjectType;
+  readonly objectType: ObjectType;
   readonly objectColor?: Color;
 }
 
 export interface MakeCollectionObjectNameRefListRuntimeSelectInput {
   readonly userPrompt?: string;
-  readonly objectType?: ObjectType;
+  readonly objectType: ObjectType;
 }
 
 export interface MakeCollectionObjectNameRefListWildcardSelectionInput {
   readonly collectionWildcardCriteria?: string;
   readonly objectWildcardCriteria?: string;
-  readonly objectType?: ObjectType;
+  readonly objectType: ObjectType;
 }
 
 export interface MakeCollectionObjectNameRuntimeSelectInput {
   readonly userPrompt?: string;
-  readonly objectType?: ObjectType;
-}
-
-export interface MakeCollectionVectorGroupNameRefListRuntimeSelectInput {
-  readonly userPrompt?: string;
+  readonly objectType: ObjectType;
 }
 
 export interface MakeEventRefListWildcardSelectionInput {
@@ -1524,19 +1495,8 @@ export interface MakeVectorNameRefListFromVectorGroupInput {
   readonly vectorGroupName: CollectionObjectName;
 }
 
-export interface MakeVectorNameRefListRuntimeSelectInput {
-  readonly userPrompt?: string;
-}
-
 export interface MakeVectorNamesUniqueInVectorGroupInput {
   readonly vectorGroupName: CollectionObjectName;
-}
-
-export interface MirrorObjectsInput {
-  readonly objects: Iterable<CollectionObjectName>;
-  readonly frameName: CollectionObjectName;
-  readonly framePlaneToMirrorAround: MirrorFramePlane;
-  readonly copy?: boolean;
 }
 
 export interface MoveObjectsPointToPointDeltaInput {
@@ -1617,12 +1577,6 @@ export interface TransformPointsByDeltaAboutWorkingFrameInput {
   readonly deltaInWorkingCoordinates: Vector;
 }
 
-export interface AddCollectionInstrumentsToRefListWildcardSelectionInput {
-  readonly collectionInstrumentRefList: Iterable<CollectionInstrumentId>;
-  readonly collectionWildcardCriteria?: string;
-  readonly instrumentWildcardCriteria?: string;
-}
-
 export interface AverageSetOfGroupsInput {
   readonly groupNames: Iterable<CollectionObjectName>;
   readonly resultingGroupName: CollectionObjectName;
@@ -1661,14 +1615,9 @@ export interface GetGradientAtProjectedPointOnSurfaceEdgeInput {
   /** MP qualifier: B-Spline. */
   readonly surfaceEdge: CollectionObjectName;
   readonly surfaceName: CollectionObjectName;
-  readonly edgeOffsetDirection?: Vector;
+  readonly edgeOffsetDirection: Vector;
   readonly edgeOffsetDistance?: number;
   readonly generateOutputVectorLines?: boolean;
-}
-
-export interface MakeCalloutViewRefListWildcardSelectionInput {
-  readonly collectionWildcardCriteria?: string;
-  readonly calloutViewWildcardCriteria?: string;
 }
 
 export interface MakeCollectionObjectNameEnsureUniqueInput {
@@ -1695,18 +1644,6 @@ export interface SetDefaultCalloutViewPropertiesInput {
   readonly properties?: CalloutViewProperties;
 }
 
-export interface SetCalloutViewPropertiesInput {
-  readonly calloutViews: Iterable<CollectionItemName>;
-  readonly properties?: CalloutViewProperties;
-}
-
-export interface ConstructPolygonizedSurfaceFromPointCloudsInput {
-  readonly pointCloudList: Iterable<CollectionObjectName>;
-  readonly meshOrientation: MeshOrientationType;
-  readonly polygonizedSurfaceName: CollectionObjectName;
-  readonly gridResolution?: number;
-}
-
 export interface ConstructScaleBarInput {
   readonly scaleBarName: CollectionItemName;
   readonly beginTarget: PointName;
@@ -1730,7 +1667,7 @@ export interface EnableDisableDatumAlignmentForFeatureCheckInput extends Feature
   readonly enableDatumAlignment?: boolean;
   readonly enableCustomInitialAlignment?: boolean;
   readonly enableInitialDatumAlignment?: boolean;
-  readonly alignment?: CollectionItemName;
+  readonly alignment: CollectionItemName;
 }
 
 export interface EvaluateFeatureCheckInput extends FeatureCheckInput {
@@ -1773,16 +1710,16 @@ export interface EvaluateFeatureChecksResult {
 }
 
 export interface FeatureInspectionAutoFilterInput {
-  readonly pointNames?: Iterable<PointName>;
-  readonly groupNames?: Iterable<CollectionObjectName>;
-  readonly cloudNames?: Iterable<CollectionObjectName>;
+  readonly pointNames: Iterable<PointName>;
+  readonly groupNames: Iterable<CollectionObjectName>;
+  readonly cloudNames: Iterable<CollectionObjectName>;
   readonly surfaceOffset?: number;
   readonly edgeOffset?: number;
-  readonly offsetDirection?: OffsetDirectionType;
+  readonly offsetDirection: OffsetDirectionType;
   readonly includePointsWithinCylinderAxisProximity?: boolean;
   readonly enforceMaxPointsPerFaceInOutput?: boolean;
   readonly maxPointsPerFace?: number;
-  readonly featureCheckNameList?: Iterable<CollectionItemName>;
+  readonly featureCheckNameList: Iterable<CollectionItemName>;
   readonly includeDatums?: boolean;
   readonly createCloudForEachDatumOrCheck?: boolean;
 }
@@ -1831,8 +1768,8 @@ export interface SetGdtOptionsInput {
   readonly useHighPoints?: boolean;
   readonly extrapolateAxialExtent?: boolean;
   readonly excludeFromAutoEvaluation?: boolean;
-  readonly distanceBetweenMode?: GdtDistanceBetweenMode;
-  readonly evaluationMethod?: GdtEvaluationMethod;
+  readonly distanceBetweenMode: GdtDistanceBetweenMode;
+  readonly evaluationMethod: GdtEvaluationMethod;
   readonly createActualFeatures?: boolean;
   readonly createSolvedPoints?: boolean;
   readonly crossSectionCriteria?: number;
@@ -1921,7 +1858,7 @@ export interface AutoCorrespondWithProximityTriggerInput {
   readonly projectResultsToNominalVector?: boolean;
   readonly warblerRampStartDistance?: number;
   readonly showWatchWindow?: boolean;
-  readonly deviationVectorGroupName?: string;
+  readonly deviationVectorGroupName: string;
   readonly makeUnmeasuredGroup?: boolean;
   readonly measureEachPointOnlyOnce?: boolean;
 }
@@ -1970,14 +1907,14 @@ export interface BuildTargetInput {
   readonly instrument: CollectionInstrumentId;
   readonly outputTargetName: PointName;
   readonly nominalPoint: PointName;
-  readonly tolerance?: ToleranceVectorOptions;
+  readonly tolerance: ToleranceVectorOptions;
   readonly htmlPromptFile?: FileReference;
 }
 
 export interface CalculateTcpFixtureUncertaintiesInput {
   readonly tcpFixture: CollectionObjectName;
   readonly tcpMeasurements: readonly PointName[];
-  readonly tcpInWorking?: Transform;
+  readonly tcpInWorking: Transform;
 }
 
 export interface CollimationInput {
@@ -1985,13 +1922,13 @@ export interface CollimationInput {
   readonly movingInstrument: CollectionInstrumentId;
   readonly collimationPoint: PointName;
   readonly zeroMovingInstrument?: boolean;
-  readonly tiltMode?: CollimationTiltMode;
-  readonly baselineMethod?: CollimationBaselineMethod;
+  readonly tiltMode: CollimationTiltMode;
+  readonly baselineMethod: CollimationBaselineMethod;
   readonly baselineDistance?: number;
-  readonly scalePoint1?: PointName;
-  readonly scalePoint2?: PointName;
-  readonly notMeasuredByMovingInstrument?: PointName;
-  readonly asMeasuredByMovingInstrument?: PointName;
+  readonly scalePoint1: PointName;
+  readonly scalePoint2: PointName;
+  readonly notMeasuredByMovingInstrument: PointName;
+  readonly asMeasuredByMovingInstrument: PointName;
 }
 
 export interface CombinePointGroupsInput {
@@ -2076,7 +2013,7 @@ export interface DeleteInstrumentInput {
 
 export interface DeleteMeasurementObservationInput {
   readonly pointName: PointName;
-  readonly observationIndex?: number;
+  readonly observationIndex: number;
   readonly deletePointIfNoMeasurementsRemain?: boolean;
 }
 
@@ -2344,7 +2281,7 @@ export interface LocateInstrumentGroupToSurfaceQuickFitInput {
   readonly measuredGroup: CollectionObjectName;
   readonly surfacePointsGroup: CollectionObjectName;
   readonly surfaceToFit: CollectionObjectName;
-  readonly otherObjectsToTransform?: Iterable<CollectionObjectName>;
+  readonly otherObjectsToTransform: Iterable<CollectionObjectName>;
   readonly rmsTolerance?: number;
   readonly maximumAbsoluteTolerance?: number;
 }
@@ -2363,7 +2300,7 @@ export interface LocateInstrumentsUsmnInput {
   readonly nominalsGroup?: CollectionObjectName;
   readonly moveInWorkingFrame?: boolean;
   readonly autoRejectOutliersAndResolve?: boolean;
-  readonly showUsmnDialog?: ShowUsmnDialog;
+  readonly showUsmnDialog: ShowUsmnDialog;
   readonly maximumAcceptableRmsError?: number;
   readonly maximumAcceptableError?: number;
   readonly excludedGroups?: Iterable<CollectionObjectName>;
@@ -2459,7 +2396,7 @@ export interface MoveInstrumentToAnotherCollectionInput {
 
 export interface MoveMeasurementObservationInput {
   readonly sourcePointName: PointName;
-  readonly observationIndex?: number;
+  readonly observationIndex: number;
   readonly deletePointIfNoMeasurementsRemain?: boolean;
   readonly destinationPointName: PointName;
   readonly forceObservationActive?: boolean;
@@ -2533,7 +2470,7 @@ export interface SendCloudToSaInput extends CloudViewerInstrumentInput {
 
 export interface SetAbsoluteInstrumentScaleFactorInput {
   readonly instrument: CollectionInstrumentId;
-  readonly scaleFactor?: number;
+  readonly scaleFactor: number;
 }
 
 export interface SetAlignmentProjectorInput {
@@ -2586,7 +2523,7 @@ export interface SetInstrumentWeatherSettingInput {
   readonly pressure?: number;
   /** Relative humidity in percent. */
   readonly relativeHumidity?: number;
-  readonly setAutomatically?: boolean;
+  readonly setAutomatically: boolean;
 }
 
 export interface SetLadarAutoMeasPointInput {
@@ -2628,14 +2565,14 @@ export interface SetLadarFeatureMeasSphereInput {
 
 export interface SetMultiplyInstrumentScaleFactorInput {
   readonly instrument: CollectionInstrumentId;
-  readonly scaleFactor?: number;
+  readonly scaleFactor: number;
 }
 
 export interface SetObservationCollimationShotOptionsInput {
   readonly point: PointName;
   readonly observationIndex?: number;
   readonly isCollimationShot?: boolean;
-  readonly targetedInstrument?: CollectionInstrumentId;
+  readonly targetedInstrument: CollectionInstrumentId;
 }
 
 export interface SetObservationMirrorCubeShotFaceInput {
@@ -2680,7 +2617,7 @@ export interface SetRemeasureFailedChecksOnlyInput {
 }
 
 export interface SetTargetComputationOptionsInput {
-  readonly computationMethod?: TargetComputationMethod;
+  readonly computationMethod: TargetComputationMethod;
   readonly ignoreDistanceMeasurements?: boolean;
 }
 
@@ -2869,7 +2806,7 @@ export interface AutoFilterCloudsToNominalGeometry2DInput {
   readonly autoFilterTargetRelationships: Iterable<CollectionItemName>;
   readonly clouds: Iterable<CollectionObjectName>;
   readonly cloudThinningSettings?: CloudThinningOptions;
-  readonly filterProximitySettings2D?: FilterProximitySettings;
+  readonly filterProximitySettings2D: FilterProximitySettings;
   readonly geometryExtractionTolerance?: number;
   readonly useFeatureSpecificFilterSettings?: boolean;
 }
@@ -2878,17 +2815,17 @@ export interface AutoFilterCloudsToNominalGeometry3DInput {
   readonly autoFilterTargetRelationships: Iterable<CollectionItemName>;
   readonly clouds: Iterable<CollectionObjectName>;
   readonly cloudThinningSettings?: CloudThinningOptions;
-  readonly filterProximitySettings3D?: FilterProximitySettings;
+  readonly filterProximitySettings3D: FilterProximitySettings;
   readonly useFeatureSpecificFilterSettings?: boolean;
 }
 
 export interface AutoFilterPointsGroupsCloudsToSurfaceFacesInput {
-  readonly points?: Iterable<PointName>;
-  readonly groups?: Iterable<CollectionObjectName>;
-  readonly clouds?: Iterable<CollectionObjectName>;
+  readonly points: Iterable<PointName>;
+  readonly groups: Iterable<CollectionObjectName>;
+  readonly clouds: Iterable<CollectionObjectName>;
   readonly surfaceOffset?: number;
   readonly edgeOffset?: number;
-  readonly offsetDirection?: OffsetDirectionType;
+  readonly offsetDirection: OffsetDirectionType;
   readonly enforceMaxPointsPerFaceInOutput?: boolean;
   readonly maxPointsPerFace?: number;
   readonly surfaces: Iterable<CollectionObjectName>;
@@ -2900,7 +2837,7 @@ export interface AutoFilterPointsGroupsCloudsToSurfaceFacesInput {
 export interface AutoFilterPointsToNominalGeometry3DInput {
   readonly autoFilterTargetRelationships: Iterable<CollectionItemName>;
   readonly points: Iterable<PointName>;
-  readonly filterProximitySettings3D?: FilterProximitySettings;
+  readonly filterProximitySettings3D: FilterProximitySettings;
 }
 
 export interface ComputeGeometryRelationshipUncertaintiesInput {
@@ -2909,8 +2846,8 @@ export interface ComputeGeometryRelationshipUncertaintiesInput {
 }
 
 export interface CreatePointsToObjectsMapInput {
-  readonly points?: Iterable<PointName>;
-  readonly groups?: Iterable<CollectionObjectName>;
+  readonly points: Iterable<PointName>;
+  readonly groups: Iterable<CollectionObjectName>;
   readonly objects: Iterable<CollectionObjectName>;
   readonly proximityTolerance?: number;
   readonly pointsToObjectsMapName: string;
@@ -2925,16 +2862,16 @@ export interface DoRelationshipFitInput {
   readonly objectsToMove: Iterable<CollectionObjectName>;
   readonly instrumentsToMove: Iterable<CollectionInstrumentId>;
   readonly solverMode?: SolverMode;
-  readonly motionToAllow?: FitDofOptions;
+  readonly motionToAllow: FitDofOptions;
   readonly enableRandomizedStart?: boolean;
   readonly useFitDialog?: boolean;
 }
 
 export interface ExtractGeometryFromPointCloudsInput {
   readonly relationshipName: CollectionItemName;
-  readonly geometryType?: GeometryType;
+  readonly geometryType: GeometryType;
   readonly cloudName: CollectionObjectName;
-  readonly boundingPoints?: Iterable<PointName>;
+  readonly boundingPoints: Iterable<PointName>;
   readonly seedPoints: Iterable<PointName>;
   readonly tolerance?: number;
   readonly reverseNormal?: boolean;
@@ -3008,28 +2945,28 @@ export interface MakeDynamicCircleRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly firstReferenceGeometry: CollectionObjectName;
   readonly secondReferenceGeometry: CollectionObjectName;
-  readonly constructionMode?: DynamicCircleMode;
+  readonly constructionMode: DynamicCircleMode;
 }
 
 export interface MakeDynamicEllipseRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly firstReferenceGeometry: CollectionObjectName;
   readonly secondReferenceGeometry: CollectionObjectName;
-  readonly constructionMode?: DynamicEllipseMode;
+  readonly constructionMode: DynamicEllipseMode;
 }
 
 export interface MakeDynamicLineRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly firstReferenceGeometry: CollectionObjectName;
   readonly secondReferenceGeometry: CollectionObjectName;
-  readonly constructionMode?: DynamicLineMode;
+  readonly constructionMode: DynamicLineMode;
 }
 
 export interface MakeDynamicPlaneRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly firstReferenceGeometry: CollectionObjectName;
   readonly secondReferenceGeometry: CollectionObjectName;
-  readonly constructionMode?: DynamicPlaneMode;
+  readonly constructionMode: DynamicPlaneMode;
   readonly offsetPlaneOffset?: number;
 }
 
@@ -3037,16 +2974,16 @@ export interface MakeDynamicPointRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly firstReferenceGeometry: CollectionObjectName;
   readonly secondReferenceGeometry: CollectionObjectName;
-  readonly constructionMode?: DynamicPointMode;
-  readonly thirdReferenceGeometry?: CollectionObjectName;
+  readonly constructionMode: DynamicPointMode;
+  readonly thirdReferenceGeometry: CollectionObjectName;
 }
 
 export interface MakeFrameToFrameRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly firstFrameName: CollectionObjectName;
   readonly secondFrameName: CollectionObjectName;
-  readonly orientationTolerance?: ToleranceScalarOptions;
-  readonly positionTolerance?: ToleranceVectorOptions;
+  readonly orientationTolerance: ToleranceScalarOptions;
+  readonly positionTolerance: ToleranceVectorOptions;
 }
 
 export interface MakeGeometryCompareOnlyRelationshipInput {
@@ -3076,8 +3013,8 @@ export interface MakeGroupToGroupRelationshipInput {
   readonly firstGroupName: CollectionObjectName;
   readonly secondGroupName: CollectionObjectName;
   readonly autoUpdateAVectorGroup?: boolean;
-  readonly tolerance?: ToleranceVectorOptions;
-  readonly constraint?: ToleranceVectorOptions;
+  readonly tolerance: ToleranceVectorOptions;
+  readonly constraint: ToleranceVectorOptions;
 }
 
 export interface MakeGroupToNominalGroupRelationshipInput {
@@ -3090,8 +3027,8 @@ export interface MakeGroupToNominalGroupRelationshipInput {
   readonly useViewZoomingWithProximity?: boolean;
   readonly ignorePointsBeyondThreshold?: boolean;
   readonly proximityThreshold?: number;
-  readonly tolerance?: ToleranceVectorOptions;
-  readonly constraint?: ToleranceVectorOptions;
+  readonly tolerance: ToleranceVectorOptions;
+  readonly constraint: ToleranceVectorOptions;
   readonly fitWeight?: number;
 }
 
@@ -3099,7 +3036,7 @@ export interface MakeGroupsToObjectsRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly pointGroupsInRelationship: Iterable<CollectionObjectName>;
   readonly objectsInRelationship: Iterable<CollectionObjectName>;
-  readonly projectionOptions?: ProjectionOptions;
+  readonly projectionOptions: ProjectionOptions;
   readonly autoUpdateAVectorGroup?: boolean;
 }
 
@@ -3114,7 +3051,7 @@ export interface MakePointCloudsToObjectsRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly pointCloudsInRelationship: Iterable<CollectionObjectName>;
   readonly objectsInRelationship: Iterable<CollectionObjectName>;
-  readonly projectionOptions?: ProjectionOptions;
+  readonly projectionOptions: ProjectionOptions;
   readonly autoUpdateAVectorGroup?: boolean;
 }
 
@@ -3122,15 +3059,15 @@ export interface MakePointToPointRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly firstPointName: PointName;
   readonly secondPointName: PointName;
-  readonly tolerance?: ToleranceVectorOptions;
-  readonly constraint?: ToleranceVectorOptions;
+  readonly tolerance: ToleranceVectorOptions;
+  readonly constraint: ToleranceVectorOptions;
 }
 
 export interface MakePointsToObjectsRelationshipInput {
   readonly relationshipName: CollectionItemName;
   readonly pointsInRelationship: Iterable<PointName>;
   readonly objectsInRelationship: Iterable<CollectionObjectName>;
-  readonly projectionOptions?: ProjectionOptions;
+  readonly projectionOptions: ProjectionOptions;
   readonly autoUpdateAVectorGroup?: boolean;
 }
 
@@ -3139,8 +3076,8 @@ export interface MakePointsToPointsRelationshipInput {
   readonly nominalPoints: Iterable<PointName>;
   readonly measuredPoints: Iterable<PointName>;
   readonly autoUpdateAVectorGroup?: boolean;
-  readonly tolerance?: ToleranceVectorOptions;
-  readonly constraint?: ToleranceVectorOptions;
+  readonly tolerance: ToleranceVectorOptions;
+  readonly constraint: ToleranceVectorOptions;
 }
 
 export interface MakeVectorGroupToVectorGroupRelationshipInput {
@@ -3154,14 +3091,14 @@ export interface MoveCollectionsByMinimizingRelationshipsInput {
   readonly collectionsToMove: Iterable<string>;
   readonly relationshipsToMinimize: Iterable<CollectionItemName>;
   readonly solverMode?: SolverMode;
-  readonly motionToAllow?: FitDofOptions;
+  readonly motionToAllow: FitDofOptions;
   readonly useFitDialog?: boolean;
   readonly convergenceThreshold?: number;
 }
 
 export interface RelationshipWatchWindowTemplateInput {
-  readonly watchWindowTemplateName?: CollectionObjectName;
-  readonly options?: RelationshipWatchWindowTemplateOptions;
+  readonly watchWindowTemplateName: CollectionObjectName;
+  readonly options: RelationshipWatchWindowTemplateOptions;
 }
 
 export interface SetGroupToNominalGroupViewZoomingInput {
@@ -3175,8 +3112,8 @@ export interface SetGroupToNominalGroupViewZoomingInput {
 
 export interface SetObjectToObjectDirectionRelationshipTolerancesInput {
   readonly relationshipName: CollectionItemName;
-  readonly angleBetweenVectorsTolerances?: ToleranceScalarOptions;
-  readonly mutualPerpendicularLengthTolerances?: ToleranceScalarOptions;
+  readonly angleBetweenVectorsTolerances: ToleranceScalarOptions;
+  readonly mutualPerpendicularLengthTolerances: ToleranceScalarOptions;
 }
 
 export interface SetOptimizationPerturbationParametersInput {
@@ -3191,17 +3128,17 @@ export interface SetOptimizationSearchOptionsInput {
 
 export interface SetPointsToPointsRelationshipAssociatedDataInput {
   readonly relationshipName: CollectionItemName;
-  readonly nominalPoints?: Iterable<PointName>;
-  readonly actualPoints?: Iterable<PointName>;
+  readonly nominalPoints: Iterable<PointName>;
+  readonly actualPoints: Iterable<PointName>;
   readonly ignoreEmptyArguments?: boolean;
 }
 
 export interface SetRelationshipAssociatedDataInput {
   readonly relationshipName: CollectionItemName;
-  readonly individualPoints?: Iterable<PointName>;
-  readonly pointGroups?: Iterable<CollectionObjectName>;
-  readonly pointClouds?: Iterable<CollectionObjectName>;
-  readonly objects?: Iterable<CollectionObjectName>;
+  readonly individualPoints: Iterable<PointName>;
+  readonly pointGroups: Iterable<CollectionObjectName>;
+  readonly pointClouds: Iterable<CollectionObjectName>;
+  readonly objects: Iterable<CollectionObjectName>;
   readonly ignoreEmptyArguments?: boolean;
 }
 
@@ -3327,7 +3264,7 @@ export interface SetCalibrationApplianceNodeMeasurementFrameInput {
 
 export interface SetCalibrationApplianceNodeMeasurementOffsetTransformInput {
   readonly calibrationApplianceNode: CollectionObjectName;
-  readonly measurementOffsetTransform?: Transform;
+  readonly measurementOffsetTransform: Transform;
 }
 
 export interface SetCalibrationApplianceNodeMeasurementPointGroupInput {
@@ -3392,7 +3329,7 @@ export interface CreateRobotCalibrationInput {
 
 export interface DeleteRobotCalibrationInput {
   readonly machineId: CollectionMachineId;
-  readonly calibrationName?: string;
+  readonly calibrationName: string;
 }
 
 export interface DeleteRobotMachineInput {
@@ -3452,12 +3389,12 @@ export interface MoveRobotMachineToFrameInput {
 
 export interface MoveRobotMachineToJointPoseSixDofInput {
   readonly machineId: CollectionMachineId;
-  readonly joint1?: number;
-  readonly joint2?: number;
-  readonly joint3?: number;
-  readonly joint4?: number;
-  readonly joint5?: number;
-  readonly joint6?: number;
+  readonly joint1: number;
+  readonly joint2: number;
+  readonly joint3: number;
+  readonly joint4: number;
+  readonly joint5: number;
+  readonly joint6: number;
 }
 
 export interface MoveRobotMachineToNamedDestinationInput {
@@ -3498,19 +3435,19 @@ export interface SetRobotCalibrationMeasurementOffsetInToolFrameInput {
   readonly machineId: CollectionMachineId;
   readonly calibrationName?: string;
   /** MP qualifier: relative to tool. */
-  readonly measurementFrame?: Transform;
+  readonly measurementFrame: Transform;
 }
 
 export interface SetRobotCalibrationToolFrameInput {
   readonly machineId: CollectionMachineId;
   readonly calibrationName?: string;
   /** MP qualifier: relative to flange. */
-  readonly toolFrame?: Transform;
+  readonly toolFrame: Transform;
 }
 
 export interface SetRobotMachineBaseTransformInput {
   readonly machineId: CollectionMachineId;
-  readonly destinationTransform?: Transform;
+  readonly destinationTransform: Transform;
   readonly referenceFrame: CollectionObjectName;
   readonly numberOfSteps?: number;
 }
@@ -3518,13 +3455,13 @@ export interface SetRobotMachineBaseTransformInput {
 export interface SetRobotMachineModelLinkParametersInput {
   readonly machineId: CollectionMachineId;
   readonly linkName?: string;
-  readonly configuration?: RobotModelLinkConfiguration;
+  readonly configuration: RobotModelLinkConfiguration;
 }
 
 export interface SetRobotMachineParameterInput {
   readonly machineId: CollectionMachineId;
-  readonly parameterName?: string;
-  readonly parameterValue?: number;
+  readonly parameterName: string;
+  readonly parameterValue: number;
 }
 
 export interface SimulateRobotMachinePathOutputCsvFileInput {
@@ -4820,66 +4757,6 @@ export async function deleteCloudPointsByRadialDistanceFromPoints(
     [],
   ) as void;
 }
-export async function deleteCloudPointsByXYZRange(
-  briosa: BriosaClient,
-  input: DeleteCloudPointsByXYZRangeInput,
-  options: BriosaCallOptions = {},
-): Promise<void> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    CloudAndMeshOperationsProtocol.DeleteCloudPointsByXYZRangeRequest.fromPartial(
-      {
-        cloudNames: toWireOperationValue(
-          repeatedOperationValue(
-            getOperationValueSchema('collectionObjectName'),
-          ),
-          requireOperationInput(input.cloudNames, 'cloudNames'),
-        ),
-        xMin:
-          input.xMin == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.xMin),
-        xMax:
-          input.xMax == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.xMax),
-        yMin:
-          input.yMin == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.yMin),
-        yMax:
-          input.yMax == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.yMax),
-        zMin:
-          input.zMin == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.zMin),
-        zMax:
-          input.zMax == null
-            ? undefined
-            : toWireOperationValue(operationScalarSchemas.number, input.zMax),
-        deleteInside: toWireOperationValue(
-          operationScalarSchemas.boolean,
-          resolveOperationDefault(input.deleteInside, false, 'deleteInside'),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'CloudAndMeshOperations',
-    'DeleteCloudPointsByXYZRange',
-    request,
-    CloudAndMeshOperationsProtocol.DeleteCloudPointsByXYZRangeRequest,
-    CloudAndMeshOperationsProtocol.DeleteCloudPointsByXYZRangeResult,
-    options,
-  );
-  return mapOperationResponse(
-    response as Readonly<Record<string, unknown>>,
-    [],
-  ) as void;
-}
 export async function generateGeneralMesh(
   briosa: BriosaClient,
   input: GenerateGeneralMeshInput,
@@ -5246,49 +5123,6 @@ export async function deletePointsWildcardSelection(
     [],
   ) as void;
 }
-export async function mirrorObjects(
-  briosa: BriosaClient,
-  input: MirrorObjectsInput,
-  options: BriosaCallOptions = {},
-): Promise<void> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.MirrorObjectsRequest.fromPartial({
-      objects: toWireOperationValue(
-        repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
-        requireOperationInput(input.objects, 'objects'),
-      ),
-      frameName: toWireOperationValue(
-        getOperationValueSchema('collectionObjectName'),
-        requireOperationInput(input.frameName, 'frameName'),
-      ),
-      framePlaneToMirrorAround: toWireOperationValue(
-        getOperationValueSchema('mirrorFramePlane'),
-        requireOperationInput(
-          input.framePlaneToMirrorAround,
-          'framePlaneToMirrorAround',
-        ),
-      ),
-      copy: toWireOperationValue(
-        operationScalarSchemas.boolean,
-        resolveOperationDefault(input.copy, true, 'copy'),
-      ),
-    } as never);
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'MirrorObjects',
-    request,
-    ConstructionOperationsProtocol.MirrorObjectsRequest,
-    ConstructionOperationsProtocol.MirrorObjectsResult,
-    options,
-  );
-  return mapOperationResponse(
-    response as Readonly<Record<string, unknown>>,
-    [],
-  ) as void;
-}
 export async function moveObjectsPointToPointDelta(
   briosa: BriosaClient,
   input: MoveObjectsPointToPointDeltaInput,
@@ -5625,17 +5459,17 @@ export async function autoFilterCloudsToNominalGeometry2D(
                 getOperationValueSchema('cloudThinningOptions'),
                 input.cloudThinningSettings,
               ),
-        filterProximitySettings2d:
-          input.filterProximitySettings2D?.surfaceInclusionProximity == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('filterProximitySettings'),
-                input.filterProximitySettings2D?.surfaceInclusionProximity,
-              ),
+        filterProximitySettings2d: toWireOperationValue(
+          getOperationValueSchema('filterProximitySettings'),
+          requireOperationInput(
+            input.filterProximitySettings2D,
+            'filterProximitySettings2D',
+          ),
+        ),
         geometryExtractionTolerance: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(
-            input.filterProximitySettings2D?.geometryExtractionTolerance,
+            input.geometryExtractionTolerance,
             0.01,
             'geometryExtractionTolerance',
           ),
@@ -5694,13 +5528,13 @@ export async function autoFilterCloudsToNominalGeometry3D(
                 getOperationValueSchema('cloudThinningOptions'),
                 input.cloudThinningSettings,
               ),
-        filterProximitySettings3d:
-          input.filterProximitySettings3D == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('filterProximitySettings'),
-                input.filterProximitySettings3D,
-              ),
+        filterProximitySettings3d: toWireOperationValue(
+          getOperationValueSchema('filterProximitySettings'),
+          requireOperationInput(
+            input.filterProximitySettings3D,
+            'filterProximitySettings3D',
+          ),
+        ),
         useFeatureSpecificFilterSettings: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
@@ -5735,31 +5569,22 @@ export async function autoFilterPointsGroupsCloudsToSurfaceFaces(
   const request =
     RelationshipOperationsProtocol.AutoFilterPointsGroupsCloudsToSurfaceFacesRequest.fromPartial(
       {
-        points:
-          input.points == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(getOperationValueSchema('pointName')),
-                input.points,
-              ),
-        groups:
-          input.groups == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(
-                  getOperationValueSchema('collectionObjectName'),
-                ),
-                input.groups,
-              ),
-        clouds:
-          input.clouds == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(
-                  getOperationValueSchema('collectionObjectName'),
-                ),
-                input.clouds,
-              ),
+        points: toWireOperationValue(
+          listWrapperOperationValue(getOperationValueSchema('pointName')),
+          requireOperationInput(input.points, 'points'),
+        ),
+        groups: toWireOperationValue(
+          listWrapperOperationValue(
+            getOperationValueSchema('collectionObjectName'),
+          ),
+          requireOperationInput(input.groups, 'groups'),
+        ),
+        clouds: toWireOperationValue(
+          listWrapperOperationValue(
+            getOperationValueSchema('collectionObjectName'),
+          ),
+          requireOperationInput(input.clouds, 'clouds'),
+        ),
         surfaceOffset: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(input.surfaceOffset, 0.1, 'surfaceOffset'),
@@ -5768,13 +5593,10 @@ export async function autoFilterPointsGroupsCloudsToSurfaceFaces(
           operationScalarSchemas.number,
           resolveOperationDefault(input.edgeOffset, 0.1, 'edgeOffset'),
         ),
-        offsetDirection:
-          input.offsetDirection == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('offsetDirectionType'),
-                input.offsetDirection,
-              ),
+        offsetDirection: toWireOperationValue(
+          getOperationValueSchema('offsetDirectionType'),
+          requireOperationInput(input.offsetDirection, 'offsetDirection'),
+        ),
         enforceMaxPointsPerFaceInOutput: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
@@ -5857,13 +5679,13 @@ export async function autoFilterPointsToNominalGeometry3D(
           repeatedOperationValue(getOperationValueSchema('pointName')),
           requireOperationInput(input.points, 'points'),
         ),
-        filterProximitySettings3d:
-          input.filterProximitySettings3D == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('filterProximitySettings'),
-                input.filterProximitySettings3D,
-              ),
+        filterProximitySettings3d: toWireOperationValue(
+          getOperationValueSchema('filterProximitySettings'),
+          requireOperationInput(
+            input.filterProximitySettings3D,
+            'filterProximitySettings3D',
+          ),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -5927,22 +5749,16 @@ export async function createPointsToObjectsMap(
     throw new TypeError('input is required.');
   const request =
     RelationshipOperationsProtocol.CreatePointsToObjectsMapRequest.fromPartial({
-      points:
-        input.points == null
-          ? undefined
-          : toWireOperationValue(
-              listWrapperOperationValue(getOperationValueSchema('pointName')),
-              input.points,
-            ),
-      groups:
-        input.groups == null
-          ? undefined
-          : toWireOperationValue(
-              listWrapperOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-              ),
-              input.groups,
-            ),
+      points: toWireOperationValue(
+        listWrapperOperationValue(getOperationValueSchema('pointName')),
+        requireOperationInput(input.points, 'points'),
+      ),
+      groups: toWireOperationValue(
+        listWrapperOperationValue(
+          getOperationValueSchema('collectionObjectName'),
+        ),
+        requireOperationInput(input.groups, 'groups'),
+      ),
       objects: toWireOperationValue(
         repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
         requireOperationInput(input.objects, 'objects'),
@@ -6036,13 +5852,10 @@ export async function doRelationshipFit(
         getOperationValueSchema('solverMode'),
         resolveOperationDefault(input.solverMode, 'Gauss-Newton', 'solverMode'),
       ),
-      motionToAllow:
-        input.motionToAllow == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('fitDofOptions'),
-              input.motionToAllow,
-            ),
+      motionToAllow: toWireOperationValue(
+        getOperationValueSchema('fitDofOptions'),
+        requireOperationInput(input.motionToAllow, 'motionToAllow'),
+      ),
       enableRandomizedStart: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
@@ -6086,24 +5899,18 @@ export async function extractGeometryFromPointClouds(
           getOperationValueSchema('collectionItemName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        geometryType:
-          input.geometryType == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('geometryType'),
-                input.geometryType,
-              ),
+        geometryType: toWireOperationValue(
+          getOperationValueSchema('geometryType'),
+          requireOperationInput(input.geometryType, 'geometryType'),
+        ),
         cloudName: toWireOperationValue(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(input.cloudName, 'cloudName'),
         ),
-        boundingPoints:
-          input.boundingPoints == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(getOperationValueSchema('pointName')),
-                input.boundingPoints,
-              ),
+        boundingPoints: toWireOperationValue(
+          listWrapperOperationValue(getOperationValueSchema('pointName')),
+          requireOperationInput(input.boundingPoints, 'boundingPoints'),
+        ),
         seedPoints: toWireOperationValue(
           repeatedOperationValue(getOperationValueSchema('pointName')),
           requireOperationInput(input.seedPoints, 'seedPoints'),
@@ -6638,13 +6445,10 @@ export async function makeDynamicCircleRelationship(
           getOperationValueSchema('collectionItemName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        constructionMode:
-          input.constructionMode == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('dynamicCircleMode'),
-                input.constructionMode,
-              ),
+        constructionMode: toWireOperationValue(
+          getOperationValueSchema('dynamicCircleMode'),
+          requireOperationInput(input.constructionMode, 'constructionMode'),
+        ),
         firstReferenceGeometry: toWireOperationValue(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(
@@ -6689,13 +6493,10 @@ export async function makeDynamicEllipseRelationship(
           getOperationValueSchema('collectionItemName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        constructionMode:
-          input.constructionMode == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('dynamicEllipseMode'),
-                input.constructionMode,
-              ),
+        constructionMode: toWireOperationValue(
+          getOperationValueSchema('dynamicEllipseMode'),
+          requireOperationInput(input.constructionMode, 'constructionMode'),
+        ),
         firstReferenceGeometry: toWireOperationValue(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(
@@ -6740,13 +6541,10 @@ export async function makeDynamicLineRelationship(
           getOperationValueSchema('collectionItemName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        constructionMode:
-          input.constructionMode == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('dynamicLineMode'),
-                input.constructionMode,
-              ),
+        constructionMode: toWireOperationValue(
+          getOperationValueSchema('dynamicLineMode'),
+          requireOperationInput(input.constructionMode, 'constructionMode'),
+        ),
         firstReferenceGeometry: toWireOperationValue(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(
@@ -6791,13 +6589,10 @@ export async function makeDynamicPlaneRelationship(
           getOperationValueSchema('collectionItemName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        constructionMode:
-          input.constructionMode == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('dynamicPlaneMode'),
-                input.constructionMode,
-              ),
+        constructionMode: toWireOperationValue(
+          getOperationValueSchema('dynamicPlaneMode'),
+          requireOperationInput(input.constructionMode, 'constructionMode'),
+        ),
         firstReferenceGeometry: toWireOperationValue(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(
@@ -6850,13 +6645,10 @@ export async function makeDynamicPointRelationship(
           getOperationValueSchema('collectionItemName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        constructionMode:
-          input.constructionMode == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('dynamicPointMode'),
-                input.constructionMode,
-              ),
+        constructionMode: toWireOperationValue(
+          getOperationValueSchema('dynamicPointMode'),
+          requireOperationInput(input.constructionMode, 'constructionMode'),
+        ),
         firstReferenceGeometry: toWireOperationValue(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(
@@ -6871,13 +6663,13 @@ export async function makeDynamicPointRelationship(
             'secondReferenceGeometry',
           ),
         ),
-        thirdReferenceGeometry:
-          input.thirdReferenceGeometry == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-                input.thirdReferenceGeometry,
-              ),
+        thirdReferenceGeometry: toWireOperationValue(
+          getOperationValueSchema('collectionObjectName'),
+          requireOperationInput(
+            input.thirdReferenceGeometry,
+            'thirdReferenceGeometry',
+          ),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -6916,20 +6708,17 @@ export async function makeFrameToFrameRelationship(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(input.secondFrameName, 'secondFrameName'),
         ),
-        orientationTolerance:
-          input.orientationTolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceScalarOptions'),
-                input.orientationTolerance,
-              ),
-        positionTolerance:
-          input.positionTolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.positionTolerance,
-              ),
+        orientationTolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceScalarOptions'),
+          requireOperationInput(
+            input.orientationTolerance,
+            'orientationTolerance',
+          ),
+        ),
+        positionTolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.positionTolerance, 'positionTolerance'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -7122,20 +6911,14 @@ export async function makeGroupToGroupRelationship(
             'autoUpdateAVectorGroup',
           ),
         ),
-        tolerance:
-          input.tolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.tolerance,
-              ),
-        constraint:
-          input.constraint == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.constraint,
-              ),
+        tolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.tolerance, 'tolerance'),
+        ),
+        constraint: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.constraint, 'constraint'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -7222,20 +7005,14 @@ export async function makeGroupToNominalGroupRelationship(
             'proximityThreshold',
           ),
         ),
-        tolerance:
-          input.tolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.tolerance,
-              ),
-        constraint:
-          input.constraint == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.constraint,
-              ),
+        tolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.tolerance, 'tolerance'),
+        ),
+        constraint: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.constraint, 'constraint'),
+        ),
         fitWeight: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(input.fitWeight, 1, 'fitWeight'),
@@ -7288,13 +7065,10 @@ export async function makeGroupsToObjectsRelationship(
             'objectsInRelationship',
           ),
         ),
-        projectionOptions:
-          input.projectionOptions == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('projectionOptions'),
-                input.projectionOptions,
-              ),
+        projectionOptions: toWireOperationValue(
+          getOperationValueSchema('projectionOptions'),
+          requireOperationInput(input.projectionOptions, 'projectionOptions'),
+        ),
         autoUpdateAVectorGroup: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
@@ -7399,13 +7173,10 @@ export async function makePointCloudsToObjectsRelationship(
             'objectsInRelationship',
           ),
         ),
-        projectionOptions:
-          input.projectionOptions == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('projectionOptions'),
-                input.projectionOptions,
-              ),
+        projectionOptions: toWireOperationValue(
+          getOperationValueSchema('projectionOptions'),
+          requireOperationInput(input.projectionOptions, 'projectionOptions'),
+        ),
         autoUpdateAVectorGroup: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
@@ -7452,20 +7223,14 @@ export async function makePointToPointRelationship(
           getOperationValueSchema('pointName'),
           requireOperationInput(input.secondPointName, 'secondPointName'),
         ),
-        tolerance:
-          input.tolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.tolerance,
-              ),
-        constraint:
-          input.constraint == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.constraint,
-              ),
+        tolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.tolerance, 'tolerance'),
+        ),
+        constraint: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.constraint, 'constraint'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -7512,13 +7277,10 @@ export async function makePointsToObjectsRelationship(
             'objectsInRelationship',
           ),
         ),
-        projectionOptions:
-          input.projectionOptions == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('projectionOptions'),
-                input.projectionOptions,
-              ),
+        projectionOptions: toWireOperationValue(
+          getOperationValueSchema('projectionOptions'),
+          requireOperationInput(input.projectionOptions, 'projectionOptions'),
+        ),
         autoUpdateAVectorGroup: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
@@ -7573,20 +7335,14 @@ export async function makePointsToPointsRelationship(
             'autoUpdateAVectorGroup',
           ),
         ),
-        tolerance:
-          input.tolerance == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.tolerance,
-              ),
-        constraint:
-          input.constraint == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceVectorOptions'),
-                input.constraint,
-              ),
+        tolerance: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.tolerance, 'tolerance'),
+        ),
+        constraint: toWireOperationValue(
+          getOperationValueSchema('toleranceVectorOptions'),
+          requireOperationInput(input.constraint, 'constraint'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -7691,13 +7447,10 @@ export async function moveCollectionsByMinimizingRelationships(
             'solverMode',
           ),
         ),
-        motionToAllow:
-          input.motionToAllow == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('fitDofOptions'),
-                input.motionToAllow,
-              ),
+        motionToAllow: toWireOperationValue(
+          getOperationValueSchema('fitDofOptions'),
+          requireOperationInput(input.motionToAllow, 'motionToAllow'),
+        ),
         useFitDialog: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(input.useFitDialog, false, 'useFitDialog'),
@@ -7728,23 +7481,26 @@ export async function moveCollectionsByMinimizingRelationships(
 }
 export async function relationshipWatchWindowTemplate(
   briosa: BriosaClient,
-  input?: RelationshipWatchWindowTemplateInput,
+  input: RelationshipWatchWindowTemplateInput,
   options: BriosaCallOptions = {},
 ): Promise<void> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
+  requireOperationInput(input.options, 'options');
   const request =
     RelationshipOperationsProtocol.RelationshipWatchWindowTemplateRequest.fromPartial(
       {
-        watchWindowTemplateName:
-          input?.watchWindowTemplateName == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-                input?.watchWindowTemplateName,
-              ),
+        watchWindowTemplateName: toWireOperationValue(
+          getOperationValueSchema('collectionObjectName'),
+          requireOperationInput(
+            input.watchWindowTemplateName,
+            'watchWindowTemplateName',
+          ),
+        ),
         linearPrecision: toWireOperationValue(
           operationScalarSchemas.integer,
           resolveOperationDefault(
-            input?.options?.linearPrecision,
+            input.options.linearPrecision,
             4,
             'linearPrecision',
           ),
@@ -7752,43 +7508,43 @@ export async function relationshipWatchWindowTemplate(
         angularPrecision: toWireOperationValue(
           operationScalarSchemas.integer,
           resolveOperationDefault(
-            input?.options?.angularPrecision,
+            input.options.angularPrecision,
             3,
             'angularPrecision',
           ),
         ),
         font:
-          input?.options?.font == null
+          input.options.font == null
             ? undefined
             : toWireOperationValue(
                 getOperationValueSchema('font'),
-                input?.options?.font,
+                input.options.font,
               ),
         textColor:
-          input?.options?.textColor == null
+          input.options.textColor == null
             ? undefined
             : toWireOperationValue(
                 getOperationValueSchema('color'),
-                input?.options?.textColor,
+                input.options.textColor,
               ),
         backgroundColor:
-          input?.options?.backgroundColor == null
+          input.options.backgroundColor == null
             ? undefined
             : toWireOperationValue(
                 getOperationValueSchema('color'),
-                input?.options?.backgroundColor,
+                input.options.backgroundColor,
               ),
         highlightColor:
-          input?.options?.highlightColor == null
+          input.options.highlightColor == null
             ? undefined
             : toWireOperationValue(
                 getOperationValueSchema('color'),
-                input?.options?.highlightColor,
+                input.options.highlightColor,
               ),
         showDeviationX: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.options?.showDeviationX,
+            input.options.showDeviationX,
             true,
             'showDeviationX',
           ),
@@ -7796,7 +7552,7 @@ export async function relationshipWatchWindowTemplate(
         showDeviationY: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.options?.showDeviationY,
+            input.options.showDeviationY,
             true,
             'showDeviationY',
           ),
@@ -7804,7 +7560,7 @@ export async function relationshipWatchWindowTemplate(
         showDeviationZ: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.options?.showDeviationZ,
+            input.options.showDeviationZ,
             true,
             'showDeviationZ',
           ),
@@ -7812,33 +7568,29 @@ export async function relationshipWatchWindowTemplate(
         showDeviationMagnitude: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.options?.showDeviationMagnitude,
+            input.options.showDeviationMagnitude,
             true,
             'showDeviationMagnitude',
           ),
         ),
-        udpNetworkTransmitSettings:
-          input?.options?.udpNetworkTransmitSettings == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('relationshipWatchWindowUdpSettings'),
-                input?.options?.udpNetworkTransmitSettings,
-              ),
+        udpNetworkTransmitSettings: toWireOperationValue(
+          getOperationValueSchema('relationshipWatchWindowUdpSettings'),
+          requireOperationInput(
+            input.options.udpNetworkTransmitSettings,
+            'udpNetworkTransmitSettings',
+          ),
+        ),
         transparentBackground: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.options?.transparentBackground,
+            input.options.transparentBackground,
             false,
             'transparentBackground',
           ),
         ),
         hideUnits: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input?.options?.hideUnits,
-            false,
-            'hideUnits',
-          ),
+          resolveOperationDefault(input.options.hideUnits, false, 'hideUnits'),
         ),
       } as never,
     );
@@ -7936,20 +7688,20 @@ export async function setObjectToObjectDirectionRelationshipTolerances(
           getOperationValueSchema('collectionItemName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        angleBetweenVectorsTolerances:
-          input.angleBetweenVectorsTolerances == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceScalarOptions'),
-                input.angleBetweenVectorsTolerances,
-              ),
-        mutualPerpendicularLengthTolerances:
-          input.mutualPerpendicularLengthTolerances == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('toleranceScalarOptions'),
-                input.mutualPerpendicularLengthTolerances,
-              ),
+        angleBetweenVectorsTolerances: toWireOperationValue(
+          getOperationValueSchema('toleranceScalarOptions'),
+          requireOperationInput(
+            input.angleBetweenVectorsTolerances,
+            'angleBetweenVectorsTolerances',
+          ),
+        ),
+        mutualPerpendicularLengthTolerances: toWireOperationValue(
+          getOperationValueSchema('toleranceScalarOptions'),
+          requireOperationInput(
+            input.mutualPerpendicularLengthTolerances,
+            'mutualPerpendicularLengthTolerances',
+          ),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -8056,20 +7808,14 @@ export async function setPointsToPointsRelationshipAssociatedData(
           getOperationValueSchema('collectionItemName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        nominalPoints:
-          input.nominalPoints == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(getOperationValueSchema('pointName')),
-                input.nominalPoints,
-              ),
-        actualPoints:
-          input.actualPoints == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(getOperationValueSchema('pointName')),
-                input.actualPoints,
-              ),
+        nominalPoints: toWireOperationValue(
+          listWrapperOperationValue(getOperationValueSchema('pointName')),
+          requireOperationInput(input.nominalPoints, 'nominalPoints'),
+        ),
+        actualPoints: toWireOperationValue(
+          listWrapperOperationValue(getOperationValueSchema('pointName')),
+          requireOperationInput(input.actualPoints, 'actualPoints'),
+        ),
         ignoreEmptyArguments: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
@@ -8108,40 +7854,28 @@ export async function setRelationshipAssociatedData(
           getOperationValueSchema('collectionItemName'),
           requireOperationInput(input.relationshipName, 'relationshipName'),
         ),
-        individualPoints:
-          input.individualPoints == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(getOperationValueSchema('pointName')),
-                input.individualPoints,
-              ),
-        pointGroups:
-          input.pointGroups == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(
-                  getOperationValueSchema('collectionObjectName'),
-                ),
-                input.pointGroups,
-              ),
-        pointClouds:
-          input.pointClouds == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(
-                  getOperationValueSchema('collectionObjectName'),
-                ),
-                input.pointClouds,
-              ),
-        objects:
-          input.objects == null
-            ? undefined
-            : toWireOperationValue(
-                listWrapperOperationValue(
-                  getOperationValueSchema('collectionObjectName'),
-                ),
-                input.objects,
-              ),
+        individualPoints: toWireOperationValue(
+          listWrapperOperationValue(getOperationValueSchema('pointName')),
+          requireOperationInput(input.individualPoints, 'individualPoints'),
+        ),
+        pointGroups: toWireOperationValue(
+          listWrapperOperationValue(
+            getOperationValueSchema('collectionObjectName'),
+          ),
+          requireOperationInput(input.pointGroups, 'pointGroups'),
+        ),
+        pointClouds: toWireOperationValue(
+          listWrapperOperationValue(
+            getOperationValueSchema('collectionObjectName'),
+          ),
+          requireOperationInput(input.pointClouds, 'pointClouds'),
+        ),
+        objects: toWireOperationValue(
+          listWrapperOperationValue(
+            getOperationValueSchema('collectionObjectName'),
+          ),
+          requireOperationInput(input.objects, 'objects'),
+        ),
         ignoreEmptyArguments: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
@@ -8520,10 +8254,6 @@ export interface ConstructionOperations {
   constructCirclesFromSurfaceFacesRuntimeSelect(
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
-  constructCirclesLinesFromSurfaces(
-    input: ConstructCirclesLinesFromSurfacesInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly CollectionObjectName[]>;
   constructCollection(
     input: ConstructCollectionInput,
     callOptions?: BriosaCallOptions,
@@ -8753,7 +8483,7 @@ export interface ConstructionOperations {
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   constructPointFromCloudPointRuntimeSelect(
-    input?: ConstructPointFromCloudPointRuntimeSelectInput,
+    input: ConstructPointFromCloudPointRuntimeSelectInput,
     callOptions?: BriosaCallOptions,
   ): Promise<Vector>;
   constructPointFromSurveyTargetCenter(
@@ -9079,7 +8809,7 @@ export interface ConstructionOperations {
     callOptions?: BriosaCallOptions,
   ): Promise<readonly CollectionInstrumentId[]>;
   makeCollectionItemNameRefListWildcardSelection(
-    input?: MakeCollectionItemNameRefListWildcardSelectionInput,
+    input: MakeCollectionItemNameRefListWildcardSelectionInput,
     callOptions?: BriosaCallOptions,
   ): Promise<readonly CollectionItemName[]>;
   makeCollectionNameRuntimeSelect(
@@ -9099,21 +8829,17 @@ export interface ConstructionOperations {
     callOptions?: BriosaCallOptions,
   ): Promise<readonly CollectionObjectName[]>;
   makeCollectionObjectNameRefListRuntimeSelect(
-    input?: MakeCollectionObjectNameRefListRuntimeSelectInput,
+    input: MakeCollectionObjectNameRefListRuntimeSelectInput,
     callOptions?: BriosaCallOptions,
   ): Promise<readonly CollectionObjectName[]>;
   makeCollectionObjectNameRefListWildcardSelection(
-    input?: MakeCollectionObjectNameRefListWildcardSelectionInput,
+    input: MakeCollectionObjectNameRefListWildcardSelectionInput,
     callOptions?: BriosaCallOptions,
   ): Promise<readonly CollectionObjectName[]>;
   makeCollectionObjectNameRuntimeSelect(
-    input?: MakeCollectionObjectNameRuntimeSelectInput,
+    input: MakeCollectionObjectNameRuntimeSelectInput,
     callOptions?: BriosaCallOptions,
   ): Promise<CollectionObjectName>;
-  makeCollectionVectorGroupNameRefListRuntimeSelect(
-    input?: MakeCollectionVectorGroupNameRefListRuntimeSelectInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly CollectionVectorGroupName[]>;
   makeEventRefListWildcardSelection(
     input?: MakeEventRefListWildcardSelectionInput,
     callOptions?: BriosaCallOptions,
@@ -9162,10 +8888,6 @@ export interface ConstructionOperations {
     input: MakeVectorNameRefListFromVectorGroupInput,
     callOptions?: BriosaCallOptions,
   ): Promise<readonly VectorName[]>;
-  makeVectorNameRefListRuntimeSelect(
-    input?: MakeVectorNameRefListRuntimeSelectInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly VectorName[]>;
   makeVectorNamesUniqueInVectorGroup(
     input: MakeVectorNamesUniqueInVectorGroupInput,
     callOptions?: BriosaCallOptions,
@@ -9198,10 +8920,6 @@ export interface ConstructionOperations {
     input: TransformPointsByDeltaAboutWorkingFrameInput,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
-  addCollectionInstrumentsToRefListWildcardSelection(
-    input: AddCollectionInstrumentsToRefListWildcardSelectionInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly CollectionInstrumentId[]>;
   averageSetOfGroups(
     input: AverageSetOfGroupsInput,
     callOptions?: BriosaCallOptions,
@@ -9222,10 +8940,6 @@ export interface ConstructionOperations {
     input: GetGradientAtProjectedPointOnSurfaceEdgeInput,
     callOptions?: BriosaCallOptions,
   ): Promise<ProjectedPointGradient>;
-  makeCalloutViewRefListWildcardSelection(
-    input?: MakeCalloutViewRefListWildcardSelectionInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<readonly CollectionItemName[]>;
   makeCollectionObjectNameEnsureUnique(
     input: MakeCollectionObjectNameEnsureUniqueInput,
     callOptions?: BriosaCallOptions,
@@ -9244,14 +8958,6 @@ export interface ConstructionOperations {
   ): Promise<readonly CollectionItemName[]>;
   setDefaultCalloutViewProperties(
     input?: SetDefaultCalloutViewPropertiesInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<void>;
-  setCalloutViewProperties(
-    input: SetCalloutViewPropertiesInput,
-    callOptions?: BriosaCallOptions,
-  ): Promise<void>;
-  constructPolygonizedSurfaceFromPointClouds(
-    input: ConstructPolygonizedSurfaceFromPointCloudsInput,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   constructScaleBar(
@@ -9869,75 +9575,6 @@ async function constructCirclesFromSurfaceFacesRuntimeSelectOperation(
     [],
   ) as void;
 }
-async function constructCirclesLinesFromSurfacesOperation(
-  briosa: BriosaClient,
-  input: ConstructCirclesLinesFromSurfacesInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly CollectionObjectName[]> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.ConstructCirclesLinesFromSurfacesRequest.fromPartial(
-      {
-        surfaces: toWireOperationValue(
-          repeatedOperationValue(
-            getOperationValueSchema('collectionObjectName'),
-          ),
-          requireOperationInput(input.surfaces, 'surfaces'),
-        ),
-        minimumDiameter: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.minimumDiameter, 0, 'minimumDiameter'),
-        ),
-        maximumDiameter: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.maximumDiameter, 0, 'maximumDiameter'),
-        ),
-        tolerance: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.tolerance, 0.02, 'tolerance'),
-        ),
-        singleSurface: toWireOperationValue(
-          operationScalarSchemas.boolean,
-          resolveOperationDefault(input.singleSurface, false, 'singleSurface'),
-        ),
-        circleLineMode: toWireOperationValue(
-          getOperationValueSchema('circleLineMode'),
-          requireOperationInput(input.circleLineMode, 'circleLineMode'),
-        ),
-        destinationCollectionName:
-          input.destinationCollectionName == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('collectionName'),
-                input.destinationCollectionName,
-              ),
-        baseName: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input.baseName,
-            'Geometry Object',
-            'baseName',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'ConstructCirclesLinesFromSurfaces',
-    request,
-    ConstructionOperationsProtocol.ConstructCirclesLinesFromSurfacesRequest,
-    ConstructionOperationsProtocol.ConstructCirclesLinesFromSurfacesResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'geometryObjects',
-      repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
-    ],
-  ]) as readonly CollectionObjectName[];
-}
 async function constructCollectionOperation(
   briosa: BriosaClient,
   input: ConstructCollectionInput,
@@ -10125,13 +9762,10 @@ async function constructCrossSectionCloudOperation(
             'projectToReferenceSurface',
           ),
         ),
-        referenceObject:
-          input.referenceObject == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-                input.referenceObject,
-              ),
+        referenceObject: toWireOperationValue(
+          getOperationValueSchema('collectionObjectName'),
+          requireOperationInput(input.referenceObject, 'referenceObject'),
+        ),
         inputClouds: toWireOperationValue(
           repeatedOperationValue(
             getOperationValueSchema('collectionObjectName'),
@@ -10450,13 +10084,13 @@ async function constructEllipsoidOperation(
           'uncertaintyEllipsoid',
         ),
       ),
-      transformInWorkingCoordinates:
-        input.transformInWorkingCoordinates == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('transform'),
-              input.transformInWorkingCoordinates,
-            ),
+      transformInWorkingCoordinates: toWireOperationValue(
+        getOperationValueSchema('transform'),
+        requireOperationInput(
+          input.transformInWorkingCoordinates,
+          'transformInWorkingCoordinates',
+        ),
+      ),
       ellipseColor:
         input.ellipseColor == null
           ? undefined
@@ -10520,13 +10154,13 @@ async function constructFrameOperation(
         getOperationValueSchema('collectionObjectName'),
         requireOperationInput(input.newFrameName, 'newFrameName'),
       ),
-      transformInWorkingCoordinates:
-        input.transformInWorkingCoordinates == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('transform'),
-              input.transformInWorkingCoordinates,
-            ),
+      transformInWorkingCoordinates: toWireOperationValue(
+        getOperationValueSchema('transform'),
+        requireOperationInput(
+          input.transformInWorkingCoordinates,
+          'transformInWorkingCoordinates',
+        ),
+      ),
     } as never);
   const response = await invokeClientOperation(
     briosa,
@@ -10753,13 +10387,13 @@ async function constructFrameFromTransformInWorldOperation(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(input.newFrameName, 'newFrameName'),
         ),
-        transformInWorldCoordinates:
-          input.transformInWorldCoordinates == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('transform'),
-                input.transformInWorldCoordinates,
-              ),
+        transformInWorldCoordinates: toWireOperationValue(
+          getOperationValueSchema('transform'),
+          requireOperationInput(
+            input.transformInWorldCoordinates,
+            'transformInWorldCoordinates',
+          ),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -12474,16 +12108,18 @@ async function constructPointFitToPointsOperation(
 }
 async function constructPointFromCloudPointRuntimeSelectOperation(
   briosa: BriosaClient,
-  input?: ConstructPointFromCloudPointRuntimeSelectInput,
+  input: ConstructPointFromCloudPointRuntimeSelectInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<Vector> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request =
     ConstructionOperationsProtocol.ConstructPointFromCloudPointRuntimeSelectRequest.fromPartial(
       {
         selectionPrompt: toWireOperationValue(
           operationScalarSchemas.string,
           resolveOperationDefault(
-            input?.selectionPrompt,
+            input.selectionPrompt,
             'Select cloud point',
             'selectionPrompt',
           ),
@@ -12491,18 +12127,18 @@ async function constructPointFromCloudPointRuntimeSelectOperation(
         constructPoint: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.constructPoint,
+            input.constructPoint,
             false,
             'constructPoint',
           ),
         ),
-        constructedPointName:
-          input?.constructedPointName == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('pointName'),
-                input?.constructedPointName,
-              ),
+        constructedPointName: toWireOperationValue(
+          getOperationValueSchema('pointName'),
+          requireOperationInput(
+            input.constructedPointName,
+            'constructedPointName',
+          ),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -13330,13 +12966,10 @@ async function constructPointsFromSurfacesOnUvGridOperation(
           operationScalarSchemas.integer,
           resolveOperationDefault(input.numberOfVGrids, 5, 'numberOfVGrids'),
         ),
-        edgePointMode:
-          input.edgePointMode == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('edgePointMode'),
-                input.edgePointMode,
-              ),
+        edgePointMode: toWireOperationValue(
+          getOperationValueSchema('edgePointMode'),
+          requireOperationInput(input.edgePointMode, 'edgePointMode'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -13631,13 +13264,10 @@ async function constructPointsShiftedInWorkingFrameOperation(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(input.groupForNewPoints, 'groupForNewPoints'),
         ),
-        shiftVector:
-          input.shiftVector == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('vector'),
-                input.shiftVector,
-              ),
+        shiftVector: toWireOperationValue(
+          getOperationValueSchema('vector'),
+          requireOperationInput(input.shiftVector, 'shiftVector'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -13724,13 +13354,10 @@ async function constructPointsSubsetWithGreatestSpacingOperation(
           operationScalarSchemas.integer,
           resolveOperationDefault(input.subsetSize, 10, 'subsetSize'),
         ),
-        groupForSubset:
-          input.groupForSubset == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-                input.groupForSubset,
-              ),
+        groupForSubset: toWireOperationValue(
+          getOperationValueSchema('collectionObjectName'),
+          requireOperationInput(input.groupForSubset, 'groupForSubset'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -15171,13 +14798,13 @@ async function createPointCalloutOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(input.showUMag, false, 'showUmag'),
       ),
-      desiredCoordinateSystem:
-        input.desiredCoordinateSystem == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('coordinateSystemType'),
-              input.desiredCoordinateSystem,
-            ),
+      desiredCoordinateSystem: toWireOperationValue(
+        getOperationValueSchema('coordinateSystemType'),
+        requireOperationInput(
+          input.desiredCoordinateSystem,
+          'desiredCoordinateSystem',
+        ),
+      ),
       notes: toWireOperationValue(
         repeatedOperationValue(operationScalarSchemas.string),
         resolveOperationDefault(input.notes, [], 'notes'),
@@ -15967,7 +15594,7 @@ async function deleteCollectionsByWildcardOperation(
       {
         searchString: toWireOperationValue(
           operationScalarSchemas.string,
-          resolveOperationDefault(input.searchString, '', 'searchString'),
+          requireOperationInput(input.searchString, 'searchString'),
         ),
         caseSensitiveSearch: toWireOperationValue(
           operationScalarSchemas.boolean,
@@ -16012,7 +15639,7 @@ async function deleteFoldersByWildcardOperation(
     ConstructionOperationsProtocol.DeleteFoldersByWildcardRequest.fromPartial({
       searchString: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(input.searchString, '', 'searchString'),
+        requireOperationInput(input.searchString, 'searchString'),
       ),
       caseSensitiveSearch: toWireOperationValue(
         operationScalarSchemas.boolean,
@@ -16387,16 +16014,18 @@ async function makeCollectionInstrumentRefListRuntimeSelectOperation(
 }
 async function makeCollectionItemNameRefListWildcardSelectionOperation(
   briosa: BriosaClient,
-  input?: MakeCollectionItemNameRefListWildcardSelectionInput,
+  input: MakeCollectionItemNameRefListWildcardSelectionInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<readonly CollectionItemName[]> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request =
     ConstructionOperationsProtocol.MakeCollectionItemNameRefListWildcardSelectionRequest.fromPartial(
       {
         collectionWildcardCriteria: toWireOperationValue(
           operationScalarSchemas.string,
           resolveOperationDefault(
-            input?.collectionWildcardCriteria,
+            input.collectionWildcardCriteria,
             '*',
             'collectionWildcardCriteria',
           ),
@@ -16404,18 +16033,15 @@ async function makeCollectionItemNameRefListWildcardSelectionOperation(
         itemWildcardCriteria: toWireOperationValue(
           operationScalarSchemas.string,
           resolveOperationDefault(
-            input?.itemWildcardCriteria,
+            input.itemWildcardCriteria,
             '*',
             'itemWildcardCriteria',
           ),
         ),
-        itemType:
-          input?.itemType == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('itemType'),
-                input?.itemType,
-              ),
+        itemType: toWireOperationValue(
+          getOperationValueSchema('itemType'),
+          requireOperationInput(input.itemType, 'itemType'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -16475,13 +16101,10 @@ async function makeCollectionObjectNameRefListByTypeOperation(
           operationScalarSchemas.string,
           resolveOperationDefault(input.collection, '', 'collection'),
         ),
-        objectType:
-          input.objectType == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('objectType'),
-                input.objectType,
-              ),
+        objectType: toWireOperationValue(
+          getOperationValueSchema('objectType'),
+          requireOperationInput(input.objectType, 'objectType'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -16514,13 +16137,10 @@ async function makeCollectionObjectNameRefListByTypeAndColorOperation(
           operationScalarSchemas.string,
           resolveOperationDefault(input.collection, '', 'collection'),
         ),
-        objectType:
-          input.objectType == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('objectType'),
-                input.objectType,
-              ),
+        objectType: toWireOperationValue(
+          getOperationValueSchema('objectType'),
+          requireOperationInput(input.objectType, 'objectType'),
+        ),
         objectColor:
           input.objectColor == null
             ? undefined
@@ -16578,23 +16198,22 @@ async function makeCollectionObjectNameRefListFromAllGroupsInCollectionOperation
 }
 async function makeCollectionObjectNameRefListRuntimeSelectOperation(
   briosa: BriosaClient,
-  input?: MakeCollectionObjectNameRefListRuntimeSelectInput,
+  input: MakeCollectionObjectNameRefListRuntimeSelectInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<readonly CollectionObjectName[]> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request =
     ConstructionOperationsProtocol.MakeCollectionObjectNameRefListRuntimeSelectRequest.fromPartial(
       {
         userPrompt: toWireOperationValue(
           operationScalarSchemas.string,
-          resolveOperationDefault(input?.userPrompt, '', 'userPrompt'),
+          resolveOperationDefault(input.userPrompt, '', 'userPrompt'),
         ),
-        objectType:
-          input?.objectType == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('objectType'),
-                input?.objectType,
-              ),
+        objectType: toWireOperationValue(
+          getOperationValueSchema('objectType'),
+          requireOperationInput(input.objectType, 'objectType'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -16615,16 +16234,18 @@ async function makeCollectionObjectNameRefListRuntimeSelectOperation(
 }
 async function makeCollectionObjectNameRefListWildcardSelectionOperation(
   briosa: BriosaClient,
-  input?: MakeCollectionObjectNameRefListWildcardSelectionInput,
+  input: MakeCollectionObjectNameRefListWildcardSelectionInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<readonly CollectionObjectName[]> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request =
     ConstructionOperationsProtocol.MakeCollectionObjectNameRefListWildcardSelectionRequest.fromPartial(
       {
         collectionWildcardCriteria: toWireOperationValue(
           operationScalarSchemas.string,
           resolveOperationDefault(
-            input?.collectionWildcardCriteria,
+            input.collectionWildcardCriteria,
             '*',
             'collectionWildcardCriteria',
           ),
@@ -16632,18 +16253,15 @@ async function makeCollectionObjectNameRefListWildcardSelectionOperation(
         objectWildcardCriteria: toWireOperationValue(
           operationScalarSchemas.string,
           resolveOperationDefault(
-            input?.objectWildcardCriteria,
+            input.objectWildcardCriteria,
             '*',
             'objectWildcardCriteria',
           ),
         ),
-        objectType:
-          input?.objectType == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('objectType'),
-                input?.objectType,
-              ),
+        objectType: toWireOperationValue(
+          getOperationValueSchema('objectType'),
+          requireOperationInput(input.objectType, 'objectType'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -16664,23 +16282,22 @@ async function makeCollectionObjectNameRefListWildcardSelectionOperation(
 }
 async function makeCollectionObjectNameRuntimeSelectOperation(
   briosa: BriosaClient,
-  input?: MakeCollectionObjectNameRuntimeSelectInput,
+  input: MakeCollectionObjectNameRuntimeSelectInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<CollectionObjectName> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request =
     ConstructionOperationsProtocol.MakeCollectionObjectNameRuntimeSelectRequest.fromPartial(
       {
         userPrompt: toWireOperationValue(
           operationScalarSchemas.string,
-          resolveOperationDefault(input?.userPrompt, '', 'userPrompt'),
+          resolveOperationDefault(input.userPrompt, '', 'userPrompt'),
         ),
-        objectType:
-          input?.objectType == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('objectType'),
-                input?.objectType,
-              ),
+        objectType: toWireOperationValue(
+          getOperationValueSchema('objectType'),
+          requireOperationInput(input.objectType, 'objectType'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -16698,38 +16315,6 @@ async function makeCollectionObjectNameRuntimeSelectOperation(
       getOperationValueSchema('collectionObjectName'),
     ],
   ]) as CollectionObjectName;
-}
-async function makeCollectionVectorGroupNameRefListRuntimeSelectOperation(
-  briosa: BriosaClient,
-  input?: MakeCollectionVectorGroupNameRefListRuntimeSelectInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly CollectionVectorGroupName[]> {
-  const request =
-    ConstructionOperationsProtocol.MakeCollectionVectorGroupNameRefListRuntimeSelectRequest.fromPartial(
-      {
-        userPrompt: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(input?.userPrompt, '', 'userPrompt'),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'MakeCollectionVectorGroupNameRefListRuntimeSelect',
-    request,
-    ConstructionOperationsProtocol.MakeCollectionVectorGroupNameRefListRuntimeSelectRequest,
-    ConstructionOperationsProtocol.MakeCollectionVectorGroupNameRefListRuntimeSelectResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'resultantCollectionVectorGroupNameReferenceList',
-      repeatedOperationValue(
-        getOperationValueSchema('collectionVectorGroupName'),
-      ),
-    ],
-  ]) as readonly CollectionVectorGroupName[];
 }
 async function makeEventRefListWildcardSelectionOperation(
   briosa: BriosaClient,
@@ -17166,40 +16751,6 @@ async function makeVectorNameRefListFromVectorGroupOperation(
     ],
   ]) as readonly VectorName[];
 }
-async function makeVectorNameRefListRuntimeSelectOperation(
-  briosa: BriosaClient,
-  input?: MakeVectorNameRefListRuntimeSelectInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly VectorName[]> {
-  const request =
-    ConstructionOperationsProtocol.MakeVectorNameRefListRuntimeSelectRequest.fromPartial(
-      {
-        userPrompt: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input?.userPrompt,
-            ' Select Vectors (ENTER when done) ',
-            'userPrompt',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'MakeVectorNameRefListRuntimeSelect',
-    request,
-    ConstructionOperationsProtocol.MakeVectorNameRefListRuntimeSelectRequest,
-    ConstructionOperationsProtocol.MakeVectorNameRefListRuntimeSelectResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'resultantVectorNameList',
-      repeatedOperationValue(getOperationValueSchema('vectorName')),
-    ],
-  ]) as readonly VectorName[];
-}
 async function makeVectorNamesUniqueInVectorGroupOperation(
   briosa: BriosaClient,
   input: MakeVectorNamesUniqueInVectorGroupInput,
@@ -17498,59 +17049,6 @@ async function transformPointsByDeltaAboutWorkingFrameOperation(
     [],
   ) as void;
 }
-async function addCollectionInstrumentsToRefListWildcardSelectionOperation(
-  briosa: BriosaClient,
-  input: AddCollectionInstrumentsToRefListWildcardSelectionInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly CollectionInstrumentId[]> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.AddCollectionInstrumentsToRefListWildcardSelectionRequest.fromPartial(
-      {
-        collectionInstrumentRefList: toWireOperationValue(
-          repeatedOperationValue(
-            getOperationValueSchema('collectionInstrumentId'),
-          ),
-          requireOperationInput(
-            input.collectionInstrumentRefList,
-            'collectionInstrumentRefList',
-          ),
-        ),
-        collectionWildcardCriteria: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input.collectionWildcardCriteria,
-            '*',
-            'collectionWildcardCriteria',
-          ),
-        ),
-        instrumentWildcardCriteria: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input.instrumentWildcardCriteria,
-            '*',
-            'instrumentWildcardCriteria',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'AddCollectionInstrumentsToRefListWildcardSelection',
-    request,
-    ConstructionOperationsProtocol.AddCollectionInstrumentsToRefListWildcardSelectionRequest,
-    ConstructionOperationsProtocol.AddCollectionInstrumentsToRefListWildcardSelectionResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'collectionInstrumentRefList',
-      repeatedOperationValue(getOperationValueSchema('collectionInstrumentId')),
-    ],
-  ]) as readonly CollectionInstrumentId[];
-}
 async function averageSetOfGroupsOperation(
   briosa: BriosaClient,
   input: AverageSetOfGroupsInput,
@@ -17774,13 +17272,13 @@ async function getGradientAtProjectedPointOnSurfaceEdgeOperation(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(input.surfaceName, 'surfaceName'),
         ),
-        edgeOffsetDirection:
-          input.edgeOffsetDirection == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('vector'),
-                input.edgeOffsetDirection,
-              ),
+        edgeOffsetDirection: toWireOperationValue(
+          getOperationValueSchema('vector'),
+          requireOperationInput(
+            input.edgeOffsetDirection,
+            'edgeOffsetDirection',
+          ),
+        ),
         edgeOffsetDistance: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(
@@ -17815,48 +17313,6 @@ async function getGradientAtProjectedPointOnSurfaceEdgeOperation(
       'projectedPoint',
     ],
   ]) as ProjectedPointGradient;
-}
-async function makeCalloutViewRefListWildcardSelectionOperation(
-  briosa: BriosaClient,
-  input?: MakeCalloutViewRefListWildcardSelectionInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<readonly CollectionItemName[]> {
-  const request =
-    ConstructionOperationsProtocol.MakeCalloutViewRefListWildcardSelectionRequest.fromPartial(
-      {
-        collectionWildcardCriteria: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input?.collectionWildcardCriteria,
-            '*',
-            'collectionWildcardCriteria',
-          ),
-        ),
-        calloutViewWildcardCriteria: toWireOperationValue(
-          operationScalarSchemas.string,
-          resolveOperationDefault(
-            input?.calloutViewWildcardCriteria,
-            '*',
-            'calloutViewWildcardCriteria',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'MakeCalloutViewRefListWildcardSelection',
-    request,
-    ConstructionOperationsProtocol.MakeCalloutViewRefListWildcardSelectionRequest,
-    ConstructionOperationsProtocol.MakeCalloutViewRefListWildcardSelectionResult,
-    callOptions,
-  );
-  return mapOperationResponse(response as Readonly<Record<string, unknown>>, [
-    [
-      'calloutViews',
-      repeatedOperationValue(getOperationValueSchema('collectionItemName')),
-    ],
-  ]) as readonly CollectionItemName[];
 }
 async function makeCollectionObjectNameEnsureUniqueOperation(
   briosa: BriosaClient,
@@ -18046,88 +17502,6 @@ async function setDefaultCalloutViewPropertiesOperation(
     [],
   ) as void;
 }
-async function setCalloutViewPropertiesOperation(
-  briosa: BriosaClient,
-  input: SetCalloutViewPropertiesInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<void> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.SetCalloutViewPropertiesRequest.fromPartial({
-      calloutViews: toWireOperationValue(
-        repeatedOperationValue(getOperationValueSchema('collectionItemName')),
-        requireOperationInput(input.calloutViews, 'calloutViews'),
-      ),
-      properties:
-        input.properties == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('calloutViewProperties'),
-              input.properties,
-            ),
-    } as never);
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'SetCalloutViewProperties',
-    request,
-    ConstructionOperationsProtocol.SetCalloutViewPropertiesRequest,
-    ConstructionOperationsProtocol.SetCalloutViewPropertiesResult,
-    callOptions,
-  );
-  return mapOperationResponse(
-    response as Readonly<Record<string, unknown>>,
-    [],
-  ) as void;
-}
-async function constructPolygonizedSurfaceFromPointCloudsOperation(
-  briosa: BriosaClient,
-  input: ConstructPolygonizedSurfaceFromPointCloudsInput,
-  callOptions: BriosaCallOptions = {},
-): Promise<void> {
-  if (typeof input !== 'object' || input === null)
-    throw new TypeError('input is required.');
-  const request =
-    ConstructionOperationsProtocol.ConstructPolygonizedSurfaceFromPointCloudsRequest.fromPartial(
-      {
-        pointCloudList: toWireOperationValue(
-          repeatedOperationValue(
-            getOperationValueSchema('collectionObjectName'),
-          ),
-          requireOperationInput(input.pointCloudList, 'pointCloudList'),
-        ),
-        meshOrientation: toWireOperationValue(
-          getOperationValueSchema('meshOrientationType'),
-          requireOperationInput(input.meshOrientation, 'meshOrientation'),
-        ),
-        gridResolution: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.gridResolution, 0, 'gridResolution'),
-        ),
-        polygonizedSurfaceName: toWireOperationValue(
-          getOperationValueSchema('collectionObjectName'),
-          requireOperationInput(
-            input.polygonizedSurfaceName,
-            'polygonizedSurfaceName',
-          ),
-        ),
-      } as never,
-    );
-  const response = await invokeClientOperation(
-    briosa,
-    'ConstructionOperations',
-    'ConstructPolygonizedSurfaceFromPointClouds',
-    request,
-    ConstructionOperationsProtocol.ConstructPolygonizedSurfaceFromPointCloudsRequest,
-    ConstructionOperationsProtocol.ConstructPolygonizedSurfaceFromPointCloudsResult,
-    callOptions,
-  );
-  return mapOperationResponse(
-    response as Readonly<Record<string, unknown>>,
-    [],
-  ) as void;
-}
 async function constructScaleBarOperation(
   briosa: BriosaClient,
   input: ConstructScaleBarInput,
@@ -18255,8 +17629,6 @@ export function createConstructionOperations(
         briosa,
         callOptions,
       ),
-    constructCirclesLinesFromSurfaces: (input, callOptions) =>
-      constructCirclesLinesFromSurfacesOperation(briosa, input, callOptions),
     constructCollection: (input, callOptions) =>
       constructCollectionOperation(briosa, input, callOptions),
     constructCone: (input, callOptions) =>
@@ -18861,12 +18233,6 @@ export function createConstructionOperations(
         input,
         callOptions,
       ),
-    makeCollectionVectorGroupNameRefListRuntimeSelect: (input, callOptions) =>
-      makeCollectionVectorGroupNameRefListRuntimeSelectOperation(
-        briosa,
-        input,
-        callOptions,
-      ),
     makeEventRefListWildcardSelection: (input, callOptions) =>
       makeEventRefListWildcardSelectionOperation(briosa, input, callOptions),
     makePictureNameRefListRuntimeSelect: (input, callOptions) =>
@@ -18899,8 +18265,6 @@ export function createConstructionOperations(
       makeTransformFromDoublesFixedXyzOperation(briosa, input, callOptions),
     makeVectorNameRefListFromVectorGroup: (input, callOptions) =>
       makeVectorNameRefListFromVectorGroupOperation(briosa, input, callOptions),
-    makeVectorNameRefListRuntimeSelect: (input, callOptions) =>
-      makeVectorNameRefListRuntimeSelectOperation(briosa, input, callOptions),
     makeVectorNamesUniqueInVectorGroup: (input, callOptions) =>
       makeVectorNamesUniqueInVectorGroupOperation(briosa, input, callOptions),
     renameCalloutView: (input, callOptions) =>
@@ -18925,12 +18289,6 @@ export function createConstructionOperations(
         input,
         callOptions,
       ),
-    addCollectionInstrumentsToRefListWildcardSelection: (input, callOptions) =>
-      addCollectionInstrumentsToRefListWildcardSelectionOperation(
-        briosa,
-        input,
-        callOptions,
-      ),
     averageSetOfGroups: (input, callOptions) =>
       averageSetOfGroupsOperation(briosa, input, callOptions),
     constructGeometryFromSurfaces: (input, callOptions) =>
@@ -18941,12 +18299,6 @@ export function createConstructionOperations(
       getGradientAtProjectedPointOnSurfaceOperation(briosa, input, callOptions),
     getGradientAtProjectedPointOnSurfaceEdge: (input, callOptions) =>
       getGradientAtProjectedPointOnSurfaceEdgeOperation(
-        briosa,
-        input,
-        callOptions,
-      ),
-    makeCalloutViewRefListWildcardSelection: (input, callOptions) =>
-      makeCalloutViewRefListWildcardSelectionOperation(
         briosa,
         input,
         callOptions,
@@ -18965,14 +18317,6 @@ export function createConstructionOperations(
       ),
     setDefaultCalloutViewProperties: (input, callOptions) =>
       setDefaultCalloutViewPropertiesOperation(briosa, input, callOptions),
-    setCalloutViewProperties: (input, callOptions) =>
-      setCalloutViewPropertiesOperation(briosa, input, callOptions),
-    constructPolygonizedSurfaceFromPointClouds: (input, callOptions) =>
-      constructPolygonizedSurfaceFromPointCloudsOperation(
-        briosa,
-        input,
-        callOptions,
-      ),
     constructScaleBar: (input, callOptions) =>
       constructScaleBarOperation(briosa, input, callOptions),
   };
@@ -18999,7 +18343,7 @@ export interface GdtOperations {
     callOptions?: BriosaCallOptions,
   ): Promise<EvaluateFeatureChecksResult>;
   featureInspectionAutoFilter(
-    input?: FeatureInspectionAutoFilterInput,
+    input: FeatureInspectionAutoFilterInput,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   generateFeatureCheckSummary(
@@ -19078,7 +18422,7 @@ export interface GdtOperations {
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   setGdtOptions(
-    input?: SetGdtOptionsInput,
+    input: SetGdtOptionsInput,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   setGlobalForceSimultaneousEvaluation(
@@ -19206,13 +18550,10 @@ async function enableDisableDatumAlignmentForFeatureCheckOperation(
             'enableInitialDatumAlignment',
           ),
         ),
-        alignment:
-          input.alignment == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('collectionItemName'),
-                input.alignment,
-              ),
+        alignment: toWireOperationValue(
+          getOperationValueSchema('collectionItemName'),
+          requireOperationInput(input.alignment, 'alignment'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -19338,55 +18679,41 @@ async function evaluateFeatureChecksOperation(
 }
 async function featureInspectionAutoFilterOperation(
   briosa: BriosaClient,
-  input?: FeatureInspectionAutoFilterInput,
+  input: FeatureInspectionAutoFilterInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<void> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request =
     GdtOperationsProtocol.FeatureInspectionAutoFilterRequest.fromPartial({
-      pointNames:
-        input?.pointNames == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(getOperationValueSchema('pointName')),
-              input?.pointNames,
-            ),
-      groupNames:
-        input?.groupNames == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-              ),
-              input?.groupNames,
-            ),
-      cloudNames:
-        input?.cloudNames == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-              ),
-              input?.cloudNames,
-            ),
+      pointNames: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('pointName')),
+        requireOperationInput(input.pointNames, 'pointNames'),
+      ),
+      groupNames: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
+        requireOperationInput(input.groupNames, 'groupNames'),
+      ),
+      cloudNames: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
+        requireOperationInput(input.cloudNames, 'cloudNames'),
+      ),
       surfaceOffset: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(input?.surfaceOffset, 0.1, 'surfaceOffset'),
+        resolveOperationDefault(input.surfaceOffset, 0.1, 'surfaceOffset'),
       ),
       edgeOffset: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(input?.edgeOffset, 0.1, 'edgeOffset'),
+        resolveOperationDefault(input.edgeOffset, 0.1, 'edgeOffset'),
       ),
-      offsetDirection:
-        input?.offsetDirection == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('offsetDirectionType'),
-              input?.offsetDirection,
-            ),
+      offsetDirection: toWireOperationValue(
+        getOperationValueSchema('offsetDirectionType'),
+        requireOperationInput(input.offsetDirection, 'offsetDirection'),
+      ),
       includePointsWithinCylinderAxisProximity: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
-          input?.includePointsWithinCylinderAxisProximity,
+          input.includePointsWithinCylinderAxisProximity,
           false,
           'includePointsWithinCylinderAxisProximity',
         ),
@@ -19394,32 +18721,30 @@ async function featureInspectionAutoFilterOperation(
       enforceMaxPointsPerFaceInOutput: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
-          input?.enforceMaxPointsPerFaceInOutput,
+          input.enforceMaxPointsPerFaceInOutput,
           false,
           'enforceMaxPointsPerFaceInOutput',
         ),
       ),
       maxPointsPerFace: toWireOperationValue(
         operationScalarSchemas.integer,
-        resolveOperationDefault(input?.maxPointsPerFace, 0, 'maxPointsPerFace'),
+        resolveOperationDefault(input.maxPointsPerFace, 0, 'maxPointsPerFace'),
       ),
-      featureCheckNameList:
-        input?.featureCheckNameList == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionItemName'),
-              ),
-              input?.featureCheckNameList,
-            ),
+      featureCheckNameList: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionItemName')),
+        requireOperationInput(
+          input.featureCheckNameList,
+          'featureCheckNameList',
+        ),
+      ),
       includeDatums: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input?.includeDatums, true, 'includeDatums'),
+        resolveOperationDefault(input.includeDatums, true, 'includeDatums'),
       ),
       createCloudForEachDatumOrCheck: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
-          input?.createCloudForEachDatumOrCheck,
+          input.createCloudForEachDatumOrCheck,
           false,
           'createCloudForEachDatumOrCheck',
         ),
@@ -19836,52 +19161,43 @@ async function makeGdtDatumAnnotationOperation(
   options: MakeGdtDatumAnnotationOptions,
   callOptions: BriosaCallOptions = {},
 ): Promise<void> {
+  if (typeof options !== 'object' || options === null)
+    throw new TypeError('options is required.');
   const request =
     GdtOperationsProtocol.MakeGdtDatumAnnotationRequest.fromPartial({
       datumName: toWireOperationValue(
         operationScalarSchemas.string,
         resolveOperationDefault(options.datumName, '', 'datumName'),
       ),
-      objects:
-        options.objects == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-              ),
-              options.objects,
-            ),
-      geometryRelationships:
-        options.geometryRelationships == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionItemName'),
-              ),
-              options.geometryRelationships,
-            ),
-      surfaceFaces: toWireOperationValue(
-        getOperationValueSchema('surfaceFaceList'),
-        resolveOperationDefault(
-          options.surfaceFaces,
-          {} as SurfaceFaceList,
-          'surfaceFaces',
+      objects: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
+        requireOperationInput(options.objects, 'objects'),
+      ),
+      geometryRelationships: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionItemName')),
+        requireOperationInput(
+          options.geometryRelationships,
+          'geometryRelationships',
         ),
       ),
-      auxiliaryObject:
-        options.auxiliaryObject == null
+      surfaceFaces:
+        options.surfaceFaces == null
           ? undefined
           : toWireOperationValue(
-              getOperationValueSchema('collectionObjectName'),
-              options.auxiliaryObject,
+              getOperationValueSchema('surfaceFaceList'),
+              options.surfaceFaces,
             ),
-      auxiliaryGeometryRelationship:
-        options.auxiliaryGeometryRelationship == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('collectionItemName'),
-              options.auxiliaryGeometryRelationship,
-            ),
+      auxiliaryObject: toWireOperationValue(
+        getOperationValueSchema('collectionObjectName'),
+        requireOperationInput(options.auxiliaryObject, 'auxiliaryObject'),
+      ),
+      auxiliaryGeometryRelationship: toWireOperationValue(
+        getOperationValueSchema('collectionItemName'),
+        requireOperationInput(
+          options.auxiliaryGeometryRelationship,
+          'auxiliaryGeometryRelationship',
+        ),
+      ),
       isSlot: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(options.isSlot, false, 'isSlot'),
@@ -19914,6 +19230,8 @@ async function makeGdtFeatureCheckAnnotationOperation(
   options: MakeGdtFeatureCheckAnnotationOptions,
   callOptions: BriosaCallOptions = {},
 ): Promise<void> {
+  if (typeof options !== 'object' || options === null)
+    throw new TypeError('options is required.');
   const request =
     GdtOperationsProtocol.MakeGdtFeatureCheckAnnotationRequest.fromPartial({
       featureAnnotationName: toWireOperationValue(
@@ -19932,32 +19250,24 @@ async function makeGdtFeatureCheckAnnotationOperation(
           'featureType',
         ),
       ),
-      objects:
-        options.objects == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionObjectName'),
-              ),
-              options.objects,
-            ),
-      geometryRelationships:
-        options.geometryRelationships == null
-          ? undefined
-          : toWireOperationValue(
-              repeatedOperationValue(
-                getOperationValueSchema('collectionItemName'),
-              ),
-              options.geometryRelationships,
-            ),
-      surfaceFaces: toWireOperationValue(
-        getOperationValueSchema('surfaceFaceList'),
-        resolveOperationDefault(
-          options.surfaceFaces,
-          {} as SurfaceFaceList,
-          'surfaceFaces',
+      objects: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionObjectName')),
+        requireOperationInput(options.objects, 'objects'),
+      ),
+      geometryRelationships: toWireOperationValue(
+        repeatedOperationValue(getOperationValueSchema('collectionItemName')),
+        requireOperationInput(
+          options.geometryRelationships,
+          'geometryRelationships',
         ),
       ),
+      surfaceFaces:
+        options.surfaceFaces == null
+          ? undefined
+          : toWireOperationValue(
+              getOperationValueSchema('surfaceFaceList'),
+              options.surfaceFaces,
+            ),
       decomposeMultipleFeatures: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
@@ -20062,20 +19372,17 @@ async function makeGdtFeatureCheckAnnotationOperation(
           'perUnitAreaDiameterStepOver',
         ),
       ),
-      auxiliaryObject:
-        options.auxiliaryObject == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('collectionObjectName'),
-              options.auxiliaryObject,
-            ),
-      auxiliaryGeometryRelationship:
-        options.auxiliaryGeometryRelationship == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('collectionItemName'),
-              options.auxiliaryGeometryRelationship,
-            ),
+      auxiliaryObject: toWireOperationValue(
+        getOperationValueSchema('collectionObjectName'),
+        requireOperationInput(options.auxiliaryObject, 'auxiliaryObject'),
+      ),
+      auxiliaryGeometryRelationship: toWireOperationValue(
+        getOperationValueSchema('collectionItemName'),
+        requireOperationInput(
+          options.auxiliaryGeometryRelationship,
+          'auxiliaryGeometryRelationship',
+        ),
+      ),
       useNominalForDimensionTolerance: toWireOperationValue(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
@@ -20502,18 +19809,20 @@ async function setGdtExtendedOptionsOperation(
 }
 async function setGdtOptionsOperation(
   briosa: BriosaClient,
-  input?: SetGdtOptionsInput,
+  input: SetGdtOptionsInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<void> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request = GdtOperationsProtocol.SetGdtOptionsRequest.fromPartial({
     useHighPoints: toWireOperationValue(
       operationScalarSchemas.boolean,
-      resolveOperationDefault(input?.useHighPoints, false, 'useHighPoints'),
+      resolveOperationDefault(input.useHighPoints, false, 'useHighPoints'),
     ),
     extrapolateAxialExtent: toWireOperationValue(
       operationScalarSchemas.boolean,
       resolveOperationDefault(
-        input?.extrapolateAxialExtent,
+        input.extrapolateAxialExtent,
         true,
         'extrapolateAxialExtent',
       ),
@@ -20521,29 +19830,23 @@ async function setGdtOptionsOperation(
     excludeFromAutoEvaluation: toWireOperationValue(
       operationScalarSchemas.boolean,
       resolveOperationDefault(
-        input?.excludeFromAutoEvaluation,
+        input.excludeFromAutoEvaluation,
         true,
         'excludeFromAutoEvaluation',
       ),
     ),
-    distanceBetweenMode:
-      input?.distanceBetweenMode == null
-        ? undefined
-        : toWireOperationValue(
-            getOperationValueSchema('gdtDistanceBetweenMode'),
-            input?.distanceBetweenMode,
-          ),
-    evaluationMethod:
-      input?.evaluationMethod == null
-        ? undefined
-        : toWireOperationValue(
-            getOperationValueSchema('gdtEvaluationMethod'),
-            input?.evaluationMethod,
-          ),
+    distanceBetweenMode: toWireOperationValue(
+      getOperationValueSchema('gdtDistanceBetweenMode'),
+      requireOperationInput(input.distanceBetweenMode, 'distanceBetweenMode'),
+    ),
+    evaluationMethod: toWireOperationValue(
+      getOperationValueSchema('gdtEvaluationMethod'),
+      requireOperationInput(input.evaluationMethod, 'evaluationMethod'),
+    ),
     createActualFeatures: toWireOperationValue(
       operationScalarSchemas.boolean,
       resolveOperationDefault(
-        input?.createActualFeatures,
+        input.createActualFeatures,
         false,
         'createActualFeatures',
       ),
@@ -20551,7 +19854,7 @@ async function setGdtOptionsOperation(
     createSolvedPoints: toWireOperationValue(
       operationScalarSchemas.boolean,
       resolveOperationDefault(
-        input?.createSolvedPoints,
+        input.createSolvedPoints,
         false,
         'createSolvedPoints',
       ),
@@ -20559,7 +19862,7 @@ async function setGdtOptionsOperation(
     crossSectionCriteria: toWireOperationValue(
       operationScalarSchemas.number,
       resolveOperationDefault(
-        input?.crossSectionCriteria,
+        input.crossSectionCriteria,
         0.03937,
         'crossSectionCriteria',
       ),
@@ -20567,7 +19870,7 @@ async function setGdtOptionsOperation(
     enableAutoFeatureDetection: toWireOperationValue(
       operationScalarSchemas.boolean,
       resolveOperationDefault(
-        input?.enableAutoFeatureDetection,
+        input.enableAutoFeatureDetection,
         true,
         'enableAutoFeatureDetection',
       ),
@@ -21450,7 +20753,7 @@ export interface InstrumentOperations {
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   setTargetComputationOptions(
-    input?: SetTargetComputationOptionsInput,
+    input: SetTargetComputationOptionsInput,
     callOptions?: BriosaCallOptions,
   ): Promise<void>;
   setTrackerEdmTheodoliteUncertainties(
@@ -21963,13 +21266,13 @@ async function autoCorrespondWithProximityTriggerOperation(
             'showWatchWindow',
           ),
         ),
-        deviationVectorGroupName:
-          input.deviationVectorGroupName == null
-            ? undefined
-            : toWireOperationValue(
-                operationScalarSchemas.string,
-                input.deviationVectorGroupName,
-              ),
+        deviationVectorGroupName: toWireOperationValue(
+          operationScalarSchemas.string,
+          requireOperationInput(
+            input.deviationVectorGroupName,
+            'deviationVectorGroupName',
+          ),
+        ),
         makeUnmeasuredGroup: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
@@ -22085,7 +21388,7 @@ async function autoMeasurePointsOperation(
       ),
       autoStart: toWireOperationValue(
         operationScalarSchemas.boolean,
-        resolveOperationDefault(input.autoStart, false, 'autoStart'),
+        resolveOperationDefault(input.autoStart, true, 'autoStart'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -22128,7 +21431,7 @@ async function autoMeasureSpecifiedGeometryOperation(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
             input.waitForComplete,
-            false,
+            true,
             'waitForComplete',
           ),
         ),
@@ -22270,13 +21573,10 @@ async function buildTargetOperation(
       getOperationValueSchema('pointName'),
       requireOperationInput(input.nominalPoint, 'nominalPoint'),
     ),
-    tolerance:
-      input.tolerance == null
-        ? undefined
-        : toWireOperationValue(
-            getOperationValueSchema('toleranceVectorOptions'),
-            input.tolerance,
-          ),
+    tolerance: toWireOperationValue(
+      getOperationValueSchema('toleranceVectorOptions'),
+      requireOperationInput(input.tolerance, 'tolerance'),
+    ),
     htmlPromptFile:
       input.htmlPromptFile == null
         ? undefined
@@ -22313,13 +21613,10 @@ async function calculateTcpFixtureUncertaintiesOperation(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(input.tcpFixture, 'tcpFixture'),
         ),
-        tcpInWorking:
-          input.tcpInWorking == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('transform'),
-                input.tcpInWorking,
-              ),
+        tcpInWorking: toWireOperationValue(
+          getOperationValueSchema('transform'),
+          requireOperationInput(input.tcpInWorking, 'tcpInWorking'),
+        ),
         tcpMeasurements: toWireOperationValue(
           repeatedOperationValue(getOperationValueSchema('pointName')),
           requireOperationInput(input.tcpMeasurements, 'tcpMeasurements'),
@@ -22425,52 +21722,40 @@ async function collimationOperation(
         'zeroMovingInstrument',
       ),
     ),
-    tiltMode:
-      input.tiltMode == null
-        ? undefined
-        : toWireOperationValue(
-            getOperationValueSchema('collimationTiltMode'),
-            input.tiltMode,
-          ),
-    baselineMethod:
-      input.baselineMethod == null
-        ? undefined
-        : toWireOperationValue(
-            getOperationValueSchema('collimationBaselineMethod'),
-            input.baselineMethod,
-          ),
+    tiltMode: toWireOperationValue(
+      getOperationValueSchema('collimationTiltMode'),
+      requireOperationInput(input.tiltMode, 'tiltMode'),
+    ),
+    baselineMethod: toWireOperationValue(
+      getOperationValueSchema('collimationBaselineMethod'),
+      requireOperationInput(input.baselineMethod, 'baselineMethod'),
+    ),
     baselineDistance: toWireOperationValue(
       operationScalarSchemas.number,
       resolveOperationDefault(input.baselineDistance, 0, 'baselineDistance'),
     ),
-    scalePoint1:
-      input.scalePoint1 == null
-        ? undefined
-        : toWireOperationValue(
-            getOperationValueSchema('pointName'),
-            input.scalePoint1,
-          ),
-    scalePoint2:
-      input.scalePoint2 == null
-        ? undefined
-        : toWireOperationValue(
-            getOperationValueSchema('pointName'),
-            input.scalePoint2,
-          ),
-    notMeasuredByMovingInstrument:
-      input.notMeasuredByMovingInstrument == null
-        ? undefined
-        : toWireOperationValue(
-            getOperationValueSchema('pointName'),
-            input.notMeasuredByMovingInstrument,
-          ),
-    asMeasuredByMovingInstrument:
-      input.asMeasuredByMovingInstrument == null
-        ? undefined
-        : toWireOperationValue(
-            getOperationValueSchema('pointName'),
-            input.asMeasuredByMovingInstrument,
-          ),
+    scalePoint1: toWireOperationValue(
+      getOperationValueSchema('pointName'),
+      requireOperationInput(input.scalePoint1, 'scalePoint1'),
+    ),
+    scalePoint2: toWireOperationValue(
+      getOperationValueSchema('pointName'),
+      requireOperationInput(input.scalePoint2, 'scalePoint2'),
+    ),
+    notMeasuredByMovingInstrument: toWireOperationValue(
+      getOperationValueSchema('pointName'),
+      requireOperationInput(
+        input.notMeasuredByMovingInstrument,
+        'notMeasuredByMovingInstrument',
+      ),
+    ),
+    asMeasuredByMovingInstrument: toWireOperationValue(
+      getOperationValueSchema('pointName'),
+      requireOperationInput(
+        input.asMeasuredByMovingInstrument,
+        'asMeasuredByMovingInstrument',
+      ),
+    ),
   } as never);
   const response = await invokeClientOperation(
     briosa,
@@ -22580,7 +21865,7 @@ async function configureAndMeasureOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
           input.measureImmediately,
-          false,
+          true,
           'measureImmediately',
         ),
       ),
@@ -23018,11 +22303,7 @@ async function deleteMeasurementObservationOperation(
         ),
         observationIndex: toWireOperationValue(
           operationScalarSchemas.integer,
-          resolveOperationDefault(
-            input.observationIndex,
-            0,
-            'observationIndex',
-          ),
+          requireOperationInput(input.observationIndex, 'observationIndex'),
         ),
         deletePointIfNoMeasurementsRemain: toWireOperationValue(
           operationScalarSchemas.boolean,
@@ -24916,15 +24197,15 @@ async function locateInstrumentGroupToSurfaceQuickFitOperation(
           getOperationValueSchema('collectionObjectName'),
           requireOperationInput(input.surfaceToFit, 'surfaceToFit'),
         ),
-        otherObjectsToTransform:
-          input.otherObjectsToTransform == null
-            ? undefined
-            : toWireOperationValue(
-                repeatedOperationValue(
-                  getOperationValueSchema('collectionObjectName'),
-                ),
-                input.otherObjectsToTransform,
-              ),
+        otherObjectsToTransform: toWireOperationValue(
+          repeatedOperationValue(
+            getOperationValueSchema('collectionObjectName'),
+          ),
+          requireOperationInput(
+            input.otherObjectsToTransform,
+            'otherObjectsToTransform',
+          ),
+        ),
         rmsTolerance: toWireOperationValue(
           operationScalarSchemas.number,
           resolveOperationDefault(input.rmsTolerance, 0, 'rmsTolerance'),
@@ -25039,13 +24320,10 @@ async function locateInstrumentsUsmnOperation(
           'autoRejectOutliersAndResolve',
         ),
       ),
-      showUsmnDialog:
-        input.showUsmnDialog == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('showUsmnDialog'),
-              input.showUsmnDialog,
-            ),
+      showUsmnDialog: toWireOperationValue(
+        getOperationValueSchema('showUsmnDialog'),
+        requireOperationInput(input.showUsmnDialog, 'showUsmnDialog'),
+      ),
       maximumAcceptableRmsError: toWireOperationValue(
         operationScalarSchemas.number,
         resolveOperationDefault(
@@ -25628,7 +24906,7 @@ async function measureExistingSinglePointOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
           input.measureImmediately,
-          false,
+          true,
           'measureImmediately',
         ),
       ),
@@ -25682,7 +24960,7 @@ async function measureExistingSinglePointAndCompareOperation(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
             input.measureImmediately,
-            false,
+            true,
             'measureImmediately',
           ),
         ),
@@ -25744,7 +25022,7 @@ async function measureExistingSinglePointManualGuideOperation(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
             input.measureImmediately,
-            false,
+            true,
             'measureImmediately',
           ),
         ),
@@ -25827,7 +25105,7 @@ async function measureSinglePointHereOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
           input.measureImmediately,
-          false,
+          true,
           'measureImmediately',
         ),
       ),
@@ -25902,7 +25180,7 @@ async function moveMeasurementObservationOperation(
       ),
       observationIndex: toWireOperationValue(
         operationScalarSchemas.integer,
-        resolveOperationDefault(input.observationIndex, 0, 'observationIndex'),
+        requireOperationInput(input.observationIndex, 'observationIndex'),
       ),
       deletePointIfNoMeasurementsRemain: toWireOperationValue(
         operationScalarSchemas.boolean,
@@ -26409,7 +25687,7 @@ async function setAbsoluteInstrumentScaleFactorOperation(
         ),
         scaleFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.scaleFactor, 0, 'scaleFactor'),
+          requireOperationInput(input.scaleFactor, 'scaleFactor'),
         ),
       } as never,
     );
@@ -26817,29 +26095,30 @@ async function setInstrumentWeatherSettingOperation(
           getOperationValueSchema('collectionInstrumentId'),
           requireOperationInput(input.instrument, 'instrument'),
         ),
-        temperature: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.temperature, 0, 'temperature'),
-        ),
-        pressure: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(input.pressure, 0, 'pressure'),
-        ),
-        relativeHumidity: toWireOperationValue(
-          operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.relativeHumidity,
-            0,
-            'relativeHumidity',
-          ),
-        ),
+        temperature:
+          input.temperature == null
+            ? undefined
+            : toWireOperationValue(
+                operationScalarSchemas.number,
+                input.temperature,
+              ),
+        pressure:
+          input.pressure == null
+            ? undefined
+            : toWireOperationValue(
+                operationScalarSchemas.number,
+                input.pressure,
+              ),
+        relativeHumidity:
+          input.relativeHumidity == null
+            ? undefined
+            : toWireOperationValue(
+                operationScalarSchemas.number,
+                input.relativeHumidity,
+              ),
         setAutomatically: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input.setAutomatically,
-            false,
-            'setAutomatically',
-          ),
+          requireOperationInput(input.setAutomatically, 'setAutomatically'),
         ),
       } as never,
     );
@@ -27119,7 +26398,7 @@ async function setMultiplyInstrumentScaleFactorOperation(
         ),
         scaleFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.scaleFactor, 0, 'scaleFactor'),
+          requireOperationInput(input.scaleFactor, 'scaleFactor'),
         ),
       } as never,
     );
@@ -27167,13 +26446,10 @@ async function setObservationCollimationShotOptionsOperation(
             'isCollimationShot',
           ),
         ),
-        targetedInstrument:
-          input.targetedInstrument == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('collectionInstrumentId'),
-                input.targetedInstrument,
-              ),
+        targetedInstrument: toWireOperationValue(
+          getOperationValueSchema('collectionInstrumentId'),
+          requireOperationInput(input.targetedInstrument, 'targetedInstrument'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -27450,23 +26726,22 @@ async function setRemeasureFailedChecksOnlyOperation(
 }
 async function setTargetComputationOptionsOperation(
   briosa: BriosaClient,
-  input?: SetTargetComputationOptionsInput,
+  input: SetTargetComputationOptionsInput,
   callOptions: BriosaCallOptions = {},
 ): Promise<void> {
+  if (typeof input !== 'object' || input === null)
+    throw new TypeError('input is required.');
   const request =
     InstrumentOperationsProtocol.SetTargetComputationOptionsRequest.fromPartial(
       {
-        computationMethod:
-          input?.computationMethod == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('targetComputationMethod'),
-                input?.computationMethod,
-              ),
+        computationMethod: toWireOperationValue(
+          getOperationValueSchema('targetComputationMethod'),
+          requireOperationInput(input.computationMethod, 'computationMethod'),
+        ),
         ignoreDistanceMeasurements: toWireOperationValue(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
-            input?.ignoreDistanceMeasurements,
+            input.ignoreDistanceMeasurements,
             false,
             'ignoreDistanceMeasurements',
           ),
@@ -29757,13 +29032,13 @@ async function setCalibrationApplianceNodeMeasurementOffsetTransformOperation(
             'calibrationApplianceNode',
           ),
         ),
-        measurementOffsetTransform:
-          input.measurementOffsetTransform == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('transform'),
-                input.measurementOffsetTransform,
-              ),
+        measurementOffsetTransform: toWireOperationValue(
+          getOperationValueSchema('transform'),
+          requireOperationInput(
+            input.measurementOffsetTransform,
+            'measurementOffsetTransform',
+          ),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -30517,7 +29792,7 @@ async function deleteRobotCalibrationOperation(
       ),
       calibrationName: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(input.calibrationName, '', 'calibrationName'),
+        requireOperationInput(input.calibrationName, 'calibrationName'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -30996,7 +30271,7 @@ async function moveRobotMachineToFrameOperation(
         operationScalarSchemas.boolean,
         resolveOperationDefault(
           input.acknowledgeArrival,
-          false,
+          true,
           'acknowledgeArrival',
         ),
       ),
@@ -31030,27 +30305,27 @@ async function moveRobotMachineToJointPoseSixDofOperation(
         ),
         joint1: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint1, 0, 'joint1'),
+          requireOperationInput(input.joint1, 'joint1'),
         ),
         joint2: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint2, 0, 'joint2'),
+          requireOperationInput(input.joint2, 'joint2'),
         ),
         joint3: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint3, 0, 'joint3'),
+          requireOperationInput(input.joint3, 'joint3'),
         ),
         joint4: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint4, 0, 'joint4'),
+          requireOperationInput(input.joint4, 'joint4'),
         ),
         joint5: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint5, 0, 'joint5'),
+          requireOperationInput(input.joint5, 'joint5'),
         ),
         joint6: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(input.joint6, 0, 'joint6'),
+          requireOperationInput(input.joint6, 'joint6'),
         ),
       } as never,
     );
@@ -31090,7 +30365,7 @@ async function moveRobotMachineToNamedDestinationOperation(
           operationScalarSchemas.boolean,
           resolveOperationDefault(
             input.acknowledgeArrival,
-            false,
+            true,
             'acknowledgeArrival',
           ),
         ),
@@ -31316,13 +30591,10 @@ async function setRobotCalibrationMeasurementOffsetInToolFrameOperation(
           operationScalarSchemas.string,
           resolveOperationDefault(input.calibrationName, '', 'calibrationName'),
         ),
-        measurementFrame:
-          input.measurementFrame == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('transform'),
-                input.measurementFrame,
-              ),
+        measurementFrame: toWireOperationValue(
+          getOperationValueSchema('transform'),
+          requireOperationInput(input.measurementFrame, 'measurementFrame'),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -31356,13 +30628,10 @@ async function setRobotCalibrationToolFrameOperation(
         operationScalarSchemas.string,
         resolveOperationDefault(input.calibrationName, '', 'calibrationName'),
       ),
-      toolFrame:
-        input.toolFrame == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('transform'),
-              input.toolFrame,
-            ),
+      toolFrame: toWireOperationValue(
+        getOperationValueSchema('transform'),
+        requireOperationInput(input.toolFrame, 'toolFrame'),
+      ),
     } as never);
   const response = await invokeClientOperation(
     briosa,
@@ -31391,13 +30660,13 @@ async function setRobotMachineBaseTransformOperation(
         getOperationValueSchema('collectionMachineId'),
         requireOperationInput(input.machineId, 'machineId'),
       ),
-      destinationTransform:
-        input.destinationTransform == null
-          ? undefined
-          : toWireOperationValue(
-              getOperationValueSchema('transform'),
-              input.destinationTransform,
-            ),
+      destinationTransform: toWireOperationValue(
+        getOperationValueSchema('transform'),
+        requireOperationInput(
+          input.destinationTransform,
+          'destinationTransform',
+        ),
+      ),
       referenceFrame: toWireOperationValue(
         getOperationValueSchema('collectionObjectName'),
         requireOperationInput(input.referenceFrame, 'referenceFrame'),
@@ -31428,6 +30697,7 @@ async function setRobotMachineModelLinkParametersOperation(
 ): Promise<void> {
   if (typeof input !== 'object' || input === null)
     throw new TypeError('input is required.');
+  requireOperationInput(input.configuration, 'configuration');
   const request =
     RobotOperationsProtocol.SetRobotMachineModelLinkParametersRequest.fromPartial(
       {
@@ -31441,203 +30711,176 @@ async function setRobotMachineModelLinkParametersOperation(
         ),
         linkType: toWireOperationValue(
           getOperationValueSchema('robotModelLinkType'),
-          resolveOperationDefault(
-            input.configuration?.linkType,
-            'DH',
-            'linkType',
-          ),
+          requireOperationInput(input.configuration.linkType, 'linkType'),
         ),
         dhAlphaComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhAlphaComponent,
-            0,
+          requireOperationInput(
+            input.configuration.dhAlphaComponent,
             'dhAlphaComponent',
           ),
         ),
         dhAComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhAComponent,
-            0,
+          requireOperationInput(
+            input.configuration.dhAComponent,
             'dhAComponent',
           ),
         ),
         dhDComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhDComponent,
-            0,
+          requireOperationInput(
+            input.configuration.dhDComponent,
             'dhDComponent',
           ),
         ),
         dhThetaComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhThetaComponent,
-            0,
+          requireOperationInput(
+            input.configuration.dhThetaComponent,
             'dhThetaComponent',
           ),
         ),
         dhXAxisDeflectionFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhXAxisDeflectionFactor,
-            0,
+          requireOperationInput(
+            input.configuration.dhXAxisDeflectionFactor,
             'dhXAxisDeflectionFactor',
           ),
         ),
         dhYAxisDeflectionFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhYAxisDeflectionFactor,
-            0,
+          requireOperationInput(
+            input.configuration.dhYAxisDeflectionFactor,
             'dhYAxisDeflectionFactor',
           ),
         ),
         dhZAxisDeflectionFactor: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.dhZAxisDeflectionFactor,
-            0,
+          requireOperationInput(
+            input.configuration.dhZAxisDeflectionFactor,
             'dhZAxisDeflectionFactor',
           ),
         ),
         sixDofXComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofXComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofXComponent,
             'sixDofXComponent',
           ),
         ),
         sixDofYComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofYComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofYComponent,
             'sixDofYComponent',
           ),
         ),
         sixDofZComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofZComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofZComponent,
             'sixDofZComponent',
           ),
         ),
         sixDofRxComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofRxComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofRxComponent,
             'sixDofRxComponent',
           ),
         ),
         sixDofRyComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofRyComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofRyComponent,
             'sixDofRyComponent',
           ),
         ),
         sixDofRzComponent: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.sixDofRzComponent,
-            0,
+          requireOperationInput(
+            input.configuration.sixDofRzComponent,
             'sixDofRzComponent',
           ),
         ),
         activeJointComponent: toWireOperationValue(
           getOperationValueSchema('robotActiveJointComponent'),
-          resolveOperationDefault(
-            input.configuration?.activeJointComponent,
-            'NONE',
+          requireOperationInput(
+            input.configuration.activeJointComponent,
             'activeJointComponent',
           ),
         ),
         encoderOffsetValue: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.encoderOffsetValue,
-            0,
+          requireOperationInput(
+            input.configuration.encoderOffsetValue,
             'encoderOffsetValue',
           ),
         ),
         minimumEncoderLimit: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.minimumEncoderLimit,
-            0,
+          requireOperationInput(
+            input.configuration.minimumEncoderLimit,
             'minimumEncoderLimit',
           ),
         ),
         maximumEncoderLimit: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.maximumEncoderLimit,
-            0,
+          requireOperationInput(
+            input.configuration.maximumEncoderLimit,
             'maximumEncoderLimit',
           ),
         ),
         encoderSenseNegative: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input.configuration?.encoderSenseNegative,
-            false,
+          requireOperationInput(
+            input.configuration.encoderSenseNegative,
             'encoderSenseNegative',
           ),
         ),
         includeAdditionalEncoder: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input.configuration?.includeAdditionalEncoder,
-            false,
+          requireOperationInput(
+            input.configuration.includeAdditionalEncoder,
             'includeAdditionalEncoder',
           ),
         ),
         additionalEncoderIndexOffset: toWireOperationValue(
           operationScalarSchemas.integer,
-          resolveOperationDefault(
-            input.configuration?.additionalEncoderIndexOffset,
-            0,
+          requireOperationInput(
+            input.configuration.additionalEncoderIndexOffset,
             'additionalEncoderIndexOffset',
           ),
         ),
         additionalEncoderSenseNegative: toWireOperationValue(
           operationScalarSchemas.boolean,
-          resolveOperationDefault(
-            input.configuration?.additionalEncoderSenseNegative,
-            false,
+          requireOperationInput(
+            input.configuration.additionalEncoderSenseNegative,
             'additionalEncoderSenseNegative',
           ),
         ),
         segmentOriginMassKg: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.segmentOriginMassKg,
-            0,
+          requireOperationInput(
+            input.configuration.segmentOriginMassKg,
             'segmentOriginMassKg',
           ),
         ),
         segmentCgMassKg: toWireOperationValue(
           operationScalarSchemas.number,
-          resolveOperationDefault(
-            input.configuration?.segmentCgMassKg,
-            0,
+          requireOperationInput(
+            input.configuration.segmentCgMassKg,
             'segmentCgMassKg',
           ),
         ),
-        segmentCgInSegment:
-          input.configuration?.segmentCgInSegment == null
-            ? undefined
-            : toWireOperationValue(
-                getOperationValueSchema('vector'),
-                input.configuration?.segmentCgInSegment,
-              ),
+        segmentCgInSegment: toWireOperationValue(
+          getOperationValueSchema('vector'),
+          requireOperationInput(
+            input.configuration.segmentCgInSegment,
+            'segmentCgInSegment',
+          ),
+        ),
       } as never,
     );
   const response = await invokeClientOperation(
@@ -31669,11 +30912,11 @@ async function setRobotMachineParameterOperation(
       ),
       parameterName: toWireOperationValue(
         operationScalarSchemas.string,
-        resolveOperationDefault(input.parameterName, '', 'parameterName'),
+        requireOperationInput(input.parameterName, 'parameterName'),
       ),
       parameterValue: toWireOperationValue(
         operationScalarSchemas.number,
-        resolveOperationDefault(input.parameterValue, 0, 'parameterValue'),
+        requireOperationInput(input.parameterValue, 'parameterValue'),
       ),
     } as never);
   const response = await invokeClientOperation(
@@ -32078,7 +31321,6 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'cloud_and_mesh_operations.get_cloud_rgb_values_near_point',
   'cloud_and_mesh_operations.subdivide_cloud_by_point_spacing',
   'cloud_and_mesh_operations.delete_cloud_points_by_radial_distance_from_points',
-  'cloud_and_mesh_operations.delete_cloud_points_by_xyz_range',
   'cloud_and_mesh_operations.generate_general_mesh',
   'cloud_and_mesh_operations.consolidate_mesh',
   'cloud_and_mesh_operations.mesh_volume',
@@ -32097,7 +31339,6 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'construction_operations.construct_boundary_points_from_cloud',
   'construction_operations.construct_circle',
   'construction_operations.construct_circles_from_surface_faces_runtime_select',
-  'construction_operations.construct_circles_lines_from_surfaces',
   'construction_operations.construct_collection',
   'construction_operations.construct_cone',
   'construction_operations.construct_cones_from_surface_faces_runtime_select',
@@ -32251,7 +31492,6 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'construction_operations.make_collection_object_name_ref_list_runtime_select',
   'construction_operations.make_collection_object_name_ref_list_wildcard_selection',
   'construction_operations.make_collection_object_name_runtime_select',
-  'construction_operations.make_collection_vector_group_name_ref_list_runtime_select',
   'construction_operations.make_event_ref_list_wildcard_selection',
   'construction_operations.make_picture_name_ref_list_runtime_select',
   'construction_operations.make_point_name_ref_list_from_group',
@@ -32264,9 +31504,7 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'construction_operations.make_transform_from_doubles_euler_parameters',
   'construction_operations.make_transform_from_doubles_fixed_xyz',
   'construction_operations.make_vector_name_ref_list_from_vector_group',
-  'construction_operations.make_vector_name_ref_list_runtime_select',
   'construction_operations.make_vector_names_unique_in_vector_group',
-  'construction_operations.mirror_objects',
   'construction_operations.move_objects_point_to_point_delta',
   'construction_operations.move_objects_to_a_collection',
   'construction_operations.rename_callout_view',
@@ -32281,21 +31519,17 @@ export const WAVE_B_OPERATIONS = Object.freeze([
   'construction_operations.set_point_position_in_working_coordinates',
   'construction_operations.shift_plane',
   'construction_operations.transform_points_by_delta_about_working_frame',
-  'construction_operations.add_collection_instruments_to_ref_list_wildcard_selection',
   'construction_operations.average_set_of_groups',
   'construction_operations.construct_geometry_from_surfaces',
   'construction_operations.construct_objects_from_surface_faces_runtime_select',
   'construction_operations.construct_point_at_object_origin',
   'construction_operations.get_gradient_at_projected_point_on_surface',
   'construction_operations.get_gradient_at_projected_point_on_surface_edge',
-  'construction_operations.make_callout_view_ref_list_wildcard_selection',
   'construction_operations.make_collection_object_name_ensure_unique',
   'construction_operations.make_point_name_ensure_unique',
   'construction_operations.make_relationship_ref_list_runtime_select',
   'construction_operations.make_relationship_ref_list_wildcard_selection',
   'construction_operations.set_default_callout_view_properties',
-  'construction_operations.set_callout_view_properties',
-  'construction_operations.construct_polygonized_surface_from_point_clouds',
   'construction_operations.construct_scale_bar',
   'gdt_operations.datum_alignment',
   'gdt_operations.delete_feature_checks',

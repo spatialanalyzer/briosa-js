@@ -10,12 +10,19 @@ import {
   isServiceError,
   mapServiceError,
 } from './errors.js';
+import {
+  MpExecutionState,
+  type MpExecutionDetails as WireMpExecutionDetails,
+} from './generated/protocol/briosa/operation_outcomes.js';
 import type {
   BriosaCallOptions,
+  BriosaCapabilityListing,
+  BriosaCapabilityListOptions,
   BriosaClientOptions,
   BriosaLifecycleCallOptions,
   BriosaServerSnapshot,
   BriosaStartOptions,
+  MpCompletion,
   NormalizedBriosaStartOptions,
   SpatialAnalyzerLaunchOptions,
   SpatialAnalyzerLifecycleState,
@@ -24,11 +31,13 @@ import type {
 } from './models.js';
 import {
   normalizeStartOptions,
+  validateCallOptions,
   validateClientOptions,
   validateLaunchOptions,
 } from './models.js';
 import {
   mapApplicationState,
+  mapCapabilityListing,
   mapSdkState,
   mapSnapshot,
 } from './protocolMapping.js';
@@ -84,6 +93,14 @@ export interface BriosaClient {
   getServerSnapshot(
     options?: BriosaLifecycleCallOptions,
   ): Promise<BriosaServerSnapshot>;
+  /**
+   * A diagnostic capability listing. With `includeDenied`, it also reports
+   * every denied operation with its denial reason. It never changes which
+   * operations the generation admits.
+   */
+  listCapabilities(
+    options?: BriosaCapabilityListOptions,
+  ): Promise<BriosaCapabilityListing>;
   getSpatialAnalyzerState(
     options?: BriosaLifecycleCallOptions,
   ): Promise<SpatialAnalyzerLifecycleState>;
@@ -188,6 +205,29 @@ export class BriosaClientImplementation implements BriosaClient {
         );
         updateSnapshot(session, snapshot);
         return snapshot;
+      } catch (error) {
+        throw mapTransportFailure(error, session.applicationState);
+      }
+    });
+  }
+
+  listCapabilities(
+    options: BriosaCapabilityListOptions = {},
+  ): Promise<BriosaCapabilityListing> {
+    if (
+      options.includeDenied !== undefined &&
+      typeof options.includeDenied !== 'boolean'
+    ) {
+      return Promise.reject(new TypeError('includeDenied must be a boolean.'));
+    }
+    return this.#runLifecycle(async (session) => {
+      try {
+        return mapCapabilityListing(
+          await session.transport.listCapabilities(
+            options.includeDenied === true,
+            options.signal,
+          ),
+        );
       } catch (error) {
         throw mapTransportFailure(error, session.applicationState);
       }
@@ -323,6 +363,7 @@ export class BriosaClientImplementation implements BriosaClient {
   async [getWorkingDirectoryInternal](
     options: BriosaCallOptions = {},
   ): Promise<string> {
+    validateCallOptions(options);
     const session = await this.#withLock(() => {
       this.#ensureOpen();
       if (this.#startTask !== null) {
@@ -341,10 +382,15 @@ export class BriosaClientImplementation implements BriosaClient {
       return current;
     });
     try {
-      return await session.transport.getWorkingDirectory(
+      const response = await session.transport.getWorkingDirectory(
         this.#options.commandTimeoutMs ?? null,
         options.signal,
       );
+      reportMpCompletion(response, options.onMpCompletion);
+      if (response.directory === undefined) {
+        throw new BriosaProtocolError('working-directory-missing');
+      }
+      return response.directory;
     } catch (error) {
       throw mapTransportFailure(error, session.applicationState);
     } finally {
@@ -366,6 +412,7 @@ export class BriosaClientImplementation implements BriosaClient {
     responseCodec: OperationCodec<TResponse>,
     options: BriosaCallOptions = {},
   ): Promise<TResponse> {
+    validateCallOptions(options);
     const session = await this.#withLock(() => {
       this.#ensureOpen();
       if (this.#startTask !== null) {
@@ -384,7 +431,7 @@ export class BriosaClientImplementation implements BriosaClient {
       return current;
     });
     try {
-      return await session.transport.invokeOperation(
+      const response = await session.transport.invokeOperation(
         service,
         rpc,
         request,
@@ -393,6 +440,8 @@ export class BriosaClientImplementation implements BriosaClient {
         this.#options.commandTimeoutMs ?? null,
         options.signal,
       );
+      reportMpCompletion(response, options.onMpCompletion);
+      return response;
     } catch (error) {
       throw mapTransportFailure(error, session.applicationState);
     } finally {
@@ -781,6 +830,45 @@ function publishStartup(session: Session): void {
 function refreshCommandAdmission(session: Session): void {
   session.commandAdmissionOpen =
     session.snapshot.readyForMp && session.sdkState?.readyForMp === true;
+}
+
+// Every successful major-3 result carries its MP execution details, and every
+// success is checked, whether or not the caller observes it (C1): SUCCEEDED
+// with MP code 2, or PARTIAL_SUCCESS with MP code 4. Anything else breaks the
+// protocol contract. A partial success is a success, so it is reported here and
+// never thrown or retried. The observer runs after this check and before the
+// outputs are mapped, so it sees the completion even if mapping then fails.
+function reportMpCompletion(
+  response: unknown,
+  onMpCompletion: ((completion: MpCompletion) => void) | undefined,
+): void {
+  const execution = (
+    response as { readonly execution?: WireMpExecutionDetails } | undefined
+  )?.execution;
+  if (execution === undefined) {
+    throw new BriosaProtocolError('mp-completion-missing');
+  }
+  const completion = mpCompletion(execution);
+  if (completion === null) {
+    throw new BriosaProtocolError('mp-completion-invalid');
+  }
+  onMpCompletion?.(completion);
+}
+
+function mpCompletion(execution: WireMpExecutionDetails): MpCompletion | null {
+  if (
+    execution.state === MpExecutionState.MP_EXECUTION_STATE_SUCCEEDED &&
+    execution.mpResultCode === 2
+  ) {
+    return { state: 'succeeded', mpResultCode: 2 };
+  }
+  if (
+    execution.state === MpExecutionState.MP_EXECUTION_STATE_PARTIAL_SUCCESS &&
+    execution.mpResultCode === 4
+  ) {
+    return { state: 'partialSuccess', mpResultCode: 4 };
+  }
+  return null;
 }
 
 function requireGeneration(

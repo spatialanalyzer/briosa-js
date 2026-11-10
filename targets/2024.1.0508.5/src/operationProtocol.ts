@@ -17,6 +17,8 @@ export type OperationValueSchema =
       readonly kind: 'message';
       readonly name: string;
       readonly fields: Readonly<Record<string, OperationMessageField>>;
+      /** Oneofs that must carry exactly one member when the message is given. */
+      readonly requiredOneofs?: readonly string[];
     }
   | { readonly kind: 'repeated'; readonly item: OperationValueSchema }
   | { readonly kind: 'listWrapper'; readonly item: OperationValueSchema };
@@ -24,6 +26,8 @@ export type OperationValueSchema =
 interface OperationMessageField {
   readonly schema: OperationValueSchema;
   readonly optional: boolean;
+  /** The protobuf oneof that carries this member as `{ $case, value }`. */
+  readonly oneof?: string;
 }
 
 export const operationScalarSchemas = Object.freeze({
@@ -761,15 +765,21 @@ Object.assign(operationValueSchemas, {
   reportOutputOptions: {
     kind: 'message',
     name: 'ReportOutputOptions',
+    requiredOneofs: ['destination'],
     fields: {
       outputType: {
         schema: getOperationValueSchema('reportOutputType'),
         optional: false,
       },
-      externalPath: { schema: operationScalarSchemas.string, optional: true },
+      externalPath: {
+        schema: operationScalarSchemas.string,
+        optional: true,
+        oneof: 'destination',
+      },
       embeddedFile: {
         schema: getOperationValueSchema('embeddedReportFile'),
         optional: true,
+        oneof: 'destination',
       },
     },
   },
@@ -962,6 +972,7 @@ export function toWireOperationValue(
       return { values };
     }
     case 'message': {
+      if (schema.name === 'DoubleVector6') return toWireDoubleVector6(value);
       if (typeof value !== 'object' || value === null || Array.isArray(value)) {
         throw new TypeError(`${schema.name} must be an object.`);
       }
@@ -973,8 +984,18 @@ export function toWireOperationValue(
           if (field.optional) continue;
           throw new TypeError(`${schema.name}.${name} is required.`);
         }
-        result[name] = toWireOperationValue(field.schema, fieldValue);
+        const wire = toWireOperationValue(field.schema, fieldValue);
+        if (field.oneof === undefined) {
+          result[name] = wire;
+        } else {
+          // A oneof member travels as { $case, value }; only one may be set.
+          if (result[field.oneof] !== undefined)
+            throw exactlyOneOf(schema, field.oneof);
+          result[field.oneof] = { $case: name, value: wire };
+        }
       }
+      for (const oneof of schema.requiredOneofs ?? [])
+        if (result[oneof] === undefined) throw exactlyOneOf(schema, oneof);
       validateStructuredValue(schema.name, result);
       return result;
     }
@@ -1065,13 +1086,17 @@ function fromWireOperationValue(
       return values.map((item) => fromWireOperationValue(schema.item, item));
     }
     case 'message': {
+      if (schema.name === 'DoubleVector6') return fromWireDoubleVector6(value);
       if (typeof value !== 'object' || value === null || Array.isArray(value)) {
         throw new BriosaProtocolError('operation-output-shape-drift');
       }
       const source = value as Readonly<Record<string, unknown>>;
       const result: Record<string, unknown> = {};
       for (const [name, field] of Object.entries(schema.fields)) {
-        const fieldValue = source[name];
+        const fieldValue =
+          field.oneof === undefined
+            ? source[name]
+            : oneofMember(source[field.oneof], name);
         if (fieldValue === undefined) {
           if (field.optional) continue;
           throw new BriosaProtocolError(
@@ -1080,6 +1105,11 @@ function fromWireOperationValue(
         }
         result[name] = fromWireOperationValue(field.schema, fieldValue);
       }
+      for (const oneof of schema.requiredOneofs ?? [])
+        if (source[oneof] === undefined)
+          throw new BriosaProtocolError(
+            `required-domain-field-missing:${oneof}`,
+          );
       try {
         validateStructuredValue(schema.name, result);
       } catch (cause) {
@@ -1088,6 +1118,34 @@ function fromWireOperationValue(
       return result;
     }
   }
+}
+
+// The public DoubleVector6 is a tuple of exactly six numbers; the protocol
+// carries it as a message with one repeated field.
+function toWireDoubleVector6(value: unknown): unknown {
+  if (!Array.isArray(value))
+    throw new TypeError('DoubleVector6 must be an array of six numbers.');
+  if (value.length !== 6)
+    throw new RangeError('DoubleVector6 must contain exactly 6 values.');
+  return {
+    values: value.map((item: unknown) =>
+      toWireOperationValue(operationScalarSchemas.number, item),
+    ),
+  };
+}
+
+function fromWireDoubleVector6(value: unknown): readonly number[] {
+  if (typeof value !== 'object' || value === null || Array.isArray(value))
+    throw new BriosaProtocolError('operation-output-shape-drift');
+  const values = (value as Readonly<Record<string, unknown>>).values;
+  if (!Array.isArray(values))
+    throw new BriosaProtocolError('operation-output-shape-drift');
+  if (values.length !== 6)
+    throw new BriosaProtocolError('invalid-domain-value');
+  return values.map(
+    (item: unknown) =>
+      fromWireOperationValue(operationScalarSchemas.number, item) as number,
+  );
 }
 
 function validateScalar(
@@ -1133,13 +1191,27 @@ function validateStructuredValue(
         throw new RangeError('Color channels must be in 0..255.');
     }
   }
-  if (
-    name === 'ReportOutputOptions' &&
-    value.externalPath !== undefined &&
-    value.embeddedFile !== undefined
-  ) {
-    throw new TypeError('Only one report-output destination may be supplied.');
-  }
+}
+
+function exactlyOneOf(
+  schema: Extract<OperationValueSchema, { kind: 'message' }>,
+  oneof: string,
+): TypeError {
+  const members = Object.entries(schema.fields)
+    .filter(([, field]) => field.oneof === oneof)
+    .map(([name]) => name);
+  return new TypeError(
+    `${schema.name} needs exactly one ${oneof}: ${members.join(' or ')}.`,
+  );
+}
+
+function oneofMember(value: unknown, name: string): unknown {
+  if (typeof value !== 'object' || value === null) return undefined;
+  const member = value as {
+    readonly $case?: unknown;
+    readonly value?: unknown;
+  };
+  return member.$case === name ? member.value : undefined;
 }
 
 function requireOutput(value: unknown, name: string): unknown {

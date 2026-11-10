@@ -27,6 +27,7 @@ import {
   type SpatialAnalyzerLifecycleState,
   type SpatialAnalyzerSdkLifecycleState,
 } from '../src/generated/protocol/briosa/lifecycle.js';
+import type { GetWorkingDirectoryResult } from '../src/generated/protocol/briosa/file_operations.js';
 import { normalizeStartOptions } from '../src/models.js';
 import type { OwnedServer, ServerLauncher } from '../src/serverLauncher.js';
 import type { ClientTransport } from '../src/transport.js';
@@ -207,6 +208,14 @@ class RecordingTransport implements ClientTransport {
     return snapshot(this.#connected);
   }
 
+  async listCapabilities(
+    _includeDenied: boolean,
+    signal?: AbortSignal,
+  ): Promise<ListCapabilitiesResponse> {
+    await this.#record('capabilities', signal);
+    return snapshot(this.#connected)[1];
+  }
+
   async getApplicationState(
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerLifecycleState> {
@@ -276,7 +285,7 @@ class RecordingTransport implements ClientTransport {
     return this.#sdkState();
   }
 
-  async getWorkingDirectory(): Promise<string> {
+  async getWorkingDirectory(): Promise<GetWorkingDirectoryResult> {
     throw new Error('not used');
   }
 
@@ -362,7 +371,7 @@ function snapshot(
         : SpatialAnalyzerExecutionReadinessState.SPATIAL_ANALYZER_EXECUTION_READINESS_STATE_UNVERIFIED,
       targetIsolationMode:
         TargetIsolationMode.TARGET_ISOLATION_MODE_SINGLE_TENANT,
-      compatibility: { major: 2, revision: 0 },
+      compatibility: { major: 3, revision: 0 },
       readyForMp: ready,
     },
     {

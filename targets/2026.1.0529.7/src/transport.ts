@@ -39,6 +39,10 @@ export interface ClientTransport {
   getServerSnapshot(
     signal?: AbortSignal,
   ): Promise<readonly [GetServerInfoResponse, ListCapabilitiesResponse]>;
+  listCapabilities(
+    includeDenied: boolean,
+    signal?: AbortSignal,
+  ): Promise<ListCapabilitiesResponse>;
   getApplicationState(
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerLifecycleState>;
@@ -68,7 +72,7 @@ export interface ClientTransport {
   getWorkingDirectory(
     timeoutMs: number | null,
     signal?: AbortSignal,
-  ): Promise<string>;
+  ): Promise<GetWorkingDirectoryResult>;
   invokeOperation<TRequest, TResponse>(
     service: string,
     rpc: string,
@@ -120,12 +124,24 @@ export class GrpcClientTransport implements ClientTransport {
         this.#discovery.getServerInfo({}, new Metadata(), {}, callback),
       signal,
     );
-    const capabilities = await invokeUnary<ListCapabilitiesResponse>(
+    const capabilities = await this.listCapabilities(false, signal);
+    return [server, capabilities];
+  }
+
+  listCapabilities(
+    includeDenied: boolean,
+    signal?: AbortSignal,
+  ): Promise<ListCapabilitiesResponse> {
+    return invokeUnary<ListCapabilitiesResponse>(
       (callback) =>
-        this.#discovery.listCapabilities({}, new Metadata(), {}, callback),
+        this.#discovery.listCapabilities(
+          includeDenied ? { includeDenied: true } : {},
+          new Metadata(),
+          {},
+          callback,
+        ),
       signal,
     );
-    return [server, capabilities];
   }
 
   async getApplicationState(
@@ -278,11 +294,11 @@ export class GrpcClientTransport implements ClientTransport {
     return requireState(response.state, 'sdk-state-missing');
   }
 
-  async getWorkingDirectory(
+  getWorkingDirectory(
     timeoutMs: number | null,
     signal?: AbortSignal,
-  ): Promise<string> {
-    const response: GetWorkingDirectoryResult = await invokeUnary(
+  ): Promise<GetWorkingDirectoryResult> {
+    return invokeUnary(
       (callback) =>
         this.#fileOperations.getWorkingDirectory(
           {},
@@ -292,10 +308,6 @@ export class GrpcClientTransport implements ClientTransport {
         ),
       signal,
     );
-    if (response.directory === undefined) {
-      throw new BriosaProtocolError('working-directory-missing');
-    }
-    return response.directory;
   }
 
   invokeOperation<TRequest, TResponse>(

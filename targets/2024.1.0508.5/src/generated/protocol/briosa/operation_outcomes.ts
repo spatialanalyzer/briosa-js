@@ -15,6 +15,13 @@ export enum MpExecutionState {
   MP_EXECUTION_STATE_FAILED = 3,
   MP_EXECUTION_STATE_RESULT_UNAVAILABLE = 4,
   MP_EXECUTION_STATE_ARGUMENT_REJECTED = 5,
+  /**
+   * MP_EXECUTION_STATE_PARTIAL_SUCCESS - SpatialAnalyzer returned MP code 4 (PARTIAL SUCCESS): the command did its
+   * work but did not have its full intended effect. The call is a completed
+   * success with its outputs, so do not replay it. An operation whose target
+   * documentation says code 4 leaves the work undone reports it as FAILED.
+   */
+  MP_EXECUTION_STATE_PARTIAL_SUCCESS = 6,
   UNRECOGNIZED = -1,
 }
 
@@ -84,6 +91,13 @@ export enum OperationFailureKind {
   OPERATION_FAILURE_KIND_SDK_ARGUMENT_REJECTED = 15,
   /** OPERATION_FAILURE_KIND_OVERLOADED - Admission rejected the request before mapping or dispatch. No automatic retry. */
   OPERATION_FAILURE_KIND_OVERLOADED = 16,
+  /**
+   * OPERATION_FAILURE_KIND_SDK_CALL_FAULTED - An SDK call threw during the MP sequence. The execution disposition carries
+   * the proven phase: NOT_STARTED before ExecuteStep, STARTED_OUTCOME_UNKNOWN
+   * during ExecuteStep or MP result retrieval, and COMPLETED when an output
+   * getter threw after MP success. No automatic retry.
+   */
+  OPERATION_FAILURE_KIND_SDK_CALL_FAULTED = 17,
   UNRECOGNIZED = -1,
 }
 

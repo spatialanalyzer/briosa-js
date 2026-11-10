@@ -199,7 +199,10 @@ export interface CreateChartFromVectorGroupRequest {
   auxDataSetToChart?:
     | DatasetType
     | undefined;
-  /** Optional in the MP editor; the existing API presence and omission behavior is unchanged. */
+  /**
+   * Optional (major 3): omitted when absent; an empty name is rejected. A name that
+   * matches no chart opens a blocking SpatialAnalyzer dialog.
+   */
   templateChartName?: ChartName | undefined;
   showInterface?: boolean | undefined;
 }
@@ -481,6 +484,10 @@ export interface RefreshReportBarResult {
 }
 
 export interface RemoveReportTagRequest {
+  /**
+   * Required and not empty (major 3): an omitted, empty or whitespace-only value is
+   * rejected before dispatch.
+   */
   tagName?: string | undefined;
 }
 

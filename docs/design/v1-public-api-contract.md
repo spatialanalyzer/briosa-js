@@ -123,9 +123,7 @@ observation further until
 [spatialanalyzer/briosa#317](https://github.com/spatialanalyzer/briosa/issues/317)
 lands.
 
-Released 0.9 servers and the pinned protocol build `89b59aa` have no larger
-defaults: their startup bound is a fixed 10 s, and their readiness probe uses the
-quick execution budget (30 s by default), so the default covers them too.
+Every server that a client of contract major 3 selects contains these bounds.
 
 When the server's lifecycle bounds are raised, size the client budget to at
 least three times `StartupTimeout`, plus `ReadinessProbeTimeout`, plus
@@ -137,23 +135,28 @@ with the default 30 s application startup need at least 90 + 60 + 30 + 10 =
 Lifecycle methods take only an optional `signal`. The client adds no per-call
 lifecycle deadline, and `commandTimeoutMs` applies only to MP commands.
 
-What happens on the server when a caller stops waiting during an SDK start,
-connection, or recovery depends on the server build:
+When a caller stops waiting during an SDK start, connection, reconnection, or
+recovery, or during a SpatialAnalyzer launch, the server finishes an exchange it
+has already accepted under its own bounds
+([spatialanalyzer/briosa#315](https://github.com/spatialanalyzer/briosa/pull/315),
+[#356](https://github.com/spatialanalyzer/briosa/pull/356)), whether the caller
+stopped waiting through the startup budget or an aborted signal. A request the
+server had not accepted yet changes nothing. Either way, the caller sees only its
+own `BriosaCallAbortedError` and no invented outcome, and the client never
+retries. A startup the client abandoned may still produce a running or ready
+generation, so refresh SDK or application state before deciding what to do next.
 
-- Builds that contain
-  [spatialanalyzer/briosa#315](https://github.com/spatialanalyzer/briosa/pull/315)
-  (briosa main from `0c7ff7a`, planned for the contract-major-3 release) finish
-  an exchange they have accepted under their own bounds, whether the caller
-  stopped waiting through the startup budget or an aborted signal.
-- Older supported builds, including every released 0.9 server and the pinned
-  protocol build `89b59aa`, cancel the exchange with the caller. A cancelled SDK
-  start, or the replacement start inside a recovery, terminates the new worker
-  and leaves the SDK stopped (`worker-startup-cancelled`). A cancelled ConnectEx
-  retires the generation, which then needs recovery (`connect-ex-cancelled`). A
-  cancelled readiness probe quarantines the generation and requires operator
-  recovery (`execution-readiness-probe-cancelled`).
-
-Either way, refresh SDK state before deciding what to do next.
+While the accepted exchange runs, another lifecycle call fails with
+`BriosaSpatialAnalyzerSdkError` (or `BriosaSpatialAnalyzerError` for the
+application), kind `stateConflict`, diagnostic
+`sdk-lifecycle-transition-in-progress` (or
+`application-lifecycle-transition-in-progress`), and guidance `refreshState`:
+refresh state and retry later. Stop a generation you own only after the
+transition has ended. The `lifecycle-cancellation` conformance scenario checks
+this sequence for Connect. A lifecycle failure detail that reports the caller's
+own interruption carries the kind `callerCancelled` or `callerDeadlineExceeded`,
+never `stateConflict`; a remote caller rarely receives one, because gRPC
+delivers no response after a cancellation or deadline.
 
 A per-call deadline, such as `AbortSignal.timeout(...)`, shorter than the
 server's worst case for that call can stop the caller waiting before the
@@ -175,10 +178,7 @@ loaded machine.
 When the server's bounds are raised, add the increase: `StartupTimeout` counts
 once for Start and Recover and twice for Connect, `ReadinessProbeTimeout` once
 for Connect, and the application startup and shutdown bounds once for Launch and
-Close. Released 0.9 servers and the pinned build `89b59aa` have the same or
-shorter worst cases, with one exception: they associate the application after
-Connect reports readiness, so Connect can also wait behind an MP command that
-another client submits in between.
+Close.
 
 ### Command and input names
 
@@ -237,8 +237,21 @@ Transport and asynchronous controls use a separate optional final
 ```ts
 export interface BriosaCallOptions {
   readonly signal?: AbortSignal;
+  readonly onMpCompletion?: (completion: MpCompletion) => void;
 }
 ```
+
+`onMpCompletion` is a per-call control like the signal, not a callback form of
+the operation. From contract major 3 the client checks the MP completion of
+every successful call, whether or not a callback is passed: the success must
+carry execution details with `succeeded` and MP code 2, or `partialSuccess` and
+MP code 4, and anything else rejects the call with `BriosaProtocolError`
+(`mp-completion-missing` or `mp-completion-invalid`). The callback is then
+called once with the completion, `{ state: 'succeeded' | 'partialSuccess',
+mpResultCode }`, before the outputs are mapped, so it reports the completion
+even if output mapping fails. A partial success (MP code 4) did its work, so the
+operation still resolves with its outputs and is never retried. An exception
+thrown by the callback rejects the call although the operation completed.
 
 The primary command surface does not expose gRPC metadata, channel
 credentials, channel options, call handles, generated call options, or other
@@ -319,6 +332,11 @@ and is documented with `@defaultValue`. Omission or explicit `undefined`
 selects the reviewed value; `null` does not. The mapping computes and sends the
 effective value explicitly.
 
+A required MP input has no implicit default, and the client never sends an
+empty value, 0, or false for an input the caller left unset. Where a deliberate
+choice has a name, such as a relationship without limits, the caller passes a
+named value such as `ToleranceVectorOptions.noLimits` explicitly.
+
 A fixed structured default uses a named, deeply immutable runtime value of the
 same handwritten domain type. A TypeScript interface and same-name frozen
 constant namespace may provide the idiom:
@@ -353,7 +371,11 @@ The handwritten public error boundary uses these JavaScript classes:
 Raw `@grpc/grpc-js` errors do not escape through public error values, including
 through `Error.cause`. Public operation failures expose handwritten
 JavaScript values for the shared execution disposition, recovery guidance,
-replay guidance, and replay-safety dimensions.
+replay guidance, and replay-safety dimensions. Every `OperationFailureKind` is
+its own member, including `sdkCallFaulted`, whose phase is read from the
+execution disposition alone. `BriosaOperationError.mpExecution` carries the
+server's value-free MP execution details, in which `partialSuccess` stays a
+distinct state, or `null` when the server sent none.
 
 ## Deferred design decisions
 

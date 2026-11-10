@@ -559,11 +559,21 @@ export interface EmbeddedReportFile {
   readonly fileName: string;
 }
 
-export interface ReportOutputOptions {
-  readonly outputType: ReportOutputType;
-  readonly externalPath?: string;
-  readonly embeddedFile?: EmbeddedReportFile;
-}
+/**
+ * Where a report goes. Given options need exactly one destination: an external
+ * path or an embedded report file. Omitted options keep the server's default.
+ */
+export type ReportOutputOptions =
+  | {
+      readonly outputType: ReportOutputType;
+      readonly externalPath: string;
+      readonly embeddedFile?: never;
+    }
+  | {
+      readonly outputType: ReportOutputType;
+      readonly embeddedFile: EmbeddedReportFile;
+      readonly externalPath?: never;
+    };
 
 export interface ReportViewOptions {
   readonly viewType: ReportViewType;
@@ -630,6 +640,26 @@ export const Font = Object.freeze({
 const disabledScalarLimit = deepFreeze<ScalarToleranceLimit>({
   enabled: false,
   value: 0,
+});
+
+const disabledLimit = deepFreeze<ToleranceLimit>({ enabled: false, value: 0 });
+
+/**
+ * Named tolerance vector options. A relationship's tolerance and constraint
+ * are required at contract major 3; pass `noLimits` explicitly for a
+ * relationship without limits. It is never an implicit default.
+ */
+export const ToleranceVectorOptions = Object.freeze({
+  noLimits: deepFreeze<ToleranceVectorOptions>({
+    highX: disabledLimit,
+    highY: disabledLimit,
+    highZ: disabledLimit,
+    highMagnitude: disabledLimit,
+    lowX: disabledLimit,
+    lowY: disabledLimit,
+    lowZ: disabledLimit,
+    lowMagnitude: disabledLimit,
+  }),
 });
 
 export const FitConstraintScalarOptions = Object.freeze({
