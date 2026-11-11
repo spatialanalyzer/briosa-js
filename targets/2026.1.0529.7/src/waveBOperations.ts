@@ -18329,6 +18329,7 @@ export interface GdtOperations {
   ): Promise<void>;
   deleteFeatureChecks(
     featureChecks: readonly CollectionItemName[],
+    callOptions?: BriosaCallOptions,
   ): Promise<void>;
   enableDisableDatumAlignmentForFeatureCheck(
     input: EnableDisableDatumAlignmentForFeatureCheckInput,
@@ -18373,30 +18374,49 @@ export interface GdtOperations {
   getGdtExtendedOptions(callOptions?: BriosaCallOptions): Promise<boolean>;
   makeAnnotationRefListFromCollection(
     collection: CollectionName,
+    callOptions?: BriosaCallOptions,
   ): Promise<readonly CollectionItemName[]>;
-  makeAnnotationRefListWildcardSelection(options?: {
-    collectionWildcardCriteria?: string;
-    annotationWildcardCriteria?: string;
-  }): Promise<readonly CollectionItemName[]>;
+  makeAnnotationRefListWildcardSelection(
+    options?: {
+      collectionWildcardCriteria?: string;
+      annotationWildcardCriteria?: string;
+    },
+    callOptions?: BriosaCallOptions,
+  ): Promise<readonly CollectionItemName[]>;
   makeDatumRefListFromCollection(
     collection: CollectionName,
+    callOptions?: BriosaCallOptions,
   ): Promise<readonly CollectionObjectName[]>;
   makeFeatureCheckRefListFromCollection(
     collection: CollectionName,
+    callOptions?: BriosaCallOptions,
   ): Promise<readonly CollectionItemName[]>;
-  makeFeatureCheckReferenceListWildcardSelection(options?: {
-    collectionWildcardCriteria?: string;
-    featureCheckWildcardCriteria?: string;
-  }): Promise<readonly CollectionItemName[]>;
-  makeFeatureChecks(collection: CollectionName): Promise<void>;
-  makeGdtDatumAnnotation(options: MakeGdtDatumAnnotationOptions): Promise<void>;
+  makeFeatureCheckReferenceListWildcardSelection(
+    options?: {
+      collectionWildcardCriteria?: string;
+      featureCheckWildcardCriteria?: string;
+    },
+    callOptions?: BriosaCallOptions,
+  ): Promise<readonly CollectionItemName[]>;
+  makeFeatureChecks(
+    collection: CollectionName,
+    callOptions?: BriosaCallOptions,
+  ): Promise<void>;
+  makeGdtDatumAnnotation(
+    options: MakeGdtDatumAnnotationOptions,
+    callOptions?: BriosaCallOptions,
+  ): Promise<void>;
   makeGdtFeatureCheckAnnotation(
     options: MakeGdtFeatureCheckAnnotationOptions,
+    callOptions?: BriosaCallOptions,
   ): Promise<void>;
   makeSurfaceFaceListFromSurface(
     surface: CollectionObjectName,
+    callOptions?: BriosaCallOptions,
   ): Promise<SurfaceFaceList>;
-  makeSurfaceFaceListRuntimeSelect(): Promise<SurfaceFaceList>;
+  makeSurfaceFaceListRuntimeSelect(
+    callOptions?: BriosaCallOptions,
+  ): Promise<SurfaceFaceList>;
   refreshDatumsFeatureChecksFromAnnotations(
     input: RefreshDatumsFeatureChecksFromAnnotationsInput,
     callOptions?: BriosaCallOptions,
@@ -20089,8 +20109,8 @@ export function createGdtOperations(briosa: BriosaClient): GdtOperations {
   return {
     datumAlignment: (input, callOptions) =>
       datumAlignmentOperation(briosa, input, callOptions),
-    deleteFeatureChecks: (featureChecks) =>
-      deleteFeatureChecksOperation(briosa, featureChecks, undefined),
+    deleteFeatureChecks: (featureChecks, callOptions) =>
+      deleteFeatureChecksOperation(briosa, featureChecks, callOptions),
     enableDisableDatumAlignmentForFeatureCheck: (input, callOptions) =>
       enableDisableDatumAlignmentForFeatureCheckOperation(
         briosa,
@@ -20117,42 +20137,42 @@ export function createGdtOperations(briosa: BriosaClient): GdtOperations {
       getFeatureCheckReportingFrameOperation(briosa, input, callOptions),
     getGdtExtendedOptions: (callOptions) =>
       getGdtExtendedOptionsOperation(briosa, callOptions),
-    makeAnnotationRefListFromCollection: (collection) =>
+    makeAnnotationRefListFromCollection: (collection, callOptions) =>
       makeAnnotationRefListFromCollectionOperation(
         briosa,
         collection,
-        undefined,
+        callOptions,
       ),
-    makeAnnotationRefListWildcardSelection: (options) =>
+    makeAnnotationRefListWildcardSelection: (options, callOptions) =>
       makeAnnotationRefListWildcardSelectionOperation(
         briosa,
         options,
-        undefined,
+        callOptions,
       ),
-    makeDatumRefListFromCollection: (collection) =>
-      makeDatumRefListFromCollectionOperation(briosa, collection, undefined),
-    makeFeatureCheckRefListFromCollection: (collection) =>
+    makeDatumRefListFromCollection: (collection, callOptions) =>
+      makeDatumRefListFromCollectionOperation(briosa, collection, callOptions),
+    makeFeatureCheckRefListFromCollection: (collection, callOptions) =>
       makeFeatureCheckRefListFromCollectionOperation(
         briosa,
         collection,
-        undefined,
+        callOptions,
       ),
-    makeFeatureCheckReferenceListWildcardSelection: (options) =>
+    makeFeatureCheckReferenceListWildcardSelection: (options, callOptions) =>
       makeFeatureCheckReferenceListWildcardSelectionOperation(
         briosa,
         options,
-        undefined,
+        callOptions,
       ),
-    makeFeatureChecks: (collection) =>
-      makeFeatureChecksOperation(briosa, collection, undefined),
-    makeGdtDatumAnnotation: (options) =>
-      makeGdtDatumAnnotationOperation(briosa, options, undefined),
-    makeGdtFeatureCheckAnnotation: (options) =>
-      makeGdtFeatureCheckAnnotationOperation(briosa, options, undefined),
-    makeSurfaceFaceListFromSurface: (surface) =>
-      makeSurfaceFaceListFromSurfaceOperation(briosa, surface, undefined),
-    makeSurfaceFaceListRuntimeSelect: () =>
-      makeSurfaceFaceListRuntimeSelectOperation(briosa, undefined),
+    makeFeatureChecks: (collection, callOptions) =>
+      makeFeatureChecksOperation(briosa, collection, callOptions),
+    makeGdtDatumAnnotation: (options, callOptions) =>
+      makeGdtDatumAnnotationOperation(briosa, options, callOptions),
+    makeGdtFeatureCheckAnnotation: (options, callOptions) =>
+      makeGdtFeatureCheckAnnotationOperation(briosa, options, callOptions),
+    makeSurfaceFaceListFromSurface: (surface, callOptions) =>
+      makeSurfaceFaceListFromSurfaceOperation(briosa, surface, callOptions),
+    makeSurfaceFaceListRuntimeSelect: (callOptions) =>
+      makeSurfaceFaceListRuntimeSelectOperation(briosa, callOptions),
     refreshDatumsFeatureChecksFromAnnotations: (input, callOptions) =>
       refreshDatumsFeatureChecksFromAnnotationsOperation(
         briosa,

@@ -55,6 +55,8 @@ export interface RecordedOperation {
   readonly request: unknown;
   readonly requestCodec: OperationCodec<unknown>;
   readonly responseCodec: OperationCodec<unknown>;
+  /** The caller's abort signal, as the client handed it to the transport. */
+  readonly signal: AbortSignal | undefined;
 }
 
 /** Builds the response (or a promise of it) for one scripted operation. */
@@ -81,6 +83,8 @@ export class ScriptedTransport implements ClientTransport {
   readonly capabilityRequests: boolean[] = [];
   readonly workingDirectoryResults: GetWorkingDirectoryResult[] = [];
   workingDirectoryCalls = 0;
+  /** The abort signal of the last getWorkingDirectory call. */
+  workingDirectorySignal: AbortSignal | undefined;
   respond: OperationResponder = () => ({ execution: succeeded() });
   capabilities: ListCapabilitiesResponse = defaultCapabilities();
   deniedCapabilities: ListCapabilitiesResponse | null = null;
@@ -163,8 +167,12 @@ export class ScriptedTransport implements ClientTransport {
     return this.startSdk();
   }
 
-  async getWorkingDirectory(): Promise<GetWorkingDirectoryResult> {
+  async getWorkingDirectory(
+    _timeoutMs: number | null,
+    signal?: AbortSignal,
+  ): Promise<GetWorkingDirectoryResult> {
     this.workingDirectoryCalls += 1;
+    this.workingDirectorySignal = signal;
     const result = this.workingDirectoryResults.shift();
     return (
       result ?? { directory: String.raw`C:\Working`, execution: succeeded() }
@@ -177,6 +185,8 @@ export class ScriptedTransport implements ClientTransport {
     request: TRequest,
     requestCodec: OperationCodec<TRequest>,
     responseCodec: OperationCodec<TResponse>,
+    _timeoutMs: number | null,
+    signal?: AbortSignal,
   ): Promise<TResponse> {
     const operation: RecordedOperation = {
       service,
@@ -184,6 +194,7 @@ export class ScriptedTransport implements ClientTransport {
       request,
       requestCodec,
       responseCodec,
+      signal,
     };
     this.operations.push(operation);
     return (await this.respond(operation)) as TResponse;
