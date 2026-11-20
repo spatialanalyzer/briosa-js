@@ -30,9 +30,10 @@ The facades stay in the package, and a denied call fails with
 `BriosaOperationError` of kind `policyDenied` and disposition `notStarted`.
 
 - The seven device-configuration setters need `Profile=device`, `Profile=full`,
-  or a per-operation `allow` override: `setAbsoluteInstrumentScaleFactor`,
-  `setMultiplyInstrumentScaleFactor`, `setRobotMachineModelLinkParameters`,
-  `setActiveRobotCalibration`, `setRobotCalibrationToolFrame`,
+  `Flags:device_config=allow`, or a per-operation `allow` override:
+  `setAbsoluteInstrumentScaleFactor`, `setMultiplyInstrumentScaleFactor`,
+  `setRobotMachineModelLinkParameters`, `setActiveRobotCalibration`,
+  `setRobotCalibrationToolFrame`,
   `setRobotCalibrationMeasurementOffsetInToolFrame`, and
   `setProbeOffsetFrameOffline`.
 - Operations, and request options, that open or block on operator UI need the
@@ -275,7 +276,7 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
 
 | Operation                                                                   | Replacement                                                                                                                                                                                                     |
 | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `deleteCloudPointsByXYZRange`                                               | None. There is no X Y Z box delete; the radial delete has different semantics and is not licensed-validated yet.                                                                                                |
+| `deleteCloudPointsByXYZRange`                                               | None. There is no X Y Z box delete; the radial delete has different semantics, and a licensed session validated it on both targets for one cloud and one point.                                                 |
 | `mirrorObjects`                                                             | None.                                                                                                                                                                                                           |
 | `constructionOperations.constructCirclesLinesFromSurfaces`                  | None.                                                                                                                                                                                                           |
 | `constructionOperations.addCollectionInstrumentsToRefListWildcardSelection` | None.                                                                                                                                                                                                           |
