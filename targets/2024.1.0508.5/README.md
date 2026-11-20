@@ -11,15 +11,15 @@ complete protocol identity is pinned in [`protocol.lock.json`](protocol.lock.jso
 
 ## Package Identity
 
-The next version is not published yet. Build the candidate locally and use its
-package path or feed in the installation command below.
-
 The package is named `@spatialanalyzer/briosa-2024.1.0508.5`, while its
 exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
-npm install briosa@file:C:\path\to\spatialanalyzer-briosa-2024.1.0508.5-0.5.0.tgz
+npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.0
 ```
+
+To try a local build instead, build it as in [Build and Test](#build-and-test),
+run `npm pack`, and install the archive with `npm install briosa@file:<archive>`.
 
 Each exact SpatialAnalyzer target has an independent package. Install the chosen
 package under the local dependency name `briosa` so application imports stay short.
