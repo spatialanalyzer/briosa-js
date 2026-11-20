@@ -73,9 +73,10 @@ The facades stay in the package, and a denied call fails with
 
 ## Request defaults that changed
 
-Waiting is now the default. The server denies the old values: the first five
-and the last need the interactive opt-in, and the non-waiting values of
-`waitForComplete` and `acknowledgeArrival` are never admitted.
+Waiting is now the default. The server denies the old values: those of
+`measureImmediately`, `autoStart`, and `promptOnMissingComponents` need the
+interactive opt-in, and the non-waiting values of `waitForComplete` and
+`acknowledgeArrival` are never admitted.
 
 | Operation                                                    | Field                       | 0.4.0 default | 0.5.0 default |
 | ------------------------------------------------------------ | --------------------------- | ------------- | ------------- |
