@@ -39,12 +39,19 @@ The facades stay in the package, and a denied call fails with
   server's interactive opt-in, `Flags:interactive_ui=allow`, or a per-operation
   `allow` override. Without either, an operation whose own risk flags are
   denied fails with `operation-policy-denied`, and a request that is denied only
-  because of a request option fails with `operation-option-denied`. A
-  per-operation `allow` override admits the operation even over a flag `deny`;
-  only unreviewed operations and exclusive workflows are denied before overrides
-  apply.
+  because one of its options opens operator UI fails with
+  `operation-option-denied`. A per-operation `allow` override admits the
+  operation even over a flag `deny`; only unreviewed operations, requests that
+  cannot be read against their reviewed options
+  (`operation-request-unclassified`), exclusive workflows, and requests that
+  leave work running after the call returns are denied before overrides apply.
 - Multi-call exclusive workflows (device, trapping, watch, robot-interface, and
   appliance sessions) are denied under every setting.
+- For any other operation, setting `waitForCompletion`, `waitForComplete`, or
+  `acknowledgeArrival` to `false` leaves work running after the call returns,
+  so the request is denied under every setting with
+  `operation-option-isolation-unsupported`. Neither the interactive opt-in nor
+  an `allow` override admits it, even when the request also opens operator UI.
 
 ## Discovery
 
