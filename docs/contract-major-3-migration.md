@@ -297,11 +297,12 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
   call threw during the MP sequence. Read the proven phase from
   `executionDisposition`: `notStarted` (before Execute Step, do not replay),
   `startedOutcomeUnknown` (reconcile before any replay), or `completed` (an
-  output getter failed after the MP succeeded).
+  output getter threw after the MP returned code 2 or 4).
 - **Partial success.** An MP that returns code 4 (PARTIAL SUCCESS) did its work.
-  The call succeeds and returns its outputs; it never throws for it and is never
-  retried. Pass `onMpCompletion` in the call options to observe each call's
-  completion, `{ state: 'succeeded' | 'partialSuccess', mpResultCode }`:
+  The call is never retried, and it resolves with its outputs when the server
+  retrieves all of them. Pass `onMpCompletion` in the call options to observe
+  each call's completion,
+  `{ state: 'succeeded' | 'partialSuccess', mpResultCode }`:
 
   ```ts
   await getWorkingDirectory(briosa, {
@@ -319,6 +320,15 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
   check and before the outputs are mapped, so it reports the completion even if
   output mapping then fails; an exception it throws rejects the call.
 
+  The server retrieves the outputs before it replies. If it can't retrieve one
+  after code 4, the call rejects with `BriosaOperationError` instead, and the
+  callback isn't called, because the call didn't succeed. The kind is
+  `outputRetrievalFailure` when a getter returned no usable value or the worker
+  couldn't deliver the outputs, for example one too large to encode, and
+  `sdkCallFaulted` when a getter threw. Both have the `executionDisposition`
+  `completed` and the `replayGuidance` `doNotReplay`, and their `mpExecution`
+  keeps the state `partialSuccess` and MP code 4.
+
   Four operations report code 4 as an ordinary `mpFailure`, whose `mpExecution`
   has state `failed` and code 4: `constructPointFromSurveyTargetCenter`,
   `openSaFile`, `openTemplateFile`, and `setReportOptionsForObject`. On SA 2026
@@ -335,6 +345,10 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
   server's value-free MP execution details (`state`, `mpResultCode`, and
   `outputRetrievals`), or `null`. A `partialSuccess` state stays distinct there
   too, for example when an output could not be retrieved after code 4.
+  `outputRetrievals` holds the per-output states that the server reports. They
+  don't always identify the getter that failed: when the worker can't deliver
+  the outputs, every output can be marked `failed`, whether the kind is
+  `outputRetrievalFailure` or `sdkCallFaulted`.
 - **Modal dialogs.** When a SpatialAnalyzer modal dialog holds an MP, the
   failure stays `workerWatchdogTimeout` with `startedOutcomeUnknown`, its
   diagnostic is `sa-modal-dialog-open`, and recovery guidance is

@@ -78,9 +78,9 @@ request defaults and argument rules that changed, the nine removed operations,
 and the admission profiles that the server applies.
 
 - **Partial success.** An MP that returns code 4 (PARTIAL SUCCESS) did its work,
-  so the call succeeds with its outputs and is never retried. The client checks
-  every success's MP completion, observed or not, and each call can observe its
-  own:
+  so the call is never retried, and it resolves with its outputs when the server
+  retrieves all of them. The client checks every success's MP completion,
+  observed or not, and each call can observe its own:
 
   ```ts
   const directory = await getWorkingDirectory(briosa, {
@@ -89,6 +89,12 @@ and the admission profiles that the server applies.
     },
   });
   ```
+
+  If an output can't be retrieved after code 4, the call rejects with
+  `BriosaOperationError` instead, and `onMpCompletion` isn't called. The error's
+  kind is `outputRetrievalFailure` when a getter returned no usable value or the
+  worker couldn't deliver the outputs, and `sdkCallFaulted` when a getter threw.
+  Either way, its `mpExecution` keeps the state `partialSuccess` and MP code 4.
 
   `constructPointFromSurveyTargetCenter`, `openSaFile`, `openTemplateFile`, and
   `setReportOptionsForObject` report code 4 as an ordinary `mpFailure`. For
@@ -100,10 +106,13 @@ and the admission profiles that the server applies.
 
 - **Typed failures.** `BriosaOperationError` adds the kind `sdkCallFaulted`, whose
   phase is its `executionDisposition`, and `mpExecution`, the server's MP
-  execution details, in which `partialSuccess` stays distinct. A SpatialAnalyzer
-  modal dialog surfaces as `workerWatchdogTimeout` with the diagnostic
-  `sa-modal-dialog-open` and the guidance `operatorInterventionRequired`; an
-  operator must dismiss it.
+  execution details, in which `partialSuccess` stays distinct.
+  `mpExecution.outputRetrievals` holds the per-output states that the server
+  reports. They don't always identify the getter that failed: when the worker
+  can't deliver the outputs, every output can be marked `failed`. A
+  SpatialAnalyzer modal dialog surfaces as `workerWatchdogTimeout` with the
+  diagnostic `sa-modal-dialog-open` and the guidance
+  `operatorInterventionRequired`; an operator must dismiss it.
 - **Discovery.** The server snapshot reports the `admissionProfile` and an opaque
   `policyFingerprint`, and each capability its reviewed `riskFlags`,
   `durationClass`, `validationStatus`, and `admission`.

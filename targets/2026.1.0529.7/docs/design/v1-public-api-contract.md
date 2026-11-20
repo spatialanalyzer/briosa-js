@@ -250,8 +250,13 @@ MP code 4, and anything else rejects the call with `BriosaProtocolError`
 called once with the completion, `{ state: 'succeeded' | 'partialSuccess',
 mpResultCode }`, before the outputs are mapped, so it reports the completion
 even if output mapping fails. A partial success (MP code 4) did its work, so the
-operation still resolves with its outputs and is never retried. An exception
-thrown by the callback rejects the call although the operation completed.
+operation is never retried, and it resolves with its outputs when the server
+retrieves all of them. Otherwise the call rejects with `BriosaOperationError`,
+and the callback isn't called. The kind is `outputRetrievalFailure` when a
+getter returned no usable value or the worker couldn't deliver the outputs, and
+`sdkCallFaulted` when a getter threw; either way, `mpExecution` keeps
+`partialSuccess` and MP code 4. An exception thrown by the callback rejects the
+call although the operation completed.
 
 The primary command surface does not expose gRPC metadata, channel
 credentials, channel options, call handles, generated call options, or other
@@ -375,7 +380,10 @@ replay guidance, and replay-safety dimensions. Every `OperationFailureKind` is
 its own member, including `sdkCallFaulted`, whose phase is read from the
 execution disposition alone. `BriosaOperationError.mpExecution` carries the
 server's value-free MP execution details, in which `partialSuccess` stays a
-distinct state, or `null` when the server sent none.
+distinct state, or `null` when the server sent none. Its `outputRetrievals`
+holds the per-output states that the server reports. They don't always identify
+the getter that failed: when the worker can't deliver the outputs, every output
+can be marked `failed`.
 
 ## Deferred design decisions
 
