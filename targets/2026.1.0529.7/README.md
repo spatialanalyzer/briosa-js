@@ -123,12 +123,12 @@ canonical stores, explicit search roots, and supported local layouts. It validat
 receipts and manifests, filters the exact SA target and compatibility contract,
 and selects the highest compatible stable release. No internet access is needed.
 
-This development checkout prepares client 0.5.0 for behavioral contract **3.0**
-(major 3, revision at least 0), which ships as Server 0.10.0. It is not a
-published compatibility claim. Contract-major-2 servers (Server 0.9.x),
-major-1 servers, and servers without contract metadata, including Server 0.6.1,
-are rejected before launch. Protocol and source pins remain exact build inputs;
-startup verifies the running server against its selected installation.
+Client 0.5.0 requires behavioral contract **3.0** (major 3, revision at least
+0), the contract of Server 0.10.0, and selects and starts only servers that
+declare it. Contract-major-2 servers (Server 0.9.x), major-1 servers, and
+servers without contract metadata, including Server 0.6.1, are rejected before
+launch. Protocol and source pins remain exact build inputs; startup verifies the
+running server against its selected installation.
 
 The three robot methods Get Robot Machine Parameter, Start Robot Machine
 Interface, and Stop Robot Machine Interface now take a collection/instrument

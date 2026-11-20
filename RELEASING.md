@@ -36,6 +36,12 @@ publishes the draft GitHub release.
 
 1. Update both targets' package versions together, review the PR, and merge with
    all CI checks passing. Keep target-specific package names and stable imports.
+   In the same PR, check that the compatibility paragraph under "Server
+   selection" in both target READMEs describes the release: its version, the
+   behavioral contract it requires, and the servers it rejects, written for a
+   published package rather than a development checkout. Each target README is
+   that package's npm README, so it ships as written; 0.4.0 and 0.5.0 both
+   shipped development-checkout wording.
 2. Optional dry run: dispatch `release.yml` on `main`, or on a branch, with
    `version=<version>` and `publish=false`. It runs the release checks and the
    complete CI matrix (protocol drift, conformance, tests, formatting, packaging,

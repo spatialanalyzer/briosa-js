@@ -36,9 +36,13 @@ The facades stay in the package, and a denied call fails with
   `setRobotCalibrationMeasurementOffsetInToolFrame`, and
   `setProbeOffsetFrameOffline`.
 - Operations, and request options, that open or block on operator UI need the
-  server's interactive opt-in: `Flags:interactive_ui=allow` or a per-operation
-  `allow` override. Without it the request is denied with
-  `operation-option-denied`.
+  server's interactive opt-in, `Flags:interactive_ui=allow`, or a per-operation
+  `allow` override. Without either, an operation whose own risk flags are
+  denied fails with `operation-policy-denied`, and a request that is denied only
+  because of a request option fails with `operation-option-denied`. A
+  per-operation `allow` override admits the operation even over a flag `deny`;
+  only unreviewed operations and exclusive workflows are denied before overrides
+  apply.
 - Multi-call exclusive workflows (device, trapping, watch, robot-interface, and
   appliance sessions) are denied under every setting.
 
@@ -299,11 +303,19 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
   `BriosaProtocolError` (`mp-completion-missing` or `mp-completion-invalid`),
   because the server always reports the code. The callback runs once, after that
   check and before the outputs are mapped, so it reports the completion even if
-  output mapping then fails; an exception it throws rejects the call. For four
-  operations the
-  target documentation says code 4 leaves the work undone, so the server reports
-  it as an ordinary `mpFailure` with code 4: `constructPointFromSurveyTargetCenter`,
-  `openSaFile`, `openTemplateFile`, and `setReportOptionsForObject`.
+  output mapping then fails; an exception it throws rejects the call.
+
+  Four operations report code 4 as an ordinary `mpFailure`, whose `mpExecution`
+  has state `failed` and code 4: `constructPointFromSurveyTargetCenter`,
+  `openSaFile`, `openTemplateFile`, and `setReportOptionsForObject`. On SA 2026
+  the target documentation says code 4 leaves the work undone for all four. On
+  SA 2024 it says so for `constructPointFromSurveyTargetCenter` and
+  `setReportOptionsForObject`, and lists no code 4 for `openSaFile` and
+  `openTemplateFile`. Those two report it as a failure on SA 2024 too, by the
+  maintainer decision on
+  [spatialanalyzer/briosa#351](https://github.com/spatialanalyzer/briosa/issues/351):
+  reporting a discarded open job as a success would be worse than a false
+  failure.
 
 - **MP execution details.** `BriosaOperationError.mpExecution` carries the
   server's value-free MP execution details (`state`, `mpResultCode`, and
