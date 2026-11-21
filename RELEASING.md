@@ -36,6 +36,18 @@ publishes the draft GitHub release.
 
 1. Update both targets' package versions together, review the PR, and merge with
    all CI checks passing. Keep target-specific package names and stable imports.
+   In the same PR, check both target READMEs, written for a published package
+   rather than a development checkout:
+   - the compatibility paragraph under "Server selection" describes the
+     release: its version, the behavioral contract it requires, and the
+     servers it rejects;
+   - the "Package Identity" install command installs the release version from
+     the registry, `npm install briosa@npm:@spatialanalyzer/briosa-<target>@<version>`,
+     with no local file path.
+
+   Each target README is that package's npm README, so it ships as written;
+   0.4.0 and 0.5.0 both shipped development-checkout wording.
+
 2. Optional dry run: dispatch `release.yml` on `main`, or on a branch, with
    `version=<version>` and `publish=false`. It runs the release checks and the
    complete CI matrix (protocol drift, conformance, tests, formatting, packaging,

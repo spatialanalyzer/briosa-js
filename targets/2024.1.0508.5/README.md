@@ -11,15 +11,15 @@ complete protocol identity is pinned in [`protocol.lock.json`](protocol.lock.jso
 
 ## Package Identity
 
-The next version is not published yet. Build the candidate locally and use its
-package path or feed in the installation command below.
-
 The package is named `@spatialanalyzer/briosa-2024.1.0508.5`, while its
 exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
-npm install briosa@file:C:\path\to\spatialanalyzer-briosa-2024.1.0508.5-0.5.0.tgz
+npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.0
 ```
+
+To try a local build instead, build it as in [Build and Test](#build-and-test),
+run `npm pack`, and install the archive with `npm install briosa@file:<archive>`.
 
 Each exact SpatialAnalyzer target has an independent package. Install the chosen
 package under the local dependency name `briosa` so application imports stay short.
@@ -78,9 +78,9 @@ request defaults and argument rules that changed, the nine removed operations,
 and the admission profiles that the server applies.
 
 - **Partial success.** An MP that returns code 4 (PARTIAL SUCCESS) did its work,
-  so the call succeeds with its outputs and is never retried. The client checks
-  every success's MP completion, observed or not, and each call can observe its
-  own:
+  so the call is never retried, and it resolves with its outputs when the server
+  retrieves all of them. The client checks every success's MP completion,
+  observed or not, and each call can observe its own:
 
   ```ts
   const directory = await getWorkingDirectory(briosa, {
@@ -90,16 +90,29 @@ and the admission profiles that the server applies.
   });
   ```
 
+  If an output can't be retrieved after code 4, the call rejects with
+  `BriosaOperationError` instead, and `onMpCompletion` isn't called. The error's
+  kind is `outputRetrievalFailure` when a getter returned no usable value or the
+  worker couldn't deliver the outputs, and `sdkCallFaulted` when a getter threw.
+  Either way, its `mpExecution` keeps the state `partialSuccess` and MP code 4.
+
   `constructPointFromSurveyTargetCenter`, `openSaFile`, `openTemplateFile`, and
-  `setReportOptionsForObject` report code 4 as an ordinary `mpFailure`, because
-  for them it leaves the work undone.
+  `setReportOptionsForObject` report code 4 as an ordinary `mpFailure`. For
+  `constructPointFromSurveyTargetCenter` and `setReportOptionsForObject`, the SA
+  2024 documentation says code 4 leaves the work undone. It lists no code 4 for
+  `openSaFile` and `openTemplateFile`, which report it as a failure anyway,
+  because reporting a discarded open job as a success would be worse than a
+  false failure.
 
 - **Typed failures.** `BriosaOperationError` adds the kind `sdkCallFaulted`, whose
   phase is its `executionDisposition`, and `mpExecution`, the server's MP
-  execution details, in which `partialSuccess` stays distinct. A SpatialAnalyzer
-  modal dialog surfaces as `workerWatchdogTimeout` with the diagnostic
-  `sa-modal-dialog-open` and the guidance `operatorInterventionRequired`; an
-  operator must dismiss it.
+  execution details, in which `partialSuccess` stays distinct.
+  `mpExecution.outputRetrievals` holds the per-output states that the server
+  reports. They don't always identify the getter that failed: when the worker
+  can't deliver the outputs, every output can be marked `failed`. A
+  SpatialAnalyzer modal dialog surfaces as `workerWatchdogTimeout` with the
+  diagnostic `sa-modal-dialog-open` and the guidance
+  `operatorInterventionRequired`; an operator must dismiss it.
 - **Discovery.** The server snapshot reports the `admissionProfile` and an opaque
   `policyFingerprint`, and each capability its reviewed `riskFlags`,
   `durationClass`, `validationStatus`, and `admission`.
@@ -123,12 +136,12 @@ canonical stores, explicit search roots, and supported local layouts. It validat
 receipts and manifests, filters the exact SA target and compatibility contract,
 and selects the highest compatible stable release. No internet access is needed.
 
-This development checkout prepares client 0.5.0 for behavioral contract **3.0**
-(major 3, revision at least 0), which ships as Server 0.10.0. It is not a
-published compatibility claim. Contract-major-2 servers (Server 0.9.x),
-major-1 servers, and servers without contract metadata, including Server 0.6.1,
-are rejected before launch. Protocol and source pins remain exact build inputs;
-startup verifies the running server against its selected installation.
+Client 0.5.0 requires behavioral contract **3.0** (major 3, revision at least
+0), the contract of Server 0.10.0, and selects and starts only servers that
+declare it. Contract-major-2 servers (Server 0.9.x), major-1 servers, and
+servers without contract metadata, including Server 0.6.1, are rejected before
+launch. Protocol and source pins remain exact build inputs; startup verifies the
+running server against its selected installation.
 
 The three robot methods Get Robot Machine Parameter, Start Robot Machine
 Interface, and Stop Robot Machine Interface now take a collection/instrument

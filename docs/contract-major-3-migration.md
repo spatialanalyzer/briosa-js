@@ -30,17 +30,34 @@ The facades stay in the package, and a denied call fails with
 `BriosaOperationError` of kind `policyDenied` and disposition `notStarted`.
 
 - The seven device-configuration setters need `Profile=device`, `Profile=full`,
-  or a per-operation `allow` override: `setAbsoluteInstrumentScaleFactor`,
-  `setMultiplyInstrumentScaleFactor`, `setRobotMachineModelLinkParameters`,
-  `setActiveRobotCalibration`, `setRobotCalibrationToolFrame`,
+  `Flags:device_config=allow`, or a per-operation `allow` override:
+  `setAbsoluteInstrumentScaleFactor`, `setMultiplyInstrumentScaleFactor`,
+  `setRobotMachineModelLinkParameters`, `setActiveRobotCalibration`,
+  `setRobotCalibrationToolFrame`,
   `setRobotCalibrationMeasurementOffsetInToolFrame`, and
   `setProbeOffsetFrameOffline`.
 - Operations, and request options, that open or block on operator UI need the
-  server's interactive opt-in: `Flags:interactive_ui=allow` or a per-operation
-  `allow` override. Without it the request is denied with
-  `operation-option-denied`.
+  server's interactive opt-in, `Flags:interactive_ui=allow`, or a per-operation
+  `allow` override. Without either, a request that is denied only because one of
+  its options opens operator UI fails with `operation-option-denied`, and a
+  request for an operation that the profile doesn't admit fails with
+  `operation-policy-denied`. Flags explicitly set to `deny` are checked before
+  the profile, though: with `Flags:interactive_ui=deny`, a request whose option
+  opens operator UI fails with `operation-option-denied` even when the profile
+  doesn't admit its operation, unless one of the operation's own risk flags is
+  set to `deny` too, in which case it fails with `operation-policy-denied`. A
+  per-operation `allow` override admits the operation even over a flag `deny`;
+  only unreviewed operations, requests that cannot be read against their
+  reviewed options (`operation-request-unclassified`), exclusive workflows, and
+  requests that leave work running after the call returns are denied before
+  overrides apply.
 - Multi-call exclusive workflows (device, trapping, watch, robot-interface, and
   appliance sessions) are denied under every setting.
+- For any other operation, setting `waitForCompletion`, `waitForComplete`, or
+  `acknowledgeArrival` to `false` leaves work running after the call returns,
+  so the request is denied under every setting with
+  `operation-option-isolation-unsupported`. Neither the interactive opt-in nor
+  an `allow` override admits it, even when the request also opens operator UI.
 
 ## Discovery
 
@@ -62,9 +79,10 @@ The facades stay in the package, and a denied call fails with
 
 ## Request defaults that changed
 
-Waiting is now the default. The server denies the old values: the first five
-and the last need the interactive opt-in, and the non-waiting values of
-`waitForComplete` and `acknowledgeArrival` are never admitted.
+Waiting is now the default. The server denies the old values: those of
+`measureImmediately`, `autoStart`, and `promptOnMissingComponents` need the
+interactive opt-in, and the non-waiting values of `waitForComplete` and
+`acknowledgeArrival` are never admitted.
 
 | Operation                                                    | Field                       | 0.4.0 default | 0.5.0 default |
 | ------------------------------------------------------------ | --------------------------- | ------------- | ------------- |
@@ -263,7 +281,7 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
 
 | Operation                                                                   | Replacement                                                                                                                                                                                                     |
 | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `deleteCloudPointsByXYZRange`                                               | None. There is no X Y Z box delete; the radial delete has different semantics and is not licensed-validated yet.                                                                                                |
+| `deleteCloudPointsByXYZRange`                                               | None. There is no X Y Z box delete; the radial delete has different semantics, and a licensed session validated it on both targets for one cloud and one point.                                                 |
 | `mirrorObjects`                                                             | None.                                                                                                                                                                                                           |
 | `constructionOperations.constructCirclesLinesFromSurfaces`                  | None.                                                                                                                                                                                                           |
 | `constructionOperations.addCollectionInstrumentsToRefListWildcardSelection` | None.                                                                                                                                                                                                           |
@@ -279,11 +297,12 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
   call threw during the MP sequence. Read the proven phase from
   `executionDisposition`: `notStarted` (before Execute Step, do not replay),
   `startedOutcomeUnknown` (reconcile before any replay), or `completed` (an
-  output getter failed after the MP succeeded).
+  output getter threw after the MP returned code 2 or 4).
 - **Partial success.** An MP that returns code 4 (PARTIAL SUCCESS) did its work.
-  The call succeeds and returns its outputs; it never throws for it and is never
-  retried. Pass `onMpCompletion` in the call options to observe each call's
-  completion, `{ state: 'succeeded' | 'partialSuccess', mpResultCode }`:
+  The call is never retried, and it resolves with its outputs when the server
+  retrieves all of them. Pass `onMpCompletion` in the call options to observe
+  each call's completion,
+  `{ state: 'succeeded' | 'partialSuccess', mpResultCode }`:
 
   ```ts
   await getWorkingDirectory(briosa, {
@@ -299,16 +318,37 @@ their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
   `BriosaProtocolError` (`mp-completion-missing` or `mp-completion-invalid`),
   because the server always reports the code. The callback runs once, after that
   check and before the outputs are mapped, so it reports the completion even if
-  output mapping then fails; an exception it throws rejects the call. For four
-  operations the
-  target documentation says code 4 leaves the work undone, so the server reports
-  it as an ordinary `mpFailure` with code 4: `constructPointFromSurveyTargetCenter`,
-  `openSaFile`, `openTemplateFile`, and `setReportOptionsForObject`.
+  output mapping then fails; an exception it throws rejects the call.
+
+  The server retrieves the outputs before it replies. If it can't retrieve one
+  after code 4, the call rejects with `BriosaOperationError` instead, and the
+  callback isn't called, because the call didn't succeed. The kind is
+  `outputRetrievalFailure` when a getter returned no usable value or the worker
+  couldn't deliver the outputs, for example one too large to encode, and
+  `sdkCallFaulted` when a getter threw. Both have the `executionDisposition`
+  `completed` and the `replayGuidance` `doNotReplay`, and their `mpExecution`
+  keeps the state `partialSuccess` and MP code 4.
+
+  Four operations report code 4 as an ordinary `mpFailure`, whose `mpExecution`
+  has state `failed` and code 4: `constructPointFromSurveyTargetCenter`,
+  `openSaFile`, `openTemplateFile`, and `setReportOptionsForObject`. On SA 2026
+  the target documentation says code 4 leaves the work undone for all four. On
+  SA 2024 it says so for `constructPointFromSurveyTargetCenter` and
+  `setReportOptionsForObject`, and lists no code 4 for `openSaFile` and
+  `openTemplateFile`. Those two report it as a failure on SA 2024 too, by the
+  maintainer decision on
+  [spatialanalyzer/briosa#351](https://github.com/spatialanalyzer/briosa/issues/351):
+  reporting a discarded open job as a success would be worse than a false
+  failure.
 
 - **MP execution details.** `BriosaOperationError.mpExecution` carries the
   server's value-free MP execution details (`state`, `mpResultCode`, and
   `outputRetrievals`), or `null`. A `partialSuccess` state stays distinct there
   too, for example when an output could not be retrieved after code 4.
+  `outputRetrievals` holds the per-output states that the server reports. They
+  don't always identify the getter that failed: when the worker can't deliver
+  the outputs, every output can be marked `failed`, whether the kind is
+  `outputRetrievalFailure` or `sdkCallFaulted`.
 - **Modal dialogs.** When a SpatialAnalyzer modal dialog holds an MP, the
   failure stays `workerWatchdogTimeout` with `startedOutcomeUnknown`, its
   diagnostic is `sa-modal-dialog-open`, and recovery guidance is
