@@ -79,6 +79,9 @@ interface Session {
   applicationState: SpatialAnalyzerLifecycleState | null;
   sdkState: SpatialAnalyzerSdkLifecycleState | null;
   startupCompleted: boolean;
+  // Published-bounds path (Server 0.10.1 and later): admission opens only once
+  // startup has published, so a timed-out startup never admits MP work.
+  readonly admissionAwaitsPublication: boolean;
   commandAdmissionOpen: boolean;
   activeCommands: number;
   commandsDrained: Promise<void>;
@@ -472,7 +475,9 @@ export class BriosaClientImplementation implements BriosaClient {
     try {
       await this.#startInner(options, budget);
     } catch (error) {
-      if (budget.signal.aborted) {
+      // On the published-bounds path a step that fails at or past the deadline
+      // is reported as the timeout, with its own failure as the cause.
+      if (budget.spentWhenFailed()) {
         throw new BriosaStartupError('startup-timeout', { cause: error });
       }
       throw error;
@@ -505,18 +510,25 @@ export class BriosaClientImplementation implements BriosaClient {
       // only then does the startup check its deadline before each later step,
       // so that it submits nothing after the deadline even before the timer
       // runs. Against Server 0.10.0 it keeps Client 0.5.0's timing exactly.
-      const checkDeadline = lifecycleBoundsPublished
+      const guard = lifecycleBoundsPublished
         ? (): void => {
             if (budget.expired()) {
               throw new BriosaCallAbortedError(signal.reason);
             }
           }
-        : (): void => undefined;
+        : undefined;
+      const checkDeadline = guard ?? ((): void => undefined);
       if (lifecycleBoundsPublished) {
+        budget.enableDeadlineChecks();
         budget.adopt(snapshot.lifecycleBounds, options);
       }
       checkDeadline();
-      session = createSession(server, transport, snapshot);
+      session = createSession(
+        server,
+        transport,
+        snapshot,
+        lifecycleBoundsPublished,
+      );
       await this.#withLock(() => {
         this.#ensureOpen();
         this.#session = session;
@@ -528,7 +540,7 @@ export class BriosaClientImplementation implements BriosaClient {
         checkDeadline();
         updateSdkState(
           session,
-          mapSdkState(await session.transport.startSdk(signal)),
+          mapSdkState(await session.transport.startSdk(signal, guard)),
         );
       }
       if (options.launchSpatialAnalyzer) {
@@ -537,6 +549,7 @@ export class BriosaClientImplementation implements BriosaClient {
           await session.transport.launchApplication(
             options.launchOptions,
             signal,
+            guard,
           ),
         );
       }
@@ -548,13 +561,15 @@ export class BriosaClientImplementation implements BriosaClient {
         );
         checkDeadline();
         const connected = mapSdkState(
-          await session.transport.connectSdk(generation, false, signal),
+          await session.transport.connectSdk(generation, false, signal, guard),
         );
         updateSdkState(session, connected);
         checkDeadline();
         updateSnapshot(
           session,
-          mapSnapshot(...(await session.transport.getServerSnapshot(signal))),
+          mapSnapshot(
+            ...(await session.transport.getServerSnapshot(signal, guard)),
+          ),
         );
         if (!connected.readyForMp || !session.snapshot.readyForMp) {
           throw new BriosaProtocolError('startup-readiness-not-established');
@@ -833,6 +848,7 @@ function createSession(
   server: OwnedServer,
   transport: ClientTransport,
   snapshot: BriosaServerSnapshot,
+  admissionAwaitsPublication: boolean,
 ): Session {
   return {
     server,
@@ -841,6 +857,7 @@ function createSession(
     applicationState: null,
     sdkState: null,
     startupCompleted: false,
+    admissionAwaitsPublication,
     commandAdmissionOpen: false,
     activeCommands: 0,
     commandsDrained: Promise.resolve(),
@@ -871,7 +888,9 @@ function publishStartup(session: Session): void {
 
 function refreshCommandAdmission(session: Session): void {
   session.commandAdmissionOpen =
-    session.snapshot.readyForMp && session.sdkState?.readyForMp === true;
+    (!session.admissionAwaitsPublication || session.startupCompleted) &&
+    session.snapshot.readyForMp &&
+    session.sdkState?.readyForMp === true;
 }
 
 // Every successful major-3 result carries its MP execution details, and every

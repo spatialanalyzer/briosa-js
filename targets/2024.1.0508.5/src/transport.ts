@@ -38,10 +38,12 @@ import type { SpatialAnalyzerLaunchOptions } from './models.js';
 export interface ClientTransport {
   getServerSnapshot(
     signal?: AbortSignal,
+    beforeSubmit?: () => void,
   ): Promise<readonly [GetServerInfoResponse, ListCapabilitiesResponse]>;
   listCapabilities(
     includeDenied: boolean,
     signal?: AbortSignal,
+    beforeSubmit?: () => void,
   ): Promise<ListCapabilitiesResponse>;
   getApplicationState(
     signal?: AbortSignal,
@@ -49,17 +51,22 @@ export interface ClientTransport {
   launchApplication(
     options: SpatialAnalyzerLaunchOptions,
     signal?: AbortSignal,
+    beforeSubmit?: () => void,
   ): Promise<SpatialAnalyzerLifecycleState>;
   closeApplication(
     expectedGeneration: number,
     signal?: AbortSignal,
   ): Promise<SpatialAnalyzerLifecycleState>;
   getSdkState(signal?: AbortSignal): Promise<SpatialAnalyzerSdkLifecycleState>;
-  startSdk(signal?: AbortSignal): Promise<SpatialAnalyzerSdkLifecycleState>;
+  startSdk(
+    signal?: AbortSignal,
+    beforeSubmit?: () => void,
+  ): Promise<SpatialAnalyzerSdkLifecycleState>;
   connectSdk(
     expectedGeneration: number,
     reconnect: boolean,
     signal?: AbortSignal,
+    beforeSubmit?: () => void,
   ): Promise<SpatialAnalyzerSdkLifecycleState>;
   stopSdk(
     expectedGeneration: number,
@@ -118,19 +125,27 @@ export class GrpcClientTransport implements ClientTransport {
 
   async getServerSnapshot(
     signal?: AbortSignal,
+    beforeSubmit?: () => void,
   ): Promise<readonly [GetServerInfoResponse, ListCapabilitiesResponse]> {
     const server = await invokeUnary<GetServerInfoResponse>(
       (callback) =>
         this.#discovery.getServerInfo({}, new Metadata(), {}, callback),
       signal,
+      beforeSubmit,
     );
-    const capabilities = await this.listCapabilities(false, signal);
+    // The guard runs again here, between the two discovery requests.
+    const capabilities = await this.listCapabilities(
+      false,
+      signal,
+      beforeSubmit,
+    );
     return [server, capabilities];
   }
 
   listCapabilities(
     includeDenied: boolean,
     signal?: AbortSignal,
+    beforeSubmit?: () => void,
   ): Promise<ListCapabilitiesResponse> {
     return invokeUnary<ListCapabilitiesResponse>(
       (callback) =>
@@ -141,6 +156,7 @@ export class GrpcClientTransport implements ClientTransport {
           callback,
         ),
       signal,
+      beforeSubmit,
     );
   }
 
@@ -163,6 +179,7 @@ export class GrpcClientTransport implements ClientTransport {
   async launchApplication(
     options: SpatialAnalyzerLaunchOptions,
     signal?: AbortSignal,
+    beforeSubmit?: () => void,
   ): Promise<SpatialAnalyzerLifecycleState> {
     const initialContent =
       options.jobFilePath !== undefined
@@ -173,18 +190,21 @@ export class GrpcClientTransport implements ClientTransport {
               value: options.quickStartInstrumentName,
             } as const)
           : undefined;
+    // Every option is read, in Client 0.5.0's order, before the guard runs.
+    const request = {
+      ...(initialContent === undefined ? {} : { initialContent }),
+      startMinimized: options.startMinimized ?? false,
+    };
     const response = await invokeUnary<LaunchSpatialAnalyzerResponse>(
       (callback) =>
         this.#application.launchSpatialAnalyzer(
-          {
-            ...(initialContent === undefined ? {} : { initialContent }),
-            startMinimized: options.startMinimized ?? false,
-          },
+          request,
           new Metadata(),
           {},
           callback,
         ),
       signal,
+      beforeSubmit,
     );
     return requireState(response.state, 'application-state-missing');
   }
@@ -219,11 +239,13 @@ export class GrpcClientTransport implements ClientTransport {
 
   async startSdk(
     signal?: AbortSignal,
+    beforeSubmit?: () => void,
   ): Promise<SpatialAnalyzerSdkLifecycleState> {
     const response = await invokeUnary<StartSpatialAnalyzerSdkResponse>(
       (callback) =>
         this.#sdk.startSpatialAnalyzerSdk({}, new Metadata(), {}, callback),
       signal,
+      beforeSubmit,
     );
     return requireState(response.state, 'sdk-state-missing');
   }
@@ -232,6 +254,7 @@ export class GrpcClientTransport implements ClientTransport {
     expectedGeneration: number,
     reconnect: boolean,
     signal?: AbortSignal,
+    beforeSubmit?: () => void,
   ): Promise<SpatialAnalyzerSdkLifecycleState> {
     const response = reconnect
       ? await invokeUnary<ReconnectToSpatialAnalyzerResponse>(
@@ -243,6 +266,7 @@ export class GrpcClientTransport implements ClientTransport {
               callback,
             ),
           signal,
+          beforeSubmit,
         )
       : await invokeUnary<ConnectToSpatialAnalyzerResponse>(
           (callback) =>
@@ -253,6 +277,7 @@ export class GrpcClientTransport implements ClientTransport {
               callback,
             ),
           signal,
+          beforeSubmit,
         );
     return requireState(response.state, 'sdk-state-missing');
   }
@@ -354,11 +379,27 @@ function requireState<T>(state: T | undefined, diagnosticCode: string): T {
   return state;
 }
 
+// beforeSubmit, when given, runs immediately before the call is made, after
+// the request is built. If it throws, the call is never made and its error
+// rejects the promise. Without it the call behaves as in Client 0.5.0.
 function invokeUnary<TResponse>(
   invoke: UnaryInvoker<TResponse>,
   signal: AbortSignal | undefined,
+  beforeSubmit?: () => void,
 ): Promise<TResponse> {
   return new Promise<TResponse>((resolve, reject) => {
+    if (beforeSubmit !== undefined) {
+      try {
+        beforeSubmit();
+      } catch (cause) {
+        reject(
+          cause instanceof Error
+            ? cause
+            : new Error('Briosa call was not submitted.', { cause }),
+        );
+        return;
+      }
+    }
     let call: ClientUnaryCall | undefined;
     let aborted = signal?.aborted === true;
     let abortReason: unknown = aborted ? readAbortReason(signal) : undefined;

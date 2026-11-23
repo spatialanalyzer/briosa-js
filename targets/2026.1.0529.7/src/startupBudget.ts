@@ -80,6 +80,7 @@ export class StartupBudget {
   #timer: unknown;
   #adoptable: boolean;
   #finished = false;
+  #deadlineChecks = false;
 
   constructor(timeoutMs: number, explicit: boolean, clock: StartupClock) {
     this.#clock = clock;
@@ -148,6 +149,27 @@ export class StartupBudget {
     if (this.#clock.now() < this.#deadline) return false;
     this.#expire();
     return true;
+  }
+
+  /**
+   * Turns on the deadline checks of the published-bounds path: a startup step
+   * that fails at or past the deadline then counts as the budget's expiry.
+   */
+  enableDeadlineChecks(): void {
+    this.#deadlineChecks = true;
+  }
+
+  /**
+   * Whether a failed startup ran out of budget: its signal aborted, or, on the
+   * published-bounds path, the failure came at or past the deadline before the
+   * timer callback ran. Without published bounds only the signal counts, as in
+   * Client 0.5.0.
+   */
+  spentWhenFailed(): boolean {
+    return (
+      this.#controller.signal.aborted ||
+      (this.#deadlineChecks && this.expired())
+    );
   }
 
   /** Ends the budget when startup settles; its timer never fires afterwards. */
