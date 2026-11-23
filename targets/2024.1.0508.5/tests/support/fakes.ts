@@ -88,6 +88,8 @@ export class ScriptedTransport implements ClientTransport {
   respond: OperationResponder = () => ({ execution: succeeded() });
   capabilities: ListCapabilitiesResponse = defaultCapabilities();
   deniedCapabilities: ListCapabilitiesResponse | null = null;
+  /** Server information fields that replace the defaults in every snapshot. */
+  serverInfoFields: Partial<GetServerInfoResponse> = {};
   #sdkGeneration = 0;
   #connected = false;
 
@@ -106,7 +108,10 @@ export class ScriptedTransport implements ClientTransport {
   async getServerSnapshot(): Promise<
     readonly [GetServerInfoResponse, ListCapabilitiesResponse]
   > {
-    return [serverInfo(this.#connected), await this.listCapabilities(false)];
+    return [
+      { ...serverInfo(this.#connected), ...this.serverInfoFields },
+      await this.listCapabilities(false),
+    ];
   }
 
   async listCapabilities(

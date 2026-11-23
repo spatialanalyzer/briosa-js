@@ -9,7 +9,8 @@ import {
 
 void test('contract major three is required for runtime selection', () => {
   assert.equal(briosaProtocolIdentity.compatibilityMajor, 3);
-  assert.equal(briosaProtocolIdentity.compatibilityRevision, 0);
+  // The checkpoint declares 3.1; the client still accepts 3.0 (Server 0.10.0).
+  assert.equal(briosaProtocolIdentity.compatibilityRevision, 1);
   assert.equal(compatible(1, 0, '0.8.0', 'source'), false);
   assert.equal(compatible(2, 0, '0.9.2', 'source'), false);
   assert.equal(compatible(3, 0, '0.10.0', 'source'), true);

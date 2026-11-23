@@ -7,13 +7,18 @@ import {
 } from './installationModels.js';
 export const legacyVersion = '0.6.1';
 export const legacySource = '32a3b56ba4ae31ea5ec6ec3b2aa051eb61c866aa';
+// The lowest server revision this client accepts, in installation selection and
+// in live discovery alike. The pinned protocol checkpoint declares revision 1
+// (Server 0.10.1), but this client still works with Server 0.10.0, which
+// declares revision 0, so the minimum stays 0 instead of following the import.
+export const minimumCompatibilityRevision = 0;
 export function compatible(
   major: number,
   revision: number,
   version: string,
   source: string,
   requiredMajor: number = identity.compatibilityMajor,
-  minimumRevision: number = identity.compatibilityRevision,
+  minimumRevision: number = minimumCompatibilityRevision,
 ): boolean {
   return major === 0
     ? revision === 0 &&
@@ -28,7 +33,7 @@ export function selectInstallation(
   options: BriosaServerSelection,
   target: string = identity.spatialAnalyzerTarget,
   requiredMajor: number = identity.compatibilityMajor,
-  minimumRevision: number = identity.compatibilityRevision,
+  minimumRevision: number = minimumCompatibilityRevision,
 ): { selected: BriosaInstallation | null; diagnosticCode: string | null } {
   const eligible = candidates.filter(
     (c) =>

@@ -1,8 +1,9 @@
 # Releasing npm clients
 
 Each release publishes two independent exact-SA products. The current package
-version is `0.5.0`, for behavioral contract major 3 (Briosa Server `0.10.0`);
-package versions stay independent of server versions.
+version is `0.5.1`, for Briosa Server `0.10.x`: it uses what Server `0.10.1`
+adds and still works with Server `0.10.0`. Package versions stay independent of
+server versions.
 This procedure does not establish licensed runtime or enterprise Artifactory
 validation, which remain outstanding before v1.0 promotion.
 

@@ -367,24 +367,25 @@ function serviceError(
   });
 }
 
-void test('records the frozen contract major 3 artifact and generated semantics', () => {
+void test('records the pinned 0.10.1-dev.1 checkpoint artifact and generated semantics', () => {
   assert.equal(
     briosaProtocolIdentity.artifactName,
-    'briosa-protocol-0.10.0-dev.1-sa-2026.1.0529.7',
+    'briosa-protocol-0.10.1-dev.1-sa-2026.1.0529.7',
   );
   assert.equal(
     briosaProtocolIdentity.artifactSha256,
-    '0bf2b7f216a8d1040bd416b4566cf6c53a13f398ec81657dc91b674e0f45cae3',
+    '3e5d4d1f830a05783c78c66041e459a8e1c1060e0d8c66ab150aafa2fbde34af',
   );
   assert.equal(
     briosaProtocolIdentity.descriptorSetSha256,
-    'aa938e86fc62627d58994953398da3b7dc6a202f5f3c90e778bbddccda0261f8',
+    '6f0f5a430d6bb5583982a41f16035b4cce4446dfcb498b36bf0069f3700b4a04',
   );
   assert.equal(
     briosaProtocolIdentity.sourceRevision,
-    '2960705eb3152646513dca2b5d2043cd7cfffb75',
+    'd405779027085b3dc26dc09c62a669820db5c164',
   );
   assert.equal(briosaProtocolIdentity.compatibilityMajor, 3);
+  assert.equal(briosaProtocolIdentity.compatibilityRevision, 1);
   assert.equal(briosaProtocolIdentity.protocolPackage, 'briosa');
   assert.equal(
     briosaProtocolIdentity.clientGenerationContract,

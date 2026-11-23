@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readFile, unlink, writeFile } from 'node:fs/promises';
 
 import {
@@ -51,7 +52,19 @@ async function captureError(
   throw new Error('Expected the operation to fail.');
 }
 
-async function runScenario(scenario: string): Promise<void> {
+// What the large-result scenario reports about the working directory: its
+// UTF-8 length and lowercase hexadecimal SHA-256, never the value itself.
+interface ReceivedText {
+  readonly utf8_length: number;
+  readonly sha256: string;
+}
+
+// Returns any scenario-specific fields for the fixture report.
+async function runScenario(
+  scenario: string,
+  definition: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
+  let reportFields: Record<string, unknown> = {};
   if (process.env.BRIOSA_CONFORMANCE_EXPECT_INCOMPATIBLE === '1') {
     requireCondition(
       scenario === 'control-plane-only',
@@ -87,7 +100,7 @@ async function runScenario(scenario: string): Promise<void> {
     } finally {
       await rejected.stop();
     }
-    return;
+    return reportFields;
   }
 
   const briosa = createBriosaClient({
@@ -128,7 +141,7 @@ async function runScenario(scenario: string): Promise<void> {
         'Identity mismatch did not map to the compatibility error.',
       );
       await cleanupApplication(briosa);
-      return;
+      return reportFields;
     }
 
     await briosa.start(startOptions);
@@ -181,6 +194,11 @@ async function runScenario(scenario: string): Promise<void> {
       case 'owned-cleanup':
         await assertDefaultReady(briosa);
         break;
+      case 'large-result':
+        reportFields = {
+          working_directory: await assertLargeResult(briosa, definition),
+        };
+        break;
       default:
         throw new Error(`Unsupported conformance scenario '${scenario}'.`);
     }
@@ -191,6 +209,38 @@ async function runScenario(scenario: string): Promise<void> {
       await briosa.stop();
     }
   }
+  return reportFields;
+}
+
+// #399: a result at the server's 1 MiB worker response budget arrives whole.
+// The length and digest are computed from the value this client returned, so
+// the runner's check shows receipt rather than an echo of the contract.
+async function assertLargeResult(
+  briosa: BriosaClient,
+  definition: Record<string, unknown>,
+): Promise<ReceivedText> {
+  const expected = definition.expected_working_directory;
+  requireCondition(
+    isRecord(expected) &&
+      Number.isSafeInteger(expected.utf8_length) &&
+      typeof expected.sha256 === 'string',
+    'The large-result scenario has no expected working directory.',
+  );
+  const directory = await getWorkingDirectory(briosa);
+  requireCondition(
+    typeof directory === 'string',
+    'The large result is not text.',
+  );
+  const received: ReceivedText = {
+    utf8_length: Buffer.byteLength(directory, 'utf8'),
+    sha256: createHash('sha256').update(directory, 'utf8').digest('hex'),
+  };
+  requireCondition(
+    received.utf8_length === expected.utf8_length &&
+      received.sha256 === expected.sha256,
+    'The large result did not arrive whole.',
+  );
+  return received;
 }
 
 async function assertControlPlaneOnly(briosa: BriosaClient): Promise<void> {
@@ -656,17 +706,33 @@ requireCondition(
   Array.isArray(scenarios),
   'The scenario collection is invalid.',
 );
+// Optional scenarios run only when the test script requests them; a contract
+// without the list has none.
+const optionalScenarios: unknown = parsedContract.optional_scenarios ?? [];
 requireCondition(
-  scenarios.some((item: unknown) => isRecord(item) && item.id === scenario),
+  Array.isArray(optionalScenarios),
+  'The optional scenario collection is invalid.',
+);
+const definitions: readonly unknown[] = [
+  ...(scenarios as unknown[]),
+  ...(optionalScenarios as unknown[]),
+];
+const definition = definitions.find(
+  (item: unknown): item is Record<string, unknown> =>
+    isRecord(item) && item.id === scenario,
+);
+requireCondition(
+  definition !== undefined,
   'The requested scenario is absent from the conformance contract.',
 );
 
-await runScenario(scenario);
+const scenarioReport = await runScenario(scenario, definition);
 process.stdout.write(
   `${JSON.stringify({
     schema_version: 1,
     contract_id: contractId,
     scenario,
     success: true,
+    ...scenarioReport,
   })}\n`,
 );

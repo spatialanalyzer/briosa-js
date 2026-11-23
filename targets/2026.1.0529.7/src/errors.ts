@@ -17,6 +17,7 @@ import type {
   MpExecutionState,
   OperationFailureKind,
   OutputRetrievalState,
+  PolicyDenialDetails,
   RecoveryGuidance,
   ReplayGuidance,
   ReplaySafety,
@@ -25,7 +26,11 @@ import type {
   SpatialAnalyzerSdkLifecycleFailureKind,
   SpatialAnalyzerSdkLifecycleState,
 } from './models.js';
-import { mapApplicationState, mapSdkState } from './protocolMapping.js';
+import {
+  mapApplicationState,
+  mapPolicyDenial,
+  mapSdkState,
+} from './protocolMapping.js';
 
 const applicationErrorTrailer = 'briosa-spatial-analyzer-lifecycle-error-bin';
 const sdkErrorTrailer = 'briosa-spatial-analyzer-sdk-lifecycle-error-bin';
@@ -109,6 +114,21 @@ export class BriosaSpatialAnalyzerSdkError extends BriosaError {
  * them, and is null otherwise.
  */
 export class BriosaOperationError extends BriosaError {
+  /**
+   * The typed denial detail that Server 0.10.1 and later send with a
+   * `policyDenied` failure: the policy step that denied the call, the denied
+   * risk flag, the admission profile, and the request option field the server
+   * attributed the denial to. It is present only on policy denials: it is null
+   * for every other kind, and when the server sent none, as Server 0.10.0 never
+   * does. It is descriptive: the kind, disposition, and guidance are the same
+   * with or without it.
+   *
+   * Added in Client 0.5.1. Errors the client raises always set it; the type
+   * marks it optional only so that values written for Client 0.5.0 still
+   * type-check.
+   */
+  readonly policyDenial?: PolicyDenialDetails | null;
+
   constructor(
     readonly operationId: string,
     readonly kind: OperationFailureKind,
@@ -118,9 +138,12 @@ export class BriosaOperationError extends BriosaError {
     readonly replayGuidance: ReplayGuidance,
     readonly replaySafety: ReplaySafety,
     readonly mpExecution: MpExecutionDetails | null = null,
+    policyDenial: PolicyDenialDetails | null = null,
   ) {
     super(`Briosa operation failed (${diagnosticCode}).`);
     this.name = 'BriosaOperationError';
+    // Only a policy denial names a policy step; another kind never appears to.
+    this.policyDenial = kind === 'policyDenied' ? policyDenial : null;
   }
 
   get completionUnknown(): boolean {
@@ -235,6 +258,10 @@ export function mapServiceError(
       detail.mpExecution === undefined
         ? null
         : mapMpExecution(detail.mpExecution),
+      // Never fails: an unknown rule or flag is unknown metadata.
+      detail.policyDenial === undefined
+        ? null
+        : mapPolicyDenial(detail.policyDenial),
     );
   } catch {
     return new BriosaTransportError('typed-error-malformed');

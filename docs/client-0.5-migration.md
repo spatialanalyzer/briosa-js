@@ -404,3 +404,29 @@ await briosa.gdtOperations.makeFeatureChecks(collection, {
   signal: AbortSignal.timeout(30_000),
 });
 ```
+
+## Client 0.5.1
+
+Moving from Client 0.5.0 to Client 0.5.1 needs no application changes: every
+addition is a new member, and code written for Client 0.5.0 type-checks and
+behaves the same. Client 0.5.1 selects and starts Server 0.10.0 installations
+as Client 0.5.0 does. With Server 0.10.1 and later it also reads what those
+servers add:
+
+- `BriosaOperationError.policyDenial` tells why a call was denied: the policy
+  step, the risk flag set to deny, the admission profile, and the request option
+  field. It is null with Server 0.10.0.
+- In discovery, a denied capability carries the same detail, and each
+  capability's `requestOptions` describes the request fields that turn on
+  operator UI or leave work running. `requestOptions` is null with Server
+  0.10.0, which does not describe options, and `[]` when none apply.
+- The server snapshot's `lifecycleBounds` and
+  `configuredSpatialAnalyzerInteractionMode` report the server's lifecycle wait
+  allowances and its configured interaction mode. With Server 0.10.0 every
+  allowance is null and the mode is `unknown`.
+- When `startupTimeoutMs` is omitted, the startup budget follows the startup
+  allowance the server publishes, never below two minutes. A value you set
+  always wins, including 120000. With Server 0.10.0 the budget is two minutes,
+  as before.
+
+The product guides describe each addition under "Additions in Client 0.5.1".

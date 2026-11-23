@@ -18,8 +18,32 @@ import {
   type ServiceError,
   type UntypedServiceImplementation,
 } from "@grpc/grpc-js";
-import { ReplaySafety } from "./operation_outcomes.js";
+import { PolicyDenialDetails, ReplaySafety } from "./operation_outcomes.js";
 import { VersionCoordinates } from "./version_coordinates.js";
+
+/**
+ * The SpatialAnalyzer interaction mode that the server is configured to set
+ * after each verified Connect. It reports server configuration only.
+ * SpatialAnalyzer has no getter for its live mode, and an operator or a
+ * SetInteractionMode call can change that mode at any time, so this value never
+ * describes the mode SpatialAnalyzer is using now. It is distinct from the MP
+ * and MP dialog interaction modes. SILENT, AUTOMATIC, and MANUAL correspond by
+ * name to the SaInteractionMode values of the same name; their numbers differ.
+ * A reader treats an unrecognized value as unknown.
+ */
+export enum ConfiguredSpatialAnalyzerInteractionMode {
+  /** CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_UNSPECIFIED - Not reported. Server 0.10.0 leaves the field at this value. */
+  CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_UNSPECIFIED = 0,
+  /** CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_UNCHANGED - The server never sets the mode and leaves SpatialAnalyzer's mode untouched. */
+  CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_UNCHANGED = 1,
+  /** CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_SILENT - The server sets Silent after each verified Connect. */
+  CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_SILENT = 2,
+  /** CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_AUTOMATIC - The server sets Automatic after each verified Connect. */
+  CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_AUTOMATIC = 3,
+  /** CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_MANUAL - The server sets Manual after each verified Connect. */
+  CONFIGURED_SPATIAL_ANALYZER_INTERACTION_MODE_MANUAL = 4,
+  UNRECOGNIZED = -1,
+}
 
 export enum RuntimeIdentityEvidenceSource {
   RUNTIME_IDENTITY_EVIDENCE_SOURCE_UNSPECIFIED = 0,
@@ -84,6 +108,57 @@ export enum ConnectedSpatialAnalyzerVersionState {
   CONNECTED_SPATIAL_ANALYZER_VERSION_STATE_VERIFIED_MISMATCH = 3,
   CONNECTED_SPATIAL_ANALYZER_VERSION_STATE_OPERATOR_ATTESTED_MATCH = 4,
   CONNECTED_SPATIAL_ANALYZER_VERSION_STATE_OPERATOR_ATTESTED_MISMATCH = 5,
+  UNRECOGNIZED = -1,
+}
+
+/** What a request option turns on. */
+export enum OperationRequestOptionEffect {
+  OPERATION_REQUEST_OPTION_EFFECT_UNSPECIFIED = 0,
+  /**
+   * OPERATION_REQUEST_OPTION_EFFECT_INTERACTIVE_UI - The request opens or blocks on operator UI. It gains the interactive_ui
+   * risk flag and the INTERACTIVE duration class.
+   */
+  OPERATION_REQUEST_OPTION_EFFECT_INTERACTIVE_UI = 1,
+  /**
+   * OPERATION_REQUEST_OPTION_EFFECT_BACKGROUND_WORK - The call returns while device or operator work keeps running. The request
+   * is an exclusive workflow, which no setting admits in the current isolation
+   * mode.
+   */
+  OPERATION_REQUEST_OPTION_EFFECT_BACKGROUND_WORK = 2,
+  UNRECOGNIZED = -1,
+}
+
+/** Which values of a request option's field turn its effect on. */
+export enum OperationRequestOptionCondition {
+  OPERATION_REQUEST_OPTION_CONDITION_UNSPECIFIED = 0,
+  /** OPERATION_REQUEST_OPTION_CONDITION_WHEN_TRUE - A Boolean field set to true. */
+  OPERATION_REQUEST_OPTION_CONDITION_WHEN_TRUE = 1,
+  /** OPERATION_REQUEST_OPTION_CONDITION_WHEN_FALSE - A Boolean field set to false. */
+  OPERATION_REQUEST_OPTION_CONDITION_WHEN_FALSE = 2,
+  /** OPERATION_REQUEST_OPTION_CONDITION_WHEN_PRESENT - A message field that is present. */
+  OPERATION_REQUEST_OPTION_CONDITION_WHEN_PRESENT = 3,
+  /** OPERATION_REQUEST_OPTION_CONDITION_WHEN_NON_EMPTY - A string field that is present and not empty. */
+  OPERATION_REQUEST_OPTION_CONDITION_WHEN_NON_EMPTY = 4,
+  /**
+   * OPERATION_REQUEST_OPTION_CONDITION_WHEN_ONE_OF - An enum field set to one of enabling_enum_values, or to any number the
+   * server does not recognize, which fails closed.
+   */
+  OPERATION_REQUEST_OPTION_CONDITION_WHEN_ONE_OF = 5,
+  UNRECOGNIZED = -1,
+}
+
+/** What omitting a request option's field does. */
+export enum OperationRequestOptionOmission {
+  OPERATION_REQUEST_OPTION_OMISSION_UNSPECIFIED = 0,
+  /** OPERATION_REQUEST_OPTION_OMISSION_DOES_NOT_ACTIVATE - Omitting the field does not turn the effect on. */
+  OPERATION_REQUEST_OPTION_OMISSION_DOES_NOT_ACTIVATE = 1,
+  /** OPERATION_REQUEST_OPTION_OMISSION_ACTIVATES - Omitting the field turns the effect on. */
+  OPERATION_REQUEST_OPTION_OMISSION_ACTIVATES = 2,
+  /**
+   * OPERATION_REQUEST_OPTION_OMISSION_REQUIRED - Required by request mapping: if mapping is reached, omission fails
+   * validation before worker dispatch.
+   */
+  OPERATION_REQUEST_OPTION_OMISSION_REQUIRED = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -201,7 +276,148 @@ export interface GetServerInfoResponse {
     | RuntimeIdentityEvidence
     | undefined;
   /** Behavioral promise, independent of release and source identity. */
-  compatibility?: CompatibilityContract | undefined;
+  compatibility?:
+    | CompatibilityContract
+    | undefined;
+  /**
+   * The lifecycle wait allowances that this server computes from its own
+   * effective configuration. Available before the SDK starts and whether or not
+   * SpatialAnalyzer is connected. Server 0.10.1 and later set it; Server 0.10.0
+   * leaves it absent, and a client then keeps its own fixed waits. The 0.5.0
+   * clients ignore this field and work with Server 0.10.1 unchanged; clients
+   * from 0.5.1 read it.
+   */
+  lifecycleBounds?:
+    | LifecycleBounds
+    | undefined;
+  /**
+   * The SpatialAnalyzer interaction mode that this server is configured to set
+   * after each verified Connect. It reports server configuration only and is
+   * published whether or not SpatialAnalyzer is connected; it is never read back
+   * from SpatialAnalyzer. Server 0.10.1 and later set a known value; Server
+   * 0.10.0 leaves it UNSPECIFIED. The 0.5.0 clients ignore this field and work
+   * with Server 0.10.1 unchanged.
+   */
+  configuredSpatialAnalyzerInteractionMode?: ConfiguredSpatialAnalyzerInteractionMode | undefined;
+}
+
+/**
+ * Lifecycle wait allowances in milliseconds, each computed by the server from
+ * the bounds it enforces and rounded up to a whole millisecond. Fields 1 to 6
+ * cover individual lifecycle operations; fields 7 and 8 size a startup of
+ * several requests and are not server deadlines; field 9 describes the host's
+ * graceful shutdown cancellation window. Each covers only the server's own
+ * work, from the event named on its field. None includes transport or network
+ * time, and none promises that a response reaches the caller or that any
+ * process exits within it.
+ *
+ * Server 0.10.1 and later set every finite allowance (fields 1 to 8) to a
+ * positive value. Server 0.10.0 does not send this message. A reader treats an
+ * absent or zero allowance as unavailable and keeps its own default for that
+ * purpose; it never reads an absent allowance as unbounded.
+ */
+export interface LifecycleBounds {
+  /**
+   * StartSpatialAnalyzerSdk, from the server's acceptance of the request to its
+   * typed outcome. Includes the readiness check when the new worker reports an
+   * already attached SDK, and forced worker cleanup after a failure. Excludes a
+   * request rejected for its state.
+   */
+  startSdkMilliseconds?:
+    | number
+    | undefined;
+  /**
+   * LaunchSpatialAnalyzer, from the moment the server has started the
+   * application process until its main window is ready, the process is seen to
+   * exit, or this allowance expires. Expiry does not close the application,
+   * which may still finish starting. Excludes the checks before the process
+   * starts.
+   */
+  launchSpatialAnalyzerMilliseconds?:
+    | number
+    | undefined;
+  /**
+   * ConnectToSpatialAnalyzer and ReconnectToSpatialAnalyzer, from the server's
+   * acceptance of the request to its typed outcome. Includes ConnectEx, the
+   * readiness probe with the configured interaction mode, the application
+   * association, a liveness check when one falls due, and forced worker
+   * cleanup after a failure. Excludes waiting behind a launch in progress.
+   */
+  connectSpatialAnalyzerMilliseconds?:
+    | number
+    | undefined;
+  /**
+   * RecoverSpatialAnalyzerSdk, from the server's acceptance of the request to
+   * the typed outcome of the replacement: the old worker's drain and cleanup,
+   * then the replacement's start. Excludes any later Connect; recovery never
+   * replays a command.
+   */
+  recoverSdkMilliseconds?:
+    | number
+    | undefined;
+  /**
+   * StopSpatialAnalyzerSdk, from the start of the worker stop, after any MP
+   * command in flight has finished, to the typed stop or cleanup outcome, which
+   * can report that cleanup did not complete. Excludes that command's own
+   * execution budget and any wait before the stop is accepted.
+   */
+  stopSdkMilliseconds?:
+    | number
+    | undefined;
+  /**
+   * CloseOwnedSpatialAnalyzer, from the moment the application accepts the
+   * server's close request until the process is seen to exit, this allowance
+   * expires, or the caller cancels. The server never forces the application to
+   * end. Excludes the checks before the close request.
+   */
+  closeOwnedSpatialAnalyzerMilliseconds?:
+    | number
+    | undefined;
+  /**
+   * A sizing rule, not a deadline the server enforces: the ordinary Start of a
+   * disconnected SDK, then LaunchSpatialAnalyzer, then Connect, each from its
+   * own acceptance. Excludes the client's own server startup, discovery, and
+   * round trips, which a client adds as its margin.
+   */
+  startupWithLaunchMilliseconds?:
+    | number
+    | undefined;
+  /**
+   * The same sizing rule without the launch: the ordinary Start of a
+   * disconnected SDK, then Connect.
+   */
+  startupWithoutLaunchMilliseconds?:
+    | number
+    | undefined;
+  /**
+   * The most a graceful stop of the server host may wait, from the moment the
+   * host stop begins, before the host cancels the remaining shutdown work. A
+   * stop can finish sooner or be cancelled sooner. An MP command still in
+   * flight counts against it. Expiry does not prove that the worker was
+   * released or that any process exited. Absent when the configured value is
+   * finite and its ceiling exceeds 4,294,967,294 milliseconds.
+   */
+  hostGracefulShutdown?: GracefulShutdownBound | undefined;
+}
+
+/**
+ * A graceful shutdown allowance that is either finite or explicitly unbounded.
+ * A reader that finds neither case it recognizes treats the allowance as
+ * unavailable, never as unbounded.
+ */
+export interface GracefulShutdownBound {
+  limit?:
+    | //
+    /** Positive finite allowance, in milliseconds. Zero is invalid. */
+    { $case: "finiteMilliseconds"; value: bigint }
+    | //
+    /** The server host is configured with no graceful shutdown time limit. */
+    { $case: "unbounded"; value: UnboundedShutdownWait }
+    | undefined;
+}
+
+/** Marks an explicitly unbounded wait. It has no fields. */
+export interface UnboundedShutdownWait {
 }
 
 /** Scoped to the exact SA target. Revisions preserve earlier behavior. */
@@ -286,7 +502,77 @@ export interface OperationCapability {
    * which precedence step denied it. Denied values appear only when the request
    * set include_denied.
    */
-  admission?: OperationAdmission | undefined;
+  admission?:
+    | OperationAdmission
+    | undefined;
+  /**
+   * Which policy step denied the operation's reviewed row. Server 0.10.1 and
+   * later set it exactly when admission is a denied value. Server 0.10.0 does
+   * not set it, and clients built for Server 0.10.0 ignore it.
+   */
+  policyDenial?:
+    | PolicyDenialDetails
+    | undefined;
+  /**
+   * The operation's reviewed request options. Server 0.10.1 and later always
+   * set it, with an empty list when no option applies, including on an admitted
+   * operation listed without include_denied. Server 0.10.0 does not describe
+   * request options and leaves it absent; clients built for Server 0.10.0
+   * ignore it.
+   */
+  requestOptions?: OperationRequestOptions | undefined;
+}
+
+/**
+ * The reviewed request options of one operation. A present message with an
+ * empty list means that no request option applies (Server 0.10.1 and later); an
+ * absent message means that the server did not describe options (Server 0.10.0).
+ */
+export interface OperationRequestOptions {
+  /** The order of the list carries no meaning. */
+  options?: OperationRequestOption[] | undefined;
+}
+
+/**
+ * One reviewed request option that turns on operator UI or leaves work running
+ * after the call returns. Discovery describes it. The server still decides
+ * every actual request, so a client does not pre-validate a request from it.
+ */
+export interface OperationRequestOption {
+  /** The protobuf field name of the option in the operation's request message. */
+  fieldName?: string | undefined;
+  effect?:
+    | OperationRequestOptionEffect
+    | undefined;
+  /** Which values of the field turn the effect on. */
+  condition?:
+    | OperationRequestOptionCondition
+    | undefined;
+  /**
+   * For WHEN_ONE_OF, the protobuf enum value names that turn the effect on; any
+   * enum number the server does not recognize also turns it on. Empty for every
+   * other condition.
+   */
+  enablingEnumValues?:
+    | string[]
+    | undefined;
+  /** What omitting the field does. */
+  omission?:
+    | OperationRequestOptionOmission
+    | undefined;
+  /**
+   * What the active policy decides for a request that turns on this option
+   * alone, with every other request option inactive. The server decides an
+   * actual request that turns on several options with all of them together.
+   */
+  admission?:
+    | OperationAdmission
+    | undefined;
+  /**
+   * Which policy step denies such a request. Present exactly when admission is
+   * a denied value.
+   */
+  policyDenial?: PolicyDenialDetails | undefined;
 }
 
 function createBaseGetServerInfoRequest(): GetServerInfoRequest {
@@ -336,6 +622,8 @@ function createBaseGetServerInfoResponse(): GetServerInfoResponse {
     activatedSdkIdentity: undefined,
     connectedSpatialAnalyzerIdentity: undefined,
     compatibility: undefined,
+    lifecycleBounds: undefined,
+    configuredSpatialAnalyzerInteractionMode: 0,
   };
 }
 
@@ -378,6 +666,15 @@ export const GetServerInfoResponse: MessageFns<GetServerInfoResponse> = {
     }
     if (message.compatibility !== undefined) {
       CompatibilityContract.encode(message.compatibility, writer.uint32(90).fork()).join();
+    }
+    if (message.lifecycleBounds !== undefined) {
+      LifecycleBounds.encode(message.lifecycleBounds, writer.uint32(98).fork()).join();
+    }
+    if (
+      message.configuredSpatialAnalyzerInteractionMode !== undefined &&
+      message.configuredSpatialAnalyzerInteractionMode !== 0
+    ) {
+      writer.uint32(104).int32(message.configuredSpatialAnalyzerInteractionMode);
     }
     return writer;
   },
@@ -477,6 +774,22 @@ export const GetServerInfoResponse: MessageFns<GetServerInfoResponse> = {
           message.compatibility = CompatibilityContract.decode(reader, reader.uint32());
           continue;
         }
+        case 12: {
+          if (tag !== 98) {
+            break;
+          }
+
+          message.lifecycleBounds = LifecycleBounds.decode(reader, reader.uint32());
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.configuredSpatialAnalyzerInteractionMode = reader.int32() as any;
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -511,6 +824,273 @@ export const GetServerInfoResponse: MessageFns<GetServerInfoResponse> = {
     message.compatibility = (object.compatibility !== undefined && object.compatibility !== null)
       ? CompatibilityContract.fromPartial(object.compatibility)
       : undefined;
+    message.lifecycleBounds = (object.lifecycleBounds !== undefined && object.lifecycleBounds !== null)
+      ? LifecycleBounds.fromPartial(object.lifecycleBounds)
+      : undefined;
+    message.configuredSpatialAnalyzerInteractionMode = object.configuredSpatialAnalyzerInteractionMode ?? 0;
+    return message;
+  },
+};
+
+function createBaseLifecycleBounds(): LifecycleBounds {
+  return {
+    startSdkMilliseconds: undefined,
+    launchSpatialAnalyzerMilliseconds: undefined,
+    connectSpatialAnalyzerMilliseconds: undefined,
+    recoverSdkMilliseconds: undefined,
+    stopSdkMilliseconds: undefined,
+    closeOwnedSpatialAnalyzerMilliseconds: undefined,
+    startupWithLaunchMilliseconds: undefined,
+    startupWithoutLaunchMilliseconds: undefined,
+    hostGracefulShutdown: undefined,
+  };
+}
+
+export const LifecycleBounds: MessageFns<LifecycleBounds> = {
+  encode(message: LifecycleBounds, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.startSdkMilliseconds !== undefined) {
+      writer.uint32(8).uint32(message.startSdkMilliseconds);
+    }
+    if (message.launchSpatialAnalyzerMilliseconds !== undefined) {
+      writer.uint32(16).uint32(message.launchSpatialAnalyzerMilliseconds);
+    }
+    if (message.connectSpatialAnalyzerMilliseconds !== undefined) {
+      writer.uint32(24).uint32(message.connectSpatialAnalyzerMilliseconds);
+    }
+    if (message.recoverSdkMilliseconds !== undefined) {
+      writer.uint32(32).uint32(message.recoverSdkMilliseconds);
+    }
+    if (message.stopSdkMilliseconds !== undefined) {
+      writer.uint32(40).uint32(message.stopSdkMilliseconds);
+    }
+    if (message.closeOwnedSpatialAnalyzerMilliseconds !== undefined) {
+      writer.uint32(48).uint32(message.closeOwnedSpatialAnalyzerMilliseconds);
+    }
+    if (message.startupWithLaunchMilliseconds !== undefined) {
+      writer.uint32(56).uint32(message.startupWithLaunchMilliseconds);
+    }
+    if (message.startupWithoutLaunchMilliseconds !== undefined) {
+      writer.uint32(64).uint32(message.startupWithoutLaunchMilliseconds);
+    }
+    if (message.hostGracefulShutdown !== undefined) {
+      GracefulShutdownBound.encode(message.hostGracefulShutdown, writer.uint32(74).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): LifecycleBounds {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLifecycleBounds();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.startSdkMilliseconds = reader.uint32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.launchSpatialAnalyzerMilliseconds = reader.uint32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.connectSpatialAnalyzerMilliseconds = reader.uint32();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.recoverSdkMilliseconds = reader.uint32();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.stopSdkMilliseconds = reader.uint32();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.closeOwnedSpatialAnalyzerMilliseconds = reader.uint32();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.startupWithLaunchMilliseconds = reader.uint32();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.startupWithoutLaunchMilliseconds = reader.uint32();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.hostGracefulShutdown = GracefulShutdownBound.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<LifecycleBounds>): LifecycleBounds {
+    return LifecycleBounds.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<LifecycleBounds>): LifecycleBounds {
+    const message = createBaseLifecycleBounds();
+    message.startSdkMilliseconds = object.startSdkMilliseconds ?? undefined;
+    message.launchSpatialAnalyzerMilliseconds = object.launchSpatialAnalyzerMilliseconds ?? undefined;
+    message.connectSpatialAnalyzerMilliseconds = object.connectSpatialAnalyzerMilliseconds ?? undefined;
+    message.recoverSdkMilliseconds = object.recoverSdkMilliseconds ?? undefined;
+    message.stopSdkMilliseconds = object.stopSdkMilliseconds ?? undefined;
+    message.closeOwnedSpatialAnalyzerMilliseconds = object.closeOwnedSpatialAnalyzerMilliseconds ?? undefined;
+    message.startupWithLaunchMilliseconds = object.startupWithLaunchMilliseconds ?? undefined;
+    message.startupWithoutLaunchMilliseconds = object.startupWithoutLaunchMilliseconds ?? undefined;
+    message.hostGracefulShutdown = (object.hostGracefulShutdown !== undefined && object.hostGracefulShutdown !== null)
+      ? GracefulShutdownBound.fromPartial(object.hostGracefulShutdown)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGracefulShutdownBound(): GracefulShutdownBound {
+  return { limit: undefined };
+}
+
+export const GracefulShutdownBound: MessageFns<GracefulShutdownBound> = {
+  encode(message: GracefulShutdownBound, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    switch (message.limit?.$case) {
+      case "finiteMilliseconds":
+        if (BigInt.asUintN(64, message.limit.value) !== message.limit.value) {
+          throw new globalThis.Error("value provided for field message.limit.value of type uint64 too large");
+        }
+        writer.uint32(8).uint64(message.limit.value);
+        break;
+      case "unbounded":
+        UnboundedShutdownWait.encode(message.limit.value, writer.uint32(18).fork()).join();
+        break;
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GracefulShutdownBound {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGracefulShutdownBound();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.limit = { $case: "finiteMilliseconds", value: reader.uint64() as bigint };
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.limit = { $case: "unbounded", value: UnboundedShutdownWait.decode(reader, reader.uint32()) };
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<GracefulShutdownBound>): GracefulShutdownBound {
+    return GracefulShutdownBound.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GracefulShutdownBound>): GracefulShutdownBound {
+    const message = createBaseGracefulShutdownBound();
+    switch (object.limit?.$case) {
+      case "finiteMilliseconds": {
+        if (object.limit?.value !== undefined && object.limit?.value !== null) {
+          message.limit = { $case: "finiteMilliseconds", value: BigInt(object.limit.value) };
+        }
+        break;
+      }
+      case "unbounded": {
+        if (object.limit?.value !== undefined && object.limit?.value !== null) {
+          message.limit = { $case: "unbounded", value: UnboundedShutdownWait.fromPartial(object.limit.value) };
+        }
+        break;
+      }
+    }
+    return message;
+  },
+};
+
+function createBaseUnboundedShutdownWait(): UnboundedShutdownWait {
+  return {};
+}
+
+export const UnboundedShutdownWait: MessageFns<UnboundedShutdownWait> = {
+  encode(_: UnboundedShutdownWait, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UnboundedShutdownWait {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUnboundedShutdownWait();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UnboundedShutdownWait>): UnboundedShutdownWait {
+    return UnboundedShutdownWait.fromPartial(base ?? {});
+  },
+  fromPartial(_: DeepPartial<UnboundedShutdownWait>): UnboundedShutdownWait {
+    const message = createBaseUnboundedShutdownWait();
     return message;
   },
 };
@@ -807,6 +1387,8 @@ function createBaseOperationCapability(): OperationCapability {
     durationClass: 0,
     validationStatus: 0,
     admission: 0,
+    policyDenial: undefined,
+    requestOptions: undefined,
   };
 }
 
@@ -848,6 +1430,12 @@ export const OperationCapability: MessageFns<OperationCapability> = {
     }
     if (message.admission !== undefined && message.admission !== 0) {
       writer.uint32(88).int32(message.admission);
+    }
+    if (message.policyDenial !== undefined) {
+      PolicyDenialDetails.encode(message.policyDenial, writer.uint32(98).fork()).join();
+    }
+    if (message.requestOptions !== undefined) {
+      OperationRequestOptions.encode(message.requestOptions, writer.uint32(106).fork()).join();
     }
     return writer;
   },
@@ -957,6 +1545,22 @@ export const OperationCapability: MessageFns<OperationCapability> = {
           message.admission = reader.int32() as any;
           continue;
         }
+        case 12: {
+          if (tag !== 98) {
+            break;
+          }
+
+          message.policyDenial = PolicyDenialDetails.decode(reader, reader.uint32());
+          continue;
+        }
+        case 13: {
+          if (tag !== 106) {
+            break;
+          }
+
+          message.requestOptions = OperationRequestOptions.decode(reader, reader.uint32());
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -982,6 +1586,196 @@ export const OperationCapability: MessageFns<OperationCapability> = {
     message.durationClass = object.durationClass ?? 0;
     message.validationStatus = object.validationStatus ?? 0;
     message.admission = object.admission ?? 0;
+    message.policyDenial = (object.policyDenial !== undefined && object.policyDenial !== null)
+      ? PolicyDenialDetails.fromPartial(object.policyDenial)
+      : undefined;
+    message.requestOptions = (object.requestOptions !== undefined && object.requestOptions !== null)
+      ? OperationRequestOptions.fromPartial(object.requestOptions)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseOperationRequestOptions(): OperationRequestOptions {
+  return { options: [] };
+}
+
+export const OperationRequestOptions: MessageFns<OperationRequestOptions> = {
+  encode(message: OperationRequestOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.options !== undefined && message.options.length !== 0) {
+      for (const v of message.options) {
+        OperationRequestOption.encode(v!, writer.uint32(10).fork()).join();
+      }
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): OperationRequestOptions {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperationRequestOptions();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          const el = OperationRequestOption.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.options!.push(el);
+          }
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OperationRequestOptions>): OperationRequestOptions {
+    return OperationRequestOptions.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<OperationRequestOptions>): OperationRequestOptions {
+    const message = createBaseOperationRequestOptions();
+    message.options = object.options?.map((e) => OperationRequestOption.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseOperationRequestOption(): OperationRequestOption {
+  return {
+    fieldName: "",
+    effect: 0,
+    condition: 0,
+    enablingEnumValues: [],
+    omission: 0,
+    admission: 0,
+    policyDenial: undefined,
+  };
+}
+
+export const OperationRequestOption: MessageFns<OperationRequestOption> = {
+  encode(message: OperationRequestOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.fieldName !== undefined && message.fieldName !== "") {
+      writer.uint32(10).string(message.fieldName);
+    }
+    if (message.effect !== undefined && message.effect !== 0) {
+      writer.uint32(16).int32(message.effect);
+    }
+    if (message.condition !== undefined && message.condition !== 0) {
+      writer.uint32(24).int32(message.condition);
+    }
+    if (message.enablingEnumValues !== undefined && message.enablingEnumValues.length !== 0) {
+      for (const v of message.enablingEnumValues) {
+        writer.uint32(34).string(v!);
+      }
+    }
+    if (message.omission !== undefined && message.omission !== 0) {
+      writer.uint32(40).int32(message.omission);
+    }
+    if (message.admission !== undefined && message.admission !== 0) {
+      writer.uint32(48).int32(message.admission);
+    }
+    if (message.policyDenial !== undefined) {
+      PolicyDenialDetails.encode(message.policyDenial, writer.uint32(58).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): OperationRequestOption {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperationRequestOption();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fieldName = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.effect = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.condition = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          const el = reader.string();
+          if (el !== undefined) {
+            message.enablingEnumValues!.push(el);
+          }
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.omission = reader.int32() as any;
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.admission = reader.int32() as any;
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.policyDenial = PolicyDenialDetails.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OperationRequestOption>): OperationRequestOption {
+    return OperationRequestOption.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<OperationRequestOption>): OperationRequestOption {
+    const message = createBaseOperationRequestOption();
+    message.fieldName = object.fieldName ?? "";
+    message.effect = object.effect ?? 0;
+    message.condition = object.condition ?? 0;
+    message.enablingEnumValues = object.enablingEnumValues?.map((e) => e) || [];
+    message.omission = object.omission ?? 0;
+    message.admission = object.admission ?? 0;
+    message.policyDenial = (object.policyDenial !== undefined && object.policyDenial !== null)
+      ? PolicyDenialDetails.fromPartial(object.policyDenial)
+      : undefined;
     return message;
   },
 };

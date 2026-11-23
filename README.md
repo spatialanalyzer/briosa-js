@@ -6,18 +6,19 @@ Independent exact-target clients for the [Briosa SpatialAnalyzer bridge](https:/
 
 | SpatialAnalyzer target | Product and development guide | Client version |
 | --- | --- | --- |
-| 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.5.0 |
-| 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.5.0 |
+| 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.5.1 |
+| 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.5.1 |
 
 Choose the package for your exact SA installation. Client 0.5.x works with
 Server 0.10.x and does not work with Server 0.9.x or earlier; Client 0.5.0 was
-tested with Server 0.10.0. Client 0.4.x works with Server 0.9.x, and clients
-0.4.x and earlier do not work with Server 0.10.x. For server releases after
-0.10.0, a patch update keeps the same clients working; a minor update may
-require a client upgrade. Each product pins its own generation artifact and
-retains Server 0.9.2 as a conformance baseline that it must reject. Client
-package versions are independent of the Briosa server version. See
-[Releasing](RELEASING.md) for registry publishing and validation.
+tested with Server 0.10.0. Client 0.5.1 also reads what Server 0.10.1 adds, and
+works with Server 0.10.0 as Client 0.5.0 does. Client 0.4.x works with Server
+0.9.x, and clients 0.4.x and earlier do not work with Server 0.10.x. For server
+releases after 0.10.0, a patch update keeps the same clients working; a minor
+update may require a client upgrade. Each product pins its own generation
+artifact and retains Server 0.9.2 as a conformance baseline that it must
+reject. Client package versions are independent of the Briosa server version.
+See [Releasing](RELEASING.md) for registry publishing and validation.
 
 Package names include the SA target; application namespaces/imports remain stable.
 See each product guide for installation and examples. Run development commands
@@ -33,7 +34,7 @@ promotion.
 Select one target through an npm alias:
 
 ```sh
-npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.0
+npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.1
 ```
 
 ```ts
@@ -51,6 +52,18 @@ success, and the new discovery fields, are described in the
 changes are described in the
 [MP argument migration guide](docs/mp-argument-name-migration.md).
 
+Upgrading from Client 0.5.0 to Client 0.5.1 needs no application changes. With
+Server 0.10.1 and later, Client 0.5.1 reports why the server denied a call
+(`BriosaOperationError.policyDenial`), describes each operation's request
+options and denial in discovery, exposes the server's lifecycle bounds and
+configured interaction mode on the server snapshot, and sizes an omitted
+startup budget from the server's published startup allowance. With Server
+0.10.0 these values report "not available" and behavior is unchanged. Each
+product guide describes the additions.
+
 The default `startupTimeoutMs` is 120000 (two minutes) instead of 30000 in both
 products. It is sized from the server's default lifecycle bounds; see
 [startup and lifecycle time budgets](docs/design/v1-public-api-contract.md#startup-and-lifecycle-time-budgets).
+With Server 0.10.1 and later, Client 0.5.1 lengthens an omitted budget to fit
+the startup allowance that the server publishes, never below two minutes; a
+value you set always wins.

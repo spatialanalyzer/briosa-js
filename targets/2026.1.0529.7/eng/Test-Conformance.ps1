@@ -74,13 +74,36 @@ try {
     $tsx = Join-Path $repositoryRoot "node_modules\tsx\dist\cli.mjs"
     $fixture = Join-Path $repositoryRoot "tools\conformance.ts"
     if ($FixturePath) { $fixture = [IO.Path]::GetFullPath($FixturePath, $repositoryRoot) }
-    & $runner `
-        -Scenario $selectedScenarios `
-        -FixtureCommand $NodeExecutable `
-        -FixtureArguments @($tsx, $fixture)
+    $scenarios = Get-Content (Join-Path $packageRoot "contract/scenarios.json") -Raw | ConvertFrom-Json
+    # Optional scenarios run only on request. Ask for the ones this fixture
+    # supports when the runner and its contract offer them; the frozen 0.9.2
+    # runner offers none, and the rejection path runs control-plane-only alone.
+    $offeredOptional = @(
+        if ($scenarios.PSObject.Properties.Name -contains 'optional_scenarios') {
+            $scenarios.optional_scenarios | ForEach-Object { [string]$_.id }
+        })
+    $requestedOptional = @(
+        if (-not $ExpectIncompatible -and (Get-Command $runner).Parameters.ContainsKey('OptionalScenario')) {
+            @('large-result') | Where-Object { $_ -in $offeredOptional }
+        })
+    $runnerArguments = @{
+        Scenario = $selectedScenarios
+        FixtureCommand = $NodeExecutable
+        FixtureArguments = @($tsx, $fixture)
+    }
+    if ($requestedOptional.Count -gt 0) { $runnerArguments.OptionalScenario = $requestedOptional }
+    # With the runner's 30 s worker start bound, Server 0.10.1 publishes a 160 s
+    # startup allowance, so an omitted client budget waits 180 s. The runner's
+    # fixture timeout starts before the client enters start(), so it must be
+    # longer than that for a hang to end in the client's typed startup timeout.
+    $fixtureTimeoutSeconds = $null
+    if ((Get-Command $runner).Parameters.ContainsKey('FixtureTimeoutSeconds')) {
+        $fixtureTimeoutSeconds = 240
+        $runnerArguments.FixtureTimeoutSeconds = $fixtureTimeoutSeconds
+    }
+    & $runner @runnerArguments
     if (-not [string]::IsNullOrWhiteSpace($EvidencePath)) {
         $protocol = Get-Content (Join-Path $repositoryRoot "protocol.lock.json") -Raw | ConvertFrom-Json
-        $scenarios = Get-Content (Join-Path $packageRoot "contract/scenarios.json") -Raw | ConvertFrom-Json
         $clientRoot = (Split-Path (Split-Path $repositoryRoot -Parent) -Parent).Replace('\', '/')
         $clientRevision = [string](& git -c "safe.directory=$clientRoot" -C $clientRoot rev-parse HEAD)
         if ($LASTEXITCODE -ne 0) { throw "Cannot identify client source for evidence." }
@@ -95,7 +118,8 @@ try {
             licensedSpatialAnalyzer = $false
             client = @{
                 repository = "https://github.com/spatialanalyzer/briosa-js"
-                version = (Get-Content (Join-Path $repositoryRoot "package.json") -Raw | ConvertFrom-Json).version
+                # The tested package's version, or the checkout's for a source run.
+                version = $(if ($ClientPackage) { $ClientPackage.version } else { (Get-Content (Join-Path $repositoryRoot "package.json") -Raw | ConvertFrom-Json).version })
                 sourceRevision = $(if ($ClientPackage) { $ClientPackage.sourceRevision } else { $clientRevision })
                 uncommittedChanges = $(if (-not $ClientPackage) { $dirty } else { $null })
                 fixtureSourceRevision = $clientRevision
@@ -108,7 +132,9 @@ try {
             server = $lock.artifact
             target = $lock.target
             scenarioContract = $lock.contract
-            scenarios = $(if ($ExpectIncompatible) { @('installation-contract-rejected') } else { @($scenarios.scenarios.id) })
+            scenarios = $(if ($ExpectIncompatible) { @('installation-contract-rejected') } else { @($scenarios.scenarios.id) + $requestedOptional })
+            optionalScenarios = $requestedOptional
+            fixtureTimeoutSeconds = $fixtureTimeoutSeconds
         }
         $destination = [IO.Path]::GetFullPath($EvidencePath, $repositoryRoot)
         [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($destination)) | Out-Null

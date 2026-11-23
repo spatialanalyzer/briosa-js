@@ -101,6 +101,37 @@ export enum OperationFailureKind {
   UNRECOGNIZED = -1,
 }
 
+/**
+ * The step of the active admission policy that denied a call or an operation.
+ * Each value names the same step as one denied value of OperationAdmission in
+ * discovery: PROFILE and DENIED_PROFILE, FLAG and DENIED_FLAG, OVERRIDE and
+ * DENIED_OVERRIDE, EXCLUSIVE and DENIED_EXCLUSIVE, UNREVIEWED and
+ * DENIED_UNREVIEWED. The numbers differ, so match the two enums by name.
+ */
+export enum PolicyDenialRule {
+  POLICY_DENIAL_RULE_UNSPECIFIED = 0,
+  /**
+   * POLICY_DENIAL_RULE_PROFILE - The profile, widened by flags set to allow, does not admit every risk flag,
+   * or the read-only effect filter excludes the operation.
+   */
+  POLICY_DENIAL_RULE_PROFILE = 1,
+  /** POLICY_DENIAL_RULE_FLAG - A risk flag is set to deny. */
+  POLICY_DENIAL_RULE_FLAG = 2,
+  /** POLICY_DENIAL_RULE_OVERRIDE - A per-operation override is set to deny. */
+  POLICY_DENIAL_RULE_OVERRIDE = 3,
+  /**
+   * POLICY_DENIAL_RULE_EXCLUSIVE - An exclusive workflow, which no setting admits in the current isolation
+   * mode. A request whose options leave work running after the call returns is one.
+   */
+  POLICY_DENIAL_RULE_EXCLUSIVE = 4,
+  /**
+   * POLICY_DENIAL_RULE_UNREVIEWED - The operation's classification metadata is not reviewed, or the request
+   * cannot be read against the operation's reviewed request options.
+   */
+  POLICY_DENIAL_RULE_UNREVIEWED = 5,
+  UNRECOGNIZED = -1,
+}
+
 /** Records retrieval state by the public operation result field name. */
 export interface OutputRetrievalDetails {
   fieldName?: string | undefined;
@@ -115,6 +146,44 @@ export interface MpExecutionDetails {
   outputRetrievals?: OutputRetrievalDetails[] | undefined;
 }
 
+/**
+ * Value-free detail of a policy denial, shared by a denied call and by
+ * discovery. Server 0.10.1 and later send it. Server 0.10.0 does not, and
+ * clients built for Server 0.10.0, such as the 0.5.0 clients, ignore it.
+ */
+export interface PolicyDenialDetails {
+  rule?:
+    | PolicyDenialRule
+    | undefined;
+  /**
+   * The risk flag set to deny that decided, as the lowercase suffix of its
+   * OperationRiskFlag value name: for example "physical_motion" for
+   * OPERATION_RISK_FLAG_PHYSICAL_MOTION. Present exactly when rule is FLAG, and
+   * never "unspecified". When several of the request's flags are set to deny,
+   * it names the first in OperationRiskFlag declaration order. A newer server
+   * can name a flag that an older client does not know.
+   */
+  deniedFlag?:
+    | string
+    | undefined;
+  /**
+   * The protobuf field name of the request option the server attributed the
+   * denial to, for example "show_results_dialog"; never a request value. When a
+   * request turns on several options with the deciding effect, it names the
+   * first in the server's reviewed order, which need not be the only cause.
+   * Absent when the operation's reviewed row decided, and when the request could
+   * not be read against its reviewed options.
+   */
+  requestOptionField?:
+    | string
+    | undefined;
+  /**
+   * The active admission profile: read-only, standard, device, or full.
+   * Present exactly when rule is PROFILE.
+   */
+  admissionProfile?: string | undefined;
+}
+
 /** Typed, value-free detail carried in briosa-operation-error-bin metadata. */
 export interface OperationError {
   operationId?: string | undefined;
@@ -125,7 +194,15 @@ export interface OperationError {
   executionDisposition?: ExecutionDisposition | undefined;
   recoveryGuidance?: RecoveryGuidance | undefined;
   replayGuidance?: ReplayGuidance | undefined;
-  replaySafety?: ReplaySafety | undefined;
+  replaySafety?:
+    | ReplaySafety
+    | undefined;
+  /**
+   * The policy step that denied the call. Server 0.10.1 and later set it on
+   * every POLICY_DENIED failure and on no other kind. Server 0.10.0 does not set
+   * it, and clients built for Server 0.10.0 ignore it.
+   */
+  policyDenial?: PolicyDenialDetails | undefined;
 }
 
 function createBaseOutputRetrievalDetails(): OutputRetrievalDetails {
@@ -273,6 +350,88 @@ export const MpExecutionDetails: MessageFns<MpExecutionDetails> = {
   },
 };
 
+function createBasePolicyDenialDetails(): PolicyDenialDetails {
+  return { rule: 0, deniedFlag: undefined, requestOptionField: undefined, admissionProfile: undefined };
+}
+
+export const PolicyDenialDetails: MessageFns<PolicyDenialDetails> = {
+  encode(message: PolicyDenialDetails, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.rule !== undefined && message.rule !== 0) {
+      writer.uint32(8).int32(message.rule);
+    }
+    if (message.deniedFlag !== undefined) {
+      writer.uint32(18).string(message.deniedFlag);
+    }
+    if (message.requestOptionField !== undefined) {
+      writer.uint32(26).string(message.requestOptionField);
+    }
+    if (message.admissionProfile !== undefined) {
+      writer.uint32(34).string(message.admissionProfile);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PolicyDenialDetails {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePolicyDenialDetails();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.rule = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.deniedFlag = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.requestOptionField = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.admissionProfile = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PolicyDenialDetails>): PolicyDenialDetails {
+    return PolicyDenialDetails.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<PolicyDenialDetails>): PolicyDenialDetails {
+    const message = createBasePolicyDenialDetails();
+    message.rule = object.rule ?? 0;
+    message.deniedFlag = object.deniedFlag ?? undefined;
+    message.requestOptionField = object.requestOptionField ?? undefined;
+    message.admissionProfile = object.admissionProfile ?? undefined;
+    return message;
+  },
+};
+
 function createBaseOperationError(): OperationError {
   return {
     operationId: "",
@@ -284,6 +443,7 @@ function createBaseOperationError(): OperationError {
     recoveryGuidance: 0,
     replayGuidance: 0,
     replaySafety: 0,
+    policyDenial: undefined,
   };
 }
 
@@ -315,6 +475,9 @@ export const OperationError: MessageFns<OperationError> = {
     }
     if (message.replaySafety !== undefined && message.replaySafety !== 0) {
       writer.uint32(80).int32(message.replaySafety);
+    }
+    if (message.policyDenial !== undefined) {
+      PolicyDenialDetails.encode(message.policyDenial, writer.uint32(90).fork()).join();
     }
     return writer;
   },
@@ -398,6 +561,14 @@ export const OperationError: MessageFns<OperationError> = {
           message.replaySafety = reader.int32() as any;
           continue;
         }
+        case 11: {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.policyDenial = PolicyDenialDetails.decode(reader, reader.uint32());
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -423,6 +594,9 @@ export const OperationError: MessageFns<OperationError> = {
     message.recoveryGuidance = object.recoveryGuidance ?? 0;
     message.replayGuidance = object.replayGuidance ?? 0;
     message.replaySafety = object.replaySafety ?? 0;
+    message.policyDenial = (object.policyDenial !== undefined && object.policyDenial !== null)
+      ? PolicyDenialDetails.fromPartial(object.policyDenial)
+      : undefined;
     return message;
   },
 };

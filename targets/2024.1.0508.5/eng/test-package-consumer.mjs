@@ -16,7 +16,8 @@ function run(command, arguments_, cwd) {
   assert.equal(
     result.status,
     0,
-    result.error?.message ?? result.stderr ?? result.stdout,
+    // tsc reports on stdout, so an empty stderr must not hide it.
+    result.error?.message || result.stderr || result.stdout,
   );
   return result.stdout;
 }
@@ -73,23 +74,39 @@ console.log('Verified short briosa import');
   writeFileSync(join(consumer, 'consumer.mjs'), program);
   run(process.execPath, ['consumer.mjs'], consumer);
   writeFileSync(join(consumer, 'consumer.ts'), program);
-  run(
-    process.execPath,
-    [
-      join(root, 'node_modules/typescript/bin/tsc'),
-      '--noEmit',
-      '--module',
-      'NodeNext',
-      '--moduleResolution',
-      'NodeNext',
-      '--target',
-      'ES2022',
-      '--strict',
-      '--skipLibCheck',
-      'consumer.ts',
-    ],
-    consumer,
+  // A program written against the Client 0.5.0 declarations must still
+  // type-check against these: no new required member, nothing removed or
+  // narrowed, and the same constructors.
+  const structural = readFileSync(
+    join(root, 'tests/compat/structural-0.5.0.ts'),
+    'utf8',
   );
+  assert.ok(structural.includes("from '../../src/index.js'"));
+  writeFileSync(
+    join(consumer, 'structural.ts'),
+    structural.replaceAll("from '../../src/index.js'", "from 'briosa'"),
+  );
+  for (const exactOptional of [[], ['--exactOptionalPropertyTypes']]) {
+    run(
+      process.execPath,
+      [
+        join(root, 'node_modules/typescript/bin/tsc'),
+        '--noEmit',
+        '--module',
+        'NodeNext',
+        '--moduleResolution',
+        'NodeNext',
+        '--target',
+        'ES2022',
+        '--strict',
+        ...exactOptional,
+        '--skipLibCheck',
+        'consumer.ts',
+        'structural.ts',
+      ],
+      consumer,
+    );
+  }
   console.log(
     `Verified packed ${metadata.name}@${metadata.version} with JavaScript and TypeScript imports from 'briosa'.`,
   );

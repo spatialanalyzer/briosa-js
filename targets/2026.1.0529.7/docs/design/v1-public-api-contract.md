@@ -96,8 +96,11 @@ Callers that depend on order await commands sequentially.
 ### Startup and lifecycle time budgets
 
 `BriosaStartOptions.startupTimeoutMs` is one overall budget for the whole
-`start()`, whichever phases are selected. It defaults to 120000 (two minutes).
-When it expires, `start()` rejects with `BriosaStartupError` and diagnostic
+`start()`, whichever phases are selected. When the caller sets it, that value is
+the budget, including an explicit 120000. When the caller omits it, the budget
+is 120000 (two minutes), and with Server 0.10.1 and later Client 0.5.1 sizes it
+from the server's published startup allowance, as described below. When it
+expires, `start()` rejects with `BriosaStartupError` and diagnostic
 `startup-timeout`, whichever phase it interrupts, including an RPC in flight.
 Aborting the `signal` passed to `start()` only stops that caller from waiting and
 rejects with `BriosaCallAbortedError`; the start continues until it completes or
@@ -123,9 +126,51 @@ observation further until
 [spatialanalyzer/briosa#317](https://github.com/spatialanalyzer/briosa/issues/317)
 lands.
 
-Every server that a client of contract major 3 selects contains these bounds.
+Every Server 0.10.x contains these bounds.
 
-When the server's lifecycle bounds are raised, size the client budget to at
+#### Budget sized from published lifecycle bounds
+
+Server 0.10.1 and later publish the server side of the sizing rule below,
+computed from their effective settings, in the server snapshot's
+`lifecycleBounds`. When the caller omits `startupTimeoutMs`, Client 0.5.1 and
+later follow the shared
+[startup budget rule](https://github.com/spatialanalyzer/briosa/blob/main/docs/architecture/client-library-behavioral-contract.md#startup-budget-from-published-lifecycle-bounds):
+
+1. The client reads one monotonic start instant, `t0`, when `start()` begins,
+   before it launches the server, and arms the deadline at `t0 + 120 s`.
+2. Once, when the first server snapshot passes the identity checks, it picks
+   the allowance for the selected phases: `startupWithLaunchMs` for Start SDK,
+   Launch, and Connect; `startupWithoutLaunchMs` for Start SDK and Connect;
+   `startSdkMs + launchSpatialAnalyzerMs` for Start SDK and Launch;
+   `startSdkMs` or `launchSpatialAnalyzerMs` for either alone. With no server
+   phase, or when any allowance the selection needs is unavailable, the
+   deadline stays; a partial budget is never summed.
+3. The new deadline is `t0 + max(120 s, allowance + 20 s)`, so time already
+   spent counts and the budget never shrinks. If the startup has already
+   reached its deadline, it is not extended, no further phase starts, and
+   `start()` rejects with `startup-timeout`. If the remaining delay is longer
+   than a Node.js timer can arm (2,147,483,647 ms), the deadline stays.
+   Whenever the server published lifecycle bounds, whether or not an allowance
+   was adopted and including an explicit budget, the client also reads the
+   clock immediately before it submits each later startup request, after the
+   request is built, including between the two discovery requests of the
+   post-Connect snapshot, and before it publishes readiness. A startup at or
+   past its deadline then ends with `startup-timeout` and submits nothing more,
+   even if the timer has not run yet. A step that fails at or past the deadline
+   is reported as `startup-timeout`, with its own failure as the `cause`; one
+   that fails earlier keeps its own error. The generation admits MP commands
+   only once the startup has published readiness, so a startup that timed out
+   never admits them; stop the client before starting again.
+4. The client replaces only the timer of the startup's one abort signal; it
+   never restarts the startup. The post-Connect snapshot never changes the
+   budget, the caller's `signal` stays independent, and individual lifecycle
+   calls still carry no deadline.
+
+Against Server 0.10.0, which publishes no lifecycle bounds, an omitted budget
+stays at the fixed two minutes, as in Client 0.5.0.
+
+When the lifecycle bounds of a Server 0.10.0 are raised, or when a caller sets
+its own budget, size the client budget to at
 least three times `StartupTimeout`, plus `ReadinessProbeTimeout`, plus
 `ApplicationStartupTimeout` when launching, plus 10 s, plus a margin. For
 example, a server `StartupTimeout` of 30 s and `ReadinessProbeTimeout` of 60 s
@@ -179,6 +224,39 @@ When the server's bounds are raised, add the increase: `StartupTimeout` counts
 once for Start and Recover and twice for Connect, `ReadinessProbeTimeout` once
 for Connect, and the application startup and shutdown bounds once for Launch and
 Close.
+
+### Denial detail, request options, and lifecycle bounds
+
+Client 0.5.1 exposes, as handwritten values, what Server 0.10.1 and later add
+to failures and discovery. Server 0.10.0 sends none of it; the values then
+report "not available" and the client behaves as Client 0.5.0 does.
+
+- `BriosaOperationError.policyDenial` is a `PolicyDenialDetails`: the denying
+  `rule`, the `deniedFlag` as an `OperationRiskFlag`, the `admissionProfile`,
+  and the `requestOptionField` the server attributed the denial to. It is
+  present only on a `policyDenied` failure: null for every other kind, and when
+  the server sent none. One helper maps the wire flag name to the risk
+  flag, with `unknown` for a name the client does not know, at every site.
+- Each `BriosaOperationCapability` carries the same `policyDenial` for a
+  denied row, and `requestOptions`: null when the server did not describe
+  options, `[]` when none apply, and otherwise each option's field name,
+  effect, condition, enabling enum value names, omission, and its single-option
+  admission and denial detail.
+- `BriosaServerSnapshot.lifecycleBounds` gives each allowance in milliseconds,
+  or null when it is absent or zero, and `hostGracefulShutdown` as
+  `unavailable`, `finite`, or `unbounded`, read from the published case and
+  never inferred from absence. `configuredSpatialAnalyzerInteractionMode` is
+  the server's configuration, never SpatialAnalyzer's live mode, and `unknown`
+  for an unreported or unrecognized value.
+
+An unknown rule, effect, condition, omission, admission, or mode is unknown
+metadata: it never fails discovery and never grants permission. When the
+enclosing message decodes, absent, inconsistent, or unrecognized denial detail
+never changes a failure's kind, disposition, or guidance, or a capability's
+admission; an undecodable error trailer is still `typed-error-malformed`. The
+client never checks a request against discovery. New members of existing
+interfaces are optional in their types, so values written for Client 0.5.0
+still type-check, and the client always sets them.
 
 ### Command and input names
 
@@ -242,10 +320,11 @@ export interface BriosaCallOptions {
 ```
 
 `onMpCompletion` is a per-call control like the signal, not a callback form of
-the operation. From contract major 3 the client checks the MP completion of
-every successful call, whether or not a callback is passed: the success must
-carry execution details with `succeeded` and MP code 2, or `partialSuccess` and
-MP code 4, and anything else rejects the call with `BriosaProtocolError`
+the operation. Starting with Client 0.5.0 and Server 0.10.0, the client checks
+the MP completion of every successful call, whether or not a callback is
+passed: the success must carry execution details with `succeeded` and MP code
+2, or `partialSuccess` and MP code 4, and anything else rejects the call with
+`BriosaProtocolError`
 (`mp-completion-missing` or `mp-completion-invalid`). The callback is then
 called once with the completion, `{ state: 'succeeded' | 'partialSuccess',
 mpResultCode }`, before the outputs are mapped, so it reports the completion
