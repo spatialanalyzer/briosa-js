@@ -426,6 +426,55 @@ void test('a timer that fires between the two refresh requests stops the second'
   await briosa.stop();
 });
 
+// The launch request's options are read inside the call setup, where Client
+// 0.5.0 read them: after the signal is sampled and inside its error handling.
+
+void test('Server 0.10.0: a getter that aborts the signal still sends one Launch, as in Client 0.5.0', async () => {
+  const briosa = client();
+  await briosa.start({
+    startSpatialAnalyzerSdk: false,
+    launchSpatialAnalyzer: false,
+    connectToSpatialAnalyzer: false,
+  });
+  const caller = new AbortController();
+  const state = await briosa.launchSpatialAnalyzer(
+    {
+      get startMinimized(): boolean {
+        caller.abort();
+        return false;
+      },
+    },
+    { signal: caller.signal },
+  );
+  assert.equal(state.applicationState, 'running');
+  assert.equal(count('LaunchSpatialAnalyzer'), 1);
+  await briosa.stop();
+});
+
+for (const path of ['Server 0.10.0', 'published bounds'] as const) {
+  void test(`${path}: a getter that throws during startup fails the call setup, as in Client 0.5.0`, async () => {
+    if (path === 'published bounds') bounds = published;
+    const briosa = client();
+    await assert.rejects(
+      briosa.start({
+        launchOptions: {
+          get startMinimized(): boolean {
+            // A non-Error value, as a caller's getter may throw.
+            // eslint-disable-next-line @typescript-eslint/only-throw-error
+            throw 'sentinel';
+          },
+        },
+      }),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.message === 'Briosa call setup failed.' &&
+        error.cause === 'sentinel',
+    );
+    assert.equal(count('LaunchSpatialAnalyzer'), 0);
+    await briosa.stop();
+  });
+}
+
 // Review finding 3: a step that fails at or past the deadline is the timeout,
 // with its own failure as the cause; before the deadline it keeps its error.
 

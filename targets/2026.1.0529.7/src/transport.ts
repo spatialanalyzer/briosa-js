@@ -190,21 +190,24 @@ export class GrpcClientTransport implements ClientTransport {
               value: options.quickStartInstrumentName,
             } as const)
           : undefined;
-    // Every option is read, in Client 0.5.0's order, before the guard runs.
-    const request = {
-      ...(initialContent === undefined ? {} : { initialContent }),
-      startMinimized: options.startMinimized ?? false,
-    };
+    // The request is built inside the call setup, where Client 0.5.0 built it:
+    // after the signal is sampled and inside the setup's error handling. The
+    // guard then runs after every option is read and before the call is made.
     const response = await invokeUnary<LaunchSpatialAnalyzerResponse>(
-      (callback) =>
-        this.#application.launchSpatialAnalyzer(
+      (callback) => {
+        const request = {
+          ...(initialContent === undefined ? {} : { initialContent }),
+          startMinimized: options.startMinimized ?? false,
+        };
+        beforeSubmit?.();
+        return this.#application.launchSpatialAnalyzer(
           request,
           new Metadata(),
           {},
           callback,
-        ),
+        );
+      },
       signal,
-      beforeSubmit,
     );
     return requireState(response.state, 'application-state-missing');
   }
