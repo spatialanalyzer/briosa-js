@@ -63,7 +63,9 @@ startup allowance that the server publishes for the phases you selected and
 moves the deadline to the larger of two minutes and that allowance plus 20
 seconds, counted from the start of `start()`. A server whose lifecycle bounds
 were raised therefore needs no client change. The budget never drops below two
-minutes and is never extended once it has run out.
+minutes and is never extended once it has run out. With these servers the
+client also reads the clock before each later startup step, including when you
+set the budget, so a startup past its deadline sends nothing more.
 
 Against Server 0.10.0, which publishes no allowance, an omitted budget stays at
 two minutes, as in Client 0.5.0. If you raise that server's
@@ -74,7 +76,10 @@ shows how to size it. Lifecycle methods add no deadline of their own. If the
 budget expires while the server is starting or connecting the SDK, read the SDK
 state before retrying: the server finishes a step it has accepted
 ([spatialanalyzer/briosa#315](https://github.com/spatialanalyzer/briosa/pull/315)),
-so the generation may still become ready.
+so the generation may still become ready. A `startupTimeoutMs` of
+2,147,483,648 (about 24.9 days) or more is longer than a Node.js timer can
+wait; Node.js then fires the timer after 1 ms, so `start()` times out almost at
+once, as in Client 0.5.0.
 
 The client retains lifecycle generations and supplies RPC guards automatically.
 Typed lifecycle failures, compatibility failures, caller cancellation,
@@ -144,8 +149,8 @@ new value below reports "not available".
   carries `policyDenial`: the policy step that denied it (`rule`), the risk
   flag set to deny (`deniedFlag`, an `OperationRiskFlag`), the admission
   profile, and the request option field the server attributed the denial to.
-  It is null with Server 0.10.0. It describes the denial and never changes the
-  error's kind, disposition, or guidance.
+  It is null for every other kind, and with Server 0.10.0. It describes the
+  denial and never changes the error's kind, disposition, or guidance.
 
   ```ts
   try {
@@ -201,11 +206,14 @@ Client 0.5.x works with Server 0.10.x. Before launch, it checks that the
 installation matches the exact SA target and declares support for this client.
 It rejects Server 0.9.x and earlier. Client 0.5.0 was tested with Server 0.10.0.
 Client 0.5.1 selects Server 0.10.0 installations as well as Server 0.10.1 and
-later ones.
+compatible later releases.
 Clients 0.4.x and earlier do not work with Server 0.10.x. For server releases
 after 0.10.0, a patch update keeps the same clients working; a minor update may
 require a client upgrade. Protocol and source pins remain exact build inputs;
-startup verifies the running server against its selected installation.
+startup verifies the running server against its selected installation. It
+compares them once, when it first reads the server's identity, and a mismatch
+fails startup; later snapshots, including the one after Connect, are checked for
+compatibility only, as in Client 0.5.0.
 
 The three robot methods Get Robot Machine Parameter, Start Robot Machine
 Interface, and Stop Robot Machine Interface now take a collection/instrument

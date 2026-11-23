@@ -150,6 +150,11 @@ later follow the shared
    reached its deadline, it is not extended, no further phase starts, and
    `start()` rejects with `startup-timeout`. If the remaining delay is longer
    than a Node.js timer can arm (2,147,483,647 ms), the deadline stays.
+   Whenever the server published lifecycle bounds, whether or not an allowance
+   was adopted and including an explicit budget, the client also reads the
+   clock before each later startup step and before it publishes readiness. A
+   startup at or past its deadline then ends with `startup-timeout` and submits
+   nothing more, even if the timer has not run yet.
 4. The client replaces only the timer of the startup's one abort signal; it
    never restarts the startup. The post-Connect snapshot never changes the
    budget, the caller's `signal` stays independent, and individual lifecycle
@@ -222,8 +227,9 @@ report "not available" and the client behaves as Client 0.5.0 does.
 
 - `BriosaOperationError.policyDenial` is a `PolicyDenialDetails`: the denying
   `rule`, the `deniedFlag` as an `OperationRiskFlag`, the `admissionProfile`,
-  and the `requestOptionField` the server attributed the denial to. It is null
-  when the server sent none. One helper maps the wire flag name to the risk
+  and the `requestOptionField` the server attributed the denial to. It is
+  present only on a `policyDenied` failure: null for every other kind, and when
+  the server sent none. One helper maps the wire flag name to the risk
   flag, with `unknown` for a name the client does not know, at every site.
 - Each `BriosaOperationCapability` carries the same `policyDenial` for a
   denied row, and `requestOptions`: null when the server did not describe
