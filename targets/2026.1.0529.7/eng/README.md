@@ -37,14 +37,23 @@ Run all commands from this exact-target directory. `Test-Conformance.ps1` runs
 headlessly with `Briosa__Desktop__Mode=Disabled` for its child processes and restores
 the caller's prior value. The package consumer check installs the actual local
 package and validates the stable public namespace/import without launching SA.
+It also type-checks `tests/compat/structural-0.5.0.ts`, a program written
+against the Client 0.5.0 declarations, against the packed declarations, with
+and without `exactOptionalPropertyTypes`; `npm test` checks it against the
+source in both modes. `npm run package:declarations` compares every name the
+published 0.5.0 package exports, including the operation and value surfaces, with
+the packed declarations: each type must accept 0.5.0 values and fit 0.5.0 code,
+and each value must be usable where its 0.5.0 counterpart was. It downloads the
+0.5.0 tarball from the npm registry and checks its SHA-256, or takes
+`-- --baseline <tarball>`.
 
 The importer also copies the server-owned installation selection fixtures.
 Runtime compatibility is independent of the generation artifact build.
 `Test-Conformance.ps1 -LockPath <lock> -EvidencePath <new-report.json>` runs
 another exact, hash-verified server fixture and retains portable evidence.
-The default lock retains Server 0.9.2, the newest contract-major-2 server, for
-rejection coverage. Use -ExpectIncompatible with that lock; a contract-major
-mismatch must fail before launch.
+The default lock retains Server 0.9.2, the newest server release that Client
+0.5.x does not work with, for rejection coverage. Use -ExpectIncompatible with
+that lock; the client must reject that installation before launch.
 
 `Test-CurrentServerConformance.ps1` builds the exact generation source and writes
 its own conformance lock; the legacy lock remains independently pinned to 0.9.2.

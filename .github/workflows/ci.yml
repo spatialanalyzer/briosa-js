@@ -141,8 +141,9 @@ jobs:
       #
       # Exempt: this step and the legacy half of the package compatibility
       # step run the frozen Server 0.9.2 runner from conformance.lock.json. It
-      # reads neither variable and keeps its 60 s fixture timeout. Those legs
-      # run only control-plane-only, in which the client rejects the 0.9.2
+      # reads neither variable; like the other runners it takes the 240 s
+      # fixture timeout that eng/Test-Conformance.ps1 passes. Those legs run
+      # only control-plane-only, in which the client rejects the 0.9.2
       # installation before any server starts, so there is no server log to
       # keep.
       - name: Run shared client conformance suite
@@ -190,6 +191,9 @@ jobs:
 
       - name: Verify packed consumer alias
         run: npm run package:consumer
+
+      - name: Compare declarations with the published 0.5.0 package
+        run: npm run package:declarations
 
       - name: Pack release archive
         run: npm pack --pack-destination .

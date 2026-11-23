@@ -71,12 +71,12 @@ export const unions = {
     'notStarted',
     'startedOutcomeUnknown',
     'completed',
-  ] satisfies ExecutionDisposition[],
+  ] as const satisfies readonly ExecutionDisposition[],
   installationScope: [
     'machine',
     'user',
     'portable',
-  ] satisfies InstallationScope[],
+  ] as const satisfies readonly InstallationScope[],
   lifecycleRecoveryGuidance: [
     'unspecified',
     'none',
@@ -86,7 +86,7 @@ export const unions = {
     'stopSdkFirst',
     'recoverSdkWithoutReplay',
     'operatorActionRequired',
-  ] satisfies LifecycleRecoveryGuidance[],
+  ] as const satisfies readonly LifecycleRecoveryGuidance[],
   logLevel: [
     'Trace',
     'Debug',
@@ -95,11 +95,11 @@ export const unions = {
     'Error',
     'Critical',
     'None',
-  ] satisfies BriosaLogLevel[],
+  ] as const satisfies readonly BriosaLogLevel[],
   mpCompletionState: [
     'succeeded',
     'partialSuccess',
-  ] satisfies MpCompletionState[],
+  ] as const satisfies readonly MpCompletionState[],
   mpExecutionState: [
     'unspecified',
     'succeeded',
@@ -108,7 +108,7 @@ export const unions = {
     'resultUnavailable',
     'argumentRejected',
     'partialSuccess',
-  ] satisfies MpExecutionState[],
+  ] as const satisfies readonly MpExecutionState[],
   operationAdmission: [
     'unspecified',
     'admitted',
@@ -118,14 +118,14 @@ export const unions = {
     'deniedExclusive',
     'deniedUnreviewed',
     'unknown',
-  ] satisfies OperationAdmission[],
+  ] as const satisfies readonly OperationAdmission[],
   operationDurationClass: [
     'unspecified',
     'quick',
     'longRunning',
     'interactive',
     'unknown',
-  ] satisfies OperationDurationClass[],
+  ] as const satisfies readonly OperationDurationClass[],
   operationFailureKind: [
     'unspecified',
     'validation',
@@ -145,7 +145,7 @@ export const unions = {
     'sdkArgumentRejected',
     'overloaded',
     'sdkCallFaulted',
-  ] satisfies OperationFailureKind[],
+  ] as const satisfies readonly OperationFailureKind[],
   operationRiskFlag: [
     'unspecified',
     'filesystemMetadata',
@@ -160,39 +160,39 @@ export const unions = {
     'interactiveUi',
     'externalIo',
     'unknown',
-  ] satisfies OperationRiskFlag[],
+  ] as const satisfies readonly OperationRiskFlag[],
   operationValidationStatus: [
     'unspecified',
     'noRecordedGap',
     'fixturePending',
     'atRiskUnvalidated',
     'unknown',
-  ] satisfies OperationValidationStatus[],
+  ] as const satisfies readonly OperationValidationStatus[],
   outputRetrievalState: [
     'unspecified',
     'retrieved',
     'notAttempted',
     'failed',
-  ] satisfies OutputRetrievalState[],
+  ] as const satisfies readonly OutputRetrievalState[],
   recoveryGuidance: [
     'unspecified',
     'none',
     'waitForReadiness',
     'workerReplacement',
     'operatorInterventionRequired',
-  ] satisfies RecoveryGuidance[],
+  ] as const satisfies readonly RecoveryGuidance[],
   replayGuidance: [
     'unspecified',
     'doNotReplay',
     'mayReplay',
     'reconcileBeforeReplay',
-  ] satisfies ReplayGuidance[],
+  ] as const satisfies readonly ReplayGuidance[],
   replaySafety: [
     'unspecified',
     'safe',
     'unsafe',
     'unknown',
-  ] satisfies ReplaySafety[],
+  ] as const satisfies readonly ReplaySafety[],
   applicationState: [
     'unspecified',
     'notRunning',
@@ -202,7 +202,7 @@ export const unions = {
     'exited',
     'ambiguous',
     'faulted',
-  ] satisfies SpatialAnalyzerApplicationState[],
+  ] as const satisfies readonly SpatialAnalyzerApplicationState[],
   connectionState: [
     'unspecified',
     'disconnected',
@@ -210,7 +210,7 @@ export const unions = {
     'connected',
     'faulted',
     'stopping',
-  ] satisfies SpatialAnalyzerConnectionState[],
+  ] as const satisfies readonly SpatialAnalyzerConnectionState[],
   executionReadinessState: [
     'unspecified',
     'unverified',
@@ -218,7 +218,7 @@ export const unions = {
     'executionReady',
     'competingClientSuspected',
     'operatorRecoveryRequired',
-  ] satisfies SpatialAnalyzerExecutionReadinessState[],
+  ] as const satisfies readonly SpatialAnalyzerExecutionReadinessState[],
   lifecycleFailureKind: [
     'unspecified',
     'validation',
@@ -232,13 +232,13 @@ export const unions = {
     'internal',
     'callerCancelled',
     'callerDeadlineExceeded',
-  ] satisfies SpatialAnalyzerLifecycleFailureKind[],
+  ] as const satisfies readonly SpatialAnalyzerLifecycleFailureKind[],
   ownership: [
     'unspecified',
     'none',
     'external',
     'serverLaunched',
-  ] satisfies SpatialAnalyzerOwnership[],
+  ] as const satisfies readonly SpatialAnalyzerOwnership[],
   sdkLifecycleFailureKind: [
     'unspecified',
     'validation',
@@ -261,17 +261,17 @@ export const unions = {
     'sdkRecoveryRequired',
     'callerCancelled',
     'callerDeadlineExceeded',
-  ] satisfies SpatialAnalyzerSdkLifecycleFailureKind[],
+  ] as const satisfies readonly SpatialAnalyzerSdkLifecycleFailureKind[],
   sdkRecoveryMode: [
     'replaceWithoutReplay',
-  ] satisfies SpatialAnalyzerSdkRecoveryMode[],
+  ] as const satisfies readonly SpatialAnalyzerSdkRecoveryMode[],
   sdkRecoveryState: [
     'unspecified',
     'notRequired',
     'recoveryAvailable',
     'operatorActionRequired',
     'blocked',
-  ] satisfies SpatialAnalyzerSdkRecoveryState[],
+  ] as const satisfies readonly SpatialAnalyzerSdkRecoveryState[],
   sdkState: [
     'unspecified',
     'stopped',
@@ -283,7 +283,7 @@ export const unions = {
     'stopping',
     'recovering',
     'faulted',
-  ] satisfies SpatialAnalyzerSdkState[],
+  ] as const satisfies readonly SpatialAnalyzerSdkState[],
   terminationKind: [
     'unspecified',
     'startFailed',
@@ -292,8 +292,64 @@ export const unions = {
     'workerProcessExited',
     'controlChannelLost',
     'watchdogTerminated',
-  ] satisfies SpatialAnalyzerSdkTerminationKind[],
+  ] as const satisfies readonly SpatialAnalyzerSdkTerminationKind[],
 };
+
+// Every exported union has exactly its Client 0.5.0 members: a member added in
+// a later release would break an exhaustive switch written for 0.5.0, and a
+// removed one would break code that names it.
+type Exact<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
+type Exhaustive<T extends true> = T;
+type Members<K extends keyof typeof unions> = (typeof unions)[K][number];
+export type ExhaustiveUnions = [
+  Exhaustive<Exact<ExecutionDisposition, Members<'executionDisposition'>>>,
+  Exhaustive<Exact<InstallationScope, Members<'installationScope'>>>,
+  Exhaustive<
+    Exact<LifecycleRecoveryGuidance, Members<'lifecycleRecoveryGuidance'>>
+  >,
+  Exhaustive<Exact<BriosaLogLevel, Members<'logLevel'>>>,
+  Exhaustive<Exact<MpCompletionState, Members<'mpCompletionState'>>>,
+  Exhaustive<Exact<MpExecutionState, Members<'mpExecutionState'>>>,
+  Exhaustive<Exact<OperationAdmission, Members<'operationAdmission'>>>,
+  Exhaustive<Exact<OperationDurationClass, Members<'operationDurationClass'>>>,
+  Exhaustive<Exact<OperationFailureKind, Members<'operationFailureKind'>>>,
+  Exhaustive<Exact<OperationRiskFlag, Members<'operationRiskFlag'>>>,
+  Exhaustive<
+    Exact<OperationValidationStatus, Members<'operationValidationStatus'>>
+  >,
+  Exhaustive<Exact<OutputRetrievalState, Members<'outputRetrievalState'>>>,
+  Exhaustive<Exact<RecoveryGuidance, Members<'recoveryGuidance'>>>,
+  Exhaustive<Exact<ReplayGuidance, Members<'replayGuidance'>>>,
+  Exhaustive<Exact<ReplaySafety, Members<'replaySafety'>>>,
+  Exhaustive<
+    Exact<SpatialAnalyzerApplicationState, Members<'applicationState'>>
+  >,
+  Exhaustive<Exact<SpatialAnalyzerConnectionState, Members<'connectionState'>>>,
+  Exhaustive<
+    Exact<
+      SpatialAnalyzerExecutionReadinessState,
+      Members<'executionReadinessState'>
+    >
+  >,
+  Exhaustive<
+    Exact<SpatialAnalyzerLifecycleFailureKind, Members<'lifecycleFailureKind'>>
+  >,
+  Exhaustive<Exact<SpatialAnalyzerOwnership, Members<'ownership'>>>,
+  Exhaustive<
+    Exact<
+      SpatialAnalyzerSdkLifecycleFailureKind,
+      Members<'sdkLifecycleFailureKind'>
+    >
+  >,
+  Exhaustive<Exact<SpatialAnalyzerSdkRecoveryMode, Members<'sdkRecoveryMode'>>>,
+  Exhaustive<
+    Exact<SpatialAnalyzerSdkRecoveryState, Members<'sdkRecoveryState'>>
+  >,
+  Exhaustive<Exact<SpatialAnalyzerSdkState, Members<'sdkState'>>>,
+  Exhaustive<
+    Exact<SpatialAnalyzerSdkTerminationKind, Members<'terminationKind'>>
+  >,
+];
 
 const applicationState: SpatialAnalyzerLifecycleState = {
   stateRevision: 1n,
