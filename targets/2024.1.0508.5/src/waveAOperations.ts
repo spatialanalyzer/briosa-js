@@ -356,8 +356,9 @@ export interface CreateChartFromVectorGroupInput {
   readonly dataSetToChart: DatasetType;
   readonly auxDataSetToChart: DatasetType;
   /**
-   * Optional: left unset when omitted. An empty name is rejected, and a name
-   * that matches no chart opens a blocking SpatialAnalyzer dialog.
+   * Optional starting with Client 0.5.0 and Server 0.10.0: left unset when
+   * omitted. An empty name is rejected, and a name that matches no chart opens
+   * a blocking SpatialAnalyzer dialog.
    */
   readonly templateChartName?: ChartName;
   readonly showInterface?: boolean;
@@ -720,8 +721,9 @@ export interface FitGeometryToPointGroupInput {
   readonly fitInterfaceTolerance?: number;
   readonly ignoreOutOfTolerancePoints?: boolean;
   /**
-   * Optional: left unset when omitted, so SpatialAnalyzer fits without a
-   * starting geometry. An empty name is rejected.
+   * Optional starting with Client 0.5.0 and Server 0.10.0: left unset when
+   * omitted, so SpatialAnalyzer fits without a starting geometry. An empty name
+   * is rejected.
    */
   readonly startingConditionGeometry?: CollectionObjectName;
 }
@@ -737,8 +739,9 @@ export interface FitGeometryToPointGroupProjectedToPlaneInput {
   readonly fitInterfaceTolerance?: number;
   readonly ignoreOutOfTolerancePoints?: boolean;
   /**
-   * Optional: left unset when omitted, so SpatialAnalyzer fits without a
-   * starting geometry. An empty name is rejected.
+   * Optional starting with Client 0.5.0 and Server 0.10.0: left unset when
+   * omitted, so SpatialAnalyzer fits without a starting geometry. An empty name
+   * is rejected.
    */
   readonly startingConditionGeometry?: CollectionObjectName;
 }
@@ -753,8 +756,9 @@ export interface FitGeometryToPointsInput {
   readonly fitInterfaceTolerance?: number;
   readonly ignoreOutOfTolerancePoints?: boolean;
   /**
-   * Optional: left unset when omitted, so SpatialAnalyzer fits without a
-   * starting geometry. An empty name is rejected.
+   * Optional starting with Client 0.5.0 and Server 0.10.0: left unset when
+   * omitted, so SpatialAnalyzer fits without a starting geometry. An empty name
+   * is rejected.
    */
   readonly startingConditionGeometry?: CollectionObjectName;
 }
@@ -3048,7 +3052,10 @@ export interface SetTransformVariableInput {
 
 export interface SetUserInterfaceProfileInput {
   readonly profileName?: string;
-  /** Optional: left unset when omitted; an empty path is rejected. */
+  /**
+   * Optional starting with Client 0.5.0 and Server 0.10.0: left unset when
+   * omitted; an empty path is rejected.
+   */
   readonly profileFileName?: FileReference;
 }
 

@@ -72,8 +72,8 @@ automatically replays an MP operation.
 
 ## Client 0.5 and Server 0.10.x
 
-Client 0.5.x works with Server 0.10.x (Client 0.5.0 was published with Server
-0.10.0 on 2026-11-21). The
+Client 0.5.x works with Server 0.10.x. Client 0.5.0 was tested with Server
+0.10.0. The
 [Client 0.5 migration guide](https://github.com/spatialanalyzer/briosa-js/blob/main/docs/client-0.5-migration.md)
 lists every breaking change from Client 0.4.x: the request defaults and argument
 rules that changed, the nine removed operations, and the admission profiles that
@@ -138,14 +138,13 @@ canonical stores, explicit search roots, and supported local layouts. It validat
 receipts and manifests, filters by exact SA target and server compatibility,
 and selects the highest compatible stable release. No internet access is needed.
 
-Client 0.5.x works with Server **0.10.x** (Client 0.5.0 was published with
-Server 0.10.0 on 2026-11-21) and selects and starts only compatible Server
-0.10.x installations. Server 0.9.x, Server 0.8.0 and 0.7.0, and earlier servers
-without compatibility metadata, including Server 0.6.1, are rejected before
-launch; clients 0.4.x and earlier do not work with Server 0.10.x. Patch releases
-stay compatible with the same clients, while minor releases may introduce
-breaking changes. Protocol and source pins remain exact build inputs; startup
-verifies the running server against its selected installation.
+Client 0.5.x works with Server 0.10.x. Before launch, it checks that the
+installation matches the exact SA target and declares support for this client.
+It rejects Server 0.9.x and earlier. Client 0.5.0 was tested with Server 0.10.0.
+Clients 0.4.x and earlier do not work with Server 0.10.x. For server releases
+after 0.10.0, a patch update keeps the same clients working; a minor update may
+require a client upgrade. Protocol and source pins remain exact build inputs;
+startup verifies the running server against its selected installation.
 
 The three robot methods Get Robot Machine Parameter, Start Robot Machine
 Interface, and Stop Robot Machine Interface now take a collection/instrument

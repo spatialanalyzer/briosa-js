@@ -1,11 +1,12 @@
 # Migrating to Client 0.5 (Server 0.10.x)
 
 Client 0.5.0 of both exact-target packages, `@spatialanalyzer/briosa-2026.1.0529.7`
-and `@spatialanalyzer/briosa-2024.1.0508.5`, targets Briosa Server 0.10.x
-(Client 0.5.0 was published with Server 0.10.0 on 2026-11-21). Client 0.5.x is a
-breaking release from Client 0.4.x and Server 0.9.x. Patch releases stay
-compatible with the same clients, while minor releases may introduce breaking
-changes. The authoritative description of every server change is the
+and `@spatialanalyzer/briosa-2024.1.0508.5`, targets Briosa Server 0.10.x.
+Client 0.5.0 was tested with Server 0.10.0. Upgrading from Client 0.4.0 to
+Client 0.5.0 requires application changes; use Server 0.10.x with the new
+client. For server releases after 0.10.0, a patch update keeps the same clients
+working; a minor update may require a client upgrade. The authoritative
+description of every server change is the
 [Server 0.10.0 change record](https://github.com/spatialanalyzer/briosa/blob/main/docs/development/contract-major-3.md);
 this page lists what JavaScript and TypeScript callers change.
 
@@ -17,10 +18,10 @@ available for rollback.
 
 ## Server selection
 
-- Client 0.5.x selects and starts only Server 0.10.x installations. Server
-  0.9.x, Server 0.8.0 and 0.7.0, and earlier servers without compatibility
-  metadata (such as Server 0.6.1) are rejected before launch with
-  `server-installation-incompatible`.
+- Client 0.5.x works with Server 0.10.x. Before launch, it checks that the
+  installation matches the exact SA target and declares support for this client.
+  It rejects Server 0.9.x and earlier. Rejected installations fail before launch
+  with `server-installation-incompatible`.
 - The default startup budget, `startupTimeoutMs`, is 120000 (two minutes). It is
   sized from the server's lifecycle bounds; see the
   [public API contract](design/v1-public-api-contract.md#startup-and-lifecycle-time-budgets).
@@ -278,17 +279,18 @@ when omitted, which Server 0.10.x now accepts.
 
 ## Removed operations
 
-SpatialAnalyzer rejects these on the exact targets, so they are removed with
-their inputs and value types (`CircleLineMode`, `MeshOrientationType`, and
-`MirrorFramePlane`):
+Client 0.5.0 removes these nine operations for Server 0.10.0. Eight failed to
+produce a usable result in licensed testing; the ninth could not be verified.
+They are removed with their inputs and value types (`CircleLineMode`,
+`MeshOrientationType`, and `MirrorFramePlane`):
 
 | Operation                                                                   | Replacement                                                                                                                                                                                                     |
 | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `deleteCloudPointsByXYZRange`                                               | None. There is no X Y Z box delete; the radial delete has different semantics, and a licensed session validated it on both targets for one cloud and one point.                                                 |
 | `mirrorObjects`                                                             | None.                                                                                                                                                                                                           |
 | `constructionOperations.constructCirclesLinesFromSurfaces`                  | None.                                                                                                                                                                                                           |
-| `constructionOperations.addCollectionInstrumentsToRefListWildcardSelection` | None.                                                                                                                                                                                                           |
-| `constructionOperations.makeCalloutViewRefListWildcardSelection`            | `constructionOperations.makeCollectionItemNameRefListWildcardSelection`.                                                                                                                                        |
+| `constructionOperations.addCollectionInstrumentsToRefListWildcardSelection` | Build the instrument reference list directly.                                                                                                                                                                   |
+| `constructionOperations.makeCalloutViewRefListWildcardSelection`            | `constructionOperations.makeCollectionItemNameRefListWildcardSelection`. Use the callout-view item type. This is a different MP step; that item type has not been observed on a licensed run.                   |
 | `constructionOperations.setCalloutViewProperties`                           | None. `setDefaultCalloutViewProperties` stays.                                                                                                                                                                  |
 | `constructionOperations.constructPolygonizedSurfaceFromPointClouds`         | None.                                                                                                                                                                                                           |
 | `constructionOperations.makeCollectionVectorGroupNameRefListRuntimeSelect`  | None.                                                                                                                                                                                                           |
