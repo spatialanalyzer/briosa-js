@@ -92,6 +92,15 @@ try {
         FixtureArguments = @($tsx, $fixture)
     }
     if ($requestedOptional.Count -gt 0) { $runnerArguments.OptionalScenario = $requestedOptional }
+    # With the runner's 30 s worker start bound, Server 0.10.1 publishes a 160 s
+    # startup allowance, so an omitted client budget waits 180 s. The runner's
+    # fixture timeout starts before the client enters start(), so it must be
+    # longer than that for a hang to end in the client's typed startup timeout.
+    $fixtureTimeoutSeconds = $null
+    if ((Get-Command $runner).Parameters.ContainsKey('FixtureTimeoutSeconds')) {
+        $fixtureTimeoutSeconds = 240
+        $runnerArguments.FixtureTimeoutSeconds = $fixtureTimeoutSeconds
+    }
     & $runner @runnerArguments
     if (-not [string]::IsNullOrWhiteSpace($EvidencePath)) {
         $protocol = Get-Content (Join-Path $repositoryRoot "protocol.lock.json") -Raw | ConvertFrom-Json
@@ -109,7 +118,8 @@ try {
             licensedSpatialAnalyzer = $false
             client = @{
                 repository = "https://github.com/spatialanalyzer/briosa-js"
-                version = (Get-Content (Join-Path $repositoryRoot "package.json") -Raw | ConvertFrom-Json).version
+                # The tested package's version, or the checkout's for a source run.
+                version = $(if ($ClientPackage) { $ClientPackage.version } else { (Get-Content (Join-Path $repositoryRoot "package.json") -Raw | ConvertFrom-Json).version })
                 sourceRevision = $(if ($ClientPackage) { $ClientPackage.sourceRevision } else { $clientRevision })
                 uncommittedChanges = $(if (-not $ClientPackage) { $dirty } else { $null })
                 fixtureSourceRevision = $clientRevision
@@ -124,6 +134,7 @@ try {
             scenarioContract = $lock.contract
             scenarios = $(if ($ExpectIncompatible) { @('installation-contract-rejected') } else { @($scenarios.scenarios.id) + $requestedOptional })
             optionalScenarios = $requestedOptional
+            fixtureTimeoutSeconds = $fixtureTimeoutSeconds
         }
         $destination = [IO.Path]::GetFullPath($EvidencePath, $repositoryRoot)
         [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($destination)) | Out-Null
