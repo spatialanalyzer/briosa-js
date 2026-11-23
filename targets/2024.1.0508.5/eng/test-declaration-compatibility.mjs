@@ -8,6 +8,9 @@
 //   no union member added);
 // - a value (function, constant, or class) must be usable wherever its
 //   baseline counterpart was;
+// - every method of an exported interface or class must accept the baseline
+//   method's arguments, checked on its own because TypeScript compares method
+//   parameters bivariantly inside the type checks above;
 // - a name the candidate no longer exports fails to resolve.
 //
 // Usage: npm run package:declarations [-- --baseline <published tarball>]
@@ -34,6 +37,9 @@ const metadata = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 // The published release this package must stay compatible with.
 const baseline = {
   version: '0.5.0',
+  // The names its entry point exports; a different count means the baseline
+  // was not read.
+  exports: 1769,
   sha256: '4e1389726d5135cfb2f815de3e5d8220513bc145ccd976089a18a0fd70297f7a',
 };
 const npm = process.env.npm_execpath;
@@ -155,6 +161,40 @@ try {
     ts.SymbolFlags.Function |
     ts.SymbolFlags.Class |
     ts.SymbolFlags.Enum;
+  // The members of an interface's or a class's instance type that are
+  // declared with method syntax, whose parameters are compared bivariantly.
+  function methodsOf(target) {
+    if (
+      (target.flags & (ts.SymbolFlags.Interface | ts.SymbolFlags.Class)) ===
+      0
+    )
+      return [];
+    const methods = [];
+    const instance = checker.getDeclaredTypeOfSymbol(target);
+    for (const property of checker.getPropertiesOfType(instance)) {
+      const declarations = (property.declarations ?? []).filter(
+        (declaration) =>
+          ts.isMethodSignature(declaration) ||
+          ts.isMethodDeclaration(declaration),
+      );
+      if (declarations.length === 0) continue;
+      const name = declarations[0].name;
+      // A computed key such as [Symbol.asyncDispose] is indexed by its type.
+      const key = ts.isComputedPropertyName(name)
+        ? `[typeof ${name.expression.getText()}]`
+        : `[${JSON.stringify(property.name)}]`;
+      methods.push({
+        label: key.replace(/\W+/gu, '_').replace(/^_|_$/gu, ''),
+        key,
+        overloaded: declarations.length > 1,
+        generic: declarations.some(
+          (declaration) => (declaration.typeParameters?.length ?? 0) > 0,
+        ),
+      });
+    }
+    return methods;
+  }
+
   const exportsList = checker
     .getExportsOfModule(moduleSymbol)
     .map((symbol) => {
@@ -169,9 +209,27 @@ try {
         generic: (target.declarations ?? []).some(
           (declaration) => (declaration.typeParameters?.length ?? 0) > 0,
         ),
+        methods: methodsOf(target),
       };
     })
     .sort((left, right) => left.name.localeCompare(right.name, 'en'));
+  assert.equal(
+    exportsList.length,
+    baseline.exports,
+    'The baseline declarations did not export the expected names.',
+  );
+  // Parameters<> sees only the last overload and erases type parameters, so
+  // such a method needs a hand-written check instead of a partial one.
+  const unsupported = exportsList.flatMap((entry) =>
+    entry.methods
+      .filter((method) => method.overloaded || method.generic)
+      .map((method) => `${entry.name}${method.key}`),
+  );
+  assert.deepEqual(
+    unsupported,
+    [],
+    'An overloaded or generic method needs a hand-written check.',
+  );
   const generic = exportsList.filter((entry) => entry.generic && entry.type);
   assert.deepEqual(
     generic.map((entry) => entry.name),
@@ -196,6 +254,7 @@ try {
   ];
   let types = 0;
   let values = 0;
+  let methods = 0;
   for (const entry of exportsList) {
     if (entry.type) {
       lines.push(
@@ -211,6 +270,17 @@ try {
       values += 1;
     }
   }
+  // Method arguments that the baseline accepted must still be accepted.
+  // NonNullable covers an optional method.
+  for (const entry of exportsList) {
+    for (const method of entry.methods) {
+      lines.push(
+        `export type M_${entry.name}_${method.label}_accepts_baseline_arguments = Check<Extends<Parameters<NonNullable<Old.${entry.name}${method.key}>>, Parameters<NonNullable<New.${entry.name}${method.key}>>>>;`,
+      );
+      methods += 1;
+    }
+  }
+  assert.ok(methods > 0, 'No method parameter checks were generated.');
   const comparison = join(consumer, 'comparison.ts');
   writeFileSync(comparison, `${lines.join('\n')}\n`);
 
@@ -243,7 +313,7 @@ try {
     }
   }
   console.log(
-    `Verified ${metadata.name}@${metadata.version} against the published ${baseline.version} declarations: ${exportsList.length} exports (${types} types, ${values} values), with and without exactOptionalPropertyTypes.`,
+    `Verified ${metadata.name}@${metadata.version} against the published ${baseline.version} declarations: ${exportsList.length} exports (${types} types, ${values} values) and ${methods} method parameter lists, with and without exactOptionalPropertyTypes.`,
   );
 } finally {
   if (dirname(consumer) === resolve(tmpdir())) {
