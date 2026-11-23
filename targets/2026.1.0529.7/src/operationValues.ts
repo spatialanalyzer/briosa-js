@@ -646,8 +646,8 @@ const disabledLimit = deepFreeze<ToleranceLimit>({ enabled: false, value: 0 });
 
 /**
  * Named tolerance vector options. A relationship's tolerance and constraint
- * are required at contract major 3; pass `noLimits` explicitly for a
- * relationship without limits. It is never an implicit default.
+ * are required in Client 0.5.x (Server 0.10.x); pass `noLimits` explicitly for
+ * a relationship without limits. It is never an implicit default.
  */
 export const ToleranceVectorOptions = Object.freeze({
   noLimits: deepFreeze<ToleranceVectorOptions>({

@@ -70,12 +70,14 @@ Typed lifecycle failures, compatibility failures, caller cancellation,
 ambiguous MP completion, and replay guidance remain distinct. The client never
 automatically replays an MP operation.
 
-## Contract major 3
+## Client 0.5 and Server 0.10.x
 
-Client 0.5.0 adopts behavioral contract major 3 (Server 0.10.0). The
-[contract major 3 migration guide](https://github.com/spatialanalyzer/briosa-js/blob/main/docs/contract-major-3-migration.md) lists every breaking change: the
-request defaults and argument rules that changed, the nine removed operations,
-and the admission profiles that the server applies.
+Client 0.5.x works with Server 0.10.x (Client 0.5.0 was published with Server
+0.10.0 on 2026-11-21). The
+[Client 0.5 migration guide](https://github.com/spatialanalyzer/briosa-js/blob/main/docs/client-0.5-migration.md)
+lists every breaking change from Client 0.4.x: the request defaults and argument
+rules that changed, the nine removed operations, and the admission profiles that
+the server applies.
 
 - **Partial success.** An MP that returns code 4 (PARTIAL SUCCESS) did its work,
   so the call is never retried, and it resolves with its outputs when the server
@@ -129,15 +131,17 @@ this package's exact API.
 Applications select a server independently of their protocol generation pin.
 On Windows x64, discovery reads Registry64 installation hints, committed
 canonical stores, explicit search roots, and supported local layouts. It validates
-receipts and manifests, filters the exact SA target and compatibility contract,
+receipts and manifests, filters by exact SA target and server compatibility,
 and selects the highest compatible stable release. No internet access is needed.
 
-Client 0.5.0 requires behavioral contract **3.0** (major 3, revision at least
-0), the contract of Server 0.10.0, and selects and starts only servers that
-declare it. Contract-major-2 servers (Server 0.9.x), major-1 servers, and
-servers without contract metadata, including Server 0.6.1, are rejected before
-launch. Protocol and source pins remain exact build inputs; startup verifies the
-running server against its selected installation.
+Client 0.5.x works with Server **0.10.x** (Client 0.5.0 was published with
+Server 0.10.0 on 2026-11-21) and selects and starts only compatible Server
+0.10.x installations. Server 0.9.x, Server 0.8.0 and 0.7.0, and earlier servers
+without compatibility metadata, including Server 0.6.1, are rejected before
+launch; clients 0.4.x and earlier do not work with Server 0.10.x. Patch releases
+stay compatible with the same clients, while minor releases may introduce
+breaking changes. Protocol and source pins remain exact build inputs; startup
+verifies the running server against its selected installation.
 
 The three robot methods Get Robot Machine Parameter, Start Robot Machine
 Interface, and Stop Robot Machine Interface now take a collection/instrument
@@ -255,9 +259,9 @@ and [server observability guide](https://github.com/spatialanalyzer/briosa/blob/
 
 ## Compatibility and validation
 
-This package pins its generation artifact and tests the declared compatibility
-contract against packaged servers. The retained Server 0.9.2 baseline, which
-declares contract major 2, must be rejected. Exact SA target, runtime identity,
+This package pins its generation artifact and tests server compatibility against
+packaged servers. Client 0.5.x rejects the retained Server 0.9.2 baseline (along
+with all Server 0.9.x and earlier releases). Exact SA target, runtime identity,
 capabilities, and readiness still gate MP calls.
 
 Portable conformance covers lifecycle, identity mismatch, denied capabilities
