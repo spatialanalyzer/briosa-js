@@ -47,6 +47,11 @@ import {
   type ServerLauncher,
 } from './serverLauncher.js';
 import {
+  StartupBudget,
+  systemStartupClock,
+  type StartupClock,
+} from './startupBudget.js';
+import {
   type ClientTransport,
   GrpcClientTransport,
   type OperationCodec,
@@ -144,6 +149,7 @@ export class BriosaClientImplementation implements BriosaClient {
   readonly #options: BriosaClientOptions;
   readonly #serverLauncher: ServerLauncher;
   readonly #transportFactory: TransportFactory;
+  readonly #startupClock: StartupClock;
   #lockTail: Promise<void> = Promise.resolve();
   #session: Session | null = null;
   #startTask: Promise<void> | null = null;
@@ -156,11 +162,13 @@ export class BriosaClientImplementation implements BriosaClient {
     serverLauncher: ServerLauncher = new LocalServerLauncher(),
     transportFactory: TransportFactory = (target) =>
       new GrpcClientTransport(target),
+    startupClock: StartupClock = systemStartupClock,
   ) {
     validateClientOptions(options);
     this.#options = options;
     this.#serverLauncher = serverLauncher;
     this.#transportFactory = transportFactory;
+    this.#startupClock = startupClock;
     this.constructionOperations = createConstructionOperations(this);
     this.gdtOperations = createGdtOperations(this);
     this.instrumentOperations = createInstrumentOperations(this);
@@ -456,27 +464,28 @@ export class BriosaClientImplementation implements BriosaClient {
   }
 
   async #runStart(options: NormalizedBriosaStartOptions): Promise<void> {
-    const controller = new AbortController();
-    const timer = setTimeout(
-      () => controller.abort(),
+    const budget = new StartupBudget(
       options.startupTimeoutMs,
+      options.startupTimeoutExplicit,
+      this.#startupClock,
     );
     try {
-      await this.#startInner(options, controller.signal);
+      await this.#startInner(options, budget);
     } catch (error) {
-      if (controller.signal.aborted) {
+      if (budget.signal.aborted) {
         throw new BriosaStartupError('startup-timeout', { cause: error });
       }
       throw error;
     } finally {
-      clearTimeout(timer);
+      budget.finish();
     }
   }
 
   async #startInner(
     options: NormalizedBriosaStartOptions,
-    signal: AbortSignal,
+    budget: StartupBudget,
   ): Promise<void> {
+    const signal = budget.signal;
     let server: OwnedServer | null = null;
     let transport: ClientTransport | null = null;
     let session: Session | null = null;
@@ -487,6 +496,11 @@ export class BriosaClientImplementation implements BriosaClient {
       );
       transport = this.#transportFactory(server.target);
       const snapshot = await this.#waitForServer(server, transport, signal);
+      // The first validated startup snapshot. A server that publishes no
+      // allowance, such as Server 0.10.0, leaves the deadline unchanged.
+      if (budget.adopt(snapshot.lifecycleBounds, options) === 'expired') {
+        throw new BriosaCallAbortedError(signal.reason);
+      }
       session = createSession(server, transport, snapshot);
       await this.#withLock(() => {
         this.#ensureOpen();

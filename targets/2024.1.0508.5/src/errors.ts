@@ -17,6 +17,7 @@ import type {
   MpExecutionState,
   OperationFailureKind,
   OutputRetrievalState,
+  PolicyDenialDetails,
   RecoveryGuidance,
   ReplayGuidance,
   ReplaySafety,
@@ -25,7 +26,11 @@ import type {
   SpatialAnalyzerSdkLifecycleFailureKind,
   SpatialAnalyzerSdkLifecycleState,
 } from './models.js';
-import { mapApplicationState, mapSdkState } from './protocolMapping.js';
+import {
+  mapApplicationState,
+  mapPolicyDenial,
+  mapSdkState,
+} from './protocolMapping.js';
 
 const applicationErrorTrailer = 'briosa-spatial-analyzer-lifecycle-error-bin';
 const sdkErrorTrailer = 'briosa-spatial-analyzer-sdk-lifecycle-error-bin';
@@ -107,6 +112,14 @@ export class BriosaSpatialAnalyzerSdkError extends BriosaError {
  * A valid typed MP failure with detached, value-free operation policy.
  * `mpExecution` carries the MP execution details when the server reported
  * them, and is null otherwise.
+ *
+ * `policyDenial` is the typed denial detail that Server 0.10.1 and later send
+ * with a `policyDenied` failure: the policy step that denied the call, the
+ * denied risk flag, the admission profile, and the request option field the
+ * server attributed the denial to. It is null when the server sent none, as
+ * Server 0.10.0 never does. It is descriptive: the kind, disposition, and
+ * guidance are the same with or without it. Available starting with Client
+ * 0.5.1.
  */
 export class BriosaOperationError extends BriosaError {
   constructor(
@@ -118,6 +131,7 @@ export class BriosaOperationError extends BriosaError {
     readonly replayGuidance: ReplayGuidance,
     readonly replaySafety: ReplaySafety,
     readonly mpExecution: MpExecutionDetails | null = null,
+    readonly policyDenial: PolicyDenialDetails | null = null,
   ) {
     super(`Briosa operation failed (${diagnosticCode}).`);
     this.name = 'BriosaOperationError';
@@ -235,6 +249,10 @@ export function mapServiceError(
       detail.mpExecution === undefined
         ? null
         : mapMpExecution(detail.mpExecution),
+      // Never fails: an unknown rule or flag is unknown metadata.
+      detail.policyDenial === undefined
+        ? null
+        : mapPolicyDenial(detail.policyDenial),
     );
   } catch {
     return new BriosaTransportError('typed-error-malformed');

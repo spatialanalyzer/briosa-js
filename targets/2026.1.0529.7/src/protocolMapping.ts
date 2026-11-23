@@ -1,8 +1,12 @@
 import type {
   GetServerInfoResponse,
+  GracefulShutdownBound as WireGracefulShutdownBound,
+  LifecycleBounds as WireLifecycleBounds,
   ListCapabilitiesResponse,
   OperationCapability as WireOperationCapability,
+  OperationRequestOption as WireOperationRequestOption,
 } from './generated/protocol/briosa/discovery.js';
+import type { PolicyDenialDetails as WirePolicyDenialDetails } from './generated/protocol/briosa/operation_outcomes.js';
 import { briosaProtocolIdentity } from './generated/protocolIdentity.js';
 import type {
   SpatialAnalyzerLifecycleState as WireApplicationState,
@@ -15,13 +19,22 @@ import {
 import { BriosaProtocolError } from './errors.js';
 import type {
   BriosaCapabilityListing,
+  BriosaHostShutdownBound,
+  BriosaLifecycleBounds,
   BriosaOperationCapability,
+  BriosaOperationRequestOption,
   BriosaServerSnapshot,
+  ConfiguredSpatialAnalyzerInteractionMode,
   ExecutionDisposition,
   OperationAdmission,
   OperationDurationClass,
+  OperationRequestOptionCondition,
+  OperationRequestOptionEffect,
+  OperationRequestOptionOmission,
   OperationRiskFlag,
   OperationValidationStatus,
+  PolicyDenialDetails,
+  PolicyDenialRule,
   SpatialAnalyzerApplicationState,
   SpatialAnalyzerConnectionState,
   SpatialAnalyzerExecutionReadinessState,
@@ -50,6 +63,11 @@ export function mapSnapshot(
     admissionProfile: capabilities.admissionProfile ?? '',
     policyFingerprint: capabilities.policyFingerprint ?? '',
     operations: (capabilities.operations ?? []).map(mapCapability),
+    lifecycleBounds: mapLifecycleBounds(server.lifecycleBounds),
+    configuredSpatialAnalyzerInteractionMode: classificationValue(
+      interactionModes,
+      server.configuredSpatialAnalyzerInteractionMode,
+    ),
     supports(fullyQualifiedMethod: string): boolean {
       return this.operations.some(
         (operation) => operation.fullyQualifiedMethod === fullyQualifiedMethod,
@@ -137,7 +155,164 @@ function mapCapability(
       operation.validationStatus,
     ),
     admission: classificationValue(admissions, operation.admission),
+    policyDenial: optionalPolicyDenial(operation.policyDenial),
+    // Absent means "not described" (Server 0.10.0); present and empty means
+    // that no request option applies.
+    requestOptions:
+      operation.requestOptions === undefined
+        ? null
+        : (operation.requestOptions.options ?? []).map(mapRequestOption),
   };
+}
+
+const policyDenialRules: readonly PolicyDenialRule[] = [
+  'unspecified',
+  'profile',
+  'flag',
+  'override',
+  'exclusive',
+  'unreviewed',
+];
+const requestOptionEffects: readonly OperationRequestOptionEffect[] = [
+  'unspecified',
+  'interactiveUi',
+  'backgroundWork',
+];
+const requestOptionConditions: readonly OperationRequestOptionCondition[] = [
+  'unspecified',
+  'whenTrue',
+  'whenFalse',
+  'whenPresent',
+  'whenNonEmpty',
+  'whenOneOf',
+];
+const requestOptionOmissions: readonly OperationRequestOptionOmission[] = [
+  'unspecified',
+  'doesNotActivate',
+  'activates',
+  'required',
+];
+// UNSPECIFIED (Server 0.10.0) and any value this client does not know are both
+// unknown.
+const interactionModes: readonly ConfiguredSpatialAnalyzerInteractionMode[] = [
+  'unknown',
+  'unchanged',
+  'silent',
+  'automatic',
+  'manual',
+];
+
+// The wire names a denied flag by the lowercase suffix of its OperationRiskFlag
+// value name, for example "physical_motion".
+const riskFlagsByName: ReadonlyMap<string, OperationRiskFlag> = new Map(
+  riskFlags
+    .filter((flag) => flag !== 'unspecified')
+    .map((flag) => [
+      flag.replace(/[A-Z]/gu, (letter) => `_${letter.toLowerCase()}`),
+      flag,
+    ]),
+);
+
+/**
+ * Maps a denied flag's wire name to the public risk flag. Every denial detail
+ * uses this one helper. A name this client does not know, including
+ * "unspecified", is `unknown`; names are compared exactly.
+ */
+export function riskFlagFromName(name: string): OperationRiskFlag {
+  return riskFlagsByName.get(name) ?? 'unknown';
+}
+
+/**
+ * Maps a decoded denial detail without validating it: an unknown rule or flag
+ * becomes `unknown`, and fields that disagree with each other are reported as
+ * sent. It never fails, so it never changes the enclosing failure or admission.
+ */
+export function mapPolicyDenial(
+  detail: WirePolicyDenialDetails,
+): PolicyDenialDetails {
+  return {
+    rule: classificationValue(policyDenialRules, detail.rule),
+    deniedFlag:
+      detail.deniedFlag === undefined
+        ? null
+        : riskFlagFromName(detail.deniedFlag),
+    admissionProfile: detail.admissionProfile ?? null,
+    requestOptionField: detail.requestOptionField ?? null,
+  };
+}
+
+function optionalPolicyDenial(
+  detail: WirePolicyDenialDetails | undefined,
+): PolicyDenialDetails | null {
+  return detail === undefined ? null : mapPolicyDenial(detail);
+}
+
+function mapRequestOption(
+  option: WireOperationRequestOption,
+): BriosaOperationRequestOption {
+  return {
+    fieldName: option.fieldName ?? '',
+    effect: classificationValue(requestOptionEffects, option.effect),
+    condition: classificationValue(requestOptionConditions, option.condition),
+    enablingEnumValues: [...(option.enablingEnumValues ?? [])],
+    omission: classificationValue(requestOptionOmissions, option.omission),
+    admission: classificationValue(admissions, option.admission),
+    policyDenial: optionalPolicyDenial(option.policyDenial),
+  };
+}
+
+// An absent or zero allowance is unavailable, never unbounded.
+function allowance(value: number | undefined): number | null {
+  return value !== undefined && Number.isSafeInteger(value) && value > 0
+    ? value
+    : null;
+}
+
+function mapLifecycleBounds(
+  bounds: WireLifecycleBounds | undefined,
+): BriosaLifecycleBounds {
+  return {
+    startSdkMs: allowance(bounds?.startSdkMilliseconds),
+    launchSpatialAnalyzerMs: allowance(
+      bounds?.launchSpatialAnalyzerMilliseconds,
+    ),
+    connectSpatialAnalyzerMs: allowance(
+      bounds?.connectSpatialAnalyzerMilliseconds,
+    ),
+    recoverSdkMs: allowance(bounds?.recoverSdkMilliseconds),
+    stopSdkMs: allowance(bounds?.stopSdkMilliseconds),
+    closeOwnedSpatialAnalyzerMs: allowance(
+      bounds?.closeOwnedSpatialAnalyzerMilliseconds,
+    ),
+    startupWithLaunchMs: allowance(bounds?.startupWithLaunchMilliseconds),
+    startupWithoutLaunchMs: allowance(bounds?.startupWithoutLaunchMilliseconds),
+    hostGracefulShutdown: mapHostShutdownBound(bounds?.hostGracefulShutdown),
+  };
+}
+
+const unavailableShutdownBound: BriosaHostShutdownBound = {
+  kind: 'unavailable',
+};
+
+// Read from the limit case, never from a bare finite value. An absent bound, an
+// unset or unrecognized case, a zero, and a value too large to represent
+// exactly as a number are unavailable.
+function mapHostShutdownBound(
+  bound: WireGracefulShutdownBound | undefined,
+): BriosaHostShutdownBound {
+  const limit = bound?.limit;
+  if (limit?.$case === 'unbounded') return { kind: 'unbounded' };
+  if (limit?.$case === 'finiteMilliseconds') {
+    const value = limit.value;
+    if (
+      typeof value === 'bigint' &&
+      value > 0n &&
+      value <= BigInt(Number.MAX_SAFE_INTEGER)
+    ) {
+      return { kind: 'finite', milliseconds: Number(value) };
+    }
+  }
+  return unavailableShutdownBound;
 }
 
 // A classification value from a later contract revision never fails
