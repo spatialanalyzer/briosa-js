@@ -9,10 +9,13 @@ Independent exact-target clients for the [Briosa SpatialAnalyzer bridge](https:/
 | 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.5.0 |
 | 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.5.0 |
 
-Choose the package for your exact SA installation. Each product pins its own
-generation artifact and retains Server 0.9.2 as a conformance baseline that it
-must reject. The 0.5 client line selects side-by-side servers using behavioral
-contract 3.0 (Server 0.10.0); the 0.4 line selects contract 2.0 servers. Client
+Choose the package for your exact SA installation. Client 0.5.x works with
+Server 0.10.x and does not work with Server 0.9.x or earlier; Client 0.5.0 was
+tested with Server 0.10.0. Client 0.4.x works with Server 0.9.x, and clients
+0.4.x and earlier do not work with Server 0.10.x. For server releases after
+0.10.0, a patch update keeps the same clients working; a minor update may
+require a client upgrade. Each product pins its own generation artifact and
+retains Server 0.9.2 as a conformance baseline that it must reject. Client
 package versions are independent of the Briosa server version. See
 [Releasing](RELEASING.md) for registry publishing and validation.
 
@@ -40,11 +43,12 @@ import { createBriosaClient, getWorkingDirectory } from 'briosa';
 For SA 2026, replace only the target in the installation command with
 `2026.1.0529.7`. The published distribution keeps its target-qualified name.
 
-Client 0.5.0 adopts behavioral contract major 3. Its breaking changes, including
-the request defaults and argument rules that changed, the removed operations,
-partial success, and the new discovery fields, are described in the
-[contract major 3 migration guide](docs/contract-major-3-migration.md). The
-0.3.0 API naming changes are described in the
+Upgrading from Client 0.4.0 to Client 0.5.0 requires application changes; use
+Server 0.10.x with the new client. The breaking changes, including the request
+defaults and argument rules that changed, the removed operations, partial
+success, and the new discovery fields, are described in the
+[Client 0.5 migration guide](docs/client-0.5-migration.md). The 0.3.0 API naming
+changes are described in the
 [MP argument migration guide](docs/mp-argument-name-migration.md).
 
 The default `startupTimeoutMs` is 120000 (two minutes) instead of 30000 in both

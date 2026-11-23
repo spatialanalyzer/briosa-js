@@ -281,7 +281,7 @@ export interface SpatialAnalyzerSdkLifecycleState {
 
 /**
  * A reviewed risk flag of an operation's classification row (#242). `unknown`
- * is a flag from a later contract revision.
+ * is a flag added by a later compatible server release.
  */
 export type OperationRiskFlag =
   | 'unspecified'
