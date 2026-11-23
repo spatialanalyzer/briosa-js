@@ -1,5 +1,4 @@
 /** Handwritten public lifecycle and discovery types. */
-import { defaultStartupTimeoutMs } from './startupBudget.js';
 import {
   normalizeSelection,
   type BriosaServerSelection,
@@ -8,6 +7,7 @@ import {
   loggingArguments,
   type BriosaLoggingOptions,
 } from './loggingOptions.js';
+import { defaultStartupTimeoutMs } from './startupBudget.js';
 
 export interface BriosaClientOptions {
   readonly commandTimeoutMs?: number | null;
