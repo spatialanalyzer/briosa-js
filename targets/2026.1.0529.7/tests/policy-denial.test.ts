@@ -234,16 +234,59 @@ for (const { name, wire, expected } of ruleCases) {
   });
 }
 
-void test('detail on another failure kind never changes that kind', () => {
-  const detail = OperationError.fromPartial({
-    ...deniedCall({ rule: PolicyDenialRule.POLICY_DENIAL_RULE_OVERRIDE }),
-    kind: OperationFailureKind.OPERATION_FAILURE_KIND_MP_FAILURE,
-    executionDisposition: ExecutionDisposition.EXECUTION_DISPOSITION_COMPLETED,
-  });
-  const error = mapped(detail);
-  assert.equal(error.kind, 'mpFailure');
-  assert.equal(error.executionDisposition, 'completed');
-  assert.equal(error.policyDenial?.rule, 'override');
+void test('detail on another failure kind is dropped and never changes that kind', () => {
+  for (const kind of [
+    OperationFailureKind.OPERATION_FAILURE_KIND_MP_FAILURE,
+    OperationFailureKind.OPERATION_FAILURE_KIND_VALIDATION,
+  ]) {
+    const detail = OperationError.fromPartial({
+      ...deniedCall({ rule: PolicyDenialRule.POLICY_DENIAL_RULE_OVERRIDE }),
+      kind,
+      executionDisposition:
+        ExecutionDisposition.EXECUTION_DISPOSITION_COMPLETED,
+    });
+    const error = mapped(detail);
+    assert.notEqual(error.kind, 'policyDenied');
+    assert.equal(error.executionDisposition, 'completed');
+    // Only a policy denial names a policy step.
+    assert.equal(error.policyDenial, null);
+  }
+});
+
+void test('the error keeps denial detail only for a policy denial', () => {
+  const detail: PolicyDenialDetails = {
+    rule: 'flag',
+    deniedFlag: 'destructive',
+    admissionProfile: null,
+    requestOptionField: null,
+  };
+  const make = (kind: 'policyDenied' | 'validation') =>
+    new BriosaOperationError(
+      'file_operations.get_working_directory',
+      kind,
+      'code',
+      'notStarted',
+      'none',
+      'doNotReplay',
+      'safe',
+      null,
+      detail,
+    );
+  assert.deepEqual(make('policyDenied').policyDenial, detail);
+  assert.equal(make('validation').policyDenial, null);
+  // Without the trailing argument, as code written for Client 0.5.0 calls it.
+  assert.equal(
+    new BriosaOperationError(
+      'file_operations.get_working_directory',
+      'policyDenied',
+      'code',
+      'notStarted',
+      'none',
+      'doNotReplay',
+      'safe',
+    ).policyDenial,
+    null,
+  );
 });
 
 void test('an undecodable trailer keeps the existing malformed handling', () => {

@@ -112,16 +112,23 @@ export class BriosaSpatialAnalyzerSdkError extends BriosaError {
  * A valid typed MP failure with detached, value-free operation policy.
  * `mpExecution` carries the MP execution details when the server reported
  * them, and is null otherwise.
- *
- * `policyDenial` is the typed denial detail that Server 0.10.1 and later send
- * with a `policyDenied` failure: the policy step that denied the call, the
- * denied risk flag, the admission profile, and the request option field the
- * server attributed the denial to. It is null when the server sent none, as
- * Server 0.10.0 never does. It is descriptive: the kind, disposition, and
- * guidance are the same with or without it. Available starting with Client
- * 0.5.1.
  */
 export class BriosaOperationError extends BriosaError {
+  /**
+   * The typed denial detail that Server 0.10.1 and later send with a
+   * `policyDenied` failure: the policy step that denied the call, the denied
+   * risk flag, the admission profile, and the request option field the server
+   * attributed the denial to. It is present only on policy denials: it is null
+   * for every other kind, and when the server sent none, as Server 0.10.0 never
+   * does. It is descriptive: the kind, disposition, and guidance are the same
+   * with or without it.
+   *
+   * Added in Client 0.5.1. Errors the client raises always set it; the type
+   * marks it optional only so that values written for Client 0.5.0 still
+   * type-check.
+   */
+  readonly policyDenial?: PolicyDenialDetails | null;
+
   constructor(
     readonly operationId: string,
     readonly kind: OperationFailureKind,
@@ -131,10 +138,12 @@ export class BriosaOperationError extends BriosaError {
     readonly replayGuidance: ReplayGuidance,
     readonly replaySafety: ReplaySafety,
     readonly mpExecution: MpExecutionDetails | null = null,
-    readonly policyDenial: PolicyDenialDetails | null = null,
+    policyDenial: PolicyDenialDetails | null = null,
   ) {
     super(`Briosa operation failed (${diagnosticCode}).`);
     this.name = 'BriosaOperationError';
+    // Only a policy denial names a policy step; another kind never appears to.
+    this.policyDenial = kind === 'policyDenied' ? policyDenial : null;
   }
 
   get completionUnknown(): boolean {
