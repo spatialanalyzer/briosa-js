@@ -215,3 +215,22 @@ void test('every server snapshot carries the published values', async () => {
     await client.stop();
   }
 });
+
+void test('each reply gets its own host shutdown bound', () => {
+  const first = snapshotOf({ lifecycleBounds: {} }).lifecycleBounds;
+  assert.ok(first !== undefined);
+  // A caller that changes what it received cannot change a later reply.
+  Object.assign(first.hostGracefulShutdown, { kind: 'unbounded' });
+  const later = snapshotOf({
+    lifecycleBounds: {
+      hostGracefulShutdown: {
+        limit: { $case: 'finiteMilliseconds', value: 0n },
+      },
+    },
+  }).lifecycleBounds;
+  assert.deepEqual(later?.hostGracefulShutdown, { kind: 'unavailable' });
+  assert.notEqual(later?.hostGracefulShutdown, first.hostGracefulShutdown);
+  assert.deepEqual(snapshotOf({}).lifecycleBounds?.hostGracefulShutdown, {
+    kind: 'unavailable',
+  });
+});

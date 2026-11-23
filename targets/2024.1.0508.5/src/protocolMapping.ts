@@ -290,10 +290,6 @@ function mapLifecycleBounds(
   };
 }
 
-const unavailableShutdownBound: BriosaHostShutdownBound = {
-  kind: 'unavailable',
-};
-
 // Read from the limit case, never from a bare finite value. An absent bound, an
 // unset or unrecognized case, a zero, and a value too large to represent
 // exactly as a number are unavailable.
@@ -312,7 +308,8 @@ function mapHostShutdownBound(
       return { kind: 'finite', milliseconds: Number(value) };
     }
   }
-  return unavailableShutdownBound;
+  // A fresh object each time: a caller may change what it receives.
+  return { kind: 'unavailable' };
 }
 
 // A classification value from a later contract revision never fails

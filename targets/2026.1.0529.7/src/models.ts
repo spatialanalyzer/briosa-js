@@ -370,9 +370,8 @@ export interface PolicyDenialDetails {
   /**
    * The protobuf field name of the request option that the server attributed
    * the denial to, such as `show_results_dialog`, never a request value. Null
-   * when the operation's reviewed row decided. When a request turns on several
-   * options, it names the first in the server's reviewed order, which need not
-   * be the only cause.
+   * when the operation's reviewed row decided. Among enabled options with the
+   * deciding effect, the server names the first in its reviewed order.
    */
   readonly requestOptionField: string | null;
 }
@@ -609,15 +608,24 @@ export function normalizeStartOptions(
   options: BriosaStartOptions,
 ): NormalizedBriosaStartOptions {
   loggingArguments(options.logging);
+  // Every option is read in Client 0.5.0's order and as often as Client 0.5.0
+  // read it, so getters see the same reads. startupTimeoutMs is read once, and
+  // whether it was set is taken before the default fills it in, which would
+  // hide an explicit 120000.
+  const serverSelection = normalizeSelection(options.serverSelection);
+  const startSpatialAnalyzerSdk = options.startSpatialAnalyzerSdk ?? true;
+  const launchSpatialAnalyzer = options.launchSpatialAnalyzer ?? true;
+  const connectToSpatialAnalyzer = options.connectToSpatialAnalyzer ?? true;
+  const launchOptions = options.launchOptions ?? {};
+  const startupTimeoutMs = options.startupTimeoutMs;
   const normalized: NormalizedBriosaStartOptions = {
-    serverSelection: normalizeSelection(options.serverSelection),
-    startSpatialAnalyzerSdk: options.startSpatialAnalyzerSdk ?? true,
-    launchSpatialAnalyzer: options.launchSpatialAnalyzer ?? true,
-    connectToSpatialAnalyzer: options.connectToSpatialAnalyzer ?? true,
-    launchOptions: options.launchOptions ?? {},
-    // Read before the default fills it in, which would hide an explicit 120000.
-    startupTimeoutExplicit: options.startupTimeoutMs !== undefined,
-    startupTimeoutMs: options.startupTimeoutMs ?? defaultStartupTimeoutMs,
+    serverSelection,
+    startSpatialAnalyzerSdk,
+    launchSpatialAnalyzer,
+    connectToSpatialAnalyzer,
+    launchOptions,
+    startupTimeoutExplicit: startupTimeoutMs !== undefined,
+    startupTimeoutMs: startupTimeoutMs ?? defaultStartupTimeoutMs,
     ...(options.signal === undefined ? {} : { signal: options.signal }),
     ...(options.logging === undefined ? {} : { logging: options.logging }),
   };
