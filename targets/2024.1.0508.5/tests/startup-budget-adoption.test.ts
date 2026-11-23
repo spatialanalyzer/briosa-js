@@ -88,6 +88,10 @@ interface Script {
   readonly at?: Partial<Record<Phase | 'launch-server', number>>;
   /** The phase that never answers until the budget's signal aborts. */
   readonly hangAt?: Phase;
+  /** Real milliseconds a phase blocks the event loop before it answers. */
+  readonly blockMs?: Partial<Record<Phase, number>>;
+  /** Clock time when the post-Connect snapshot answers. */
+  readonly laterSnapshotAt?: number;
 }
 
 class BudgetTransport implements ClientTransport {
@@ -204,8 +208,19 @@ class BudgetTransport implements ClientTransport {
     if (!this.#recording) return;
     this.calls.push(phase);
     this.signals.push(signal);
-    const at = this.script.at?.[phase];
+    const later =
+      phase === 'snapshot' &&
+      this.calls.indexOf('snapshot') < this.calls.length - 1;
+    const at = later ? this.script.laterSnapshotAt : this.script.at?.[phase];
     if (at !== undefined) this.clock.time = at;
+    const block = this.script.blockMs?.[phase];
+    if (block !== undefined) {
+      // Busy-waits, so no timer callback can run before this phase answers.
+      const until = performance.now() + block;
+      while (performance.now() < until) {
+        // Blocks the event loop on purpose.
+      }
+    }
     if (phase !== this.script.hangAt || signal === undefined) return;
     await new Promise<never>((_resolve, reject) => {
       const aborted = (): void =>
@@ -686,4 +701,157 @@ void test('adoption never revives a finished or expired budget', () => {
   twice.finish();
   once.advanceTo(1_000_000);
   assert.equal(twice.signal.aborted, false);
+});
+
+// Expiry checks with published bounds (Server 0.10.1 and later): the startup
+// submits no phase and publishes no readiness once its deadline has passed,
+// even when the deadline's timer has not run yet. Without published bounds
+// (Server 0.10.0) the startup keeps Client 0.5.0's timing, checks included.
+
+void test('real clock: an explicit budget that expired during discovery submits no phase', async () => {
+  const clock = new FakeClock();
+  const transport = new BudgetTransport(clock, {
+    bounds: withLaunch300,
+    blockMs: { snapshot: 80 },
+    hangAt: 'start-sdk',
+  });
+  const client = new BriosaClientImplementation(
+    {},
+    new ClockLauncher(clock, undefined),
+    () => transport,
+  );
+  await assert.rejects(
+    client.start({ startupTimeoutMs: 10 }),
+    isStartupTimeout,
+  );
+  assert.deepEqual(transport.calls, ['snapshot']);
+  await client.stop();
+});
+
+void test('real clock, Server 0.10.0: the same expiry keeps Client 0.5.0 timing', async () => {
+  // As in Client 0.5.0, the next phase starts before the due timer runs, and
+  // the timer then ends it.
+  const clock = new FakeClock();
+  const transport = new BudgetTransport(clock, {
+    blockMs: { snapshot: 80 },
+    hangAt: 'start-sdk',
+  });
+  const client = new BriosaClientImplementation(
+    {},
+    new ClockLauncher(clock, undefined),
+    () => transport,
+  );
+  await assert.rejects(
+    client.start({ startupTimeoutMs: 10 }),
+    isStartupTimeout,
+  );
+  assert.deepEqual(transport.calls, ['snapshot', 'start-sdk']);
+  await client.stop();
+});
+
+void test('an omitted budget with a partial allowance expires at 121 s without another phase', async () => {
+  const { clock, transport, client } = harness({
+    // Start SDK, Launch, and Connect need startupWithLaunchMs, which is absent.
+    bounds: publish({ startSdkMilliseconds: 150_000 }),
+    at: { snapshot: 121_000 },
+  });
+  await assert.rejects(client.start(), isStartupTimeout);
+  assert.deepEqual(transport.calls, ['snapshot']);
+  assert.deepEqual(clock.delays, [120_000]);
+  await client.stop();
+});
+
+for (const [phase, after] of [
+  ['start-sdk', 'launch-sa'],
+  ['launch-sa', 'connect-sdk'],
+  ['connect-sdk', 'snapshot'],
+] as const) {
+  void test(`a ${phase} answer after the adopted deadline submits nothing more`, async () => {
+    // Allowance 160 s: deadline t0 + 180 s. The answer arrives at 181 s,
+    // before the timer has run.
+    const { clock, transport, client } = harness({
+      bounds: publish({ startupWithLaunchMilliseconds: 160_000 }),
+      at: { [phase]: 181_000 },
+    });
+    await assert.rejects(client.start(), isStartupTimeout);
+    assert.deepEqual(clock.delays, [120_000, 180_000]);
+    // The late phase is the last one sent: the next never starts.
+    const sent = transport.calls.slice(1);
+    assert.equal(sent.at(-1), phase);
+    assert.equal(sent.includes(after), false);
+    await client.stop();
+  });
+}
+
+void test('an answer at exactly the adopted deadline publishes no readiness', async () => {
+  const { transport, client } = harness({
+    bounds: publish({ startupWithLaunchMilliseconds: 160_000 }),
+    laterBounds: publish({ startupWithLaunchMilliseconds: 160_000 }),
+    at: { 'connect-sdk': 100_000 },
+    laterSnapshotAt: 180_000,
+  });
+  // The second snapshot answers at the deadline; the startup must not publish.
+  await assert.rejects(client.start(), isStartupTimeout);
+  assert.deepEqual(transport.calls, [
+    'snapshot',
+    'start-sdk',
+    'launch-sa',
+    'connect-sdk',
+    'snapshot',
+  ]);
+  await client.stop();
+});
+
+void test('Server 0.10.0: an answer after the deadline keeps Client 0.5.0 behavior', async () => {
+  // Client 0.5.0 checks no clock between phases; only its timer ends a
+  // startup. A fake timer that never runs therefore lets this one finish.
+  const { clock, transport, client } = harness({
+    at: { 'connect-sdk': 121_000 },
+  });
+  await client.start();
+  assert.deepEqual(transport.calls, [
+    'snapshot',
+    'start-sdk',
+    'launch-sa',
+    'connect-sdk',
+    'snapshot',
+  ]);
+  assert.deepEqual(clock.delays, [120_000]);
+  await client.stop();
+});
+
+void test('start options are read in Client 0.5.0 order, startupTimeoutMs once', async () => {
+  const reads: string[] = [];
+  let timeoutReads = 0;
+  const options = new Proxy(
+    {},
+    {
+      get(_target, property): unknown {
+        reads.push(String(property));
+        // A getter that would change the budget on a second read.
+        if (property === 'startupTimeoutMs')
+          return 30_000 + 1_000 * timeoutReads++;
+        return undefined;
+      },
+    },
+  ) as BriosaStartOptions;
+  const { clock, transport, client } = harness({ hangAt: 'connect-sdk' });
+  const started = client.start(options);
+  await until(transport, 'connect-sdk');
+  // The same reads, in the same order, as Client 0.5.0's normalization.
+  assert.deepEqual(reads, [
+    'logging',
+    'serverSelection',
+    'startSpatialAnalyzerSdk',
+    'launchSpatialAnalyzer',
+    'connectToSpatialAnalyzer',
+    'launchOptions',
+    'startupTimeoutMs',
+    'signal',
+    'logging',
+  ]);
+  assert.deepEqual(clock.delays, [30_000]);
+  clock.advanceTo(30_000);
+  await assert.rejects(started, isStartupTimeout);
+  await client.stop();
 });

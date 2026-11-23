@@ -136,6 +136,20 @@ export class StartupBudget {
     return 'extended';
   }
 
+  /**
+   * Whether the startup has run out: its signal has aborted, or the monotonic
+   * clock is at or past the deadline, in which case this ends it now, without
+   * waiting for the timer callback. Called before each later startup step on
+   * the published-bounds path only; Server 0.10.0 keeps Client 0.5.0's timing.
+   */
+  expired(): boolean {
+    if (this.#controller.signal.aborted) return true;
+    if (this.#finished) return false;
+    if (this.#clock.now() < this.#deadline) return false;
+    this.#expire();
+    return true;
+  }
+
   /** Ends the budget when startup settles; its timer never fires afterwards. */
   finish(): void {
     this.#finished = true;

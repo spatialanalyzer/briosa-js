@@ -495,12 +495,27 @@ export class BriosaClientImplementation implements BriosaClient {
         options.serverSelection,
       );
       transport = this.#transportFactory(server.target);
-      const snapshot = await this.#waitForServer(server, transport, signal);
-      // The first validated startup snapshot. A server that publishes no
-      // allowance, such as Server 0.10.0, leaves the deadline unchanged.
-      if (budget.adopt(snapshot.lifecycleBounds, options) === 'expired') {
-        throw new BriosaCallAbortedError(signal.reason);
+      const { snapshot, lifecycleBoundsPublished } = await this.#waitForServer(
+        server,
+        transport,
+        signal,
+      );
+      // The first validated startup snapshot. Only a server that publishes
+      // lifecycle bounds (Server 0.10.1 and later) can size the budget, and
+      // only then does the startup check its deadline before each later step,
+      // so that it submits nothing after the deadline even before the timer
+      // runs. Against Server 0.10.0 it keeps Client 0.5.0's timing exactly.
+      const checkDeadline = lifecycleBoundsPublished
+        ? (): void => {
+            if (budget.expired()) {
+              throw new BriosaCallAbortedError(signal.reason);
+            }
+          }
+        : (): void => undefined;
+      if (lifecycleBoundsPublished) {
+        budget.adopt(snapshot.lifecycleBounds, options);
       }
+      checkDeadline();
       session = createSession(server, transport, snapshot);
       await this.#withLock(() => {
         this.#ensureOpen();
@@ -510,12 +525,14 @@ export class BriosaClientImplementation implements BriosaClient {
       transport = null;
 
       if (options.startSpatialAnalyzerSdk) {
+        checkDeadline();
         updateSdkState(
           session,
           mapSdkState(await session.transport.startSdk(signal)),
         );
       }
       if (options.launchSpatialAnalyzer) {
+        checkDeadline();
         session.applicationState = mapApplicationState(
           await session.transport.launchApplication(
             options.launchOptions,
@@ -529,10 +546,12 @@ export class BriosaClientImplementation implements BriosaClient {
           sdk.sdkGeneration,
           'sdk-generation-unavailable',
         );
+        checkDeadline();
         const connected = mapSdkState(
           await session.transport.connectSdk(generation, false, signal),
         );
         updateSdkState(session, connected);
+        checkDeadline();
         updateSnapshot(
           session,
           mapSnapshot(...(await session.transport.getServerSnapshot(signal))),
@@ -541,6 +560,7 @@ export class BriosaClientImplementation implements BriosaClient {
           throw new BriosaProtocolError('startup-readiness-not-established');
         }
       }
+      checkDeadline();
       publishStartup(session);
     } catch (error) {
       throw mapTransportFailure(error, session?.applicationState ?? null);
@@ -556,7 +576,10 @@ export class BriosaClientImplementation implements BriosaClient {
     server: OwnedServer,
     transport: ClientTransport,
     signal: AbortSignal,
-  ): Promise<BriosaServerSnapshot> {
+  ): Promise<{
+    readonly snapshot: BriosaServerSnapshot;
+    readonly lifecycleBoundsPublished: boolean;
+  }> {
     while (true) {
       if (server.hasExited) {
         throw new BriosaStartupError('server-process-exited');
@@ -564,7 +587,12 @@ export class BriosaClientImplementation implements BriosaClient {
       try {
         const snapshot = await transport.getServerSnapshot(signal);
         validateInstallation(snapshot[0], server.installation);
-        return mapSnapshot(...snapshot);
+        return {
+          snapshot: mapSnapshot(...snapshot),
+          // The wire presence of lifecycle_bounds; the mapped snapshot reports
+          // an absent message as unavailable values.
+          lifecycleBoundsPublished: snapshot[0].lifecycleBounds !== undefined,
+        };
       } catch (error) {
         if (!isServiceError(error) || error.code !== status.UNAVAILABLE) {
           throw error;
