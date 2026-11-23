@@ -64,8 +64,12 @@ moves the deadline to the larger of two minutes and that allowance plus 20
 seconds, counted from the start of `start()`. A server whose lifecycle bounds
 were raised therefore needs no client change. The budget never drops below two
 minutes and is never extended once it has run out. With these servers the
-client also reads the clock before each later startup step, including when you
-set the budget, so a startup past its deadline sends nothing more.
+client also reads the clock immediately before it sends each later startup
+request, including when you set the budget, so a startup past its deadline
+sends nothing more. A step that fails at or past the deadline is reported as
+`startup-timeout`, with the step's own failure as the error's `cause`, and a
+startup that times out never admits MP commands: call `stop()` before you start
+again.
 
 Against Server 0.10.0, which publishes no allowance, an omitted budget stays at
 two minutes, as in Client 0.5.0. If you raise that server's

@@ -152,9 +152,15 @@ later follow the shared
    than a Node.js timer can arm (2,147,483,647 ms), the deadline stays.
    Whenever the server published lifecycle bounds, whether or not an allowance
    was adopted and including an explicit budget, the client also reads the
-   clock before each later startup step and before it publishes readiness. A
-   startup at or past its deadline then ends with `startup-timeout` and submits
-   nothing more, even if the timer has not run yet.
+   clock immediately before it submits each later startup request, after the
+   request is built, including between the two discovery requests of the
+   post-Connect snapshot, and before it publishes readiness. A startup at or
+   past its deadline then ends with `startup-timeout` and submits nothing more,
+   even if the timer has not run yet. A step that fails at or past the deadline
+   is reported as `startup-timeout`, with its own failure as the `cause`; one
+   that fails earlier keeps its own error. The generation admits MP commands
+   only once the startup has published readiness, so a startup that timed out
+   never admits them; stop the client before starting again.
 4. The client replaces only the timer of the startup's one abort signal; it
    never restarts the startup. The post-Connect snapshot never changes the
    budget, the caller's `signal` stays independent, and individual lifecycle
@@ -314,10 +320,11 @@ export interface BriosaCallOptions {
 ```
 
 `onMpCompletion` is a per-call control like the signal, not a callback form of
-the operation. From contract major 3 the client checks the MP completion of
-every successful call, whether or not a callback is passed: the success must
-carry execution details with `succeeded` and MP code 2, or `partialSuccess` and
-MP code 4, and anything else rejects the call with `BriosaProtocolError`
+the operation. Starting with Client 0.5.0 and Server 0.10.0, the client checks
+the MP completion of every successful call, whether or not a callback is
+passed: the success must carry execution details with `succeeded` and MP code
+2, or `partialSuccess` and MP code 4, and anything else rejects the call with
+`BriosaProtocolError`
 (`mp-completion-missing` or `mp-completion-invalid`). The callback is then
 called once with the completion, `{ state: 'succeeded' | 'partialSuccess',
 mpResultCode }`, before the outputs are mapped, so it reports the completion
