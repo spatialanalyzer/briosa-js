@@ -130,8 +130,26 @@ jobs:
       - name: Test
         run: npm test
 
+      # Conformance diagnostics (spatialanalyzer/briosa#371, items 6 and 7). Each
+      # conformance step names its own folder under runner.temp, where the
+      # runner keeps a rejected scenario's failure message, server log digest,
+      # fixture output and server log files; the upload step after the package
+      # compatibility step keeps them when a job fails. The 30 s fake-worker
+      # start bound matches the current runner's own default and stays
+      # harmless with it. BRIOSA_CONFORMANCE_DUMP_ON_TIMEOUT is deliberately not
+      # set: heap dumps hold process memory, and the upload would publish them.
+      #
+      # Exempt: this step and the legacy half of the package compatibility
+      # step run the frozen Server 0.9.2 runner from conformance.lock.json. It
+      # reads neither variable and keeps its 60 s fixture timeout. Those legs
+      # run only control-plane-only, in which the client rejects the 0.9.2
+      # installation before any server starts, so there is no server log to
+      # keep.
       - name: Run shared client conformance suite
         shell: pwsh
+        env:
+          BRIOSA_CONFORMANCE_DIAGNOSTICS_DIRECTORY: ${{ runner.temp }}/conformance-diagnostics/shared-suite
+          Briosa__Worker__StartupTimeout: '00:00:30'
         run: >
           ./eng/Test-Conformance.ps1
           -ArtifactPath "artifacts/conformance/${{ steps.protocol.outputs.conformance_file_name }}"
@@ -141,6 +159,9 @@ jobs:
 
       - name: Test the contract-aware server from pinned source
         shell: pwsh
+        env:
+          BRIOSA_CONFORMANCE_DIAGNOSTICS_DIRECTORY: ${{ runner.temp }}/conformance-diagnostics/current-server
+          Briosa__Worker__StartupTimeout: '00:00:30'
         run: >
           ./eng/Test-CurrentServerConformance.ps1
           -SourceTarget "${{ github.workspace }}/briosa-source/targets/${{ matrix.sa-target }}"
@@ -175,7 +196,19 @@ jobs:
 
       - name: Test actual client package against both server generations
         shell: pwsh
+        env:
+          BRIOSA_CONFORMANCE_DIAGNOSTICS_DIRECTORY: ${{ runner.temp }}/conformance-diagnostics/package-compatibility
+          Briosa__Worker__StartupTimeout: '00:00:30'
         run: ./eng/Test-PackageCompatibility.ps1
+
+      - name: Retain conformance diagnostics of a failed job
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: conformance-diagnostics-${{ matrix.sa-target }}-attempt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/conformance-diagnostics
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Retain packaged cross-version compatibility evidence
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
