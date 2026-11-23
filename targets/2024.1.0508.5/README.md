@@ -15,7 +15,7 @@ The package is named `@spatialanalyzer/briosa-2024.1.0508.5`, while its
 exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
-npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.0
+npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.1
 ```
 
 To try a local build instead, build it as in [Build and Test](#build-and-test),
@@ -52,11 +52,22 @@ have distinct state, launch, connect, stop, and recovery methods. `stop()` and
 `Symbol.asyncDispose` stop the owned server and SDK but never close
 SpatialAnalyzer.
 
-`BriosaStartOptions.startupTimeoutMs` bounds the whole `start()` and defaults to
-120000 (two minutes). That covers the server's default worst case of about 100
-seconds for a start that launches SpatialAnalyzer, with a 20-second margin. If
-you raise the server's `Briosa:Worker:StartupTimeout`,
-`Briosa:Worker:ReadinessProbeTimeout`, or
+`BriosaStartOptions.startupTimeoutMs` bounds the whole `start()`. A value you
+set is always the budget, including 120000. When you omit it, the budget is
+120000 (two minutes), which covers the server's default worst case of about 100
+seconds for a start that launches SpatialAnalyzer, with a 20-second margin.
+
+With Server 0.10.1 and later, an omitted budget follows the server's own
+configuration. When the client first reads the server's identity, it takes the
+startup allowance that the server publishes for the phases you selected and
+moves the deadline to the larger of two minutes and that allowance plus 20
+seconds, counted from the start of `start()`. A server whose lifecycle bounds
+were raised therefore needs no client change. The budget never drops below two
+minutes and is never extended once it has run out.
+
+Against Server 0.10.0, which publishes no allowance, an omitted budget stays at
+two minutes, as in Client 0.5.0. If you raise that server's
+`Briosa:Worker:StartupTimeout`, `Briosa:Worker:ReadinessProbeTimeout`, or
 `Briosa:SpatialAnalyzer:ApplicationStartupTimeout`, raise the client budget too;
 the [public API contract](docs/design/v1-public-api-contract.md#startup-and-lifecycle-time-budgets)
 shows how to size it. Lifecycle methods add no deadline of their own. If the
@@ -126,6 +137,58 @@ the server applies.
   later". The lifecycle failure kinds add `callerCancelled` and
   `callerDeadlineExceeded`.
 
+### Additions in Client 0.5.1
+
+Client 0.5.1 needs no application changes. It reads what Server 0.10.1 and
+later add, and against Server 0.10.0, which sends none of it, it behaves as
+Client 0.5.0 does: it selects and starts Server 0.10.0 installations, and every
+new value below reports "not available".
+
+- **Why a call was denied.** A `BriosaOperationError` of kind `policyDenied`
+  carries `policyDenial`: the policy step that denied it (`rule`), the risk
+  flag set to deny (`deniedFlag`, an `OperationRiskFlag`), the admission
+  profile, and the request option field the server attributed the denial to.
+  It is null with Server 0.10.0. It describes the denial and never changes the
+  error's kind, disposition, or guidance.
+
+  ```ts
+  try {
+    await getWorkingDirectory(briosa);
+  } catch (error) {
+    if (
+      error instanceof BriosaOperationError &&
+      error.kind === 'policyDenied'
+    ) {
+      const denial = error.policyDenial; // null with Server 0.10.0
+      if (denial?.rule === 'flag') {
+        // denial.deniedFlag is the risk flag set to deny, such as 'filesystemWrite'.
+      }
+    }
+  }
+  ```
+
+- **Discovery.** A denied capability in
+  `listCapabilities({ includeDenied: true })` carries the same `policyDenial`.
+  Each capability's `requestOptions` lists the request fields that turn on
+  operator UI or leave work running, each with its effect, condition, omission,
+  and what the policy decides for that option alone. It is `[]` when no option
+  applies, and null with Server 0.10.0, which does not describe options. The
+  server still decides every request; the client never checks a request
+  against these descriptions. A value this client doesn't know is `unknown`,
+  never a permission.
+- **Lifecycle bounds.** The server snapshot's `lifecycleBounds` gives each of
+  the server's lifecycle wait allowances in milliseconds, or null when the
+  server publishes none, as with Server 0.10.0. Its `hostGracefulShutdown` is
+  `finite`, `unbounded`, or `unavailable`.
+  `configuredSpatialAnalyzerInteractionMode` is the interaction mode the server
+  is configured to set after each Connect: the server's configuration, never
+  SpatialAnalyzer's current mode, and `unknown` with Server 0.10.0.
+- **Startup budget.** An omitted `startupTimeoutMs` follows the server's
+  published startup allowance, as described under [Usage](#usage).
+- **Large results.** Server 0.10.1 returns MP results up to its 1 MiB worker
+  response limit, where Server 0.10.0 stopped at 64 KiB. The conformance suite
+  checks that this client receives a result at that limit whole.
+
 See the [Briosa documentation](https://spatialanalyzer.github.io/briosa-docs/api/javascript/)
 for the client API overview. The target-specific source and locked protocol define
 this package's exact API.
@@ -141,6 +204,8 @@ and selects the highest compatible stable release. No internet access is needed.
 Client 0.5.x works with Server 0.10.x. Before launch, it checks that the
 installation matches the exact SA target and declares support for this client.
 It rejects Server 0.9.x and earlier. Client 0.5.0 was tested with Server 0.10.0.
+Client 0.5.1 selects Server 0.10.0 installations as well as Server 0.10.1 and
+later ones.
 Clients 0.4.x and earlier do not work with Server 0.10.x. For server releases
 after 0.10.0, a patch update keeps the same clients working; a minor update may
 require a client upgrade. Protocol and source pins remain exact build inputs;
@@ -190,7 +255,7 @@ distinguishes tested pairs from declared forward compatibility.
 ```ts
 import { discoverInstallations } from 'briosa';
 
-const selection = { version: '0.10.0-dev.1', allowPrerelease: true };
+const selection = { version: '0.10.1-dev.1', allowPrerelease: true };
 const report = await discoverInstallations(selection); // no process launch
 await briosa.start({ serverSelection: selection });
 ```
@@ -228,12 +293,12 @@ Neither path requires SpatialAnalyzer nor a license.
 
 ```powershell
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.10.0-dev.1-sa-2024.1.0508.5.zip `
+  --artifact C:\path\to\briosa-protocol-0.10.1-dev.1-sa-2024.1.0508.5.zip `
   --update `
   --source-channel source_commit_bootstrap
 
 node ./eng/import-protocol-artifact.mjs `
-  --artifact C:\path\to\briosa-protocol-0.10.0-dev.1-sa-2024.1.0508.5.zip
+  --artifact C:\path\to\briosa-protocol-0.10.1-dev.1-sa-2024.1.0508.5.zip
 ```
 
 Never edit `src/generated` or `protocol.lock.json` by hand.
@@ -270,8 +335,9 @@ capabilities, and readiness still gate MP calls.
 Portable conformance covers lifecycle, identity mismatch, denied capabilities
 with the admission profile and denial reasons, typed MP and output failure, SDK
 call faults, MP partial success, deadlines, cancellation, a lifecycle Connect
-whose caller stopped waiting, watchdog recovery, SDK loss, and owned-process
-cleanup. Its harness disables Control Center auto-launch and
+whose caller stopped waiting, watchdog recovery, SDK loss, owned-process
+cleanup, and, against Server 0.10.1 and later, a result at the 1 MiB worker
+response limit that must arrive whole. Its harness disables Control Center auto-launch and
 restores the prior setting afterward. These checks use a fake SDK, without a
 SpatialAnalyzer installation or license.
 

@@ -443,9 +443,8 @@ export interface BriosaOperationCapability {
    * send it with a denied admission. Null when the server sent none, as Server
    * 0.10.0 never does. It never changes `admission`.
    *
-   * Optional starting with Client 0.5.1 and Server 0.10.1. The client always
-   * sets it; the type is optional only so that values written for Client 0.5.0
-   * still type-check.
+   * Added in Client 0.5.1. The client always sets it; the type marks it
+   * optional only so that values written for Client 0.5.0 still type-check.
    */
   readonly policyDenial?: PolicyDenialDetails | null;
   /**
@@ -455,9 +454,8 @@ export interface BriosaOperationCapability {
    * described", never "none apply". The client never checks a request against
    * these options.
    *
-   * Optional starting with Client 0.5.1 and Server 0.10.1. The client always
-   * sets it; the type is optional only so that values written for Client 0.5.0
-   * still type-check.
+   * Added in Client 0.5.1. The client always sets it; the type marks it
+   * optional only so that values written for Client 0.5.0 still type-check.
    */
   readonly requestOptions?: readonly BriosaOperationRequestOption[] | null;
 }
@@ -538,9 +536,8 @@ export interface BriosaServerSnapshot {
    * Against Server 0.10.0 every allowance is null and the host shutdown bound
    * is unavailable.
    *
-   * Optional starting with Client 0.5.1 and Server 0.10.1. The client always
-   * sets it; the type is optional only so that values written for Client 0.5.0
-   * still type-check.
+   * Added in Client 0.5.1. The client always sets it; the type marks it
+   * optional only so that values written for Client 0.5.0 still type-check.
    */
   readonly lifecycleBounds?: BriosaLifecycleBounds;
   /**
@@ -548,9 +545,8 @@ export interface BriosaServerSnapshot {
    * Connect, with Server 0.10.1 and later; `unknown` against Server 0.10.0. It
    * is the server's configuration, never SpatialAnalyzer's live mode.
    *
-   * Optional starting with Client 0.5.1 and Server 0.10.1. The client always
-   * sets it; the type is optional only so that values written for Client 0.5.0
-   * still type-check.
+   * Added in Client 0.5.1. The client always sets it; the type marks it
+   * optional only so that values written for Client 0.5.0 still type-check.
    */
   readonly configuredSpatialAnalyzerInteractionMode?: ConfiguredSpatialAnalyzerInteractionMode;
   supports(fullyQualifiedMethod: string): boolean;
