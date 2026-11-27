@@ -6,8 +6,8 @@ Independent exact-target clients for the [Briosa SpatialAnalyzer bridge](https:/
 
 | SpatialAnalyzer target | Product and development guide | Client version |
 | --- | --- | --- |
-| 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.5.2 |
-| 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.5.2 |
+| 2024.1.0508.5 | [SA 2024](https://github.com/spatialanalyzer/briosa-js/blob/main/targets/2024.1.0508.5/README.md) | 0.5.2 |
+| 2026.1.0529.7 | [SA 2026](https://github.com/spatialanalyzer/briosa-js/blob/main/targets/2026.1.0529.7/README.md) | 0.5.2 |
 
 Choose the package for your exact SA installation. Client 0.5.x works with
 Server 0.10.x and does not work with Server 0.9.x or earlier; Client 0.5.0 was
@@ -63,14 +63,17 @@ startup budget from the server's published startup allowance. With Server
 product guide describes the additions.
 
 Upgrading from Client 0.5.1 to Client 0.5.2 needs no application changes. With
-Clients 0.5.0 and 0.5.1, a call to Server 0.10.0 or 0.10.1 could occasionally
-get no response: after a large response, such as the capability listing that
-`start()` reads, the server could skip the response to the next call on the
-same connection
-([spatialanalyzer/briosa#450](https://github.com/spatialanalyzer/briosa/issues/450)).
-Client 0.5.2 advertises a larger HTTP/2 flow-control window, so responses no
-longer wait for window credit, which is what exposed these calls to the server
-defect. Each product guide describes the change.
+Clients 0.5.0 and 0.5.1, a call following a large response on the same
+connection could occasionally receive no reply. The investigation observed this
+symptom with Briosa Server 0.10.0 and a 0.10.1 development build.
+<https://github.com/spatialanalyzer/briosa/issues/450>
+
+Client 0.5.2 raises the HTTP/2 receive window from 65,535 bytes to 16 MiB on
+each stream and on the shared connection. With one unary call at a time, this
+leaves room for the largest response the client accepts, including its
+five-byte gRPC prefix. Concurrent responses share connection credit and can
+still have to wait. The server needs a patched ASP.NET Core runtime to fix the
+underlying defect. <https://github.com/dotnet/aspnetcore/pull/70100> Each product guide describes the change.
 
 The default `startupTimeoutMs` is 120000 (two minutes) instead of 30000 in both
 products. It is sized from the server's default lifecycle bounds; see

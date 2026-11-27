@@ -434,19 +434,25 @@ The product guides describe each addition under "Additions in Client 0.5.1".
 ## Client 0.5.2
 
 Moving from Client 0.5.1 to Client 0.5.2 needs no application changes: the API
-is the same, and it selects and starts the same servers. Client 0.5.2 fixes a
-call that could occasionally get no response from Server 0.10.0 or 0.10.1
-([spatialanalyzer/briosa#450](https://github.com/spatialanalyzer/briosa/issues/450)).
-After a response larger than the client's HTTP/2 flow-control window, such as
-the capability listing that `start()` reads, the server could skip the response
-to the next call on the same connection. That call waited until its deadline,
-or without end when it had none; during `start()` it ended with
-`startup-timeout`. Clients 0.5.0 and 0.5.1 are affected.
+is the same, and it selects and starts the same servers.
 
-The cause is a defect in the ASP.NET Core HTTP/2 server that the Briosa server
-runs on ([dotnet/aspnetcore#70124](https://github.com/dotnet/aspnetcore/issues/70124)).
-Client 0.5.2 advertises a 16 MiB window for each call and for its connection,
-where it advertised 65,535 bytes before. That is more than the largest response
-the client accepts (4 MiB), so responses no longer wait for window credit. The
-server defect itself remains until the server moves to a runtime with the
-upstream fix.
+With Clients 0.5.0 and 0.5.1, a call following a large response on the same
+connection could occasionally receive no reply. The investigation observed this
+symptom with Briosa Server 0.10.0 and a 0.10.1 development build. A default
+`start()` reads the capability listing twice. If the startup budget expired
+while waiting, `start()` reported `startup-timeout`. Outside startup, a call
+with a deadline could time out. A call without a deadline could remain pending
+until cancellation or disconnection.
+<https://github.com/spatialanalyzer/briosa/issues/450>
+
+The observations are consistent with a defect in ASP.NET Core 10.0.15, which
+both tested servers include. When a response waits for HTTP/2 credit, the
+server can omit a later response on that connection.
+<https://github.com/dotnet/aspnetcore/issues/70124>
+
+Client 0.5.2 raises the HTTP/2 receive window from 65,535 bytes to 16 MiB on
+each stream and on the shared connection. With one unary call at a time, this
+leaves room for the largest response the client accepts, including its
+five-byte gRPC prefix. Concurrent responses share connection credit and can
+still have to wait. The server needs a patched ASP.NET Core runtime to fix the
+underlying defect. <https://github.com/dotnet/aspnetcore/pull/70100>
