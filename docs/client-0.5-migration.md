@@ -430,3 +430,23 @@ servers add:
   as before.
 
 The product guides describe each addition under "Additions in Client 0.5.1".
+
+## Client 0.5.2
+
+Moving from Client 0.5.1 to Client 0.5.2 needs no application changes: the API
+is the same, and it selects and starts the same servers. Client 0.5.2 fixes a
+call that could occasionally get no response from Server 0.10.0 or 0.10.1
+([spatialanalyzer/briosa#450](https://github.com/spatialanalyzer/briosa/issues/450)).
+After a response larger than the client's HTTP/2 flow-control window, such as
+the capability listing that `start()` reads, the server could skip the response
+to the next call on the same connection. That call waited until its deadline,
+or without end when it had none; during `start()` it ended with
+`startup-timeout`. Clients 0.5.0 and 0.5.1 are affected.
+
+The cause is a defect in the ASP.NET Core HTTP/2 server that the Briosa server
+runs on ([dotnet/aspnetcore#70124](https://github.com/dotnet/aspnetcore/issues/70124)).
+Client 0.5.2 advertises a 16 MiB window for each call and for its connection,
+where it advertised 65,535 bytes before. That is more than the largest response
+the client accepts (4 MiB), so responses no longer wait for window credit. The
+server defect itself remains until the server moves to a runtime with the
+upstream fix.

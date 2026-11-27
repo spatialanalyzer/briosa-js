@@ -15,7 +15,7 @@ The package is named `@spatialanalyzer/briosa-2026.1.0529.7`, while its
 exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
-npm install briosa@npm:@spatialanalyzer/briosa-2026.1.0529.7@0.5.1
+npm install briosa@npm:@spatialanalyzer/briosa-2026.1.0529.7@0.5.2
 ```
 
 To try a local build instead, build it as in [Build and Test](#build-and-test),
@@ -198,6 +198,29 @@ See the [Briosa documentation](https://spatialanalyzer.github.io/briosa-docs/api
 for the client API overview. The target-specific source and locked protocol define
 this package's exact API.
 
+### Changes in Client 0.5.2
+
+Client 0.5.2 needs no application changes, has the same API as Client 0.5.1,
+and works with the same servers. It fixes a call that could occasionally get no
+response from Server 0.10.0 or 0.10.1
+([spatialanalyzer/briosa#450](https://github.com/spatialanalyzer/briosa/issues/450)).
+
+- **What happened.** After a response larger than the client's HTTP/2
+  flow-control window, such as the capability listing that `start()` reads
+  twice, the server could skip the response to the next call on the same
+  connection. That call waited until its deadline, or without end when it had
+  none; during `start()` it ended with `startup-timeout`. Clients 0.5.0 and
+  0.5.1 are affected.
+- **The cause.** A defect in the ASP.NET Core HTTP/2 server that the Briosa
+  server runs on
+  ([dotnet/aspnetcore#70124](https://github.com/dotnet/aspnetcore/issues/70124)).
+  A response that has to wait for window credit from the client can trigger it.
+- **The change.** The client now advertises a 16 MiB window for each call and
+  for its connection, where it advertised 65,535 bytes before. That is more
+  than the largest response the client accepts (4 MiB), so responses no longer
+  wait for window credit. The server defect itself remains until the server
+  moves to a runtime with the upstream fix.
+
 ## Server selection
 
 Applications select a server independently of their protocol generation pin.
@@ -209,8 +232,8 @@ and selects the highest compatible stable release. No internet access is needed.
 Client 0.5.x works with Server 0.10.x. Before launch, it checks that the
 installation matches the exact SA target and declares support for this client.
 It rejects Server 0.9.x and earlier. Client 0.5.0 was tested with Server 0.10.0.
-Client 0.5.1 selects Server 0.10.0 installations as well as Server 0.10.1 and
-compatible later releases.
+Clients 0.5.1 and 0.5.2 select Server 0.10.0 installations as well as Server
+0.10.1 and compatible later releases.
 Clients 0.4.x and earlier do not work with Server 0.10.x. For server releases
 after 0.10.0, a patch update keeps the same clients working; a minor update may
 require a client upgrade. Protocol and source pins remain exact build inputs;
