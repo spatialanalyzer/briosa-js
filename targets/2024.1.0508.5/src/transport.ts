@@ -144,23 +144,24 @@ export type GrpcServiceClientClass<TClient extends Client> = new (
   options: Partial<ClientOptions>,
 ) => TClient;
 
-/** @internal Builds one service client; tests substitute a recorder. */
-export type GrpcServiceClientFactory = <TClient extends Client>(
+/**
+ * @internal Hands the transport each client class before it is constructed.
+ * Production passes the class unchanged; a test wraps it to record the
+ * constructor arguments that newServiceClient passes.
+ */
+export type GrpcServiceClientClassHook = <TClient extends Client>(
   clientClass: GrpcServiceClientClass<TClient>,
-  target: string,
-  channelCredentials: ChannelCredentials,
-  options: Readonly<ChannelOptions>,
-) => TClient;
+) => GrpcServiceClientClass<TClient>;
 
-// The one place in hand-written code that constructs a grpc-js client; a
-// test fails if any other code constructs a client or channel.
+// The one place in hand-written code that constructs a grpc-js client. It
+// supplies grpcChannelOptions itself, so no caller can omit them, and a test
+// fails if any other code constructs a client or channel.
 function newServiceClient<TClient extends Client>(
   clientClass: GrpcServiceClientClass<TClient>,
   target: string,
   channelCredentials: ChannelCredentials,
-  options: Readonly<ChannelOptions>,
 ): TClient {
-  return new clientClass(target, channelCredentials, options);
+  return new clientClass(target, channelCredentials, grpcChannelOptions);
 }
 
 export class GrpcClientTransport implements ClientTransport {
@@ -172,14 +173,18 @@ export class GrpcClientTransport implements ClientTransport {
 
   constructor(
     target: string,
-    createClient: GrpcServiceClientFactory = newServiceClient,
+    clientClassHook: GrpcServiceClientClassHook = (clientClass) => clientClass,
   ) {
     const channelCredentials = credentials.createInsecure();
     // Every client is built here, with the same options and credentials.
     const create = <TClient extends Client>(
       clientClass: GrpcServiceClientClass<TClient>,
     ): TClient =>
-      createClient(clientClass, target, channelCredentials, grpcChannelOptions);
+      newServiceClient(
+        clientClassHook(clientClass),
+        target,
+        channelCredentials,
+      );
     this.#discovery = create(DiscoveryServiceClient);
     this.#application = create(SpatialAnalyzerLifecycleClient);
     this.#sdk = create(SpatialAnalyzerSdkLifecycleClient);

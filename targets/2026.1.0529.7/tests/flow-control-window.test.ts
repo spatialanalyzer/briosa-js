@@ -21,11 +21,11 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import {
+  ChannelCredentials,
   Client,
   credentials,
   Metadata,
   status,
-  type ChannelCredentials,
   type ChannelOptions,
   type ServiceError,
 } from '@grpc/grpc-js';
@@ -190,10 +190,18 @@ function enclosingName(node: ts.Node): string {
 }
 
 /**
- * Type-checks the hand-written sources under src/ (generated code excluded)
- * and lists every expression that constructs a grpc-js client or channel:
- * `new` of anything typed as a grpc-js `Client` (generated service clients
- * included) or `Channel`, and calls that make client classes.
+ * Type-checks the hand-written sources under src/ (generated code and
+ * declaration files excluded) and lists every expression that constructs a
+ * grpc-js client or channel:
+ * - `new X(...)` whose type is a grpc-js `Client` (generated service clients
+ *   included), `Channel` or `ChannelInterface`;
+ * - `Reflect.construct(X, ...)`, resolved to the standard library, where a
+ *   construct signature of X returns one of those types;
+ * - calls that resolve, through import aliases, to grpc-js
+ *   `makeClientConstructor`, `makeGenericClientConstructor` or
+ *   `loadPackageDefinition`.
+ * Values typed `any` are not judged. Lint also bans `Reflect.construct` in
+ * src/, destructured or not.
  */
 function grpcConstructionSites(): ConstructionSite[] {
   const configPath = resolve(productRoot, 'tsconfig.json');
@@ -238,6 +246,25 @@ function grpcConstructionSites(): ConstructionSite[] {
       ? checker.getAliasedSymbol(symbol)
       : symbol;
   };
+  const isGrpcInstance = (type: ts.Type): boolean =>
+    (type.flags & (ts.TypeFlags.Any | ts.TypeFlags.Unknown)) === 0 &&
+    constructedTypes.some((target) => checker.isTypeAssignableTo(type, target));
+  // The standard library's Reflect.construct, however it is reached.
+  const isReflectConstruct = (expression: ts.Expression): boolean => {
+    const declaration = resolveCallee(expression)?.declarations?.[0];
+    if (
+      declaration === undefined ||
+      !program.isSourceFileDefaultLibrary(declaration.getSourceFile()) ||
+      !ts.isFunctionDeclaration(declaration) ||
+      declaration.name?.text !== 'construct'
+    ) {
+      return false;
+    }
+    const namespace = declaration.parent.parent;
+    return (
+      ts.isModuleDeclaration(namespace) && namespace.name.text === 'Reflect'
+    );
+  };
 
   const sites: ConstructionSite[] = [];
   const generated = resolve(productRoot, 'src', 'generated') + sep;
@@ -248,15 +275,25 @@ function grpcConstructionSites(): ConstructionSite[] {
     const visit = (node: ts.Node): void => {
       let constructs = false;
       if (ts.isNewExpression(node)) {
-        const type = checker.getTypeAtLocation(node);
-        constructs =
-          (type.flags & (ts.TypeFlags.Any | ts.TypeFlags.Unknown)) === 0 &&
-          constructedTypes.some((target) =>
-            checker.isTypeAssignableTo(type, target),
-          );
+        constructs = isGrpcInstance(checker.getTypeAtLocation(node));
       } else if (ts.isCallExpression(node)) {
         const callee = resolveCallee(node.expression);
-        constructs = callee !== undefined && classFactories.has(callee);
+        const constructed = node.arguments[0];
+        if (callee !== undefined && classFactories.has(callee)) {
+          constructs = true;
+        } else if (
+          constructed !== undefined &&
+          isReflectConstruct(node.expression)
+        ) {
+          // Judge the class it is given: one Reflect.construct overload
+          // returns any.
+          constructs = checker
+            .getTypeAtLocation(constructed)
+            .getConstructSignatures()
+            .some((signature) =>
+              isGrpcInstance(checker.getReturnTypeOfSignature(signature)),
+            );
+        }
       }
       if (constructs) {
         sites.push({
@@ -275,11 +312,12 @@ function grpcConstructionSites(): ConstructionSite[] {
 void test('hand-written code constructs gRPC clients and channels only in the shared constructor', () => {
   // A client built anywhere else, for example `new Client(target,
   // credentials)` in the transport, would not get the raised window.
+  // newServiceClient supplies grpcChannelOptions itself.
   assert.deepEqual(grpcConstructionSites(), [
     {
       file: 'src/transport.ts',
       within: 'newServiceClient',
-      code: 'new clientClass(target, channelCredentials, options)',
+      code: 'new clientClass(target, channelCredentials, grpcChannelOptions)',
     },
   ]);
 });
@@ -310,16 +348,28 @@ void test('the window holds the largest response the client accepts', () => {
 void test('every service client is constructed with the raised window', () => {
   const built: {
     readonly clientClass: unknown;
-    readonly target: string;
-    readonly channelCredentials: ChannelCredentials;
-    readonly options: Readonly<ChannelOptions>;
+    readonly target: unknown;
+    readonly channelCredentials: unknown;
+    readonly options: unknown;
+    readonly argumentCount: number;
   }[] = [];
+  // The proxy records the arguments of the real `new` in newServiceClient.
   const transport = new GrpcClientTransport(
     '127.0.0.1:1',
-    (clientClass, target, channelCredentials, options) => {
-      built.push({ clientClass, target, channelCredentials, options });
-      return new clientClass(target, channelCredentials, options);
-    },
+    (clientClass) =>
+      new Proxy(clientClass, {
+        construct(constructor, args: unknown[], newTarget) {
+          const [target, channelCredentials, options] = args;
+          built.push({
+            clientClass,
+            target,
+            channelCredentials,
+            options,
+            argumentCount: args.length,
+          });
+          return Reflect.construct(constructor, args, newTarget) as object;
+        },
+      }),
   );
   transport.close();
 
@@ -334,14 +384,17 @@ void test('every service client is constructed with the raised window', () => {
     ],
   );
   for (const construction of built) {
+    assert.equal(construction.argumentCount, 3);
     assert.equal(construction.target, '127.0.0.1:1');
+    // The frozen options object itself, as newServiceClient passes it.
     assert.equal(construction.options, grpcChannelOptions);
     assert.equal(
-      construction.options[flowControlWindow],
+      (construction.options as ChannelOptions)[flowControlWindow],
       http2FlowControlWindowBytes,
     );
     // One credentials object and one options object keep the five clients on
     // one shared connection.
+    assert.ok(construction.channelCredentials instanceof ChannelCredentials);
     assert.equal(construction.channelCredentials, built[0]?.channelCredentials);
   }
 });

@@ -25,6 +25,23 @@ export default tseslint.config(
     },
   },
   {
+    // Production code builds gRPC clients only through newServiceClient in
+    // src/transport.ts, which supplies the channel options; reflection could
+    // bypass it (https://github.com/spatialanalyzer/briosa-js/issues/55).
+    files: ['src/**/*.ts'],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'Reflect',
+          property: 'construct',
+          message:
+            'Construct gRPC clients only through newServiceClient in src/transport.ts.',
+        },
+      ],
+    },
+  },
+  {
     files: ['eng/**/*.mjs', 'eslint.config.mjs'],
     extends: [tseslint.configs.disableTypeChecked],
     languageOptions: {
