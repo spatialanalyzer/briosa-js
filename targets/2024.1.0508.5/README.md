@@ -15,7 +15,7 @@ The package is named `@spatialanalyzer/briosa-2024.1.0508.5`, while its
 exported Briosa types and functions remain release-neutral. Install it using an npm alias:
 
 ```powershell
-npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.1
+npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.2
 ```
 
 To try a local build instead, build it as in [Build and Test](#build-and-test),
@@ -202,6 +202,32 @@ See the [Briosa documentation](https://spatialanalyzer.github.io/briosa-docs/api
 for the client API overview. The target-specific source and locked protocol define
 this package's exact API.
 
+### Changes in Client 0.5.2
+
+Client 0.5.2 needs no application changes, has the same API as Client 0.5.1,
+and works with the same servers.
+
+With Clients 0.5.0 and 0.5.1, a call following a large response on the same
+connection could occasionally receive no reply. The investigation observed this
+symptom with Briosa Server 0.10.0 and a 0.10.1 development build. A default
+`start()` reads the capability listing twice. If the startup budget expired
+while waiting, `start()` reported `startup-timeout`. Outside startup, a call
+with a deadline could time out. A call without a deadline could remain pending
+until cancellation or disconnection.
+<https://github.com/spatialanalyzer/briosa/issues/450>
+
+The observations are consistent with a defect in ASP.NET Core 10.0.15, which
+both tested servers include. When a response waits for HTTP/2 credit, the
+server can omit a later response on that connection.
+<https://github.com/dotnet/aspnetcore/issues/70124>
+
+Client 0.5.2 raises the HTTP/2 receive window from 65,535 bytes to 16 MiB on
+each stream and on the shared connection. With one unary call at a time, this
+leaves room for the largest response the client accepts, including its
+five-byte gRPC prefix. Concurrent responses share connection credit and can
+still have to wait. The server needs a patched ASP.NET Core runtime to fix the
+underlying defect. <https://github.com/dotnet/aspnetcore/pull/70100>
+
 ## Server selection
 
 Applications select a server independently of their protocol generation pin.
@@ -213,8 +239,8 @@ and selects the highest compatible stable release. No internet access is needed.
 Client 0.5.x works with Server 0.10.x. Before launch, it checks that the
 installation matches the exact SA target and declares support for this client.
 It rejects Server 0.9.x and earlier. Client 0.5.0 was tested with Server 0.10.0.
-Client 0.5.1 selects Server 0.10.0 installations as well as Server 0.10.1 and
-compatible later releases.
+Clients 0.5.1 and 0.5.2 select Server 0.10.0 installations as well as Server
+0.10.1 and compatible later releases.
 Clients 0.4.x and earlier do not work with Server 0.10.x. For server releases
 after 0.10.0, a patch update keeps the same clients working; a minor update may
 require a client upgrade. Protocol and source pins remain exact build inputs;

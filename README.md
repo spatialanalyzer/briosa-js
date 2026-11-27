@@ -6,13 +6,14 @@ Independent exact-target clients for the [Briosa SpatialAnalyzer bridge](https:/
 
 | SpatialAnalyzer target | Product and development guide | Client version |
 | --- | --- | --- |
-| 2024.1.0508.5 | [SA 2024](targets/2024.1.0508.5/README.md) | 0.5.1 |
-| 2026.1.0529.7 | [SA 2026](targets/2026.1.0529.7/README.md) | 0.5.1 |
+| 2024.1.0508.5 | [SA 2024](https://github.com/spatialanalyzer/briosa-js/blob/main/targets/2024.1.0508.5/README.md) | 0.5.2 |
+| 2026.1.0529.7 | [SA 2026](https://github.com/spatialanalyzer/briosa-js/blob/main/targets/2026.1.0529.7/README.md) | 0.5.2 |
 
 Choose the package for your exact SA installation. Client 0.5.x works with
 Server 0.10.x and does not work with Server 0.9.x or earlier; Client 0.5.0 was
 tested with Server 0.10.0. Client 0.5.1 also reads what Server 0.10.1 adds, and
-works with Server 0.10.0 as Client 0.5.0 does. Client 0.4.x works with Server
+works with Server 0.10.0 as Client 0.5.0 does. Client 0.5.2 works with the same
+servers as Client 0.5.1 and has the same API. Client 0.4.x works with Server
 0.9.x, and clients 0.4.x and earlier do not work with Server 0.10.x. For server
 releases after 0.10.0, a patch update keeps the same clients working; a minor
 update may require a client upgrade. Each product pins its own generation
@@ -34,7 +35,7 @@ promotion.
 Select one target through an npm alias:
 
 ```sh
-npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.1
+npm install briosa@npm:@spatialanalyzer/briosa-2024.1.0508.5@0.5.2
 ```
 
 ```ts
@@ -60,6 +61,19 @@ configured interaction mode on the server snapshot, and sizes an omitted
 startup budget from the server's published startup allowance. With Server
 0.10.0 these values report "not available" and behavior is unchanged. Each
 product guide describes the additions.
+
+Upgrading from Client 0.5.1 to Client 0.5.2 needs no application changes. With
+Clients 0.5.0 and 0.5.1, a call following a large response on the same
+connection could occasionally receive no reply. The investigation observed this
+symptom with Briosa Server 0.10.0 and a 0.10.1 development build.
+<https://github.com/spatialanalyzer/briosa/issues/450>
+
+Client 0.5.2 raises the HTTP/2 receive window from 65,535 bytes to 16 MiB on
+each stream and on the shared connection. With one unary call at a time, this
+leaves room for the largest response the client accepts, including its
+five-byte gRPC prefix. Concurrent responses share connection credit and can
+still have to wait. The server needs a patched ASP.NET Core runtime to fix the
+underlying defect. <https://github.com/dotnet/aspnetcore/pull/70100> Each product guide describes the change.
 
 The default `startupTimeoutMs` is 120000 (two minutes) instead of 30000 in both
 products. It is sized from the server's default lifecycle bounds; see

@@ -3,6 +3,9 @@ import {
   Client,
   Metadata,
   type CallOptions,
+  type ChannelCredentials,
+  type ChannelOptions,
+  type ClientOptions,
   type ClientUnaryCall,
   type ServiceError,
 } from '@grpc/grpc-js';
@@ -101,6 +104,66 @@ type UnaryInvoker<TResponse> = (
   callback: (error: ServiceError | null, response: TResponse) => void,
 ) => ClientUnaryCall;
 
+/**
+ * @internal The HTTP/2 flow-control window, in bytes, of every channel the
+ * transport opens: 16 MiB.
+ *
+ * The transport sets no receive limit, so grpc-js 1.14.6 accepts response
+ * messages of up to 4 MiB (its DEFAULT_MAX_RECEIVE_MESSAGE_LENGTH). The largest
+ * accepted response is that message plus the 5-byte gRPC prefix. grpc-js
+ * advertises this value as the initial window of every stream, in its SETTINGS
+ * frame, and raises the connection window to it when the server's SETTINGS
+ * arrive. Node.js returns connection credit only once at least half the window
+ * has been consumed, so a response can start with just over half the
+ * connection window free. 16 MiB is the smallest power of two for which both
+ * windows hold the largest accepted response when calls run one at a time.
+ * Concurrent responses share connection credit and can still have to wait.
+ *
+ * At grpc-js's default of 65,535 bytes, a large response such as the
+ * capability listing waits for credit. Calls after such a response were
+ * observed to get no reply, consistent with a defect in ASP.NET Core 10.0.15
+ * (https://github.com/spatialanalyzer/briosa/issues/450,
+ * https://github.com/dotnet/aspnetcore/issues/70124).
+ */
+export const http2FlowControlWindowBytes = 16 * 1024 * 1024;
+
+/**
+ * @internal Options of every channel the transport opens. The five service
+ * clients share this object and one credentials object, so grpc-js keeps them
+ * on one connection; a client built without it would open another connection
+ * with the 65,535-byte default window.
+ */
+export const grpcChannelOptions: Readonly<ChannelOptions> = Object.freeze({
+  'grpc-node.flow_control_window': http2FlowControlWindowBytes,
+});
+
+/** @internal A grpc-js client class: a generated service client or Client. */
+export type GrpcServiceClientClass<TClient extends Client> = new (
+  address: string,
+  channelCredentials: ChannelCredentials,
+  options: Partial<ClientOptions>,
+) => TClient;
+
+/**
+ * @internal Hands the transport each client class before it is constructed.
+ * Production passes the class unchanged; a test wraps it to record the
+ * constructor arguments that newServiceClient passes.
+ */
+export type GrpcServiceClientClassHook = <TClient extends Client>(
+  clientClass: GrpcServiceClientClass<TClient>,
+) => GrpcServiceClientClass<TClient>;
+
+// The one place in hand-written code that constructs a grpc-js client. It
+// supplies grpcChannelOptions itself, so no caller can omit them, and a test
+// fails if any other code constructs a client or channel.
+function newServiceClient<TClient extends Client>(
+  clientClass: GrpcServiceClientClass<TClient>,
+  target: string,
+  channelCredentials: ChannelCredentials,
+): TClient {
+  return new clientClass(target, channelCredentials, grpcChannelOptions);
+}
+
 export class GrpcClientTransport implements ClientTransport {
   readonly #discovery: DiscoveryServiceClient;
   readonly #application: SpatialAnalyzerLifecycleClient;
@@ -108,19 +171,25 @@ export class GrpcClientTransport implements ClientTransport {
   readonly #fileOperations: FileOperationsClient;
   readonly #operations: Client;
 
-  constructor(target: string) {
+  constructor(
+    target: string,
+    clientClassHook: GrpcServiceClientClassHook = (clientClass) => clientClass,
+  ) {
     const channelCredentials = credentials.createInsecure();
-    this.#discovery = new DiscoveryServiceClient(target, channelCredentials);
-    this.#application = new SpatialAnalyzerLifecycleClient(
-      target,
-      channelCredentials,
-    );
-    this.#sdk = new SpatialAnalyzerSdkLifecycleClient(
-      target,
-      channelCredentials,
-    );
-    this.#fileOperations = new FileOperationsClient(target, channelCredentials);
-    this.#operations = new Client(target, channelCredentials);
+    // Every client is built here, with the same options and credentials.
+    const create = <TClient extends Client>(
+      clientClass: GrpcServiceClientClass<TClient>,
+    ): TClient =>
+      newServiceClient(
+        clientClassHook(clientClass),
+        target,
+        channelCredentials,
+      );
+    this.#discovery = create(DiscoveryServiceClient);
+    this.#application = create(SpatialAnalyzerLifecycleClient);
+    this.#sdk = create(SpatialAnalyzerSdkLifecycleClient);
+    this.#fileOperations = create(FileOperationsClient);
+    this.#operations = create(Client);
   }
 
   async getServerSnapshot(
