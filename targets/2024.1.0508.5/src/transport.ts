@@ -116,14 +116,14 @@ type UnaryInvoker<TResponse> = (
  * arrive. Node.js returns connection credit only once at least half the window
  * has been consumed, so a response can start with just over half the
  * connection window free. 16 MiB is the smallest power of two for which both
- * windows always hold the largest accepted response, one call at a time, so no
- * response waits for window credit.
+ * windows hold the largest accepted response when calls run one at a time.
+ * Concurrent responses share connection credit and can still have to wait.
  *
  * At grpc-js's default of 65,535 bytes, a large response such as the
- * capability listing waits for credit, and ASP.NET Core 10.0.15 can then skip
- * the next response on the connection, so that call gets no response
- * (https://github.com/dotnet/aspnetcore/issues/70124,
- * https://github.com/spatialanalyzer/briosa/issues/450).
+ * capability listing waits for credit. Calls after such a response were
+ * observed to get no reply, consistent with a defect in ASP.NET Core 10.0.15
+ * (https://github.com/spatialanalyzer/briosa/issues/450,
+ * https://github.com/dotnet/aspnetcore/issues/70124).
  */
 export const http2FlowControlWindowBytes = 16 * 1024 * 1024;
 
@@ -138,21 +138,23 @@ export const grpcChannelOptions: Readonly<ChannelOptions> = Object.freeze({
 });
 
 /** @internal A grpc-js client class: a generated service client or Client. */
-export type GrpcServiceClientClass<TClient> = new (
+export type GrpcServiceClientClass<TClient extends Client> = new (
   address: string,
   channelCredentials: ChannelCredentials,
   options: Partial<ClientOptions>,
 ) => TClient;
 
 /** @internal Builds one service client; tests substitute a recorder. */
-export type GrpcServiceClientFactory = <TClient>(
+export type GrpcServiceClientFactory = <TClient extends Client>(
   clientClass: GrpcServiceClientClass<TClient>,
   target: string,
   channelCredentials: ChannelCredentials,
   options: Readonly<ChannelOptions>,
 ) => TClient;
 
-function newServiceClient<TClient>(
+// The one place in hand-written code that constructs a grpc-js client; a
+// test fails if any other code constructs a client or channel.
+function newServiceClient<TClient extends Client>(
   clientClass: GrpcServiceClientClass<TClient>,
   target: string,
   channelCredentials: ChannelCredentials,
@@ -174,7 +176,7 @@ export class GrpcClientTransport implements ClientTransport {
   ) {
     const channelCredentials = credentials.createInsecure();
     // Every client is built here, with the same options and credentials.
-    const create = <TClient>(
+    const create = <TClient extends Client>(
       clientClass: GrpcServiceClientClass<TClient>,
     ): TClient =>
       createClient(clientClass, target, channelCredentials, grpcChannelOptions);
